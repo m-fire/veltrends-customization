@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/1-back-end-server/1-back-end-server.iml" filepath="$PROJECT_DIR$/1-back-end-server/1-back-end-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/figma-ux-plan/figma-ux-plan.iml" filepath="$PROJECT_DIR$/figma-ux-plan/figma-ux-plan.iml" />
+    </modules>
+  </component>
+</project>
