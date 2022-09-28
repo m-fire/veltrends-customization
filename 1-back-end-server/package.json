@@ -9,6 +9,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
+  "exports": "./index.js",
+  "engines": {
+    "node": ">=14.16"
+  },
   "dependencies": {
     "typescript": "^4.8.4"
   }
