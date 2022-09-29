@@ -249,11 +249,6 @@ dist
 # DynamoDB Local files
 .dynamodb/
 
-# Prisma ORM Local files
-prisma/
-*.db
-*.db-journal
-
 # TernJS port file
 .tern-port
 
@@ -313,3 +308,7 @@ yarn.lock
 
 ### video resources
 video
+
+# Prisma ORM Local files
+/prisma/
+!/prisma/schema.prisma
