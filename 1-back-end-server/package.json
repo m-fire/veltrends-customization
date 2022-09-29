@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node-esm --transpileOnly ./src/main.ts | pino-pretty",
-    "start:dev": "nodemon --watch ./src --exec \"pnpm start\" -e ts"
+    "start:dev": "nodemon --watch ./src --exec \"pnpm start\" -e ts",
+    "orm:migrate": "prisma migrate dev --name reset",
+    "orm:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",

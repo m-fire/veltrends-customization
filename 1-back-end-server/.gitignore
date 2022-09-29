@@ -249,6 +249,11 @@ dist
 # DynamoDB Local files
 .dynamodb/
 
+# Prisma ORM Local files
+prisma/
+*.db
+*.db-journal
+
 # TernJS port file
 .tern-port
 
