@@ -6,6 +6,7 @@ specifiers:
   fastify: ^4.6.0
   nodemon: ^2.0.20
   pino-pretty: ^9.1.0
+  prisma: ^4.4.0
   ts-node: ^10.9.1
   typescript: ^4.8.4
 
@@ -17,6 +18,7 @@ devDependencies:
   '@types/node': 18.7.23
   nodemon: 2.0.20
   pino-pretty: 9.1.0
+  prisma: 4.4.0
   ts-node: 10.9.1_gbhfbbeqrol7fxixnzbkbuanxe
   typescript: 4.8.4
 
@@ -97,6 +99,11 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
+  /@prisma/engines/4.4.0:
+    resolution: {integrity: sha512-Fpykccxlt9MHrAs/QpPGpI2nOiRxuLA+LiApgA59ibbf24YICZIMWd3SI2YD+q0IAIso0jCGiHhirAIbxK3RyQ==}
+    requiresBuild: true
     dev: true
 
   /@tsconfig/node10/1.0.9:
@@ -726,6 +733,15 @@ packages:
       sonic-boom: 3.2.0
       thread-stream: 2.2.0
     dev: false
+
+  /prisma/4.4.0:
+    resolution: {integrity: sha512-l/QKLmLcKJQFuc+X02LyICo0NWTUVaNNZ00jKJBqwDyhwMAhboD1FWwYV50rkH4Wls0RviAJSFzkC2ZrfawpfA==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.4.0
+    dev: true
 
   /process-warning/2.0.0:
     resolution: {integrity: sha512-+MmoAXoUX+VTHAlwns0h+kFUWFs/3FZy+ZuchkgjyOu3oioLAo2LB5aCfKPh2+P9O18i3m43tUEv3YqttSy0Ww==}
