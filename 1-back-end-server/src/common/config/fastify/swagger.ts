@@ -22,8 +22,8 @@ export const swaggerOptions: SwaggerOptions = {
     consumes: ['application/json'],
     produces: ['application/json'],
     tags: [
-      { name: 'user', description: '사용자 관련 엔드포인트' },
-      { name: 'code', description: '코드 관련 엔드포인트' },
+      // { name: 'user', description: '사용자 관련 엔드포인트' },
+      // { name: 'code', description: '코드 관련 엔드포인트' },
     ],
     // definitions: {
     //   User: {
