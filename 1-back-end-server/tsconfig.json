@@ -5,7 +5,7 @@
 
     /* TODO: 2022-09-28: ESM기반 설정 업데이트 */
     "target": "ES2022",
-    "module": "ES2022",
+    "module": "ES2022", //ES2022: async 함수없이 `await` 키워드 사용
     "lib": ["ESNext"],
     "rootDir": "./src",
     "moduleResolution": "Node",
