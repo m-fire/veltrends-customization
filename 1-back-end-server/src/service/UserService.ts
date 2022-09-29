@@ -1,6 +1,7 @@
 import * as brcypt from 'bcrypt'
 import { Authentication } from '../routes/api/auth/types.js'
 import db from '../common/config/prisma/db-client.js'
+import AppError from '../common/error/AppError.js'
 
 const SOLT_ROUNDS = 10
 
@@ -22,7 +23,7 @@ class UserService {
         username,
       },
     })
-    if (exists) throw new Error('User aleady exists.')
+    if (exists) throw new AppError('UserExistsError')
 
     // 암호화
     const passwordHash = await brcypt.hash(password, SOLT_ROUNDS)
