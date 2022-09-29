@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// 이 파일의 Force Formatting 지원은 VSCode-Prisma 플러그인 을 통해 도움을 받는다.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // "postgresql"
+  url      = env("file:./dev.db") // env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  item         Item[]
+}
+
+model Item {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  user        User   @relation(fields: [userId], references: [id])
+  userId      Int
+}
