@@ -11,22 +11,37 @@ const REQ_BODY_LOGIN_USERINFO = {
   },
 }
 
-export const SCHEMA_POST_LOGIN: FastifySchema = {
-  /* 주의!: get 방식은 body 가 포함될 경우, 애러발생 */
-  body: REQ_BODY_LOGIN_USERINFO,
-  response: {
-    200: {
+const RES_200_AUTH_COMMON = {
+  type: 'object',
+  properties: {
+    token: {
       type: 'object',
       properties: {
-        token: { type: 'string' },
+        accessToken: { type: 'string' },
+        refreshToken: { type: 'string' },
       },
-      example: {
-        token: '200 OK!',
+    },
+    user: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        username: { type: 'string' },
       },
     },
   },
 }
 
+export const SCHEMA_POST_LOGIN: FastifySchema = {
+  /* 주의!: get 방식은 body 가 포함될 경우, 애러발생 */
+  body: REQ_BODY_LOGIN_USERINFO,
+  response: {
+    200: RES_200_AUTH_COMMON,
+  },
+}
+
 export const SCHEMA_POST_REGISTER: FastifySchema = {
   body: REQ_BODY_LOGIN_USERINFO,
+  response: {
+    200: RES_200_AUTH_COMMON,
+  },
 }
