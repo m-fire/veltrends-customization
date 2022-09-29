@@ -12,6 +12,17 @@ export const loginPostSchema: FastifySchema = {
       password: { type: 'string' },
     },
   },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        token: { type: 'string' },
+      },
+      example: {
+        token: '200 OK!',
+      },
+    },
+  },
 }
 
 export const registerPostSchema: FastifySchema = {
