@@ -51,6 +51,11 @@ cmake-build-*/
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
+# Sonarlint plugin
+.idea/sonarlint/**/*.*
+
+
+
 # File-based project format
 *.iws
 
@@ -308,3 +313,7 @@ yarn.lock
 
 ### video resources
 video
+
+# Prisma ORM Local files
+/prisma/
+!/prisma/schema.prisma
