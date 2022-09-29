@@ -16,6 +16,7 @@
     "node": ">=14.16"
   },
   "dependencies": {
+    "@fastify/swagger": "^7.6.1",
     "fastify": "^4.6.0"
   },
   "devDependencies": {
