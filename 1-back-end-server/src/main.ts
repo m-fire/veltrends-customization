@@ -2,10 +2,20 @@ import fastify, { FastifyInstance } from 'fastify'
 import fastifySwagger from '@fastify/swagger'
 import routes from './routes/index.js'
 import { swaggerOptions } from './common/config/fastify/swagger.js'
+import db from './common/config/prisma/db-client.js'
 
 const server: FastifyInstance = fastify({
   logger: true,
 })
+
+db.user
+  .create({
+    data: {
+      username: 'member',
+      passwordHash: 'e8d95f34-2e83-4916-9189-07c75796afb8',
+    },
+  })
+  .then(console.log)
 
 server.get('/ping', async () => {
   return 'pong!'
