@@ -1,8 +1,8 @@
-export type SwaggerSchema<Root extends SchemaValue = 'object'> = {
+export type SchemaStruct<Root extends SchemaValue = 'object'> = {
   type: SchemaValue
   properties:
     | {
-        [key: string]: SchemaProps | SwaggerSchema
+        [key: string]: SchemaProps | SchemaStruct
       }
     | SchemaArray
   example?: SwaggerExample
@@ -15,4 +15,4 @@ export type SchemaValue = 'object' | 'array' | 'string' | 'number'
 export type SchemaProps<T extends SchemaValue = SchemaValue> = {
   type: SchemaValue
 }
-export type SchemaArray = SchemaProps[] | SwaggerSchema[]
+export type SchemaArray = SchemaProps[] | SchemaStruct[]

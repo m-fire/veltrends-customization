@@ -1,6 +1,6 @@
-import { SwaggerSchema } from '../config/fastify/types'
+import { SchemaStruct } from '../config/fastify/types'
 
-export const RES_ERROR_COMMON: SwaggerSchema = {
+export const RES_ERROR_COMMON: SchemaStruct = {
   type: 'object',
   properties: {
     type: { type: 'string' },
