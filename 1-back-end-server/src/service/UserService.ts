@@ -2,6 +2,7 @@ import * as brcypt from 'bcrypt'
 import { Authentication } from '../routes/api/auth/types.js'
 import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
+import { randomUUID } from 'crypto'
 
 const SOLT_ROUNDS = 10
 
@@ -29,7 +30,7 @@ class UserService {
     const passwordHash = await brcypt.hash(password, SOLT_ROUNDS)
     const newUser = await db.user.create({
       data: {
-        username,
+        username: `${username}-${randomUUID().substring(0, 2)}`,
         passwordHash,
       },
     })
