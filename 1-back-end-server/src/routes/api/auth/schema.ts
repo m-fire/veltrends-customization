@@ -38,13 +38,21 @@ export const SCHEMA_LOGIN_POST: FastifySchema = {
   body: REQ_BODY_USERINFO,
   response: {
     200: RES_200_TOKEN_N_USER,
+    401: {
+      ...RES_ERROR_COMMON,
+      example: {
+        type: 'AuthenticationError',
+        statusCode: 401,
+        message: 'Invalid username password',
+      },
+    },
   },
 }
 
 export const SCHEMA_REGISTER_POST: FastifySchema = {
   body: REQ_BODY_USERINFO,
   response: {
-    200: RES_200_TOKEN_N_USER,
+    201: RES_200_TOKEN_N_USER,
     409: {
       ...RES_ERROR_COMMON,
       example: {
