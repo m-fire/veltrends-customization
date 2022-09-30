@@ -1,11 +1,11 @@
 import { FastifySchema } from 'fastify'
-import { SwaggerSchema } from '../../../common/config/fastify/types.js'
 import { RES_ERROR_COMMON } from '../../../common/error/schema.js'
+import { SwaggerSchema } from '../../../common/config/fastify/types.js'
 
 // { body, querystring, params, headers, response } 등
 // HTTP 통신에 필요한 파라미터 설정
 
-const REQ_BODY_LOGIN_USERINFO: SwaggerSchema = {
+const REQ_BODY_USERINFO: SwaggerSchema = {
   type: 'object',
   properties: {
     username: { type: 'string' },
@@ -13,7 +13,7 @@ const REQ_BODY_LOGIN_USERINFO: SwaggerSchema = {
   },
 }
 
-const RES_200_AUTH_COMMON: SwaggerSchema<SwaggerSchema> = {
+export const RES_200_TOKEN_N_USER: SwaggerSchema = {
   type: 'object',
   properties: {
     token: {
@@ -26,7 +26,7 @@ const RES_200_AUTH_COMMON: SwaggerSchema<SwaggerSchema> = {
     user: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
+        id: { type: 'number' },
         username: { type: 'string' },
       },
     },
@@ -35,16 +35,16 @@ const RES_200_AUTH_COMMON: SwaggerSchema<SwaggerSchema> = {
 
 export const SCHEMA_LOGIN_POST: FastifySchema = {
   /* 주의!: get 방식은 body 가 포함될 경우, 애러발생 */
-  body: REQ_BODY_LOGIN_USERINFO,
+  body: REQ_BODY_USERINFO,
   response: {
-    200: RES_200_AUTH_COMMON,
+    200: RES_200_TOKEN_N_USER,
   },
 }
 
 export const SCHEMA_REGISTER_POST: FastifySchema = {
-  body: REQ_BODY_LOGIN_USERINFO,
+  body: REQ_BODY_USERINFO,
   response: {
-    200: RES_200_AUTH_COMMON,
+    200: RES_200_TOKEN_N_USER,
     409: {
       ...RES_ERROR_COMMON,
       example: {
