@@ -60,11 +60,7 @@ class UserService {
     return { accessToken, refreshToken }
   }
 
-  validateAuthentication() {
-    console.log(authTokens.validateToken)
-  }
-
-  login() {
+  async login({ username, password }: Authentication) {
     return 'logged in!'
   }
 }

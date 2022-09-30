@@ -11,8 +11,8 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     {
       schema: SCHEMA_LOGIN_POST,
     },
-    async () => {
-      return userService.login()
+    async ({ body: auth }) => {
+      return userService.login(auth)
     },
   )
 
