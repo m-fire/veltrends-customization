@@ -4,6 +4,9 @@ import routes from './routes/index.js'
 import { swaggerOptions } from './common/config/fastify/swagger.js'
 import db from './common/config/prisma/db-client.js'
 import AppError from './common/error/AppError.js'
+// import 'dotenv/config'
+
+// console.log(`Main.() process.env.JWT_SECRET:`, process.env.JWT_SECRET)
 
 const server: FastifyInstance = fastify({
   logger: true,
