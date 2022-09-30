@@ -21,9 +21,10 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     {
       schema: SCHEMA_REGISTER_POST,
     },
-    async ({ body: auth }) => {
-      const authTokenAndUserinfo = await userService.register(auth)
-      return authTokenAndUserinfo
+    async ({ body: auth }, reply) => {
+      const tokenAndUser = await userService.register(auth)
+      reply.statusCode = 201
+      return tokenAndUser
     },
   )
 }

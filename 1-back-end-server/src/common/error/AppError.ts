@@ -28,4 +28,8 @@ export default class AppError extends Error {
     super(info.message)
     this.statusCode = info.statusCode
   }
+
+  static is(error: unknown): error is AppError {
+    return error instanceof AppError
+  }
 }

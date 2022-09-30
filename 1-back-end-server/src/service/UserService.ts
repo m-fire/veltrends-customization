@@ -36,18 +36,15 @@ class UserService {
     }
 
     const user = await this.userRepository.save(username, passwordHash)
-    return await this.composeAuthResult(user)
+    return await this.composeTokenAndUser(user)
   }
 
   /**
    * { 인증토큰, User }
    */
-  private async composeAuthResult(user: User) {
-    const token = await this.getAuthToken(user)
-    return { token, user }
-  }
+  private async composeTokenAndUser(user: User) {
+    const { id: userId, username } = user
 
-  private async getAuthToken(userId: number, username: string) {
     const [accessToken, refreshToken] = await Promise.all([
       authTokens.generateToken({
         type: 'access',
@@ -61,12 +58,32 @@ class UserService {
         rotationCounter: 1,
       }),
     ])
+    const token = { accessToken, refreshToken }
 
-    return { accessToken, refreshToken }
+    return { token, user }
   }
 
+  /**
+   * 사용자를 못찾거나 비번이 틀릴경우, 보안상 모두 동일한 `AuthenticationError` 발생시킨다.
+   */
   async login({ username, password }: Authentication) {
-    return 'logged in!'
+    const user = await this.userRepository.findUnique(username)
+    try {
+      // 1. 가입된 사용자가 없으면 보안상 가입여부를 알리지 않기위해 패스워드 오류처리
+      // 2. Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
+      if (!user || (await bcrypt.compare(password, user.passwordHash)))
+        throw new AppError('AuthenticationError')
+    } catch (e) {
+      // AppError 일 경우, 그대로 re-throw
+      if (AppError.is(e)) throw e
+      // 알수없는 애러
+      throw new AppError('UnknownError')
+    }
+    return await this.composeTokenAndUser(user)
+  }
+
+  private validateAuthentication() {
+    console.log(authTokens.validateToken)
   }
 }
 
