@@ -1,11 +1,23 @@
-export type SchemaStruct<
-  Props extends SchemaDataProp = { type: 'string' },
-  RootType extends SchemaDataType = 'object',
+export type SwaggerSchema<
+  Props extends
+    | SwaggerSchema
+    | SchemaStructType
+    | SchemaValueProp = SchemaValueProp,
+  RootType extends SchemaStructType = 'object',
 > = {
   type: RootType
-  properties: {
-    [key: string]: Props
-  }
+  properties: RootType extends 'object'
+    ? {
+        [key: string]: Props
+      }
+    : RootType extends 'object'
+    ? [SchemaValueProp] | [SwaggerSchema<SchemaValueProp, 'object' | 'array'>]
+    : never
+  example?: SwaggerExample
 }
-type SchemaDataProp = { type: SchemaDataType }
-type SchemaDataType = 'object' | 'string' | 'number'
+type SwaggerExample = {
+  [key: string]: SchemaValueProp | SwaggerExample
+}
+type SchemaValueProp = { type: SchemaValueType }
+type SchemaValueType = 'string' | 'number'
+type SchemaStructType = 'object' | 'array'

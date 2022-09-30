@@ -1,10 +1,10 @@
 import { FastifySchema } from 'fastify'
-import { SchemaStruct } from '../../../common/config/fastify/types.js'
+import { SwaggerSchema } from '../../../common/config/fastify/types.js'
 
 // { body, querystring, params, headers, response } 등
 // HTTP 통신에 필요한 파라미터 설정
 
-const REQ_BODY_LOGIN_USERINFO: SchemaStruct = {
+const REQ_BODY_LOGIN_USERINFO: SwaggerSchema = {
   type: 'object',
   properties: {
     username: { type: 'string' },
@@ -12,7 +12,7 @@ const REQ_BODY_LOGIN_USERINFO: SchemaStruct = {
   },
 }
 
-const RES_200_AUTH_COMMON: SchemaStruct<SchemaStruct> = {
+const RES_200_AUTH_COMMON: SwaggerSchema<SwaggerSchema> = {
   type: 'object',
   properties: {
     token: {
