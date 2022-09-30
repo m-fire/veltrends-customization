@@ -1,4 +1,5 @@
-import * as brcypt from 'bcrypt'
+import * as bcrypt from 'bcrypt'
+import { User } from '@prisma/client'
 import { Authentication } from '../routes/api/auth/types.js'
 import AppError from '../common/error/AppError.js'
 import * as authTokens from '../common/config/jwt/tokens.js'
@@ -25,11 +26,24 @@ class UserService {
     if (exists) throw new AppError('UserExistsError')
 
     // 패스워드 암호화 및 사용자저장
-    const passwordHash = await brcypt.hash(password, SOLT_ROUNDS)
-    const user = await this.userRepository.save(username, passwordHash)
-    // 인증토큰
-    const token = await this.getAuthToken(user.id, username)
 
+    let passwordHash
+    try {
+      // Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
+      passwordHash = await bcrypt.hash(password, SOLT_ROUNDS)
+    } catch (e) {
+      throw new AppError('UnknownError')
+    }
+
+    const user = await this.userRepository.save(username, passwordHash)
+    return await this.composeAuthResult(user)
+  }
+
+  /**
+   * { 인증토큰, User }
+   */
+  private async composeAuthResult(user: User) {
+    const token = await this.getAuthToken(user)
     return { token, user }
   }
 
