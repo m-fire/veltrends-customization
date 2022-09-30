@@ -1,16 +1,17 @@
 import * as brcypt from 'bcrypt'
 import { Authentication } from '../routes/api/auth/types.js'
-import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
-import { randomUUID } from 'crypto'
 import * as authTokens from '../common/config/jwt/tokens.js'
+import UserRepository from './UserRepository.js'
 
 const SOLT_ROUNDS = 10
 
 class UserService {
-  private static instance: UserService
+  private userRepository = UserRepository.getInstance()
 
   private constructor() {}
+
+  private static instance: UserService
 
   static getInstance() {
     if (!UserService.instance) {
@@ -20,29 +21,19 @@ class UserService {
   }
 
   async register({ username, password }: Authentication) {
-    const exists = await db.user.findUnique({
-      where: {
-        username,
-      },
-    })
+    const exists = await this.userRepository.findUnique(username)
     if (exists) throw new AppError('UserExistsError')
 
     // 패스워드 암호화 및 사용자저장
     const passwordHash = await brcypt.hash(password, SOLT_ROUNDS)
-    const user = await db.user.create({
-      data: {
-        username: `${username}-${randomUUID().substring(0, 2)}`,
-        passwordHash,
-      },
-    })
-
+    const user = await this.userRepository.save(username, passwordHash)
     // 인증토큰
     const token = await this.getAuthToken(user.id, username)
 
     return { token, user }
   }
 
-  async getAuthToken(userId: number, username: string) {
+  private async getAuthToken(userId: number, username: string) {
     const [accessToken, refreshToken] = await Promise.all([
       authTokens.generateToken({
         type: 'access',
