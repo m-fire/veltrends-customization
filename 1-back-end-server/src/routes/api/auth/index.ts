@@ -1,12 +1,12 @@
 import { FastifyPluginAsync } from 'fastify'
 import UserService from '../../../service/UserService.js'
 import { SCHEMA_LOGIN_POST, SCHEMA_REGISTER_POST } from './schema.js'
-import { AuthPostRequest } from './types.js'
+import { UserLoginRequest, UserRegisterRequest } from './types.js'
 
 const authRoute: FastifyPluginAsync = async (fastify) => {
   const userService = UserService.getInstance()
 
-  fastify.post(
+  fastify.post<UserLoginRequest>(
     '/login',
     {
       schema: SCHEMA_LOGIN_POST,
@@ -16,7 +16,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     },
   )
 
-  fastify.post<AuthPostRequest>(
+  fastify.post<UserRegisterRequest>(
     '/register',
     {
       schema: SCHEMA_REGISTER_POST,

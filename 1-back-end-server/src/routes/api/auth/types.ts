@@ -5,6 +5,10 @@ export interface Authentication {
   password: string
 }
 
-export interface AuthPostRequest extends RequestGenericInterface {
+export interface UserRegisterRequest extends RequestGenericInterface {
+  Body: Authentication
+}
+
+export interface UserLoginRequest extends RequestGenericInterface {
   Body: Authentication
 }
