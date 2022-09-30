@@ -1,11 +1,53 @@
 POST http://{{host}}:{{port}}/api/auth/register
 Content-Type: application/json
 
-< ./new-user.json
+{
+	"username": {{$uuid}},
+	"password": "1"
+}
 
-> /DEV/LIB/jetbrains-http-client/tests/assertion/created-201.js
+> {%
+var status = 201;
+client.test("회원등록", function() {
+  client.log(JSON.stringify(response.body))
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+})
+%}
 
 ### 회원등록
+
+POST http://{{host}}:{{port}}/api/auth/login
+Content-Type: application/json
+
+< ./new-user.json
+
+> {%
+var status = 200;
+client.test("로그인 성공", function() {
+  client.log(JSON.stringify(response.body))
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+})
+%}
+
+### 로그인 성공
+
+POST http://{{host}}:{{port}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "있나?",
+  "password": "없음"
+}
+
+> {%
+var status = 401;
+client.test("로그인 실패", function() {
+  client.log(JSON.stringify(response.body))
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+})
+%}
+
+### 로그인 실패
 
 #GET http://{{host}}:{{port}}/api/auth/register/1
 #Accept: application/json
