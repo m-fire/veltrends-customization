@@ -5,10 +5,10 @@ export type SchemaStruct<Root extends SchemaValue = 'object'> = {
         [key: string]: SchemaProps | SchemaStruct
       }
     | SchemaArray
-  example?: SwaggerExample
+  example?: AnySchema
 }
 
-type SwaggerExample = {
+export type AnySchema = {
   [key: string]: any
 }
 export type SchemaValue = 'object' | 'array' | 'string' | 'number'

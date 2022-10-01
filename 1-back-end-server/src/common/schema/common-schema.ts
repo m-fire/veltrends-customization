@@ -1,4 +1,4 @@
-import { SchemaStruct } from '../config/fastify/types.js'
+import { SchemaStruct, AnySchema } from '../config/fastify/types.js'
 
 // Routes
 
@@ -49,4 +49,23 @@ export const RESPONSE_200_AUTH_RESULT: SchemaStruct = {
     },
     user: SCHEMA_USER,
   },
+}
+
+/* Schema Utils */
+
+export function composeExample<
+  T extends AnySchema,
+  Ex extends AnySchema,
+  P extends SchemaStruct,
+>(target: T, example: Ex, payloadSchema?: P): SchemaStruct {
+  return {
+    type: 'object',
+    properties: {
+      ...target,
+      ...(payloadSchema && {
+        payload: payloadSchema,
+      }),
+    },
+    example,
+  }
 }
