@@ -1,4 +1,8 @@
-type AppErrorType = 'UserExistsError' | 'AuthenticationError' | 'UnknownError'
+type AppErrorType =
+  | 'UserExistsError'
+  | 'AuthenticationError'
+  | 'UnauthorizedError'
+  | 'UnknownError'
 
 interface ErrorInfo {
   message: string
@@ -14,6 +18,12 @@ const statusCodeMap: Record<AppErrorType, ErrorInfo> = {
     message: 'Invalid username password',
     statusCode: 401,
   },
+
+  UnauthorizedError: {
+    message: 'Unauthorized',
+    statusCode: 401,
+  },
+
   UnknownError: {
     message: 'Unknown error',
     statusCode: 500,
