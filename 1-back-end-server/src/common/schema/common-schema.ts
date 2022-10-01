@@ -8,6 +8,10 @@ export const SCHEMA_USER: SchemaStruct = {
     id: { type: 'number' },
     username: { type: 'string' },
   },
+  example: {
+    id: 1,
+    username: 'exam-user',
+  },
 }
 
 // Errors

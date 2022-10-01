@@ -9,7 +9,7 @@ export type SchemaStruct<Root extends SchemaValue = 'object'> = {
 }
 
 type SwaggerExample = {
-  [key: string]: SchemaValue | SwaggerExample
+  [key: string]: any
 }
 export type SchemaValue = 'object' | 'array' | 'string' | 'number'
 export type SchemaProps<T extends SchemaValue = SchemaValue> = {
