@@ -9,6 +9,8 @@ const BEARER = 'Bearer'
 
 const authPluginAsync: FastifyPluginAsync = async (fastify, options) => {
   fastify.decorateRequest('user', null)
+  fastify.decorateRequest('isExpiredToken', false)
+
   fastify.addHook('preHandler', async (request) => {
     // 인증토큰이 해더에 없는경우 접근불가 처리.
     const { authorization } = request.headers
@@ -29,7 +31,9 @@ const authPluginAsync: FastifyPluginAsync = async (fastify, options) => {
         if (e.name === 'TokenExpiredError') {
           // Todo: 만료된 토큰 처리
           // 1. 애러 던지기-> X: 인증이 불필요한 곳에서 애러발생 No!
+          // throw new AppError('TokenExpiredError')
           // 2. FastifyRequest 타입에 추가된 expired 상태 변경
+          request.isExpiredToken = true
         }
       }
     }
@@ -50,5 +54,6 @@ declare module 'fastify' {
       id: number
       username: string
     } | null
+    isExpiredToken: boolean
   }
 }
