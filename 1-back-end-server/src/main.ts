@@ -2,27 +2,11 @@ import fastify, { FastifyInstance } from 'fastify'
 import fastifySwagger from '@fastify/swagger'
 import routes from './routes/index.js'
 import { swaggerOptions } from './common/config/fastify/swagger.js'
-import db from './common/config/prisma/db-client.js'
 import AppError from './common/error/AppError.js'
-// import 'dotenv/config'
-
-// console.log(`Main.() process.env.JWT_SECRET:`, process.env.JWT_SECRET)
+import authPlugin from './common/config/fastify/plugin/auth-plugin.js'
 
 const server: FastifyInstance = fastify({
   logger: true,
-})
-
-// db.user
-//   .create({
-//     data: {
-//       username: `member-${randomUUID().substring(0, 2)}`,
-//       passwordHash: 'e8d95f34-2e83-4916-9189-07c75796afb8',
-//     },
-//   })
-//   .then(console.log)
-
-server.get('/ping', async () => {
-  return 'pong!'
 })
 
 // js 파일 root 에 `await`사용은 Node16 부터 지원.
@@ -40,5 +24,6 @@ server.setErrorHandler(async (error, request, reply) => {
 })
 
 server.register(routes)
+server.register(authPlugin) // 전역에서 인증사용자 인증처리를 위한 플러그인
 
 server.listen({ port: 4000 })
