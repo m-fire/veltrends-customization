@@ -1,17 +1,39 @@
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
+import { JsonWebTokenError } from 'jsonwebtoken'
+import { AccessTokenPayload, validateToken } from '../../jwt/tokens.js'
 
 // ref: https://www.fastifyio/docs/latest/Reference/TypeScript/#creating-a-typescript-fastify-plugin
+
+const BEARER = 'Bearer'
 
 const authPluginAsync: FastifyPluginAsync = async (fastify, options) => {
   fastify.decorateRequest('user', null)
   fastify.addHook('preHandler', async (request) => {
-    request.user = {
-      id: 1,
-      username: 'm-fire',
+    // 인증토큰이 해더에 없는경우 접근불가 처리.
+    const { authorization } = request.headers
+    if (!authorization || !authorization.includes(BEARER)) {
+      return
+    }
+
+    // 인증토큰의 만료상태 검증 후, 접근여부 처리
+    const token = authorization.split(`${BEARER} `)[1]
+    try {
+      const decoded = await validateToken<AccessTokenPayload>(token)
+      request.user = {
+        id: decoded.userId,
+        username: decoded.username,
+      }
+    } catch (e) {
+      if (e instanceof JsonWebTokenError) {
+        if (e.name === 'TokenExpiredError') {
+          // Todo: 만료된 토큰 처리
+          // 1. 애러 던지기-> X: 인증이 불필요한 곳에서 애러발생 No!
+          // 2. FastifyRequest 타입에 추가된 expired 상태 변경
+        }
+      }
     }
   })
-  console.log(`AuthPlugin authPluginAsync()=>preHandler() `)
 }
 
 const authPlugin = fp(authPluginAsync, {
