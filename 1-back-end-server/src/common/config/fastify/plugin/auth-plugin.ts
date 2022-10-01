@@ -5,10 +5,13 @@ import fp from 'fastify-plugin'
 
 const authPluginAsync: FastifyPluginAsync = async (fastify, options) => {
   fastify.decorateRequest('user', null)
-  console.log(`AuthPlugin authPluginAsync()=>preHandler() `)
   fastify.addHook('preHandler', async (request) => {
-    console.log(`AuthPlugin authPluginAsync()=>preHandler() logged`)
+    request.user = {
+      id: 1,
+      username: 'm-fire',
+    }
   })
+  console.log(`AuthPlugin authPluginAsync()=>preHandler() `)
 }
 
 const authPlugin = fp(authPluginAsync, {
