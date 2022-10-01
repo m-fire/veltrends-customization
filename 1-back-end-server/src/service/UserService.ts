@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import { Authentication } from '../routes/api/auth/types.js'
 import AppError from '../common/error/AppError.js'
 import * as authTokens from '../common/config/jwt/tokens.js'
-import UserRepository from './UserRepository.js'
+import UserRepository from '../repository/UserRepository.js'
 
 const SOLT_ROUNDS = 10
 
