@@ -23,7 +23,8 @@ server.setErrorHandler(async (error, request, reply) => {
     : error // FastifyError
 })
 
+// Todo: fastify 4.? 하위버전에서는 routes 전에 등록해야 플러그인 로직이 정상동작!
+server.register(authPlugin) // 전역에서 인증사용자 인증처리 플러그인
 server.register(routes)
-server.register(authPlugin) // 전역에서 인증사용자 인증처리를 위한 플러그인
 
 server.listen({ port: 4000 })
