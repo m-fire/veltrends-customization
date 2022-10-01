@@ -1,10 +1,11 @@
 import { FastifyPluginAsync } from 'fastify'
 import fp from 'fastify-plugin'
-import { JsonWebTokenError } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { AccessTokenPayload, validateToken } from '../../jwt/tokens.js'
 
 // ref: https://www.fastifyio/docs/latest/Reference/TypeScript/#creating-a-typescript-fastify-plugin
 
+const { JsonWebTokenError } = jwt
 const BEARER = 'Bearer'
 
 const authPluginAsync: FastifyPluginAsync = async (fastify, options) => {
