@@ -2,24 +2,45 @@ POST http://{{host}}:{{port}}/api/auth/register
 Content-Type: application/json
 
 {
-	"username": {{$uuid}},
+	"username": "뇸뇸뇸-{{$randomInt}}",
 	"password": "1"
 }
 
 > {%
 var status = 201;
-client.test("회원등록", function() {
+client.test("회원등록-성공", function() {
   client.log(JSON.stringify(response.body))
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}
 
-### 회원등록
+### 회원등록 성공
+
+POST http://{{host}}:{{port}}/api/auth/register
+Content-Type: application/json
+
+{
+	"username": "뇸뇸뇸",
+	"password": "1"
+}
+
+> {%
+var status = 409;
+client.test("회원등록-실패", function() {
+  client.log(JSON.stringify(response.body))
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+})
+%}
+
+### 회원등록 실패
 
 POST http://{{host}}:{{port}}/api/auth/login
 Content-Type: application/json
 
-< ./new-user.json
+{
+	"username": "뇸뇸뇸",
+	"password": "1"
+}
 
 > {%
 var status = 200;
@@ -35,7 +56,7 @@ POST http://{{host}}:{{port}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "있나?",
+  "username": "없는사용자명",
   "password": "없음"
 }
 

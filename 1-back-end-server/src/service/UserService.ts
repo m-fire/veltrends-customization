@@ -64,14 +64,16 @@ class UserService {
   }
 
   /**
-   * 사용자를 못찾거나 비번이 틀릴경우, 보안상 모두 동일한 `AuthenticationError` 발생시킨다.
+   * 사용자를 못찾거나 PW가 틀릴경우, 보안상 모두 동일한 `AuthenticationError` 발생시킨다.
    */
   async login({ username, password }: Authentication) {
     const user = await this.userRepository.findUnique(username)
+    // Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
     try {
-      // 1. 가입된 사용자가 없으면 보안상 가입여부를 알리지 않기위해 패스워드 오류처리
-      // 2. Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
-      if (!user || (await bcrypt.compare(password, user.passwordHash)))
+      // 로그인 정보 검증
+      // 1. 가입된 사용자가 없으면  애러처리
+      // 2. PW가 일치하지 않으면 애러처리
+      if (!user || !(await bcrypt.compare(password, user.passwordHash)))
         throw new AppError('AuthenticationError')
     } catch (e) {
       // AppError 일 경우, 그대로 re-throw
