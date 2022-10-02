@@ -4,7 +4,7 @@ Authorization: Bearer {{access_token}}
 
 > {%
 var status = 200;
-client.test("/api/me 토큰접근", function() {
+client.test("/api/me 해더토큰 접근", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -19,7 +19,30 @@ client.test("/api/me 토큰접근", function() {
 })
 %}
 
-### 토큰접근
+### 해더 토큰 접근성공
+
+GET http://{{host}}:{{port}}/api/me
+Accept: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 200;
+client.test("/api/me 쿠키토큰 접근", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+})
+%}
+
+### 쿠키 토큰 접근성공
 
 GET http://{{host}}:{{port}}/api/me
 Accept: application/json
