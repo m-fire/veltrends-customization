@@ -4,7 +4,7 @@ import fastifyCookie from '@fastify/cookie'
 import routes from './routes/index.js'
 import { swaggerOptions } from './common/config/fastify/swagger.js'
 import AppError from './common/error/AppError.js'
-import authPlugin from './common/config/fastify/plugin/auth-plugin.js'
+import { authGlobalPlugin } from './common/config/fastify/plugin/authentication-plugins.js'
 
 const server: FastifyInstance = fastify({
   logger: true,
@@ -17,7 +17,7 @@ const server: FastifyInstance = fastify({
   await server.register(fastifySwagger, swaggerOptions)
   server.register(fastifyCookie)
   // Todo: fastify 4.? 하위버전에서는 routes 전에 등록해야 플러그인 로직이 정상동작!
-  server.register(authPlugin) // 전역에서 인증사용자 인증처리 플러그인
+  server.register(authGlobalPlugin) // 전역에서 인증사용자 인증처리 플러그인
   server.register(routes)
 }
 
