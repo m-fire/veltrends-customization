@@ -39,6 +39,10 @@ class UserService {
     return await this.composeTokenAndUser(user)
   }
 
+  async refreshToken(oldToken: string) {
+    //
+  }
+
   /**
    * { 인증토큰, User }
    */

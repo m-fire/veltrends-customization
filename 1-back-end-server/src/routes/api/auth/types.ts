@@ -12,3 +12,7 @@ export interface UserRegisterRequest extends RequestGenericInterface {
 export interface UserLoginRequest extends RequestGenericInterface {
   Body: Authentication
 }
+
+export interface RefreshTokenRequest extends RequestGenericInterface {
+  Body: { refreshToken?: string }
+}

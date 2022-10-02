@@ -44,6 +44,16 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       return tokensAndUser
     },
   )
+
+  fastify.post<RefreshTokenRequest>(
+    '/refresh',
+    {
+      schema: AUTH_REFRESH_POST,
+    },
+    async (request, reply) => {
+      //
+    },
+  )
 }
 
 export default authRoute
