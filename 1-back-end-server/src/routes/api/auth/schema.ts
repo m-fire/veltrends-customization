@@ -1,11 +1,12 @@
 import { FastifySchema } from 'fastify'
-import AppError from '../../../common/error/AppError.js'
 import {
   APP_ERROR,
   composeExample,
   errorExample,
   REQUEST_LOGIN_USERINFO,
+  REQUEST_REFRESH_POST,
   RESPONSE_AUTH_RESULT,
+  RESPONSE_REFRESH_POST,
 } from '../../../common/schema/common-schema.js'
 
 // { body, querystring, params, headers, response } 등
@@ -25,5 +26,14 @@ export const AUTH_LOGIN_POST: FastifySchema = {
   response: {
     200: RESPONSE_AUTH_RESULT,
     401: composeExample(APP_ERROR, errorExample('AuthenticationError')),
+  },
+}
+
+export const AUTH_REFRESH_POST: FastifySchema = {
+  /* 주의!: get 방식은 body 가 포함될 경우, 애러발생 */
+  body: REQUEST_REFRESH_POST,
+  response: {
+    201: RESPONSE_REFRESH_POST,
+    400: composeExample(APP_ERROR, errorExample('BadReqeustError')),
   },
 }

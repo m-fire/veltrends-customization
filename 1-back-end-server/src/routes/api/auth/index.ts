@@ -1,7 +1,19 @@
 import { FastifyPluginAsync } from 'fastify'
 import UserService from '../../../service/UserService.js'
-import { AUTH_LOGIN_POST, AUTH_REGISTER_POST } from './schema.js'
-import { UserLoginRequest, UserRegisterRequest } from './types.js'
+import AppError from '../../../common/error/AppError.js'
+import { CookieTokens } from '../../../common/config/fastify/types.js'
+import {
+  UserLoginRequest,
+  RefreshTokenRequest,
+  UserRegisterRequest,
+} from './types.js'
+import {
+  AUTH_LOGIN_POST,
+  AUTH_REFRESH_POST,
+  AUTH_REGISTER_POST,
+} from './schema.js'
+
+// Route Definition
 
 const authRoute: FastifyPluginAsync = async (fastify) => {
   const userService = UserService.getInstance()
@@ -51,7 +63,17 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       schema: AUTH_REFRESH_POST,
     },
     async (request, reply) => {
-      //
+      const oldToken =
+        request.body?.refreshToken ??
+        (request.cookies as CookieTokens)?.refresh_token
+
+      if (!oldToken) throw new AppError('BadReqeustError')
+
+      const newToken = await userService.refreshToken(oldToken)
+      reply.statusCode = 201
+      return {
+        refreshToken: newToken,
+      }
     },
   )
 }

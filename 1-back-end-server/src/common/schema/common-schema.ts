@@ -37,6 +37,13 @@ export const REQUEST_LOGIN_USERINFO: SchemaStruct = {
   },
 }
 
+export const REQUEST_REFRESH_POST: SchemaStruct = {
+  type: 'object',
+  properties: {
+    refreshToken: { type: 'string' },
+  },
+}
+
 // Responses
 
 export const RESPONSE_AUTH_RESULT: SchemaStruct = {
@@ -52,6 +59,8 @@ export const RESPONSE_AUTH_RESULT: SchemaStruct = {
     user: AUTHORIZED_USERINFO,
   },
 }
+
+export const RESPONSE_REFRESH_POST: SchemaStruct = REQUEST_REFRESH_POST
 
 /* Schema Utils */
 

@@ -2,7 +2,23 @@ type AppErrorType =
   | 'UserExistsError'
   | 'AuthenticationError'
   | 'UnauthorizedError'
+  | 'BadReqeustError'
   | 'UnknownError'
+
+export type ErrorPayloadOpt<K extends AppErrorType> =
+  K extends 'UserExistsError'
+    ? undefined
+    : K extends 'AuthenticationError'
+    ? undefined
+    : K extends 'UnauthorizedError'
+    ? {
+        isExpiredToken: boolean
+      }
+    : K extends 'BadReqeustError'
+    ? undefined
+    : K extends 'UnknownError'
+    ? undefined
+    : never
 
 interface ErrorInfo {
   message: string
@@ -22,23 +38,15 @@ const ERROR_INFO_BY_TYPE: Record<AppErrorType, ErrorInfo> = {
     message: 'Unauthorized',
     statusCode: 401,
   },
+  BadReqeustError: {
+    message: 'Bad reqeust',
+    statusCode: 400,
+  },
   UnknownError: {
     message: 'Unknown error',
     statusCode: 500,
   },
 }
-
-type ErrorPayloadOpt<K extends AppErrorType> = K extends 'UserExistsError'
-  ? undefined
-  : K extends 'AuthenticationError'
-  ? undefined
-  : K extends 'UnauthorizedError'
-  ? {
-      isExpiredToken: boolean
-    }
-  : K extends 'UnknownError'
-  ? undefined
-  : never
 
 // Common Error
 
