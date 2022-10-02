@@ -1,7 +1,9 @@
 import { FastifySchema } from 'fastify'
+import AppError from '../../../common/error/AppError.js'
 import {
   APP_ERROR,
-  composeExampleWithPayload,
+  composeExample,
+  errorExample,
   REQUEST_LOGIN_USERINFO,
   RESPONSE_AUTH_RESULT,
 } from '../../../common/schema/common-schema.js'
@@ -13,11 +15,7 @@ export const AUTH_REGISTER_POST: FastifySchema = {
   body: REQUEST_LOGIN_USERINFO,
   response: {
     201: RESPONSE_AUTH_RESULT,
-    409: composeExampleWithPayload(APP_ERROR, {
-      type: 'UserExistsError',
-      statusCode: 409,
-      message: 'User already exists',
-    }),
+    409: composeExample(APP_ERROR, errorExample('UserExistsError')),
   },
 }
 
@@ -26,10 +24,6 @@ export const AUTH_LOGIN_POST: FastifySchema = {
   body: REQUEST_LOGIN_USERINFO,
   response: {
     200: RESPONSE_AUTH_RESULT,
-    401: composeExampleWithPayload(APP_ERROR, {
-      type: 'AuthenticationError',
-      statusCode: 401,
-      message: 'Invalid username password',
-    }),
+    401: composeExample(APP_ERROR, errorExample('AuthenticationError')),
   },
 }

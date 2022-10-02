@@ -9,7 +9,7 @@ const { JsonWebTokenError } = jwt
 // 전역 인증용 플러그인
 
 // ref: https://www.fastifyio/docs/latest/Reference/TypeScript/#creating-a-typescript-fastify-plugin
-export const authGlobalPlugin = fp(
+export const globalAuthPlugin = fp(
   async (fastify, options) => {
     fastify.decorateRequest('user', null)
     fastify.decorateRequest('isExpiredToken', false)
@@ -48,7 +48,7 @@ export const authGlobalPlugin = fp(
 
 // 특정 엔드포인트 인증용 플러그인
 
-export const authEndpointPlugin = fp(
+export const endpointAuthPlugin = fp(
   async (fastify, options) => {
     fastify.addHook('preHandler', async (request) => {
       /* Todo: 인증된 사용자의 access 마다 인증을 어떤방식으로 처리 할 것인가? */

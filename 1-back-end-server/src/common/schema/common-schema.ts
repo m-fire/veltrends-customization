@@ -1,4 +1,5 @@
 import { SchemaStruct, AnySchema } from '../config/fastify/types.js'
+import AppError, { ErrorPayloadOpt } from '../error/AppError.js'
 
 // Routes
 
@@ -54,7 +55,7 @@ export const RESPONSE_AUTH_RESULT: SchemaStruct = {
 
 /* Schema Utils */
 
-export function composeExampleWithPayload<
+export function composeExample<
   T extends SchemaStruct,
   Ex extends AnySchema,
   P extends SchemaStruct,
@@ -68,5 +69,17 @@ export function composeExampleWithPayload<
       }),
     },
     example,
+  }
+}
+
+export function errorExample<
+  K extends Parameters<typeof AppError.getInfo>[0],
+  P extends ErrorPayloadOpt<K>,
+>(type: K, payloadSchema?: P) {
+  return {
+    ...AppError.getInfo(type),
+    ...(payloadSchema && {
+      payload: payloadSchema,
+    }),
   }
 }

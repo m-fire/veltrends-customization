@@ -56,4 +56,8 @@ export default class AppError<
   static is(error: unknown): error is AppError {
     return error instanceof AppError
   }
+
+  static getInfo<K extends AppErrorType>(type: K) {
+    return { ...ERROR_INFO_BY_TYPE[type], type }
+  }
 }
