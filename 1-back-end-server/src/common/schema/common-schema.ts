@@ -2,7 +2,7 @@ import { SchemaStruct, AnySchema } from '../config/fastify/types.js'
 
 // Routes
 
-export const SCHEMA_USER: SchemaStruct = {
+export const AUTHORIZED_USERINFO: SchemaStruct = {
   type: 'object',
   properties: {
     id: { type: 'number' },
@@ -16,7 +16,7 @@ export const SCHEMA_USER: SchemaStruct = {
 
 // Errors
 
-export const SCHEMA_APP_ERROR: SchemaStruct = {
+export const APP_ERROR: SchemaStruct = {
   type: 'object',
   properties: {
     type: { type: 'string' },
@@ -48,7 +48,7 @@ export const RESPONSE_200_AUTH_RESULT: SchemaStruct = {
         refreshToken: { type: 'string' },
       },
     },
-    user: SCHEMA_USER,
+    user: AUTHORIZED_USERINFO,
   },
 }
 
