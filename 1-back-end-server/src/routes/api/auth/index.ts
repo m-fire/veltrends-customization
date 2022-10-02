@@ -15,8 +15,12 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       const tokensAndUser = await userService.login(auth)
 
       const { tokens } = tokensAndUser
-      reply.cookie('access_token', tokens.accessToken)
-      reply.cookie('refresh_token', tokens.refreshToken)
+      reply.cookie('access_token', tokens.accessToken, {
+        httpOnly: true,
+      })
+      reply.cookie('refresh_token', tokens.refreshToken, {
+        httpOnly: true,
+      })
 
       return tokensAndUser
     },
@@ -28,9 +32,9 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       schema: SCHEMA_REGISTER_POST,
     },
     async ({ body: auth }, reply) => {
-      const tokensAndUserinfo = await userService.register(auth)
+      const tokensAndUser = await userService.register(auth)
       reply.statusCode = 201
-      return tokensAndUserinfo
+      return tokensAndUser
     },
   )
 }
