@@ -17,9 +17,11 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       const { tokens } = tokensAndUser
       reply.cookie('access_token', tokens.accessToken, {
         httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60), // 1h
       })
       reply.cookie('refresh_token', tokens.refreshToken, {
         httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7d
       })
 
       return tokensAndUser
