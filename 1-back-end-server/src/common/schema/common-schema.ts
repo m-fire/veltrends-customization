@@ -35,6 +35,7 @@ export const REQUEST_LOGIN_USERINFO: SchemaStruct = {
     username: { type: 'string' },
     password: { type: 'string' },
   },
+  required: ['username', 'password'],
 }
 
 export const REQUEST_REFRESH_POST: SchemaStruct = {

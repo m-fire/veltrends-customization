@@ -14,7 +14,7 @@ client.test("/api/me 해더토큰 접근", function() {
   client.log("✔ global::access_token:\t" + client.global.get("access_token"));
   client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
 
-  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+  client.assert(response.status === status, "expected status : " + status + " - actual (" + response.status + ")")
   client.assert(response.body === '`✅pong` from GET', "response content does not match")
 })
 %}
@@ -38,7 +38,7 @@ client.test("/api/me 해더토큰 접근", function() {
   client.log("✔ global::access_token:\t" + client.global.get("access_token"));
   client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
 
-  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+  client.assert(response.status === status, "expected status : " + status + " - actual (" + response.status + ")")
   client.assert(response.body === '`pong‼` from POST', "response content does not match")
 })
 %}

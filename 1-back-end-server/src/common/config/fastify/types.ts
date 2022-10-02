@@ -1,10 +1,11 @@
-export type SchemaStruct<Root extends SchemaValue = 'object'> = {
+export type SchemaStruct = {
   type: SchemaValue
   properties:
     | {
         [key: string]: SchemaProps | SchemaStruct
       }
     | SchemaArray
+  required?: string[]
   example?: AnySchema
 }
 
