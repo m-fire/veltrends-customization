@@ -4,7 +4,7 @@ const JWT_SECRET = process.env.JWT_SECRET ?? 'DevSecretKey'
 if (JWT_SECRET == null) {
   console.warn('JWT_SECRET is not defined in rootpath/.env file')
 }
-export const TOKEN_DURATION = { access: '1h', refresh: '7d' }
+export const TOKEN_DURATION = { access: '1h', refresh: '7d' } as const
 
 // Types
 

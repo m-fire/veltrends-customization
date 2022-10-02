@@ -9,7 +9,7 @@ Content-Type: application/json
 > {%
 var status = 201;
 client.test("회원등록-성공", function() {
-  client.log(JSON.stringify(response.body))
+  client.log("body:\t" + JSON.stringify(response.body))
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}
@@ -27,7 +27,7 @@ Content-Type: application/json
 > {%
 var status = 409;
 client.test("회원등록-실패", function() {
-  client.log(JSON.stringify(response.body))
+  client.log("body:\t" + JSON.stringify(response.body))
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}
@@ -74,7 +74,7 @@ Content-Type: application/json
 > {%
 var status = 401;
 client.test("로그인 실패", function() {
-  client.log(JSON.stringify(response.body))
+  client.log("body:\t" + JSON.stringify(response.body))
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}

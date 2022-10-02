@@ -17,7 +17,7 @@ server.setErrorHandler(async (error, request, reply) => {
   reply.statusCode = error.statusCode || 500
   return error instanceof AppError
     ? {
-        ...error, // type, statusCode, etc..
+        ...error, // ...message 를 제외한 etc...
         message: error.message,
       }
     : error // FastifyError

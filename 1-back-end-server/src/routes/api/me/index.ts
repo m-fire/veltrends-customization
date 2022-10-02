@@ -10,7 +10,7 @@ const meRoute: FastifyPluginAsync = async (fastify) => {
 
     if (request.isExpiredToken)
       throw new AppError('UnauthorizedError', {
-        isExpiredToken: true, // 만료된 토큰이면, 에러 payload 에 flag 활성화
+        isExpiredToken: true, // 만료된 토큰이 들어오면, 애러에 만료상태 설정
       })
     if (!request.user)
       throw new AppError('UnauthorizedError', {
