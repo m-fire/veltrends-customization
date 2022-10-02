@@ -44,8 +44,19 @@ Content-Type: application/json
 
 > {%
 var status = 200;
-client.test("로그인 성공", function() {
-  client.log(JSON.stringify(response.body))
+client.test("로그인 성공, 토큰저장", function() {
+  client.global.set("user.id", response.body.user.id);
+  client.global.set("user.username", response.body.user.username);
+  client.global.set("accessToken", response.body.token.accessToken);
+  client.global.set("refreshToken", response.body.token.refreshToken);
+
+  client.log("user.id:\t" + client.global.get("user.id"));
+  client.log("user.username:\t" + client.global.get("user.username"));
+  client.log("accessToken:\t" + client.global.get("accessToken"));
+  client.log("refreshToken:\t" + client.global.get("refreshToken"));
+  client.log("\n");
+  client.log("body:\t" + JSON.stringify(response.body))
+
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}

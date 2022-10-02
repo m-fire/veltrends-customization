@@ -1,0 +1,38 @@
+GET http://{{host}}:{{port}}/api/me
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+> {%
+var status = 200;
+client.test("/api/me 토큰접근", function() {
+  client.log("user.id:\t" + client.global.get("user.id"));
+  client.log("user.username:\t" + client.global.get("user.username"));
+  client.log("accessToken: " + client.global.get("accessToken"));
+  client.log("refreshToken:\t" + client.global.get("refreshToken"));
+  client.log("\n");
+  client.log("body:\t" + JSON.stringify(response.body))
+
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+})
+%}
+
+### 토큰접근
+
+GET http://{{host}}:{{port}}/api/me
+Accept: application/json
+
+> {%
+var status = 401;
+client.test("/api/me 일반접근", function() {
+  client.log("user.id:\t" + client.global.get("user.id"));
+  client.log("user.username:\t" + client.global.get("user.username"));
+  client.log("accessToken:\t" + client.global.get("accessToken"));
+  client.log("refreshToken:\t" + client.global.get("refreshToken"));
+  client.log("\n");
+  client.log("body:\t" + JSON.stringify(response.body))
+
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+})
+%}
+
+### 일반접근
