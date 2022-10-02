@@ -1,8 +1,11 @@
 import { FastifyPluginAsync } from 'fastify'
 import { SCHEMA_ME_GET } from './schema.js'
-import AppError from '../../../common/error/AppError.js'
+import secureAccessPlugin from '../../../common/config/fastify/plugin/secure-access-plugin.js'
 
 const meRoute: FastifyPluginAsync = async (fastify) => {
+  /* 특정 라우트에 인증정보검증 플러그인을 적용함. */
+  fastify.register(secureAccessPlugin) // URI`/api/me` 안에서만 보안검증
+
   fastify.get('/', { schema: SCHEMA_ME_GET }, async (request) => {
     return request.user
   })
