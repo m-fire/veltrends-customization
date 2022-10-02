@@ -16,3 +16,8 @@ export type SchemaProps<T extends SchemaValue = SchemaValue> = {
   type: SchemaValue
 }
 export type SchemaArray = SchemaProps[] | SchemaStruct[]
+
+export interface CookieTokens {
+  access_token?: string
+  refresh_token?: string
+}

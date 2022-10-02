@@ -28,7 +28,7 @@ export const APP_ERROR: SchemaStruct = {
 
 // Requests
 
-export const REQUEST_BODY_USERINFO: SchemaStruct = {
+export const REQUEST_LOGIN_USERINFO: SchemaStruct = {
   type: 'object',
   properties: {
     username: { type: 'string' },
@@ -38,7 +38,7 @@ export const REQUEST_BODY_USERINFO: SchemaStruct = {
 
 // Responses
 
-export const RESPONSE_200_AUTH_RESULT: SchemaStruct = {
+export const RESPONSE_AUTH_RESULT: SchemaStruct = {
   type: 'object',
   properties: {
     tokens: {

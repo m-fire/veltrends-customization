@@ -2,6 +2,7 @@ import fp from 'fastify-plugin'
 import jwt from 'jsonwebtoken'
 import { AccessTokenPayload, validateToken } from '../../jwt/tokens.js'
 import AppError from '../../../error/AppError.js'
+import { CookieTokens } from '../types.js'
 
 const { JsonWebTokenError } = jwt
 
@@ -82,9 +83,4 @@ declare module 'fastify' {
     } | null
     isExpiredToken: boolean
   }
-}
-
-interface CookieTokens {
-  access_token?: string
-  refresh_token?: string
 }
