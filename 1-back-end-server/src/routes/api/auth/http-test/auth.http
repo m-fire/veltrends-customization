@@ -9,7 +9,9 @@ Content-Type: application/json
 > {%
 var status = 201;
 client.test("회원등록-성공", function() {
-  client.log("body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}
@@ -27,7 +29,9 @@ Content-Type: application/json
 > {%
 var status = 409;
 client.test("회원등록-실패", function() {
-  client.log("body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}
@@ -45,17 +49,20 @@ Content-Type: application/json
 > {%
 var status = 200;
 client.test("로그인 성공, 토큰저장", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
   client.global.set("user.id", response.body.user.id);
   client.global.set("user.username", response.body.user.username);
-  client.global.set("accessToken", response.body.token.accessToken);
-  client.global.set("refreshToken", response.body.token.refreshToken);
+  client.global.set("access_token", response.body.tokens.accessToken);
+  client.global.set("refresh_token", response.body.tokens.refreshToken);
 
-  client.log("user.id:\t" + client.global.get("user.id"));
-  client.log("user.username:\t" + client.global.get("user.username"));
-  client.log("accessToken:\t" + client.global.get("accessToken"));
-  client.log("refreshToken:\t" + client.global.get("refreshToken"));
-  client.log("\n");
-  client.log("body:\t" + JSON.stringify(response.body))
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
 
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
@@ -74,7 +81,9 @@ Content-Type: application/json
 > {%
 var status = 401;
 client.test("로그인 실패", function() {
-  client.log("body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
   client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
 })
 %}

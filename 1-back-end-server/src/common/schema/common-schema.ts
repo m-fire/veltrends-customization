@@ -41,7 +41,7 @@ export const REQUEST_BODY_USERINFO: SchemaStruct = {
 export const RESPONSE_200_AUTH_RESULT: SchemaStruct = {
   type: 'object',
   properties: {
-    token: {
+    tokens: {
       type: 'object',
       properties: {
         accessToken: { type: 'string' },

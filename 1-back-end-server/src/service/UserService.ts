@@ -58,9 +58,9 @@ class UserService {
         rotationCounter: 1,
       }),
     ])
-    const token = { accessToken, refreshToken }
+    const tokens = { accessToken, refreshToken }
 
-    return { token, user }
+    return { tokens, user }
   }
 
   /**
