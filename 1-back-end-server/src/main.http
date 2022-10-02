@@ -1,0 +1,46 @@
+GET http://{{host}}:{{port}}/ping
+Accept: text/plain
+
+> {%
+var status = 200;
+client.test("/api/me 해더토큰 접근", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+  client.assert(response.body === '`✅pong` from GET', "response content does not match")
+})
+%}
+
+### Public 접근 성공
+
+POST http://{{host}}:{{port}}/ping
+Content-Type: text/plain
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 200;
+client.test("/api/me 해더토큰 접근", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
+  client.assert(response.body === '`pong‼` from POST', "response content does not match")
+})
+%}
+
+### 보안 접근 성공

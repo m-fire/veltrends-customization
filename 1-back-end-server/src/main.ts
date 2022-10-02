@@ -4,7 +4,11 @@ import fastifyCookie from '@fastify/cookie'
 import routes from './routes/index.js'
 import { swaggerOptions } from './common/config/fastify/swagger.js'
 import AppError from './common/error/AppError.js'
-import { authGlobalPlugin } from './common/config/fastify/plugin/authentication-plugins.js'
+import {
+  authGlobalPlugin,
+  authSectionPlugin,
+} from './common/config/fastify/plugin/authentication-plugins.js'
+import { MAIN_PING_GET, MAIN_PING_POST } from './schema.js'
 
 const server: FastifyInstance = fastify({
   logger: true,
@@ -19,6 +23,19 @@ const server: FastifyInstance = fastify({
   // Todo: fastify 4.? 하위버전에서는 routes 전에 등록해야 플러그인 로직이 정상동작!
   server.register(authGlobalPlugin) // 전역에서 인증사용자 인증처리 플러그인
   server.register(routes)
+}
+
+/* URI tests */
+{
+  // Public URI
+  server.get('/ping', { schema: MAIN_PING_GET }, async () => '`pong` from GET')
+  /* Secure URI특정 URI(/ping:post) 에 보안검사 플러긴을 적용한 예: */
+  server.register(async (fi) => {
+    fi.register(authSectionPlugin) //
+    fi.post('/ping', { schema: MAIN_PING_POST }, async (reqest, reply) => {
+      return '`pong✅` from POST'
+    })
+  })
 }
 
 server.setErrorHandler(async (error, request, reply) => {
