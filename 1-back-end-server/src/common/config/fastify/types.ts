@@ -11,7 +11,7 @@ export type SchemaStruct<Root extends SchemaValue = 'object'> = {
 export type AnySchema = {
   [key: string]: any
 }
-export type SchemaValue = 'object' | 'array' | 'string' | 'number'
+export type SchemaValue = 'object' | 'array' | 'string' | 'boolean' | 'number'
 export type SchemaProps<T extends SchemaValue = SchemaValue> = {
   type: SchemaValue
 }

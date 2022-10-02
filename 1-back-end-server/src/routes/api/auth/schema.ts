@@ -3,7 +3,7 @@ import {
   REQUEST_BODY_USERINFO,
   RESPONSE_200_AUTH_RESULT,
   SCHEMA_APP_ERROR,
-  composeExample,
+  composeExampleWithPayload,
 } from '../../../common/schema/common-schema.js'
 
 // { body, querystring, params, headers, response } 등
@@ -13,7 +13,7 @@ export const SCHEMA_REGISTER_POST: FastifySchema = {
   body: REQUEST_BODY_USERINFO,
   response: {
     201: RESPONSE_200_AUTH_RESULT,
-    409: composeExample(SCHEMA_APP_ERROR, {
+    409: composeExampleWithPayload(SCHEMA_APP_ERROR, {
       type: 'UserExistsError',
       statusCode: 409,
       message: 'User already exists',
@@ -26,7 +26,7 @@ export const SCHEMA_LOGIN_POST: FastifySchema = {
   body: REQUEST_BODY_USERINFO,
   response: {
     200: RESPONSE_200_AUTH_RESULT,
-    401: composeExample(SCHEMA_APP_ERROR, {
+    401: composeExampleWithPayload(SCHEMA_APP_ERROR, {
       type: 'AuthenticationError',
       statusCode: 401,
       message: 'Invalid username password',

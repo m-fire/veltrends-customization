@@ -22,6 +22,7 @@ export const SCHEMA_APP_ERROR: SchemaStruct = {
     type: { type: 'string' },
     message: { type: 'string' },
     statusCode: { type: 'number' },
+    payload: { type: 'number' },
   },
 }
 
@@ -53,15 +54,15 @@ export const RESPONSE_200_AUTH_RESULT: SchemaStruct = {
 
 /* Schema Utils */
 
-export function composeExample<
-  T extends AnySchema,
+export function composeExampleWithPayload<
+  T extends SchemaStruct,
   Ex extends AnySchema,
   P extends SchemaStruct,
->(target: T, example: Ex, payloadSchema?: P): SchemaStruct {
+>(target: T, example: Ex, payloadSchema?: P) {
   return {
-    type: 'object',
+    ...target,
     properties: {
-      ...target,
+      ...target.properties,
       ...(payloadSchema && {
         payload: payloadSchema,
       }),
