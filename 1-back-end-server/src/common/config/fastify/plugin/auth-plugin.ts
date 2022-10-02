@@ -13,14 +13,13 @@ const authPluginAsync: FastifyPluginAsync = async (fastify, options) => {
   fastify.decorateRequest('isExpiredToken', false)
 
   fastify.addHook('preHandler', async (request) => {
-    // 인증토큰이 해더에 없는경우 접근불가 처리.
-    const { authorization } = request.headers
-    if (!authorization || !authorization.includes(BEARER)) {
-      return
-    }
+    // 해더 or 쿠키의 인증토큰의 유효성검증 후, 접근여부 처리
+    const token =
+      request.headers.authorization?.split(`${BEARER} `)[1] ??
+      (request.cookies as CookieTokens)?.access_token
 
-    // 인증토큰의 만료상태 검증 후, 접근여부 처리
-    const token = authorization.split(`${BEARER} `)[1]
+    if (!token) return
+
     try {
       const decoded = await validateToken<AccessTokenPayload>(token)
       request.user = {
@@ -57,4 +56,9 @@ declare module 'fastify' {
     } | null
     isExpiredToken: boolean
   }
+}
+
+interface CookieTokens {
+  access_token?: string
+  refresh_token?: string
 }
