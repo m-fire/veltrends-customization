@@ -23,10 +23,11 @@ model User {
 }
 
 model Token {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  createdAt DateTime @default(now())
-  blocked   Boolean  @default(false)
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  createdAt       DateTime @default(now())
+  rotationCounter Int      @default(1)
+  blocked         Boolean  @default(false)
 
   user User @relation(fields: [userId], references: [id])
 }
