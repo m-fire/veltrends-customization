@@ -2,9 +2,13 @@ import * as bcrypt from 'bcrypt'
 import { User } from '@prisma/client'
 import { Authentication } from '../routes/api/auth/types.js'
 import AppError from '../common/error/AppError.js'
-import * as authTokens from '../common/config/jwt/tokens.js'
 import UserRepository from '../repository/UserRepository.js'
 import TokenRepository from '../repository/TokenRepository.js'
+import {
+  generateToken,
+  RefreshTokenPayload,
+  validateToken,
+} from '../common/config/jwt/tokens.js'
 
 const SOLT_ROUNDS = 10
 
@@ -42,7 +46,11 @@ class UserService {
   }
 
   async refreshToken(oldToken: string) {
-    //
+    try {
+      const decoded = await validateToken<RefreshTokenPayload>(oldToken)
+    } catch (e) {
+      throw new AppError('RefreshTokenError')
+    }
   }
 
   /**
@@ -53,13 +61,13 @@ class UserService {
     const token = await this.tokenRepository.save(userId)
 
     const [accessToken, refreshToken] = await Promise.all([
-      authTokens.generateToken({
+      generateToken({
         type: 'access',
         tokenId: token.id,
         userId,
         username,
       }),
-      authTokens.generateToken({
+      generateToken({
         type: 'refresh',
         tokenId: token.id,
         rotationCounter: 1,
@@ -92,7 +100,7 @@ class UserService {
   }
 
   private validateAuthentication() {
-    console.log(authTokens.validateToken)
+    console.log(validateToken)
   }
 }
 
