@@ -38,6 +38,17 @@ export default class TokenService {
     ])
     return { accessToken, refreshToken }
   }
+
+  async getTokenWithUser(tokenId: number) {
+    return db.token.findUnique({
+      where: { id: tokenId },
+      include: { user: true },
+    })
+  }
+
+  async validateRefreshToken(token: string) {
+    return validateToken<RefreshTokenPayload>(token)
+  }
 }
 
 export interface AuthTokens {

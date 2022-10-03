@@ -72,7 +72,16 @@ class UserService {
 
   async refreshToken(oldToken: string): Promise<AuthTokens> {
     try {
-      const decoded = await validateToken<RefreshTokenPayload>(oldToken)
+      const ts = this.tokenService
+      const { tokenId: refreshTokenId } = await ts.validateRefreshToken(
+        oldToken,
+      )
+      const tokenEntity = await ts.getTokenWithUser(refreshTokenId)
+      if (!tokenEntity) throw new Error('Token not found')
+
+      const tokens = await ts.generateTokens(tokenEntity.user, refreshTokenId)
+      // console.log(`UserService.refreshToken() tokens:`, tokens)
+      return tokens
     } catch (e) {
       throw new AppError('RefreshTokenError')
     }
