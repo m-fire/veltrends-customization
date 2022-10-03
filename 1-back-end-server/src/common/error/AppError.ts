@@ -28,7 +28,7 @@ interface ErrorInfo {
   statusCode: number
 }
 
-const ERROR_INFO_BY_TYPE: Record<AppErrorType, ErrorInfo> = {
+const ERRORINFO_BY_TYPE: Record<AppErrorType, ErrorInfo> = {
   UserExistsError: {
     message: 'User already exists',
     statusCode: 409,
@@ -63,16 +63,18 @@ export default class AppError<
   public readonly statusCode: number
 
   constructor(public readonly type: K, public payload?: ErrorPayloadOpt<K>) {
-    const info = ERROR_INFO_BY_TYPE[type]
+    const info = ERRORINFO_BY_TYPE[type]
     super(info.message)
     this.statusCode = info.statusCode
   }
 
-  static is(error: unknown): error is AppError {
+  static equals(error: unknown): error is AppError {
     return error instanceof AppError
   }
 
-  static getInfo<K extends AppErrorType>(type: K) {
-    return { ...ERROR_INFO_BY_TYPE[type], type }
+  static info<K extends AppErrorType>(
+    type: K,
+  ): typeof ERRORINFO_BY_TYPE[K] & { type: K } {
+    return { ...ERRORINFO_BY_TYPE[type], type }
   }
 }

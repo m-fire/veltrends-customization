@@ -12,7 +12,7 @@ client.test("회원등록-성공", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
-  client.assert(response.status === status, "expected status : " + status + " - actual (" + response.status + ")")
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
 })
 %}
 
@@ -32,7 +32,7 @@ client.test("회원등록-실패", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
-  client.assert(response.status === status, "expected status : " + status + " - actual (" + response.status + ")")
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
 })
 %}
 
@@ -64,7 +64,7 @@ client.test("로그인 성공, 토큰저장", function() {
   client.log("✔ global::access_token:\t" + client.global.get("access_token"));
   client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
 
-  client.assert(response.status === status, "expected status : " + status + " - actual (" + response.status + ")")
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
 })
 %}
 
@@ -84,49 +84,12 @@ client.test("로그인 실패", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
-  client.assert(response.status === status, "expected status : " + status + " - actual (" + response.status + ")")
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
 })
 %}
 
 ### 로그인 실패
 
-
-POST http://{{host}}:{{port}}/api/auth/logout
-Content-Type: application/json
-
-{
-  "userId": {{user.id}}
-}
-
-> {%
-var status = 202;
-client.test("로그아웃", function() {
-  if (response.status === status) {
-    client.log("정상적으로 로그아웃 되었습니다.\n");
-//    client.global.clear("user.id");
-//    client.global.clear("user.username");
-//    client.global.clear("access_token");
-//    client.global.clear("refresh_token");
-  } else
-    client.log("로그아웃 되지 않았습니다.\n");
-
-  client.global.clear("user.id");
-  client.global.clear("user.username");
-  client.global.clear("access_token");
-  client.global.clear("refresh_token");
-
-  client.log("\n");
-  client.log("response.body:\t" + JSON.stringify(response.body))
-  client.log("\n");
-  client.log("client.global 속성목록\n");
-  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
-  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
-  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
-  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
-  client.assert(response.status === status, "Response status is not " + status + "(" + response.status + ")")
-})
-%}
-
 POST http://{{host}}:{{port}}/api/auth/logout
 Content-Type: application/json
 
@@ -155,7 +118,7 @@ client.test("로그아웃", function() {
   client.log("✔ global::user.username:\t" + client.global.get("user.username"));
   client.log("✔ global::access_token:\t" + client.global.get("access_token"));
   client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
-  client.assert(response.status === status, "expected status : " + status + " - actual (" + response.status + ")")
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
 })
 %}
 

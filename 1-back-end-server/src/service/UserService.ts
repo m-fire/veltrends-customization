@@ -92,7 +92,7 @@ class UserService {
         throw new AppError('AuthenticationError')
     } catch (e) {
       // AppError 일 경우, 그대로 re-throw
-      if (AppError.is(e)) throw e
+      if (AppError.equals(e)) throw e
       // 알수없는 애러
       throw new AppError('UnknownError')
     }
