@@ -23,7 +23,7 @@ export const APP_ERROR: SchemaStruct = {
     type: { type: 'string' },
     message: { type: 'string' },
     statusCode: { type: 'number' },
-    payload: { type: 'number' },
+    payload: { type: 'object' },
   },
 }
 
@@ -89,11 +89,11 @@ export function composeExample<
 }
 
 export function errorExample<
-  K extends Parameters<typeof AppError.getInfo>[0],
+  K extends Parameters<typeof AppError.info>[0],
   P extends ErrorPayloadOpt<K>,
 >(type: K, payloadSchema?: P) {
   return {
-    ...AppError.getInfo(type),
+    ...AppError.info(type),
     ...(payloadSchema && {
       payload: payloadSchema,
     }),
