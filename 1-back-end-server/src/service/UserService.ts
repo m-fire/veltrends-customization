@@ -4,11 +4,13 @@ import { Authentication } from '../routes/api/auth/types.js'
 import AppError from '../common/error/AppError.js'
 import * as authTokens from '../common/config/jwt/tokens.js'
 import UserRepository from '../repository/UserRepository.js'
+import TokenRepository from '../repository/TokenRepository.js'
 
 const SOLT_ROUNDS = 10
 
 class UserService {
   private userRepository = UserRepository.getInstance()
+  private tokenRepository = TokenRepository.getInstance()
 
   private constructor() {}
 
