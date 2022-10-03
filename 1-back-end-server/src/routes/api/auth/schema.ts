@@ -33,7 +33,8 @@ export const AUTH_REFRESH_POST: FastifySchema = {
   /* 주의!: get 방식은 body 가 포함될 경우, 애러발생 */
   body: REQUEST_REFRESH_POST,
   response: {
-    201: RESPONSE_REFRESH_POST,
+    200: RESPONSE_REFRESH_POST,
     400: composeExample(APP_ERROR, errorExample('BadReqeustError')),
+    401: composeExample(APP_ERROR, errorExample('RefreshTokenError')),
   },
 }

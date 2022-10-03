@@ -61,7 +61,13 @@ export const RESPONSE_AUTH_RESULT: SchemaStruct = {
   },
 }
 
-export const RESPONSE_REFRESH_POST: SchemaStruct = REQUEST_REFRESH_POST
+export const RESPONSE_REFRESH_POST: SchemaStruct = {
+  type: 'object',
+  properties: {
+    accessToken: { type: 'string' },
+    refreshToken: { type: 'string' },
+  },
+}
 
 /* Schema Utils */
 
