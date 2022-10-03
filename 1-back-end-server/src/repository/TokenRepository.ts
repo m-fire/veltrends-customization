@@ -1,3 +1,5 @@
+import db from '../common/config/prisma/db-client.js'
+
 export default class TokenRepository {
   private static instance: TokenRepository
 
@@ -8,5 +10,13 @@ export default class TokenRepository {
       TokenRepository.instance = new TokenRepository()
     }
     return TokenRepository.instance
+  }
+
+  async save(userId: number) {
+    return await db.token.create({
+      data: {
+        userId,
+      },
+    })
   }
 }

@@ -50,17 +50,18 @@ class UserService {
    */
   private async composeTokenAndUser(user: User) {
     const { id: userId, username } = user
+    const token = await this.tokenRepository.save(userId)
 
     const [accessToken, refreshToken] = await Promise.all([
       authTokens.generateToken({
         type: 'access',
-        tokenId: 1,
+        tokenId: token.id,
         userId,
         username,
       }),
       authTokens.generateToken({
         type: 'refresh',
-        tokenId: 1,
+        tokenId: token.id,
         rotationCounter: 1,
       }),
     ])
