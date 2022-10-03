@@ -46,8 +46,8 @@ export default class TokenService {
     })
   }
 
-  async validateRefreshToken(token: string) {
-    return validateToken<RefreshTokenPayload>(token)
+  async validateRefreshToken(tokenStr: string) {
+    return validateToken<RefreshTokenPayload>(tokenStr)
   }
 }
 

@@ -36,21 +36,21 @@ export function generateToken(payload: TokenPayload) {
       {
         expiresIn: TOKEN_DURATION[payload.type],
       },
-      (error, token) => {
-        if (error || !token) return reject(error)
+      (error, tokenStr) => {
+        if (error || !tokenStr) return reject(error)
 
-        resolve(token)
+        resolve(tokenStr)
       },
     )
   })
 }
 
-export function validateToken<P>(token: string) {
+export function validateToken<P>(tokenStr: string) {
   return new Promise<P>((resolve, reject) => {
-    jwt.verify(token, JWT_SECRET, (error, token) => {
-      if (error || !token) return reject(error)
+    jwt.verify(tokenStr, JWT_SECRET, (error, jwtPayload) => {
+      if (error || !jwtPayload) return reject(error)
 
-      resolve(token as DecodedToken<P>)
+      resolve(jwtPayload as DecodedToken<P>)
     })
   })
 }

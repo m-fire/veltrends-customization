@@ -76,13 +76,13 @@ class UserService {
       const { tokenId: refreshTokenId } = await ts.validateRefreshToken(
         oldToken,
       )
-      const tokenEntity = await ts.getTokenWithUser(refreshTokenId)
+      const token = await ts.getTokenWithUser(refreshTokenId)
 
       /* Security settings */
-      if (!tokenEntity) throw new Error('Token not found')
-      if (tokenEntity.blocked) throw new Error('Token is blocked')
+      if (!token) throw new Error('Token not found')
+      if (token.blocked) throw new Error('Token is blocked')
 
-      const tokens = await ts.generateTokens(tokenEntity.user, refreshTokenId)
+      const tokens = await ts.generateTokens(token.user, refreshTokenId)
       // console.log(`UserService.refreshToken() tokens:`, tokens)
       return tokens
     } catch (e) {
