@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify'
+import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
 import { CookieTokens } from '../../../common/config/fastify/types.js'
@@ -12,6 +12,7 @@ import {
   AUTH_REFRESH_POST,
   AUTH_REGISTER_POST,
 } from './schema.js'
+import { AuthTokens } from '../../../service/TokenService'
 
 // Route Definition
 
@@ -25,22 +26,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     },
     async ({ body: auth }, reply) => {
       const tokensAndUser = await userService.login(auth)
-
-      // ref: https://github.com/fastify/fastify-cookie#example
-      const { tokens } = tokensAndUser
-      reply.cookie('access_token', tokens.accessToken, {
-        // signed: true,
-        httpOnly: true,
-        expires: new Date(Date.now() + 1000 * 60 * 60), // 1h
-        path: '/',
-      })
-      reply.cookie('refresh_token', tokens.refreshToken, {
-        // signed: true,
-        httpOnly: true,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7d
-        path: '/',
-      })
-
+      setTokenCookies(reply, tokensAndUser.tokens)
       return tokensAndUser
     },
   )
@@ -50,8 +36,8 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     {
       schema: AUTH_REGISTER_POST,
     },
-    async ({ body: auth }, reply) => {
-      const tokensAndUser = await userService.register(auth)
+    async ({ body: userInfo }, reply) => {
+      const tokensAndUser = await userService.register(userInfo)
       reply.statusCode = 201
       return tokensAndUser
     },
@@ -66,16 +52,33 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       const oldToken =
         request.body?.refreshToken ??
         (request.cookies as CookieTokens)?.refresh_token
-
       if (!oldToken) throw new AppError('BadReqeustError')
 
-      const newToken = await userService.refreshToken(oldToken)
-      reply.statusCode = 201
-      return {
-        refreshToken: newToken,
-      }
+      const tokens = await userService.refreshToken(oldToken)
+      setTokenCookies(reply, tokens)
+      reply.statusCode = 200
+      return tokens
     },
   )
+
+  // ref: https://github.com/fastify/fastify-cookie#example
+  function setTokenCookies(
+    reply: FastifyReply,
+    { accessToken, refreshToken }: AuthTokens,
+  ) {
+    reply.cookie('access_token', accessToken, {
+      // signed: true,
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60), // 1h
+      path: '/',
+    })
+    reply.cookie('refresh_token', refreshToken, {
+      // signed: true,
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7d
+      path: '/',
+    })
+  }
 }
 
 export default authRoute
