@@ -20,7 +20,7 @@ export default class TokenService {
 
   async generateTokens(user: User, token?: Token): Promise<TokenStringMap> {
     const { id: userId, username } = user
-    const { id: tokenId } =
+    const { id: tokenId, rotationCounter } =
       token ?? (await db.token.create({ data: { userId } }))
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -33,7 +33,7 @@ export default class TokenService {
       generateToken({
         type: 'refresh',
         tokenId,
-        rotationCounter: 1,
+        rotationCounter,
       }),
     ])
     return { accessToken, refreshToken }
