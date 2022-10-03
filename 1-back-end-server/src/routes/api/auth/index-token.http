@@ -28,41 +28,7 @@ client.test("refreshToken JSON 갱신 성공", function() {
   client.assert(newRefresh && newRefresh !== oldRefresh, "Refresh token was not updated")
 })
 %}
-
 ### refreshToken Header 갱신 성공
-
-POST http://{{host}}:{{port}}/api/auth/refresh
-Content-Type: text/plain
-Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
-
-empty
-
-> {%
-var status = 200;
-client.test("refreshToken 쿠키갱신 성공", function() {
-  client.log("\n");
-  client.log("response.body:\t" + JSON.stringify(response.body))
-  client.log("\n");
-
-  var oldAccess = client.global.get("access_token")
-  var oldRefresh = client.global.get("refresh_token")
-  var newAccess = response.body.accessToken
-  var newRefresh = response.body.refreshToken
-  newRefresh && client.global.set("access_token", newAccess);
-  newRefresh && client.global.set("refresh_token", newRefresh);
-
-  client.log("client.global 속성목록\n");
-  client.log("✔ global::refresh_token OLD:\t" + oldRefresh);
-  client.log("✔ global::refresh_token NEW:\t" + newRefresh);
-
-  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
-  client.assert(newAccess && newAccess !== oldAccess, "Access token was not updated")
-  client.assert(newRefresh && newRefresh !== oldRefresh, "Refresh token was not updated")
-})
-%}
-
-
-### refreshToken Cookie 갱신 성공
 
 POST http://{{host}}:{{port}}/api/auth/refresh
 Content-Type: application/json
@@ -88,5 +54,32 @@ client.test("토큰갱신 실패", function() {
   client.assert(refreshToken == null, "No token should be returned")
 })
 %}
-
 ### oldToken 미제공으로 토큰갱신 실패
+
+POST http://{{host}}:{{port}}/api/auth/refresh
+Content-Type: application/json
+
+{
+	"refreshToken": "{{access_token}}"
+}
+
+> {%
+var status = 401;
+client.test("유효하지 않은 토큰으로 갱신실패", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  var refreshToken = response.body.refreshToken
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+  client.assert(refreshToken == null, "No token should be returned")
+})
+%}
+### 무효토큰 접근차단
