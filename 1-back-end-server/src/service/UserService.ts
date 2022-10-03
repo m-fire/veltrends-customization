@@ -70,19 +70,19 @@ class UserService {
     }
   }
 
-  async refreshToken(oldToken: string): Promise<AuthTokens> {
+  async refreshToken(oldToken: string): Promise<TokenStringMap> {
     try {
       const ts = this.tokenService
       const { tokenId: refreshTokenId } = await ts.validateRefreshToken(
         oldToken,
       )
-      const token = await ts.getTokenWithUser(refreshTokenId)
+      const tokenEntity = await ts.getTokenWithUser(refreshTokenId)
 
       /* Security settings */
-      if (!token) throw new Error('Token not found')
-      if (token.blocked) throw new Error('Token is blocked')
+      if (!tokenEntity) throw new Error('Token not found')
+      if (tokenEntity.blocked) throw new Error('Token is blocked')
 
-      const tokens = await ts.generateTokens(token.user, refreshTokenId)
+      const tokens = await ts.generateTokens(tokenEntity.user, tokenEntity)
       // console.log(`UserService.refreshToken() tokens:`, tokens)
       return tokens
     } catch (e) {

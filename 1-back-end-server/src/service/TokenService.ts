@@ -18,10 +18,10 @@ export default class TokenService {
     return TokenService.instance
   }
 
-  async generateTokens(user: User, oldTokenId?: number): Promise<AuthTokens> {
+  async generateTokens(user: User, token?: Token): Promise<TokenStringMap> {
     const { id: userId, username } = user
-    const tokenId =
-      oldTokenId ?? (await db.token.create({ data: { userId } })).id
+    const { id: tokenId } =
+      token ?? (await db.token.create({ data: { userId } }))
 
     const [accessToken, refreshToken] = await Promise.all([
       generateToken({
