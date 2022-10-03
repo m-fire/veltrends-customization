@@ -2,6 +2,7 @@ import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
 import { CookieTokens } from '../../../common/config/fastify/types.js'
+import { TokenStringMap } from '../../../service/TokenService.js'
 import {
   UserLoginRequest,
   RefreshTokenRequest,
@@ -12,7 +13,6 @@ import {
   AUTH_REFRESH_POST,
   AUTH_REGISTER_POST,
 } from './schema.js'
-import { AuthTokens } from '../../../service/TokenService'
 
 // Route Definition
 
@@ -64,7 +64,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
   // ref: https://github.com/fastify/fastify-cookie#example
   function setTokenCookies(
     reply: FastifyReply,
-    { accessToken, refreshToken }: AuthTokens,
+    { accessToken, refreshToken }: TokenStringMap,
   ) {
     reply.cookie('access_token', accessToken, {
       // signed: true,

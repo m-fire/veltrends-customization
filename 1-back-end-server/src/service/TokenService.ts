@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { User, Token } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import {
   generateToken,
@@ -51,7 +51,7 @@ export default class TokenService {
   }
 }
 
-export interface AuthTokens {
+export interface TokenStringMap {
   accessToken: string
   refreshToken: string
 }
