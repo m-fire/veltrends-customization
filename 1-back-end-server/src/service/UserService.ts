@@ -77,7 +77,10 @@ class UserService {
         oldToken,
       )
       const tokenEntity = await ts.getTokenWithUser(refreshTokenId)
+
+      /* Security settings */
       if (!tokenEntity) throw new Error('Token not found')
+      if (tokenEntity.blocked) throw new Error('Token is blocked')
 
       const tokens = await ts.generateTokens(tokenEntity.user, refreshTokenId)
       // console.log(`UserService.refreshToken() tokens:`, tokens)
