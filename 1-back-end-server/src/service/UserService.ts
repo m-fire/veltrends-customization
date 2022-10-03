@@ -73,18 +73,30 @@ class UserService {
   async refreshToken(oldToken: string): Promise<TokenStringMap> {
     try {
       const ts = this.tokenService
-      const { tokenId: refreshTokenId } = await ts.validateRefreshToken(
-        oldToken,
-      )
-      const tokenEntity = await ts.getTokenWithUser(refreshTokenId)
+      const { tokenId: id, rotationCounter: outCount } =
+        await ts.validateRefreshToken(oldToken)
+      const tokenWithUser = await ts.getTokenWithUser(id)
 
-      /* Security settings */
-      if (!tokenEntity) throw new Error('Token not found')
-      if (tokenEntity.blocked) throw new Error('Token is blocked')
+      if (!tokenWithUser) throw new Error('Token not found')
+      if (tokenWithUser.blocked) throw new Error('Token is blocked')
 
-      const tokens = await ts.generateTokens(tokenEntity.user, tokenEntity)
-      // console.log(`UserService.refreshToken() tokens:`, tokens)
-      return tokens
+      /* Outer n Inner refreshed count validation(with rotationCounter) */
+
+      // 토큰갱신횟수가 일치하지 않으면, 이상접근으로 blocked 처리
+      const { rotationCounter: inCount, user } = tokenWithUser
+      if (inCount !== outCount) {
+        await db.token.update({ where: { id }, data: { blocked: true } })
+        throw new Error('Rotation counter does not match.')
+      }
+      // 유효토큰인 경우, DB Token.rotationCounter 증가 반영
+      const updated = await db.token.update({
+        where: { id },
+        data: { rotationCounter: inCount + 1 },
+      })
+
+      const refreshedTokens = await ts.generateTokens(user, updated)
+      // console.log(`UserService.refreshToken() refreshedTokens:`, refreshedTokens)
+      return refreshedTokens
     } catch (e) {
       throw new AppError('RefreshTokenError')
     }
