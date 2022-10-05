@@ -8,7 +8,11 @@ type HeaderProps = {
 }
 
 function Header({ title = <SvgLogoVeltrend /> }: HeaderProps) {
-  return <Block>{title}</Block>
+  return (
+    <Block>
+      <Title>{title}</Title>
+    </Block>
+  )
 }
 
 export default Header
@@ -23,8 +27,12 @@ const Block = styled.header`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+const Title = styled.div`
+  color: ${colors.grey5};
+  font-size: 18px;
+  font-weight: 600;
   svg {
-    color: ${colors.grey6};
     width: 130px;
     height: 30px;
   }
