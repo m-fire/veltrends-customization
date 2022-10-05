@@ -3,19 +3,13 @@ import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import SvgLogoVeltrend from '~/components/generate/LogoVeltrend'
 
-type HeaderProps = {}
-
-function Header({}: HeaderProps) {
-  return (
-    <Block>
-      <SvgLogoVeltrend />
-    </Block>
-  )
+type HeaderProps = {
+  title?: ReactNode
 }
 
-Header.defaultProps = {
-  // initial prop values
-} as HeaderProps
+function Header({ title = <SvgLogoVeltrend /> }: HeaderProps) {
+  return <Block>{title}</Block>
+}
 
 export default Header
 
