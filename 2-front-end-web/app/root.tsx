@@ -20,6 +20,7 @@ export default function App() {
       <head>
         <Meta />
         <Links />
+        {typeof document === "undefined" ? "__STYLES__" : null}
       </head>
       <body>
         <Outlet />
