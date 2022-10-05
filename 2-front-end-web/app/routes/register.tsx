@@ -1,14 +1,25 @@
 import React from 'react'
 import styled from 'styled-components'
+import Header from '~/components/Header'
 
-type registerProps = {}
+type RegisterProps = {}
 
-function Register({}: registerProps) {
-  return <>등록페이지</>
+function Register({}: RegisterProps) {
+  return (
+    <Page>
+      <Header />
+    </Page>
+  )
 }
 
 Register.defaultProps = {
   // initial prop values
-} as registerProps
+} as RegisterProps
 
 export default Register
+
+// Sub Comps
+
+const Page = styled.div`
+  height: 100%;
+`
