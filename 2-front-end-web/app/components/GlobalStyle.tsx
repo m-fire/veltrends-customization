@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components'
 
 // 글로벌 스타일링
 const GlobalStyle = createGlobalStyle`
@@ -8,6 +8,6 @@ const GlobalStyle = createGlobalStyle`
 	body {
 		margin: 0;
 	}
-`;
+`
 
-export default GlobalStyle;
+export default GlobalStyle

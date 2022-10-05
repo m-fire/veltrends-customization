@@ -1,17 +1,17 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react'
+import styled from 'styled-components'
 
 // Common Block
-const Block = styled.header``;
+const Block = styled.header``
 
-type HeaderProps = {};
+type HeaderProps = {}
 
 function Header({}: HeaderProps) {
-  return <Block>Block</Block>;
+  return <Block>Block</Block>
 }
 
 Header.defaultProps = {
   // initial prop values
-} as HeaderProps;
+} as HeaderProps
 
-export default Header;
+export default Header
