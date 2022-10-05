@@ -4,7 +4,8 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "start": "remix-serve build"
+    "start": "remix-serve build",
+    "generate:svg2tsx": "svgr --typescript --out-dir app/components/generate app/assets/svg"
   },
   "dependencies": {
     "@remix-run/node": "^1.7.2",
