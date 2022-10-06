@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import LabelInput from '~/components/LabelInput'
+import Button from '~/components/Button'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -27,6 +28,10 @@ function AuthForm({ mode }: AuthFormProps) {
             }
           />
         </InputGroup>
+
+        <ActionBox>
+          <Button>회원가입</Button>
+        </ActionBox>
       </Block>
     </>
   )
@@ -48,3 +53,6 @@ const InputGroup = styled.div`
   flex-direction: column;
   gap: 16px; // 사용주의! 구형브라우저 적용불가
 `
+
+// Footer 대용
+const ActionBox = styled.div``
