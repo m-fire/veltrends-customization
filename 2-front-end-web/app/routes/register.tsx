@@ -7,7 +7,7 @@ type RegisterProps = {}
 function Register({}: RegisterProps) {
   return (
     <Page>
-      <Header title="회원가입" />
+      <Header title="회원가입" headerLeft="HL" headerRight="HR" />
     </Page>
   )
 }

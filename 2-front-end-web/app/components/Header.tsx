@@ -5,12 +5,20 @@ import SvgLogoVeltrend from '~/components/generate/LogoVeltrend'
 
 type HeaderProps = {
   title?: ReactNode
+  headerLeft?: ReactNode
+  headerRight?: ReactNode
 }
 
-function Header({ title = <SvgLogoVeltrend /> }: HeaderProps) {
+function Header({
+  title = <SvgLogoVeltrend />,
+  headerLeft,
+  headerRight,
+}: HeaderProps) {
   return (
     <Block>
+      <HeaderLeft>{headerLeft}</HeaderLeft>
       <Title>{title}</Title>
+      <HeaderRight>{headerRight}</HeaderRight>
     </Block>
   )
 }
@@ -18,6 +26,10 @@ function Header({ title = <SvgLogoVeltrend /> }: HeaderProps) {
 export default Header
 
 // Sub Comps
+
+const HeaderLeft = styled.div``
+
+const HeaderRight = styled.div``
 
 const Block = styled.header`
   height: 56px;
