@@ -16,9 +16,9 @@ function Header({
 }: HeaderProps) {
   return (
     <Block>
-      <HeaderLeft>{headerLeft}</HeaderLeft>
+      {headerLeft && <HeaderLeft>{headerLeft}</HeaderLeft>}
       <Title>{title}</Title>
-      <HeaderRight>{headerRight}</HeaderRight>
+      {headerRight && <HeaderRight>{headerRight}</HeaderRight>}
     </Block>
   )
 }
