@@ -8,6 +8,17 @@ const GlobalStyle = createGlobalStyle`
 	body {
 		margin: 0;
 	}
+	
+	/* 컨탠츠 Full-height 설정 방법 2가지 */
+
+	// 1. 전역 스타일 제어.
+	//html, body {
+	//	height: 100vh;
+	//}
+
+	// Todo: 2. 특정 컴포넌트 마운트 시점에 스타일 적용. better!
+	// Desktop 까지 고려해야 하기 때문에, 컴포넌트 마운트방식 채택!
+	// 이유: 전체영역이 필요없는 곳에 Full-height toggle 이 쉬워야 한다는 조건.
 `
 
 export default GlobalStyle
