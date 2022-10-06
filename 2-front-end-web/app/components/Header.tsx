@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
-import SvgLogoVeltrend from '~/components/generate/LogoVeltrend'
+import { LogoVeltrend } from '~/components/generate'
 
 type HeaderProps = {
   title?: ReactNode
@@ -10,7 +10,7 @@ type HeaderProps = {
 }
 
 function Header({
-  title = <SvgLogoVeltrend />,
+  title = <LogoVeltrend />,
   headerLeft,
   headerRight,
 }: HeaderProps) {

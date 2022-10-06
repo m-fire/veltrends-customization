@@ -20,10 +20,6 @@ function Register({}: RegisterProps) {
   )
 }
 
-Register.defaultProps = {
-  // initial prop values
-} as RegisterProps
-
 export default Register
 
 // Sub Comps
