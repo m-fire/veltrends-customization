@@ -3,6 +3,7 @@ import Header from '~/components/Header'
 import HeaderBackButton from '~/components/HeaderBackButton'
 import { useGoBack } from '~/routes/useGoBack'
 import FullHeightPage from '~/components/FullHeightPage'
+import AuthForm from '~/components/AuthForm'
 
 type LoginProps = {}
 
@@ -16,6 +17,7 @@ function Login({}: LoginProps) {
         headerLeft={<HeaderBackButton onClick={goBack} />}
         headerRight="HR"
       />
+      <AuthForm mode="login" />
     </FullHeightPage>
   )
 }
