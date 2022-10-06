@@ -60,4 +60,6 @@ const InputGroup = styled.div`
 `
 
 // Footer 대용
-const ActionBox = styled.div``
+const ActionBox = styled.div`
+  width: 100%;
+`
