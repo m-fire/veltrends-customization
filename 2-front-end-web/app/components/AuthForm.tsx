@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import LabelInput from '~/components/LabelInput'
 import Button from '~/components/Button'
+import QuestionLink from '~/components/QuestionLink'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -36,6 +37,20 @@ function AuthForm({ mode }: AuthFormProps) {
           >
             {isRegister ? '회원가입' : '로그인'}
           </Button>
+
+          {isRegister ? (
+            <QuestionLink
+              question={'이미 계정이 있으신가요?'}
+              name="로그인"
+              to="/login"
+            />
+          ) : (
+            <QuestionLink
+              question={'계정이 없으신가요?'}
+              name="회원가입"
+              to="/register"
+            />
+          )}
         </ActionBox>
       </Block>
     </>
@@ -62,4 +77,8 @@ const InputGroup = styled.div`
 // Footer 대용
 const ActionBox = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
 `
