@@ -1,8 +1,8 @@
 import React from 'react'
-import styled from 'styled-components'
 import Header from '~/components/Header'
 import HeaderBackButton from '~/components/HeaderBackButton'
 import { useGoBack } from '~/routes/useGoBack'
+import FullHeightPage from '~/components/FullHeightPage'
 
 type RegisterProps = {}
 
@@ -10,20 +10,16 @@ function Register({}: RegisterProps) {
   const goBack = useGoBack()
 
   return (
-    <Page>
+    <FullHeightPage>
       <Header
         title="회원가입"
         headerLeft={<HeaderBackButton onClick={goBack} />}
         headerRight="HR"
       />
-    </Page>
+    </FullHeightPage>
   )
 }
 
 export default Register
 
 // Sub Comps
-
-const Page = styled.div`
-  height: 100%;
-`
