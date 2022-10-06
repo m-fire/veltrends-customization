@@ -30,7 +30,12 @@ function AuthForm({ mode }: AuthFormProps) {
         </InputGroup>
 
         <ActionBox>
-          <Button>회원가입</Button>
+          <Button
+            layoutMode="fullWith"
+            backgroundColor={isRegister ? 'grey4' : undefined}
+          >
+            {isRegister ? '회원가입' : '로그인'}
+          </Button>
         </ActionBox>
       </Block>
     </>
