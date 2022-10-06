@@ -2,11 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { ArrowLeft } from '~/components/generate'
 
-type HeaderBackButtonProps = {}
+type HeaderBackButtonProps = {
+  onClick?: () => void
+}
 
-function HeaderBackButton({}: HeaderBackButtonProps) {
+function HeaderBackButton({ onClick }: HeaderBackButtonProps) {
   return (
-    <IconButton>
+    <IconButton onClick={onClick}>
       <ArrowLeft />
     </IconButton>
   )

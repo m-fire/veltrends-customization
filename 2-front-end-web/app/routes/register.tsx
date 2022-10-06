@@ -6,11 +6,13 @@ import HeaderBackButton from '~/components/HeaderBackButton'
 type RegisterProps = {}
 
 function Register({}: RegisterProps) {
+  const goBack = () => console.log(`Register.goBack()`)
+
   return (
     <Page>
       <Header
         title="회원가입"
-        headerLeft={<HeaderBackButton />}
+        headerLeft={<HeaderBackButton onClick={goBack} />}
         headerRight="HR"
       />
     </Page>
