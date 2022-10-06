@@ -1,12 +1,12 @@
 import React, { HTMLAttributes } from 'react'
 import styled from 'styled-components'
 
-interface InputProps extends HTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends HTMLAttributes<HTMLInputElement> {}
 
 function Input(props: InputProps) {
   return (
     <>
-      <div>{}</div>
+      <StyledInput {...props} />
     </>
   )
 }
