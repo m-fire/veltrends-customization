@@ -27,11 +27,26 @@ export default Header
 
 // Sub Comps
 
-const HeaderLeft = styled.div``
+const HeaderLeft = styled.div`
+  position: absolute;
+  left: 16px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`
 
-const HeaderRight = styled.div``
+const HeaderRight = styled.div`
+  position: absolute;
+  right: 16px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`
 
 const Block = styled.header`
+  position: relative;
   height: 56px;
   border-bottom: 1px solid ${colors.grey1};
   padding-left: 16px;
