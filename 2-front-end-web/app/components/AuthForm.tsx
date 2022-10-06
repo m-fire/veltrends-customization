@@ -8,26 +8,43 @@ type AuthFormProps = {
   mode: 'login' | 'register'
 }
 
+const authDescriptions = {
+  login: {
+    placeholder: {
+      username: '아이디를 입력하세요',
+      password: '비밀번호를 입력하세요',
+    },
+    buttonName: '로그인',
+    action: {
+      question: '계정이 없으신가요?',
+      name: '회원가입',
+      link: '/register',
+    },
+  },
+  register: {
+    placeholder: {
+      username: '5~20자 영문, 숫자 입력',
+      password: '8자 이상 영문, 숫자, 특수문자 중 2가지 이상 입력',
+    },
+    buttonName: '회원가입',
+    action: {
+      question: '이미 계정이 있으신가요?',
+      name: '로그인',
+      link: '/login',
+    },
+  },
+} as const
+
 function AuthForm({ mode }: AuthFormProps) {
   const isRegister = mode === 'register'
+  const { placeholder, buttonName, action } = authDescriptions[mode]
+
   return (
     <>
       <Block>
         <InputGroup>
-          <LabelInput
-            label="아이디"
-            placeholder={
-              isRegister ? '5~20자 영문, 숫자 입력' : '아이디를 입력하세요'
-            }
-          />
-          <LabelInput
-            label="비밀번호"
-            placeholder={
-              isRegister
-                ? '8자 이상 영문, 숫자, 특수문자 중 2가지 이상 입력'
-                : '비밀번호를 입력하세요'
-            }
-          />
+          <LabelInput label="아이디" placeholder={placeholder.username} />
+          <LabelInput label="비밀번호" placeholder={placeholder.password} />
         </InputGroup>
 
         <ActionBox>
@@ -35,22 +52,13 @@ function AuthForm({ mode }: AuthFormProps) {
             layoutMode="fullWith"
             backgroundColor={isRegister ? 'grey4' : undefined}
           >
-            {isRegister ? '회원가입' : '로그인'}
+            {buttonName}
           </Button>
-
-          {isRegister ? (
-            <QuestionLink
-              question={'이미 계정이 있으신가요?'}
-              name="로그인"
-              to="/login"
-            />
-          ) : (
-            <QuestionLink
-              question={'계정이 없으신가요?'}
-              name="회원가입"
-              to="/register"
-            />
-          )}
+          <QuestionLink
+            question={action.question}
+            name={action.name}
+            to={action.link}
+          />
         </ActionBox>
       </Block>
     </>
