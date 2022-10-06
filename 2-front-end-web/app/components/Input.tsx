@@ -26,4 +26,7 @@ const StyledInput = styled.input`
   &:focus {
     border: 2px solid ${colors.primary1};
   }
+  &::placeholder {
+    color: ${colors.grey2};
+  }
 `

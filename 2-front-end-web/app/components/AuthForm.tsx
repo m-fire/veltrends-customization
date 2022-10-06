@@ -7,12 +7,25 @@ type AuthFormProps = {
 }
 
 function AuthForm({ mode }: AuthFormProps) {
+  const isRegister = mode === 'register'
   return (
     <>
       <Block>
         <InputGroup>
-          <LabelInput label="아이디" />
-          <LabelInput label="비밀번호" />
+          <LabelInput
+            label="아이디"
+            placeholder={
+              isRegister ? '5~20자 영문, 숫자 입력' : '아이디를 입력하세요'
+            }
+          />
+          <LabelInput
+            label="비밀번호"
+            placeholder={
+              isRegister
+                ? '8자 이상 영문, 숫자, 특수문자 중 2가지 이상 입력'
+                : '비밀번호를 입력하세요'
+            }
+          />
         </InputGroup>
       </Block>
     </>
