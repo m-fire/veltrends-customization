@@ -25,4 +25,6 @@ export default FullHeightPage
 
 const Page = styled.div`
   height: 100%;
+  display: flex;
+  flex-direction: column;
 `
