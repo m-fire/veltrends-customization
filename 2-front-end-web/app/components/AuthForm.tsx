@@ -39,6 +39,8 @@ const Block = styled.div`
   display: flex;
   flex-direction: column;
   padding: 16px 20px;
+  flex: 1;
+  justify-content: space-between;
 `
 
 const InputGroup = styled.div`
