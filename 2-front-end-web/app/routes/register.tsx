@@ -1,13 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 import Header from '~/components/Header'
+import HeaderBackButton from '~/components/HeaderBackButton'
 
 type RegisterProps = {}
 
 function Register({}: RegisterProps) {
   return (
     <Page>
-      <Header title="회원가입" headerLeft="HL" headerRight="HR" />
+      <Header
+        title="회원가입"
+        headerLeft={<HeaderBackButton />}
+        headerRight="HR"
+      />
     </Page>
   )
 }
