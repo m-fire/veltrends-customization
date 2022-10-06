@@ -6,10 +6,13 @@ interface LabelInputProps extends InputProps {
   label: string
 }
 
-function LabelInput({}: LabelInputProps) {
+function LabelInput({ label, ...rest }: LabelInputProps) {
   return (
     <>
-      <Block>{}</Block>
+      <Block>
+        <label>{label}</label>
+        <Input {...rest} />
+      </Block>
     </>
   )
 }
