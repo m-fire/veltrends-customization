@@ -17,10 +17,13 @@ export default Input
 
 const StyledInput = styled.input`
   height: 48px;
-  border: 1px solid ${colors.grey2};
+  border: 2px solid ${colors.grey2};
   border-radius: 6px;
   outline: none;
   font-size: 16px;
   padding-left: 16px;
   padding-right: 16px;
+  &:focus {
+    border: 2px solid ${colors.primary1};
+  }
 `
