@@ -16,9 +16,9 @@ function Header({
 }: HeaderProps) {
   return (
     <Block>
-      {headerLeft && <HeaderLeft>{headerLeft}</HeaderLeft>}
+      {headerLeft && <HeaderSide position={'left'}>{headerLeft}</HeaderSide>}
       <Title>{title}</Title>
-      {headerRight && <HeaderRight>{headerRight}</HeaderRight>}
+      {headerRight && <HeaderSide position={'right'}>{headerRight}</HeaderSide>}
     </Block>
   )
 }
@@ -27,18 +27,9 @@ export default Header
 
 // Sub Comps
 
-const HeaderLeft = styled.div`
+const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
   position: absolute;
-  left: 16px;
-  top: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-`
-
-const HeaderRight = styled.div`
-  position: absolute;
-  right: 16px;
+  ${(props) => props.position}: 16px;
   top: 0;
   height: 100%;
   display: flex;
