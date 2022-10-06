@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import Input, { InputProps } from '~/components/Input'
 
-type LabelInputProps = {}
+interface LabelInputProps extends InputProps {
+  label: string
+}
 
 function LabelInput({}: LabelInputProps) {
   return (
