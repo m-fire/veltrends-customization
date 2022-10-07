@@ -3,21 +3,21 @@ import styled from 'styled-components'
 import LabelInput from '~/components/LabelInput'
 import Button from '~/components/Button'
 import QuestionLink from '~/components/QuestionLink'
+import { Form } from '@remix-run/react'
+import { colors } from '~/common/style/colors'
 
-type AuthFormProps = {
-  mode: 'login' | 'register'
-}
-
-const authDescriptions = {
+const formDescriptions = {
   login: {
     placeholder: {
       username: '아이디를 입력하세요',
       password: '비밀번호를 입력하세요',
     },
-    buttonName: '로그인',
+    submitButton: {
+      text: '로그인',
+    },
     action: {
       question: '계정이 없으신가요?',
-      name: '회원가입',
+      name: '가입',
       link: '/register',
     },
   },
@@ -26,7 +26,9 @@ const authDescriptions = {
       username: '5~20자 영문, 숫자 입력',
       password: '8자 이상 영문, 숫자, 특수문자 중 2가지 이상 입력',
     },
-    buttonName: '회원가입',
+    submitButton: {
+      text: '회원가입',
+    },
     action: {
       question: '이미 계정이 있으신가요?',
       name: '로그인',
@@ -35,13 +37,16 @@ const authDescriptions = {
   },
 } as const
 
+type AuthFormProps = {
+  mode: 'login' | 'register'
+}
+
 function AuthForm({ mode }: AuthFormProps) {
-  const isRegister = mode === 'register'
-  const { placeholder, buttonName, action } = authDescriptions[mode]
+  const { placeholder, submitButton, action } = formDescriptions[mode]
 
   return (
     <>
-      <Block>
+      <StyledFormRef method="post">
         <InputGroup>
           <LabelInput
             name="username"
@@ -56,12 +61,8 @@ function AuthForm({ mode }: AuthFormProps) {
         </InputGroup>
 
         <ActionBox>
-          <Button
-            type="submit"
-            layoutMode="fullWith"
-            backgroundColor={isRegister ? 'grey4' : undefined}
-          >
-            {buttonName}
+          <Button type="submit" layoutMode="fullWith">
+            {submitButton.text}
           </Button>
           <QuestionLink
             question={action.question}
@@ -69,7 +70,7 @@ function AuthForm({ mode }: AuthFormProps) {
             to={action.link}
           />
         </ActionBox>
-      </Block>
+      </StyledFormRef>
     </>
   )
 }
@@ -77,7 +78,7 @@ export default AuthForm
 
 // Inner Components
 
-const Block = styled.form`
+const StyledFormRef = styled(Form)`
   display: flex;
   flex-direction: column;
   padding: 16px 20px;
