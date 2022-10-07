@@ -57,6 +57,7 @@ function AuthForm({ mode }: AuthFormProps) {
 
         <ActionBox>
           <Button
+            type="submit"
             layoutMode="fullWith"
             backgroundColor={isRegister ? 'grey4' : undefined}
           >

@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React, { ButtonHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
 
@@ -11,7 +11,7 @@ function Button({
   layoutMode = 'inline',
   backgroundColor = 'primary1',
   ...rest
-}: ButtonProps & HTMLAttributes<HTMLButtonElement>) {
+}: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <StyledButton
       layoutMode={layoutMode}
