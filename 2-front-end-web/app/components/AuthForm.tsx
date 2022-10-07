@@ -43,8 +43,16 @@ function AuthForm({ mode }: AuthFormProps) {
     <>
       <Block>
         <InputGroup>
-          <LabelInput label="아이디" placeholder={placeholder.username} />
-          <LabelInput label="비밀번호" placeholder={placeholder.password} />
+          <LabelInput
+            name="username"
+            label="아이디"
+            placeholder={placeholder.username}
+          />
+          <LabelInput
+            name="password"
+            label="비밀번호"
+            placeholder={placeholder.password}
+          />
         </InputGroup>
 
         <ActionBox>
@@ -68,7 +76,7 @@ export default AuthForm
 
 // Inner Components
 
-const Block = styled.div`
+const Block = styled.form`
   display: flex;
   flex-direction: column;
   padding: 16px 20px;

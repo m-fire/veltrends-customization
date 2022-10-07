@@ -1,8 +1,8 @@
-import React, { HTMLAttributes } from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 
-export interface InputProps extends HTMLAttributes<HTMLInputElement> {}
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
 function Input(props: InputProps) {
   return (
