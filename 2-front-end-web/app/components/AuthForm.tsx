@@ -4,7 +4,7 @@ import LabelInput from '~/components/LabelInput'
 import Button from '~/components/Button'
 import QuestionLink from '~/components/QuestionLink'
 import { Form } from '@remix-run/react'
-import { colors } from '~/common/style/colors'
+import { useFormDataIsLoading } from '~/hooks/useFormDataIsLoading'
 
 const formDescriptions = {
   login: {
@@ -47,6 +47,8 @@ type AuthFormProps = {
 }
 
 function AuthForm({ mode }: AuthFormProps) {
+  const isLoading = useFormDataIsLoading()
+
   const { placeholder, submitButton, action } = formDescriptions[mode]
 
   return (
