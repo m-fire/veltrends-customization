@@ -37,6 +37,11 @@ const formDescriptions = {
   },
 } as const
 
+export type AuthFormSumitData = {
+  username: string
+  password: string
+}
+
 type AuthFormProps = {
   mode: 'login' | 'register'
 }
