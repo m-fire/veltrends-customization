@@ -59,22 +59,25 @@ function AuthForm({ mode }: AuthFormProps) {
             name="username"
             label="아이디"
             placeholder={placeholder.username}
+            disabled={isLoading}
           />
           <LabelInput
             name="password"
             label="비밀번호"
             placeholder={placeholder.password}
+            disabled={isLoading}
           />
         </InputGroup>
 
         <ActionBox>
-          <Button type="submit" layoutMode="fullWith">
+          <Button type="submit" layoutMode="fullWith" disabled={isLoading}>
             {submitButton.text}
           </Button>
           <QuestionLink
             question={action.question}
             name={action.name}
             to={action.link}
+            disabled={isLoading}
           />
         </ActionBox>
       </StyledFormRef>

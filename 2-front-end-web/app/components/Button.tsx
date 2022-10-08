@@ -4,21 +4,13 @@ import { colors } from '~/common/style/colors'
 
 type ButtonProps = {
   layoutMode?: 'inline' | 'fullWith'
-  backgroundColor?: keyof typeof colors
 }
 
 function Button({
   layoutMode = 'inline',
-  backgroundColor = 'primary1',
   ...rest
 }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <StyledButton
-      layoutMode={layoutMode}
-      backgroundColor={backgroundColor}
-      {...rest}
-    />
-  )
+  return <StyledButton layoutMode={layoutMode} {...rest} />
 }
 export default Button
 
@@ -37,11 +29,11 @@ const StyledButton = styled.button<ButtonProps>`
   padding-right: 20px;
   font-weight: 600;
   border-radius: 6px;
-  ${({ backgroundColor }) =>
-    backgroundColor &&
-    css`
-      background: ${colors[backgroundColor]};
-    `}
+  transition: filter 0.25s ease-in-out;
+
+  &:disabled {
+    filter: brightness(70%);
+  }
   ${(props) =>
     props.layoutMode === 'fullWith' &&
     css`

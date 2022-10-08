@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Link } from '@remix-run/react'
 import { colors } from '~/common/style/colors'
 
@@ -8,12 +8,20 @@ type QuestionLinkProps = {
   name: string
   to: string
   className?: string
+  disabled?: boolean
 }
 
-function QuestionLink({ question, name, to, className }: QuestionLinkProps) {
+function QuestionLink({
+  question,
+  name,
+  to,
+  className,
+  disabled,
+}: QuestionLinkProps) {
   return (
-    <Block className={className}>
-      <span>{question}</span> <Link to={to}>{name}</Link>
+    <Block className={className} disabled={disabled}>
+      <span>{question}</span>
+      <Link to={to}>{name}</Link>
     </Block>
   )
 }
@@ -21,9 +29,10 @@ export default QuestionLink
 
 // Inner Components
 
-const Block = styled.div`
+const Block = styled.div<Pick<QuestionLinkProps, 'disabled'>>`
   font-size: 12px;
   color: ${colors.grey3};
+
   span {
     padding-right: 8px;
   }
@@ -31,5 +40,14 @@ const Block = styled.div`
     font-size: 16px;
     font-weight: 600;
     color: ${colors.grey5};
+    transition: color 0.25s ease-in-out;
+
+    ${({ disabled }) =>
+      disabled &&
+      css`
+        color: ${colors.grey3};
+        pointer-events: none;
+        text-decoration: none;
+      `};
   }
 `

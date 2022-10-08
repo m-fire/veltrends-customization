@@ -23,10 +23,16 @@ const StyledInput = styled.input`
   font-size: 16px;
   padding-left: 16px;
   padding-right: 16px;
+  transition: all 0.25s ease-in-out;
+
   &:focus {
     border: 2px solid ${colors.primary1};
   }
   &::placeholder {
     color: ${colors.grey2};
+  }
+  &:disabled {
+    background: ${colors.grey1};
+    color: ${colors.grey3};
   }
 `
