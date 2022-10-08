@@ -42,6 +42,9 @@ export const action: ActionFunction = async ({ request }) => {
   // 비동기 3초지연처리 테스트용 코드
   await new Promise((resolve) => setTimeout(resolve, 3000))
 
-  // Remix action result
-  return json({ username, password })
+  const headers = new Headers()
+  headers.set('Set-Cookie', `accessToken=${12345}`)
+  headers.set('Set-Cookie', `refreshToken=${67890}`)
+
+  return json({ username, password }, { headers })
 }
