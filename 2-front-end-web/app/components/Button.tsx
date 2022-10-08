@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import React, { ButtonHTMLAttributes, ReactNode, SVGProps } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
 
@@ -16,7 +16,7 @@ export default Button
 
 // Inner Components
 
-const StyledButton = styled.button<ButtonProps>`
+const StyledButton = styled.button<Pick<ButtonProps, 'layoutMode'>>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,6 +30,9 @@ const StyledButton = styled.button<ButtonProps>`
   font-weight: 600;
   border-radius: 6px;
   transition: filter 0.25s ease-in-out;
+  & span {
+    padding-right: 6px;
+  }
 
   &:disabled {
     filter: brightness(70%);

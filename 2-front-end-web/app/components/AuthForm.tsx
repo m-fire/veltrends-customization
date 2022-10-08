@@ -5,6 +5,7 @@ import Button from '~/components/Button'
 import QuestionLink from '~/components/QuestionLink'
 import { Form } from '@remix-run/react'
 import { useFormDataIsLoading } from '~/hooks/useFormDataIsLoading'
+import { Key, Write } from '~/components/generate'
 
 const formDescriptions = {
   login: {
@@ -13,6 +14,7 @@ const formDescriptions = {
       password: '비밀번호를 입력하세요',
     },
     submitButton: {
+      icon: <Key />,
       text: '로그인',
     },
     action: {
@@ -27,6 +29,7 @@ const formDescriptions = {
       password: '8자 이상 영문, 숫자, 특수문자 중 2가지 이상 입력',
     },
     submitButton: {
+      icon: <Write />,
       text: '회원가입',
     },
     action: {
@@ -71,6 +74,7 @@ function AuthForm({ mode }: AuthFormProps) {
 
         <ActionBox>
           <Button type="submit" layoutMode="fullWith" disabled={isLoading}>
+            <span>{submitButton.icon}</span>
             {submitButton.text}
           </Button>
           <QuestionLink
