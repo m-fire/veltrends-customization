@@ -6,6 +6,8 @@ import FullHeightPage from '~/components/FullHeightPage'
 import AuthForm, { AuthFormSumitData } from '~/components/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
 import { useActionData } from '@remix-run/react'
+import { isString } from '~/common/util/strings'
+import { register } from '~/common/api/auth'
 
 type RegisterProps = {}
 
@@ -29,7 +31,6 @@ function Register({}: RegisterProps) {
 export default Register
 
 // Remix actions handler
-
 export const action: ActionFunction = async ({ request }) => {
   /* Todo: Remix 의 route 모듈 root 에 `action` 이름의 비동기 함수를
            export 하는것으로 useActionData() 를 통해 데이터 핸들링 할 수 있다 */
@@ -38,13 +39,9 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
   const username = form.get('username')
   const password = form.get('password')
+  if (!isString(username) || !isString(password)) return
 
-  // submit 액션발생 시 3초지연처리 테스트코드
-  await new Promise((resolve) => setTimeout(resolve, 3000))
+  const { result, headers } = await register({ username, password })
 
-  const headers = new Headers()
-  headers.set('Set-Cookie', `accessToken=${12345}`)
-  headers.set('Set-Cookie', `refreshToken=${67890}`)
-
-  return json({ username, password }, { headers })
+  return json(result, { headers })
 }

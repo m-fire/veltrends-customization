@@ -6,6 +6,8 @@ import FullHeightPage from '~/components/FullHeightPage'
 import AuthForm, { AuthFormSumitData } from '~/components/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
 import { useActionData } from '@remix-run/react'
+import { isString } from '~/common/util/strings'
+import { login } from '~/common/api/auth'
 
 type LoginProps = {}
 
@@ -38,13 +40,9 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
   const username = form.get('username')
   const password = form.get('password')
+  if (!isString(username) || !isString(password)) return
 
-  // 비동기 3초지연처리 테스트용 코드
-  await new Promise((resolve) => setTimeout(resolve, 3000))
+  const { result, headers } = await login({ username, password })
 
-  const headers = new Headers()
-  headers.set('Set-Cookie', `accessToken=${12345}`)
-  headers.set('Set-Cookie', `refreshToken=${67890}`)
-
-  return json({ username, password }, { headers })
+  return json(result, { headers })
 }
