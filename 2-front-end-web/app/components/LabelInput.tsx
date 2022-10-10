@@ -1,18 +1,29 @@
-import React, { useState } from 'react'
+import React, { FocusEventHandler, useState } from 'react'
 import styled, { css } from 'styled-components'
 import Input, { InputProps } from '~/components/Input'
 import { colors } from '~/common/style/colors'
 
 interface LabelInputProps extends InputProps {
   label: string
+  errorMessage?: InputProps['errorMessage']
+  onFocus?: FocusEventHandler<HTMLInputElement>
+  onBlur?: FocusEventHandler<HTMLInputElement>
 }
 
-function LabelInput({ label, ...rest }: LabelInputProps) {
+function LabelInput({
+  label,
+  errorMessage,
+  onFocus,
+  onBlur,
+  ...rest
+}: LabelInputProps) {
   const [focused, setFocused] = useState(false)
-  const onFocus = () => {
+  const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+    onFocus?.(e)
     setFocused(true)
   }
-  const onBlur = () => {
+  const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+    onBlur?.(e)
     setFocused(false)
   }
 
@@ -20,7 +31,12 @@ function LabelInput({ label, ...rest }: LabelInputProps) {
     <>
       <Block>
         <Label focused={focused}>{label}</Label>
-        <Input onFocus={onFocus} onBlur={onBlur} {...rest} />
+        <Input
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          errorMessage={errorMessage}
+          {...rest}
+        />
       </Block>
     </>
   )

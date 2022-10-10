@@ -38,6 +38,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     },
     async ({ body: userInfo }, reply) => {
       const tokensAndUser = await userService.register(userInfo)
+      setTokenCookies(reply, tokensAndUser.tokens)
       reply.statusCode = 201
       return tokensAndUser
     },

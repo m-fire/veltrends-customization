@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 type AppErrorType =
   | 'UserExistsError'
   | 'AuthenticationError'
@@ -81,5 +83,16 @@ export default class AppError<
     type: K,
   ): typeof ERRORINFO_BY_TYPE[K] & { type: K } {
     return { ...ERRORINFO_BY_TYPE[type], type }
+  }
+
+  static extract(error: unknown): AppError {
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data
+      console.log(`AppError.extract() error, data:`, error, data)
+      if (AppError.equals(data)) {
+        return data
+      }
+    }
+    return new AppError('UnknownError')
   }
 }

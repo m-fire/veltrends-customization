@@ -5,16 +5,19 @@ import { useGoBack } from '~/hooks/useGoBack'
 import FullHeightPage from '~/components/FullHeightPage'
 import AuthForm, { AuthFormSumitData } from '~/components/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
-import { useActionData } from '@remix-run/react'
+import { ThrownResponse, useActionData, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { login } from '~/common/api/auth'
+import AppError from '~/common/error/AppError'
 
-type LoginProps = {}
+type LoginProps = {
+  error?: AppError
+}
 
-function Login({}: LoginProps) {
+function Login({ error }: LoginProps) {
   const goBack = useGoBack()
   const actionData = useActionData<AuthFormSumitData>()
-  console.log(`login.Login() actionData:`, actionData)
+  // console.log(`login.Login() actionData:`, actionData)
 
   return (
     <FullHeightPage>
@@ -23,7 +26,7 @@ function Login({}: LoginProps) {
         headerLeft={<HeaderBackButton onClick={goBack} />}
         headerRight="HR"
       />
-      <AuthForm mode="login" />
+      <AuthForm mode="login" error={error} />
     </FullHeightPage>
   )
 }
@@ -31,6 +34,13 @@ function Login({}: LoginProps) {
 export default Login
 
 // Remix actions handler
+
+export function CatchBoundary() {
+  const caught = useCatch<ThrownResponse<number, AppError>>()
+  console.log(`login.CatchBoundary() caught:`, caught)
+
+  return <Login error={caught.data} />
+}
 
 export const action: ActionFunction = async ({ request }) => {
   /* Todo: Remix 의 route 모듈 root 에 `action` 이름의 비동기 함수를
@@ -42,7 +52,13 @@ export const action: ActionFunction = async ({ request }) => {
   const password = form.get('password')
   if (!isString(username) || !isString(password)) return
 
-  const { result, headers } = await login({ username, password })
-
-  return json(result, { headers })
+  try {
+    const { result, headers } = await login({ username, password })
+    return json(result, { headers })
+  } catch (e) {
+    const error = AppError.extract(e)
+    throw json(error, {
+      status: error.statusCode,
+    })
+  }
 }

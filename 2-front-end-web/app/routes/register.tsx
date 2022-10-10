@@ -5,16 +5,19 @@ import { useGoBack } from '~/hooks/useGoBack'
 import FullHeightPage from '~/components/FullHeightPage'
 import AuthForm, { AuthFormSumitData } from '~/components/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
-import { useActionData } from '@remix-run/react'
+import { ThrownResponse, useActionData, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { register } from '~/common/api/auth'
+import AppError from '~/common/error/AppError'
 
-type RegisterProps = {}
+type RegisterProps = {
+  error?: AppError
+}
 
-function Register({}: RegisterProps) {
+function Register({ error }: RegisterProps) {
   const goBack = useGoBack()
   const actionData = useActionData<AuthFormSumitData>()
-  console.log(`register.Register() actionData:`, actionData)
+  // console.log(`register.Register() actionData:`, actionData)
 
   return (
     <FullHeightPage>
@@ -23,14 +26,22 @@ function Register({}: RegisterProps) {
         headerLeft={<HeaderBackButton onClick={goBack} />}
         headerRight="HR"
       />
-      <AuthForm mode="register" />
+      <AuthForm mode="register" error={error} />
     </FullHeightPage>
   )
 }
 
 export default Register
 
+export function CatchBoundary() {
+  const caught = useCatch<ThrownResponse<number, AppError>>()
+  console.log(`register.CatchBoundary() caught:`, caught)
+
+  return <Register error={caught.data} />
+}
+
 // Remix actions handler
+
 export const action: ActionFunction = async ({ request }) => {
   /* Todo: Remix 의 route 모듈 root 에 `action` 이름의 비동기 함수를
            export 하는것으로 useActionData() 를 통해 데이터 핸들링 할 수 있다 */
@@ -41,7 +52,13 @@ export const action: ActionFunction = async ({ request }) => {
   const password = form.get('password')
   if (!isString(username) || !isString(password)) return
 
-  const { result, headers } = await register({ username, password })
-
-  return json(result, { headers })
+  try {
+    const { result, headers } = await register({ username, password })
+    return json(result, { headers })
+  } catch (e) {
+    const error = AppError.extract(e)
+    throw json(error, {
+      status: error.statusCode,
+    })
+  }
 }

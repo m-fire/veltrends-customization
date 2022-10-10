@@ -16,9 +16,16 @@ export const globalAuthPlugin = fp(
 
     fastify.addHook('preHandler', async (request) => {
       // 해더 or 쿠키의 인증토큰의 유효성검증 후, 접근여부 처리
+      const cookieTokens = request.cookies as CookieTokens
       const tokenStr =
         request.headers.authorization?.split(`Bearer `)[1] ??
-        (request.cookies as CookieTokens)?.access_token
+        cookieTokens?.access_token
+
+      // 클라이언트에게 refresh_token 만 있다면, access_token 이 expired 된 것.
+      if (cookieTokens.refresh_token != null && !tokenStr) {
+        request.isExpiredToken = true // 따라서 expired 로 강제변경.
+        return
+      }
 
       if (!tokenStr) return
 
