@@ -1,32 +1,38 @@
-import { FocusEventHandler } from 'react'
+import { Validates } from '~/common/util/validates'
 
-interface InputConfig {
-  initaialValue: string
-  validate(value: string): boolean
+type FormInputConfig = {
+  validate: (text: string) => boolean
+  name?: string
+  initialValue?: string
 }
 
-interface InputProps {
-  name: string
-  onBlur: FocusEventHandler<HTMLInputElement>
+type UseFormParams<K extends string> = {
+  config: Record<K, FormInputConfig>
+  mode?: 'all' | 'chagne' | 'submit' | 'blur'
+  initialValues?: Record<K, string>
 }
-
-type UseFormParams<K extends string> = Record<K, InputConfig>
-type UseFormResult<K extends string> = Record<K, InputProps>
 
 /**
- * 훅 사용예시
- * useForm({
- *   username: {
- *     initialValue: '',
- *     validate: (v: string) => {},
- *   },
- *   password: {
- *     initialValue: '',
- *     validate: (v: string) => {},
- *   },
- * })
+ * 1. validate
+ *    - when -> blur change -> validate
+ *    - when -> submit -> validate
+ * 2. handle error message
+ *    - for each input
+ *    - for form
+ *    - external message settings
  */
-export function useForm<K extends string>(params: UseFormParams<K>) {
-  const result: Partial<UseFormResult<K>> = {}
-  return result as UseFormResult<K>
+export function useForm<K extends string>(params: UseFormParams<K>) {}
+
+// 사용예시
+export function example() {
+  const reuslt = useForm({
+    config: {
+      username: {
+        validate: Validates.Auth.usrename,
+      },
+      password: {
+        validate: Validates.Auth.password,
+      },
+    },
+  })
 }
