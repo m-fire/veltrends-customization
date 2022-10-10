@@ -4,7 +4,7 @@ import LabelInput from '~/components/LabelInput'
 import Button from '~/components/Button'
 import QuestionLink from '~/components/QuestionLink'
 import { Form } from '@remix-run/react'
-import { useFormDataIsLoading } from '~/hooks/useFormDataIsLoading'
+import { useSubmitLoading } from '~/hooks/useSubmitLoading'
 import { Key, Write } from '~/components/generate'
 import AppError from '~/common/error/AppError'
 import {
@@ -58,7 +58,7 @@ type AuthFormProps = {
 }
 
 function AuthForm({ mode, error }: AuthFormProps) {
-  const isLoading = useFormDataIsLoading()
+  const isLoading = useSubmitLoading()
   const [isValidUsername, setIsValidUsername] = useState(true)
   const [isValidPassword, setIsValidPassword] = useState(true)
 
