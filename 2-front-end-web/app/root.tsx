@@ -9,8 +9,9 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import GlobalStyle from '~/components/GlobalStyle'
-import { getMe, User } from '~/common/api/auth'
+import { getMyAccount, User } from '~/common/api/auth'
 import { setClientCookie } from '~/common/api/client'
+import AppError from '~/common/error/AppError'
 
 export default function App() {
   const user = useLoaderData<User | undefined>()
@@ -38,8 +39,17 @@ export const loader: LoaderFunction = async ({ request }) => {
   const cookie = request.headers.get('Cookie')
   if (!cookie) return null
   setClientCookie(cookie)
-  const me = await getMe()
-  return me
+  try {
+    const me = await getMyAccount()
+    return me
+  } catch (e) {
+    const error = AppError.extract(e)
+    console.log(`Root.loader() error, e:`, error, e)
+    if (error.name === 'UnauthorizedError') {
+      console.log(error.payload)
+    }
+    return null
+  }
 }
 
 export const meta: MetaFunction = () => ({

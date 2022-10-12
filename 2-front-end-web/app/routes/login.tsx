@@ -24,7 +24,6 @@ function Login({ error }: LoginProps) {
       <Header
         title="로그인"
         headerLeft={<HeaderBackButton onClick={goBack} />}
-        headerRight="HR"
       />
       <AuthForm mode="login" error={error} />
     </FullHeightPage>

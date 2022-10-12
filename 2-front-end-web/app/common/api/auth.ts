@@ -27,7 +27,7 @@ export async function login(params: AuthParams) {
   return { headers, result: response.data }
 }
 
-export async function getMe() {
+export async function getMyAccount() {
   const response = await client.get<User>(URL_ME)
   const headers = createCookieHeaders(response.headers)
   return { headers, result: response.data }

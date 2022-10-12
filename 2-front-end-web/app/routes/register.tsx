@@ -24,7 +24,6 @@ function Register({ error }: RegisterProps) {
       <Header
         title="회원가입"
         headerLeft={<HeaderBackButton onClick={goBack} />}
-        headerRight="HR"
       />
       <AuthForm mode="register" error={error} />
     </FullHeightPage>
