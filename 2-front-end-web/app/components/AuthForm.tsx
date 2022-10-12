@@ -13,6 +13,7 @@ import { Validates } from '~/common/util/validates'
 
 function AuthForm({ mode, error }: AuthFormProps) {
   const {
+    inputProps,
     handleSubmit,
     errors: formErrors,
     setError,
@@ -60,16 +61,16 @@ function AuthForm({ mode, error }: AuthFormProps) {
             label="아이디"
             placeholder={placeholderByMode.username}
             disabled={isLoading}
-            onBlur={(e) => {
-              if (mode !== 'register') return
-              setIsValidUsername(checkValidUsername(e.currentTarget.value))
-            }}
+            errorMessage={formErrors.username}
+            {...inputProps.username}
           />
           <LabelInput
             type="password"
             label="비밀번호"
             placeholder={placeholderByMode.password}
             disabled={isLoading}
+            errorMessage={formErrors.password}
+            {...inputProps.password}
           />
         </InputGroup>
 

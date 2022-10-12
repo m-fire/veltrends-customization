@@ -1,19 +1,22 @@
-import React, { InputHTMLAttributes } from 'react'
-import styled, { css } from 'styled-components'
+import React, { forwardRef, InputHTMLAttributes } from 'react'
+import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
 }
 
-function Input({ errorMessage, ...props }: InputProps) {
-  return (
-    <>
-      <StyledInput {...props} />{' '}
-      {errorMessage && <Message>{errorMessage}</Message>}
-    </>
-  )
-}
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ errorMessage, ...props }, ref) => {
+    return (
+      <>
+        <StyledInput {...props} ref={ref} />{' '}
+        {errorMessage ? <Message>{errorMessage}</Message> : null}
+      </>
+    )
+  },
+)
+Input.displayName = 'Input'
 export default Input
 
 // Inner Components
@@ -45,7 +48,7 @@ const StyledInput = styled.input<Pick<InputProps, 'errorMessage'>>`
     `}
 `
 
-const Message = styled.div<Pick<InputProps, 'errorMessage'>>`
+const Message = styled.div`
   margin-top: 6px;
   font-size: 12px;
   color: ${colors.secondary1};

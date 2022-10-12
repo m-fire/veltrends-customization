@@ -1,4 +1,4 @@
-import React, { FocusEventHandler, useState } from 'react'
+import React, { FocusEventHandler, forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import Input, { InputProps } from '~/components/Input'
 import { colors } from '~/common/style/colors'
@@ -10,37 +10,36 @@ interface LabelInputProps extends InputProps {
   onBlur?: FocusEventHandler<HTMLInputElement>
 }
 
-function LabelInput({
-  label,
-  errorMessage,
-  onFocus,
-  onBlur,
-  ...rest
-}: LabelInputProps) {
-  const [focused, setFocused] = useState(false)
-  const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
-    onFocus?.(e)
-    setFocused(true)
-  }
-  const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-    onBlur?.(e)
-    setFocused(false)
-  }
+const LabelInput = forwardRef<HTMLInputElement, LabelInputProps>(
+  ({ label, errorMessage, onFocus, onBlur, ...rest }, ref) => {
+    const [focused, setFocused] = useState(false)
 
-  return (
-    <>
-      <Block>
-        <Label focused={focused}>{label}</Label>
-        <Input
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          errorMessage={errorMessage}
-          {...rest}
-        />
-      </Block>
-    </>
-  )
-}
+    const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+      onFocus?.(e)
+      setFocused(true)
+    }
+    const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+      onBlur?.(e)
+      setFocused(false)
+    }
+
+    return (
+      <>
+        <Block>
+          <Label focused={focused}>{label}</Label>
+          <Input
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            errorMessage={errorMessage}
+            {...rest}
+            ref={ref}
+          />
+        </Block>
+      </>
+    )
+  },
+)
+LabelInput.displayName = 'LabelInput'
 export default LabelInput
 
 // Inner Components
