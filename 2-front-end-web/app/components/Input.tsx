@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  errorMessage?: string
+  errorMessage?: string | null
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -41,15 +41,10 @@ const StyledInput = styled.input<Pick<InputProps, 'errorMessage'>>`
     background: ${colors.grey1};
     color: ${colors.grey3};
   }
-  ${({ errorMessage }) =>
-    errorMessage &&
-    css`
-      border: 2px solid ${colors.secondary4};
-    `}
 `
 
 const Message = styled.div`
   margin-top: 6px;
-  font-size: 12px;
+  font-size: 14px;
   color: ${colors.secondary1};
 `
