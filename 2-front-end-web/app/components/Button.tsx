@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
 
 type ButtonProps = {
-  layoutMode?: 'inline' | 'fullWith'
+  layoutMode?: 'inline' | 'fullWidth'
 }
 
 function Button({
@@ -38,7 +38,7 @@ const StyledButton = styled.button<Pick<ButtonProps, 'layoutMode'>>`
     filter: brightness(70%);
   }
   ${(props) =>
-    props.layoutMode === 'fullWith' &&
+    props.layoutMode === 'fullWidth' &&
     css`
       width: 100%;
     `}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import LabelInput from '~/components/LabelInput'
 import Button from '~/components/Button'
@@ -7,14 +7,110 @@ import { Form } from '@remix-run/react'
 import { useSubmitLoading } from '~/hooks/useSubmitLoading'
 import { Key, Write } from '~/components/generate'
 import AppError from '~/common/error/AppError'
-import {
-  checkValidPassword,
-  checkValidUsername,
-} from '~/common/validation/regex'
-import { isString } from '~/common/util/strings'
 import { colors } from '~/common/style/colors'
+import { useForm } from '~/hooks/useForm'
+import { Validates } from '~/common/util/validates'
+
+function AuthForm({ mode, error }: AuthFormProps) {
+  const {
+    handleSubmit,
+    errors: formErrors,
+    setError,
+  } = useForm({
+    inputs: {
+      username: {
+        validate: mode === 'register' ? Validates.Auth.usrename : undefined,
+        errorMessage: '5~20자 사이의 영문 대/소문자, 숫자를 입력해주세요',
+      },
+      password: {
+        validate: mode === 'register' ? Validates.Auth.password : undefined,
+        errorMessage: '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요',
+      },
+    },
+    mode: 'all', // change | blue 모두
+    shouldPreventDefault: false,
+  })
+
+  useEffect(() => {
+    if (error == null) return
+    switch (error.name) {
+      case 'UserExistsError':
+        return setError('username', '이미 존재하는 계정입니다.')
+      case 'AuthenticationError':
+      case 'UnknownError':
+        return setError('username', '입력정보를 다시 확인해주세요.')
+    }
+  }, [error, setError])
+
+  const {
+    placeholder: placeholderByMode,
+    submitButton: submitBtnByMode,
+    action: actionByMode,
+  } = formDescriptions[mode]
+  const onSubmit = handleSubmit((values) => {
+    console.log(`AuthForm.onSubmit() { handleSubmit values :`, values)
+  })
+  const isLoading = useSubmitLoading()
+
+  return (
+    <>
+      <StyledFormRef method="post" onSubmit={onSubmit}>
+        <InputGroup>
+          <LabelInput
+            label="아이디"
+            placeholder={placeholderByMode.username}
+            disabled={isLoading}
+            onBlur={(e) => {
+              if (mode !== 'register') return
+              setIsValidUsername(checkValidUsername(e.currentTarget.value))
+            }}
+          />
+          <LabelInput
+            type="password"
+            label="비밀번호"
+            placeholder={placeholderByMode.password}
+            disabled={isLoading}
+          />
+        </InputGroup>
+
+        <ActionBox>
+          {error?.name === 'AuthenticationError' ? (
+            <ActionErrorMessage>잘못된 계정정보 입니다.</ActionErrorMessage>
+          ) : null}
+
+          <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>
+            <span>{submitBtnByMode.icon}</span>
+            {submitBtnByMode.text}
+          </Button>
+          <QuestionLink
+            question={actionByMode.question}
+            name={actionByMode.name}
+            to={actionByMode.link}
+            disabled={isLoading}
+          />
+        </ActionBox>
+      </StyledFormRef>
+    </>
+  )
+}
+export default AuthForm
 
 const formDescriptions = {
+  register: {
+    placeholder: {
+      username: '5~20자 영문, 숫자 입력',
+      password: '8자이상 영문,숫자,특수문자 중 2가지 혼합입력',
+    },
+    submitButton: {
+      icon: <Write />,
+      text: '회원가입',
+    },
+    action: {
+      question: '이미 계정이 있으신가요?',
+      name: '로그인',
+      link: '/login',
+    },
+  },
   login: {
     placeholder: {
       username: '아이디를 입력하세요',
@@ -30,21 +126,6 @@ const formDescriptions = {
       link: '/register',
     },
   },
-  register: {
-    placeholder: {
-      username: '5~20자 영문, 숫자 입력',
-      password: '8자 이상 영문, 숫자, 특수문자 중 2가지 이상 입력',
-    },
-    submitButton: {
-      icon: <Write />,
-      text: '회원가입',
-    },
-    action: {
-      question: '이미 계정이 있으신가요?',
-      name: '로그인',
-      link: '/login',
-    },
-  },
 } as const
 
 export type AuthFormSumitData = {
@@ -56,97 +137,6 @@ type AuthFormProps = {
   mode: 'login' | 'register'
   error?: AppError
 }
-
-function AuthForm({ mode, error }: AuthFormProps) {
-  const isLoading = useSubmitLoading()
-  const [isValidUsername, setIsValidUsername] = useState(true)
-  const [isValidPassword, setIsValidPassword] = useState(true)
-
-  const { placeholder, submitButton, action } = formDescriptions[mode]
-
-  const usernameErrorMessage = useMemo(() => {
-    if (!isValidUsername) {
-      return '5~20자 사이의 영문 대/소문자, 숫자를 입력해주세요.'
-    }
-    if (error?.name === 'UserExistsError') {
-      return '이미 존재하는 계정입니다.'
-    }
-    return undefined
-  }, [error, isValidUsername])
-
-  return (
-    <>
-      <StyledFormRef
-        method="post"
-        onSubmit={(e) => {
-          if (mode !== 'register') return
-
-          const form = new FormData(e.currentTarget)
-          const username = form.get('username')
-          const password = form.get('password')
-          if (
-            !isString(username) ||
-            !isString(password) ||
-            !checkValidUsername(username) ||
-            !checkValidPassword(password)
-          ) {
-            e.preventDefault()
-            return
-          }
-        }}
-      >
-        <InputGroup>
-          <LabelInput
-            name="username"
-            label="아이디"
-            placeholder={placeholder.username}
-            errorMessage={usernameErrorMessage}
-            disabled={isLoading}
-            onBlur={(e) => {
-              if (mode !== 'register') return
-              setIsValidUsername(checkValidUsername(e.currentTarget.value))
-            }}
-          />
-          <LabelInput
-            name="password"
-            label="비밀번호"
-            placeholder={placeholder.password}
-            errorMessage={
-              isValidPassword
-                ? undefined
-                : '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.'
-            }
-            onBlur={(e) => {
-              if (mode !== 'register') return
-              setIsValidPassword(checkValidPassword(e.currentTarget.value))
-            }}
-            disabled={isLoading}
-          />
-        </InputGroup>
-
-        <ActionBox>
-          {error?.name === 'AuthenticationError' ? (
-            <ActionErrorMessage>잘못된 계정정보 입니다.</ActionErrorMessage>
-          ) : error?.name === 'UserExistsError' ? (
-            <ActionErrorMessage>이미 존재하는 아이디 입니다</ActionErrorMessage>
-          ) : null}
-
-          <Button type="submit" layoutMode="fullWith" disabled={isLoading}>
-            <span>{submitButton.icon}</span>
-            {submitButton.text}
-          </Button>
-          <QuestionLink
-            question={action.question}
-            name={action.name}
-            to={action.link}
-            disabled={isLoading}
-          />
-        </ActionBox>
-      </StyledFormRef>
-    </>
-  )
-}
-export default AuthForm
 
 // Inner Components
 
