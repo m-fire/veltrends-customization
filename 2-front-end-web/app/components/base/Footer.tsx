@@ -8,7 +8,7 @@ type FooterProps = {}
 function Footer({}: FooterProps) {
   return (
     <StyledFooter>
-      <FooterTabItem icon="home" />
+      <FooterTabItem icon="home" isActive />
       <FooterTabItem icon="search" />
       <FooterTabItem icon="add" />
       <FooterTabItem icon="bookmark" />
