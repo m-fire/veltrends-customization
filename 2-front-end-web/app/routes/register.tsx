@@ -3,7 +3,7 @@ import AuthForm from '~/components/auth/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
 import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
-import { register } from '~/common/api/auth'
+import { Authenticator } from '~/common/api/auth'
 import AppError from '~/common/error/AppError'
 import BasicLayout from '~/components/layout/BasicLayout'
 
@@ -41,7 +41,10 @@ export const action: ActionFunction = async ({ request }) => {
   if (!isString(username) || !isString(password)) return
 
   try {
-    const { result, headers } = await register({ username, password })
+    const { result, headers } = await Authenticator.Route.register({
+      username,
+      password,
+    })
     return json(result, { headers })
   } catch (e) {
     const error = AppError.extract(e)

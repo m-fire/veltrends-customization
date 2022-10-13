@@ -9,7 +9,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import GlobalStyle from '~/GlobalStyle'
-import { getMyAccount, User } from '~/common/api/auth'
+import { Authenticator, User } from '~/common/api/auth'
 import { setClientCookie } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
 
@@ -40,8 +40,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!cookie) return null
   setClientCookie(cookie)
   try {
-    const me = await getMyAccount()
-    return me
+    const authResult = await Authenticator.getAuthResult()
+    return authResult
   } catch (e) {
     const error = AppError.extract(e)
     console.log(`Root.loader() error, e:`, error, e)
