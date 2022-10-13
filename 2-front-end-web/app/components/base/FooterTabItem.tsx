@@ -35,7 +35,13 @@ export default FooterTabItem
 
 const Item = styled.div`
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   svg {
-    // 아이콘 스타일링
+    color: ${colors.grey5};
+    width: 24px;
+    height: 24px;
   }
 `
