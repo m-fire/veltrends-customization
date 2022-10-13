@@ -23,6 +23,20 @@ export class Authenticator {
     return Authenticator.authorizedAccountMemo
   }
 
+  static async checkRequest(request: Request) {
+    const cookie = request.headers.get('Cookie')
+
+    if (!cookie || !cookie.includes('access_token')) return false
+    try {
+      await Authenticator.getAuthResult()
+    } catch (e) {
+      console.log({ e })
+      return false
+    }
+
+    return true
+  }
+
   static Route = class RouteAccessAuthenticator {
     static async register(params: AuthParams) {
       const response = await client.post<AuthResult>(URL_REGISTER, params)
