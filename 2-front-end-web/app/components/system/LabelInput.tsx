@@ -1,6 +1,6 @@
 import React, { FocusEventHandler, forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import Input, { InputProps } from '~/components/Input'
+import Input, { InputProps } from '~/components/system/Input'
 import { colors } from '~/common/style/colors'
 
 interface LabelInputProps extends InputProps {

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ArrowLeft } from '~/components/generate'
+import { ArrowLeft } from '~/components/generate/svg'
 
 type HeaderBackButtonProps = {
   onClick?: () => void
