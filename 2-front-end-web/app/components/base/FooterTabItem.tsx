@@ -48,8 +48,8 @@ const sharedStyle = (isActive?: boolean) => css`
   justify-content: center;
   svg {
     color: ${colors.grey5};
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     ${isActive &&
     css`
       color: ${colors.primary1};
