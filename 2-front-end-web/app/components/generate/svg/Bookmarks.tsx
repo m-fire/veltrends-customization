@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SVGProps } from 'react'
 
-const SvgBookmark = (props: SVGProps<SVGSVGElement>) => (
+const SvgBookmarks = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 16 16"
     fill="currentColor"
@@ -13,4 +13,4 @@ const SvgBookmark = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 )
 
-export default SvgBookmark
+export default SvgBookmarks

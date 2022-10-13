@@ -4,7 +4,7 @@ import { colors } from '~/common/style/colors'
 import FooterTabItem from '~/components/base/FooterTabItem'
 import { useLocation } from '@remix-run/react'
 
-const paths = ['search', 'bookmark', 'setting'] as const
+const paths = ['search', 'bookmarks', 'setting'] as const
 
 function isValidPath(path: any): path is typeof paths[number] {
   return paths.includes(path)
@@ -25,23 +25,23 @@ function Footer({}: FooterProps) {
 
   return (
     <StyledFooter>
-      <FooterTabItem icon="home" to="/" isActive={currentPage === 'home'} />
+      <FooterTabItem to="/" icon="home" isActive={currentPage === 'home'} />
       <FooterTabItem
-        icon="search"
         to="/search"
+        icon="search"
         isActive={currentPage === 'search'}
       />
 
       <FooterTabItem icon="add" />
 
       <FooterTabItem
-        icon="bookmark"
-        to="/bookmark"
-        isActive={currentPage === 'bookmark'}
+        to="/bookmarks"
+        icon="bookmarks"
+        isActive={currentPage === 'bookmarks'}
       />
       <FooterTabItem
-        icon="setting"
         to="/setting"
+        icon="setting"
         isActive={currentPage === 'setting'}
       />
     </StyledFooter>

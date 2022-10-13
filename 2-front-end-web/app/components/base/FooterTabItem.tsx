@@ -2,7 +2,7 @@ import React, { createElement } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
 import {
-  Bookmark,
+  Bookmarks,
   Fire,
   Plus,
   Search,
@@ -14,7 +14,7 @@ const iconMap = {
   home: Fire,
   search: Search,
   add: Plus,
-  bookmark: Bookmark,
+  bookmarks: Bookmarks,
   setting: Setting,
 }
 
