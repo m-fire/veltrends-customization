@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '~/components/base/Header'
 import HeaderBackButton from '~/components/base/HeaderBackButton'
-import { useGoBack } from '~/hooks/useGoBack'
+import { useGoBack } from '~/common/hooks/useGoBack'
 import FullHeightPage from '~/components/system/FullHeightPage'
 import AuthForm, { AuthFormSumitData } from '~/components/auth/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'

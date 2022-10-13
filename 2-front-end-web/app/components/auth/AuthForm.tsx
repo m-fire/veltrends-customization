@@ -4,11 +4,11 @@ import LabelInput from '~/components/system/LabelInput'
 import Button from '~/components/system/Button'
 import QuestionLink from '~/components/auth/QuestionLink'
 import { Form } from '@remix-run/react'
-import { useSubmitLoading } from '~/hooks/useSubmitLoading'
+import { useSubmitLoading } from '~/common/hooks/useSubmitLoading'
 import { Key, Write } from '~/components/generate/svg'
 import AppError from '~/common/error/AppError'
 import { colors } from '~/common/style/colors'
-import { useForm } from '~/hooks/useForm'
+import { useForm } from '~/common/hooks/useForm'
 import { Validates } from '~/common/util/validates'
 
 function AuthForm({ mode, error }: AuthFormProps) {
