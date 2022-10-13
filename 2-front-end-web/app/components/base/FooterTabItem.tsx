@@ -41,7 +41,7 @@ export default FooterTabItem
 
 // Inner Components
 
-const LinkItemRef = styled(Link)<Pick<FooterTabItemProps, 'isActive'>>`
+const sharedStyle = (isActive?: boolean) => css`
   flex: 1;
   display: flex;
   align-items: center;
@@ -50,27 +50,17 @@ const LinkItemRef = styled(Link)<Pick<FooterTabItemProps, 'isActive'>>`
     color: ${colors.grey5};
     width: 24px;
     height: 24px;
-    ${({ isActive }) =>
-      isActive &&
-      css`
-        color: ${colors.primary1};
-      `}
+    ${isActive &&
+    css`
+      color: ${colors.primary1};
+    `}
   }
 `
 
+const LinkItemRef = styled(Link)<Pick<FooterTabItemProps, 'isActive'>>`
+  ${({ isActive }) => sharedStyle(isActive)}
+`
+
 const ButtonItem = styled.button<Pick<FooterTabItemProps, 'isActive'>>`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  svg {
-    color: ${colors.grey5};
-    width: 24px;
-    height: 24px;
-    ${({ isActive }) =>
-      isActive &&
-      css`
-        color: ${colors.primary1};
-      `}
-  }
+  ${({ isActive }) => sharedStyle(isActive)}
 `
