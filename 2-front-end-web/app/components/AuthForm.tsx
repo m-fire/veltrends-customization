@@ -34,13 +34,22 @@ function AuthForm({ mode, error }: AuthFormProps) {
 
   useEffect(() => {
     if (error == null) return
+    console.log(`AuthForm.() error.name:`, error.name)
+    let message: string
     switch (error.name) {
       case 'UserExistsError':
-        return setError('username', '이미 존재하는 계정입니다.')
+        message = '이미 존재하는 계정입니다.'
+        break
       case 'AuthenticationError':
+        message = '+입력정보를 다시 확인해주세요'
+        break
       case 'UnknownError':
-        return setError('username', '입력정보를 다시 확인해주세요.')
+        message = '-입력정보를 다시 확인해주세요'
+        break
+      default:
+        message = error.message
     }
+    setError('username', message)
   }, [error, setError])
 
   const {
