@@ -4,11 +4,14 @@ import Header from '~/components/base/Header'
 import Footer from '~/components/base/Footer'
 import styled from 'styled-components'
 
-type TabTemplateProps = {
+type TabLayoutProps = {
   children?: ReactNode
 }
 
-function TabTemplate({ children }: TabTemplateProps) {
+/**
+ * Shows content with a header adn a tab bar.
+ */
+function TabLayout({ children }: TabLayoutProps) {
   return (
     <FullHeightPage>
       <Header />
@@ -17,10 +20,10 @@ function TabTemplate({ children }: TabTemplateProps) {
     </FullHeightPage>
   )
 }
-export default TabTemplate
+export default TabLayout
 
 // Inner Components
 
-const Content = styled.div<Pick<TabTemplateProps, 'children'>>`
+const Content = styled.div<Pick<TabLayoutProps, 'children'>>`
   flex: 1;
 `

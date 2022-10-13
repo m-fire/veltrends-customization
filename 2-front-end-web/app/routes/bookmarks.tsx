@@ -1,10 +1,10 @@
 import React from 'react'
-import TabTemplate from '~/components/template/TabTemplate'
+import TabLayout from '~/components/template/TabLayout'
 
 type BookmarksProps = {}
 
 function Bookmarks({}: BookmarksProps) {
-  return <TabTemplate>Bookmarks route</TabTemplate>
+  return <TabLayout>Bookmarks route</TabLayout>
 }
 export default Bookmarks
 

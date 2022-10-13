@@ -1,32 +1,21 @@
 import React from 'react'
-import Header from '~/components/base/Header'
-import HeaderBackButton from '~/components/base/HeaderBackButton'
-import { useGoBack } from '~/common/hooks/useGoBack'
-import FullHeightPage from '~/components/system/FullHeightPage'
-import AuthForm, { AuthFormSumitData } from '~/components/auth/AuthForm'
+import AuthForm from '~/components/auth/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
-import { ThrownResponse, useActionData, useCatch } from '@remix-run/react'
+import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { login } from '~/common/api/auth'
 import AppError from '~/common/error/AppError'
+import BasicLayout from '~/components/template/BasicLayout'
 
 type LoginProps = {
   error?: AppError
 }
 
 function Login({ error }: LoginProps) {
-  const goBack = useGoBack()
-  const actionData = useActionData<AuthFormSumitData>()
-  // console.log(`login.Login() actionData:`, actionData)
-
   return (
-    <FullHeightPage>
-      <Header
-        title="로그인"
-        headerLeft={<HeaderBackButton onClick={goBack} />}
-      />
+    <BasicLayout title="로그인" hasBackButton>
       <AuthForm mode="login" error={error} />
-    </FullHeightPage>
+    </BasicLayout>
   )
 }
 

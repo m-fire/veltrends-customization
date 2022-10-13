@@ -1,10 +1,10 @@
 import React from 'react'
-import TabTemplate from '~/components/template/TabTemplate'
+import TabLayout from '~/components/template/TabLayout'
 
 type SearchProps = {}
 
 function Search({}: SearchProps) {
-  return <TabTemplate>Search route</TabTemplate>
+  return <TabLayout>Search route</TabLayout>
 }
 export default Search
 

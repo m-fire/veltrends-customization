@@ -1,7 +1,7 @@
-import TabTemplate from '~/components/template/TabTemplate'
+import TabLayout from '~/components/template/TabLayout'
 
 export default function Index() {
-  return <TabTemplate>Index route</TabTemplate>
+  return <TabLayout>Index route</TabLayout>
 }
 
 // Inner Components

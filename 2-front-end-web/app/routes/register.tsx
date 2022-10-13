@@ -1,32 +1,21 @@
 import React from 'react'
-import Header from '~/components/base/Header'
-import HeaderBackButton from '~/components/base/HeaderBackButton'
-import { useGoBack } from '~/common/hooks/useGoBack'
-import FullHeightPage from '~/components/system/FullHeightPage'
-import AuthForm, { AuthFormSumitData } from '~/components/auth/AuthForm'
+import AuthForm from '~/components/auth/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
-import { ThrownResponse, useActionData, useCatch } from '@remix-run/react'
+import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { register } from '~/common/api/auth'
 import AppError from '~/common/error/AppError'
+import BasicLayout from '~/components/template/BasicLayout'
 
 type RegisterProps = {
   error?: AppError
 }
 
 function Register({ error }: RegisterProps) {
-  const goBack = useGoBack()
-  const actionData = useActionData<AuthFormSumitData>()
-  // console.log(`register.Register() actionData:`, actionData)
-
   return (
-    <FullHeightPage>
-      <Header
-        title="회원가입"
-        headerLeft={<HeaderBackButton onClick={goBack} />}
-      />
+    <BasicLayout title="회원가입" hasBackButton>
       <AuthForm mode="register" error={error} />
-    </FullHeightPage>
+    </BasicLayout>
   )
 }
 
