@@ -5,7 +5,7 @@ import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { register } from '~/common/api/auth'
 import AppError from '~/common/error/AppError'
-import BasicLayout from '~/components/template/BasicLayout'
+import BasicLayout from '~/components/layout/BasicLayout'
 
 type RegisterProps = {
   error?: AppError

@@ -1,5 +1,5 @@
 import React from 'react'
-import TabLayout from '~/components/template/TabLayout'
+import TabLayout from '~/components/layout/TabLayout'
 
 type BookmarksProps = {}
 
