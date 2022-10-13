@@ -34,5 +34,7 @@ export default BasicLayout
 // Inner Components
 
 const Content = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
 `

@@ -24,6 +24,8 @@ export default TabLayout
 
 // Inner Components
 
-const Content = styled.div<Pick<TabLayoutProps, 'children'>>`
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
 `
