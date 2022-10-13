@@ -14,13 +14,13 @@ type FooterProps = {}
 function Footer({}: FooterProps) {
   return (
     <StyledFooter>
-      <FooterTabItem icon="home" to="/" />
-      <FooterTabItem icon="search" to="/search" />
+      <FooterTabItem to="/" icon="home" />
+      <FooterTabItem to="/search" icon="search" />
 
-      <FooterTabItem icon="add" />
+      <FooterTabItem to="/write" icon="add" theme="circle-stroke" />
 
-      <FooterTabItem icon="bookmarks" to="/bookmarks" />
-      <FooterTabItem icon="setting" to="/setting" />
+      <FooterTabItem to="/bookmarks" icon="bookmarks" />
+      <FooterTabItem to="/setting" icon="setting" />
     </StyledFooter>
   )
 }
