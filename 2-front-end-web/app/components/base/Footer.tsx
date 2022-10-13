@@ -8,11 +8,11 @@ type FooterProps = {}
 function Footer({}: FooterProps) {
   return (
     <StyledFooter>
-      <FooterTabItem />
-      <FooterTabItem />
-      <FooterTabItem />
-      <FooterTabItem />
-      <FooterTabItem />
+      <FooterTabItem icon="home" />
+      <FooterTabItem icon="search" />
+      <FooterTabItem icon="add" />
+      <FooterTabItem icon="bookmark" />
+      <FooterTabItem icon="setting" />
     </StyledFooter>
   )
 }

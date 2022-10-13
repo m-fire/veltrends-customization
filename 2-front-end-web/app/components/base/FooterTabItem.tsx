@@ -1,13 +1,31 @@
-import React from 'react'
+import React, { createElement } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
+import {
+  Bookmark,
+  Fire,
+  Plus,
+  Search,
+  Setting,
+} from '~/components/generate/svg'
 
-type FooterTabItemProps = {}
+const iconMap = {
+  home: Fire,
+  search: Search,
+  add: Plus,
+  bookmark: Bookmark,
+  setting: Setting,
+}
 
-function FooterTabItem({}: FooterTabItemProps) {
+type FooterTabItemProps = {
+  icon: keyof typeof iconMap
+}
+
+function FooterTabItem({ icon }: FooterTabItemProps) {
+  const iconEl = createElement(iconMap[icon])
   return (
     <>
-      <Item>Item</Item>
+      <Item>{iconEl}</Item>
     </>
   )
 }
@@ -16,6 +34,8 @@ export default FooterTabItem
 // Inner Components
 
 const Item = styled.div`
-  border: 1px solid ${colors.grey1};
-  background-color: gray;
+  flex: 1;
+  svg {
+    // 아이콘 스타일링
+  }
 `
