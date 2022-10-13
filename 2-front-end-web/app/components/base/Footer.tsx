@@ -25,13 +25,25 @@ function Footer({}: FooterProps) {
 
   return (
     <StyledFooter>
-      <FooterTabItem isActive={currentPage === 'home'} />
-      <FooterTabItem isActive={currentPage === 'search'} />
+      <FooterTabItem icon="home" to="/" isActive={currentPage === 'home'} />
+      <FooterTabItem
+        icon="search"
+        to="/search"
+        isActive={currentPage === 'search'}
+      />
 
       <FooterTabItem icon="add" />
 
-      <FooterTabItem isActive={currentPage === 'bookmark'} />
-      <FooterTabItem isActive={currentPage === 'setting'} />
+      <FooterTabItem
+        icon="bookmark"
+        to="/bookmark"
+        isActive={currentPage === 'bookmark'}
+      />
+      <FooterTabItem
+        icon="setting"
+        to="/setting"
+        isActive={currentPage === 'setting'}
+      />
     </StyledFooter>
   )
 }

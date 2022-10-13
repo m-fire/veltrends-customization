@@ -48,8 +48,8 @@ const sharedStyle = (isActive?: boolean) => css`
   justify-content: center;
   svg {
     color: ${colors.grey5};
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     ${isActive &&
     css`
       color: ${colors.primary1};
@@ -61,6 +61,24 @@ const LinkItemRef = styled(Link)<Pick<FooterTabItemProps, 'isActive'>>`
   ${({ isActive }) => sharedStyle(isActive)}
 `
 
+const decoShapeCircleStyle = (isActive?: boolean) => css`
+  &::after {
+    display: block;
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    content: '';
+    border: 2px solid ${isActive ? colors.primary1 : colors.grey5};
+    border-radius: 999px;
+  }
+`
 const ButtonItem = styled.button<Pick<FooterTabItemProps, 'isActive'>>`
-  ${({ isActive }) => sharedStyle(isActive)}
+  background: none;
+  outline: none;
+  border: none;
+  position: relative;
+  ${({ isActive }) => [
+    ...sharedStyle(isActive),
+    ...decoShapeCircleStyle(isActive),
+  ]};
 `
