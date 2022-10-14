@@ -12,10 +12,10 @@ import GlobalStyle from '~/GlobalStyle'
 import { Authenticator, User } from '~/common/api/auth'
 import { setClientCookie } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
+import { UserContext } from '~/context/UserContext'
 
 export default function App() {
-  const user = useLoaderData<User | undefined>()
-  // console.log(`default.App() user:`, user)
+  const data = useLoaderData<User | undefined>()
 
   return (
     <html lang="ko">
@@ -26,7 +26,9 @@ export default function App() {
       </head>
       <body>
         <GlobalStyle />
-        <Outlet />
+        <UserContext.Provider value={data}>
+          <Outlet />
+        </UserContext.Provider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
