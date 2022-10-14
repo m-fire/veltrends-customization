@@ -37,8 +37,21 @@ export default function App() {
   )
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, context }) => {
   const cookie = request.headers.get('Cookie')
+  /*
+  const redirectIfNeeded = () => {
+    const { pathname, search } = new URL(request.url)
+    const isProtected = PROTECTED_ROUTES.some((route) =>
+      pathname.includes(route),
+    )
+    if (isProtected) {
+      return redirect('/login?next=' + encodeURIComponent(pathname + search))
+    }
+    return null
+  }
+*/
+  // if (!cookie) return redirectIfNeeded()
   if (!cookie) return null
   setClientCookie(cookie)
   try {
@@ -46,11 +59,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     console.log(`Root.loader() getAccount() try!`)
     return userAndTokens
   } catch (e) {
+    console.log(`Root.loader() getAccount() catched!`)
     const error = AppError.extract(e)
-    console.log(`Root.loader() error, e:`, error, e)
     if (error.name === 'UnauthorizedError') {
-      console.log(error.payload)
+      // console.log(error.payload)
     }
+
+    // return redirectIfNeeded()
     return null
   }
 }
