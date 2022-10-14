@@ -1,4 +1,4 @@
-export class Validates {
+export class Validator {
   static readonly Auth = class AuthenticationInfoValidation {
     static usrename = (text: string) => /^[a-z0-9]{5,20}$/.test(text)
 

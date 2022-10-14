@@ -9,7 +9,7 @@ import { Key, Write } from '~/components/generate/svg'
 import AppError from '~/common/error/AppError'
 import { colors } from '~/common/style/colors'
 import { useForm } from '~/common/hooks/useForm'
-import { Validates } from '~/common/util/validates'
+import { Validator } from '~/common/util/validates'
 
 function AuthForm({ mode, error }: AuthFormProps) {
   const {
@@ -20,11 +20,11 @@ function AuthForm({ mode, error }: AuthFormProps) {
   } = useForm({
     inputs: {
       username: {
-        validate: mode === 'register' ? Validates.Auth.usrename : undefined,
+        validate: mode === 'register' ? Validator.Auth.usrename : undefined,
         errorMessage: '5~20자 사이의 영문 대/소문자, 숫자를 입력해주세요',
       },
       password: {
-        validate: mode === 'register' ? Validates.Auth.password : undefined,
+        validate: mode === 'register' ? Validator.Auth.password : undefined,
         errorMessage: '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요',
       },
     },
