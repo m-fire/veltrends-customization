@@ -40,8 +40,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!cookie) return null
   setClientCookie(cookie)
   try {
-    const authResult = await Authenticator.getAuthResult()
-    return authResult
+    const userAndTokens = await Authenticator.getAccount()
+    console.log(`Root.loader() getAccount() try!`)
+    return userAndTokens
   } catch (e) {
     const error = AppError.extract(e)
     console.log(`Root.loader() error, e:`, error, e)

@@ -15,7 +15,7 @@ const URL_LOGIN = API_AUTH + '/login'
 export class Authenticator {
   private static authorizedAccountMemo: AuthResult | null = null
 
-  static async getAuthResult() {
+  static async getAccount() {
     const response = await client.get<AuthResult>(URL_ME)
     if (!Authenticator.authorizedAccountMemo)
       Authenticator.authorizedAccountMemo = response.data
@@ -28,7 +28,7 @@ export class Authenticator {
 
     if (!cookie || !cookie.includes('access_token')) return false
     try {
-      await Authenticator.getAuthResult()
+      await Authenticator.getAccount()
     } catch (e) {
       console.log({ e })
       return false
