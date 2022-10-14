@@ -1,5 +1,14 @@
 import axios from 'axios'
 
+export type RoutePath =
+  | '/'
+  | '/login'
+  | '/register'
+  | '/search'
+  | '/write'
+  | '/bookmarks'
+  | '/setting'
+
 export const client = axios.create()
 
 export const URL_API_SERVER = 'http://localhost:4000'

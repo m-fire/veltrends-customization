@@ -2,6 +2,7 @@ import React, { createElement } from 'react'
 import { NavLink } from '@remix-run/react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
+import { RoutePath } from '~/common/api/client'
 import {
   Bookmarks,
   Fire,
@@ -18,12 +19,10 @@ const iconMap = {
   setting: Setting,
 }
 
-type LinkToType = '/' | '/search' | '/write' | '/bookmarks' | '/setting'
-
 type ThemeType = 'circle-stroke'
 
 type FooterTabItemProps = {
-  to: LinkToType
+  to: RoutePath
   icon: keyof typeof iconMap
   theme?: ThemeType
 }
