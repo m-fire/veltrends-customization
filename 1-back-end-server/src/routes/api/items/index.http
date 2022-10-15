@@ -1,0 +1,52 @@
+GET http://{{host}}:{{port}}/api/items
+Accept: application/json
+#Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 200;
+client.test("/api/items 해더토큰 접근", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### items 조회
+
+POST http://{{host}}:{{port}}/api/items
+Content-Type: application/json
+#Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"title":  "test_title",
+	"body": "test_body",
+	"link":  "https://test.com/test",
+	"tags": "tag=tag1&tag=tag2&tag=tag3"
+}
+
+> {%
+var status = 200;
+client.test("/api/items 쿠키토큰 접근", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### item 생성
