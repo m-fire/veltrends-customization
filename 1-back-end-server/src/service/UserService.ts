@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
 import TokenService, { TokenStringMap } from './TokenService.js'
-import { AuthBody } from '../routes/api/auth/schema.js'
+import { AuthBody } from '../routes/api/auth/types.js'
 
 const SOLT_ROUNDS = 10
 

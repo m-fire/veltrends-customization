@@ -1,6 +1,6 @@
 import { FastifySchema } from 'fastify'
-import { Static, Type } from '@sinclair/typebox'
-import { createAppErrorSchema } from '../../../common/schema/common-schema.js'
+import { Type } from '@sinclair/typebox'
+import { createAppErrorSchema } from '../../../common/util/schema-util.js'
 
 // Typebox Schema
 
@@ -8,7 +8,6 @@ export const AUTH_BODY_SCHEMA = Type.Object({
   username: Type.String(),
   password: Type.String(),
 })
-export type AuthBody = Static<typeof AUTH_BODY_SCHEMA>
 
 export const AUTH_USER_INFO_SCHEMA = Type.Object(
   {
@@ -26,18 +25,16 @@ export const AUTH_USER_INFO_SCHEMA = Type.Object(
 export const REFRESH_TOKEN_BODY_SCHEMA = Type.Object({
   refreshToken: Type.Optional(Type.String()),
 })
-export type RefreshTokenBody = Static<typeof REFRESH_TOKEN_BODY_SCHEMA>
 
-const TOKENS_SCHEMA = Type.Object({
+export const TOKENS_SCHEMA = Type.Object({
   accessToken: Type.String(),
   refreshToken: Type.String(),
 })
 
-const AUTH_RESULT_SCHEMA = Type.Object({
+export const AUTH_RESULT_SCHEMA = Type.Object({
   tokens: TOKENS_SCHEMA,
   user: AUTH_USER_INFO_SCHEMA,
 })
-export type AuthResult = Static<typeof AUTH_RESULT_SCHEMA>
 
 // FastifySchema
 

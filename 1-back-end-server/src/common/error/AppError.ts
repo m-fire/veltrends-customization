@@ -65,7 +65,6 @@ export default class AppError<
   constructor(public readonly name: K, public payload?: ErrorPayloadOpt<K>) {
     const info = ERRORS_INFO_BY_NAME[name]
     super(info.message)
-    this.name = name
     this.statusCode = info.statusCode
   }
 
