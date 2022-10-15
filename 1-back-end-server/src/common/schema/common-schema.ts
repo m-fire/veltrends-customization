@@ -11,7 +11,7 @@ export const AUTH_USER_INFO_SCHEMA = Type.Object(
   {
     example: {
       id: 1,
-      username: 'exam-user',
+      username: 'test-user',
     },
   },
 )
@@ -21,11 +21,11 @@ export type AuthUserInfo = Static<typeof AUTH_USER_INFO_SCHEMA>
 
 export function createAppErrorSchema<
   K extends Parameters<typeof AppError.info>[0],
->(type: K, payloadSchema?: TSchema) {
-  const errorExample = AppError.info(type)
+>(name: K, payloadSchema?: TSchema) {
+  const errorExample = AppError.info(name)
   return Type.Object(
     {
-      type: Type.String(),
+      name: Type.String(),
       message: Type.String(),
       statusCode: Type.Number(),
       ...(payloadSchema && { payload: payloadSchema }),

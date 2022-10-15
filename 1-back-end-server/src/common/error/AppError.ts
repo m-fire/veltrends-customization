@@ -1,4 +1,4 @@
-type AppErrorType =
+export type AppErrorType =
   | 'UserExistsError'
   | 'AuthenticationError'
   | 'UnauthorizedError'
@@ -28,7 +28,7 @@ interface ErrorInfo {
   statusCode: number
 }
 
-const ERRORINFO_BY_TYPE: Record<AppErrorType, ErrorInfo> = {
+const ERRORS_INFO_BY_NAME: Record<AppErrorType, ErrorInfo> = {
   UserExistsError: {
     message: 'User already exists',
     statusCode: 409,
@@ -53,7 +53,7 @@ const ERRORINFO_BY_TYPE: Record<AppErrorType, ErrorInfo> = {
     message: 'Unknown error',
     statusCode: 500,
   },
-}
+} as const
 
 // Common Error
 
@@ -62,10 +62,10 @@ export default class AppError<
 > extends Error {
   public readonly statusCode: number
 
-  constructor(public readonly type: K, public payload?: ErrorPayloadOpt<K>) {
-    const info = ERRORINFO_BY_TYPE[type]
+  constructor(public readonly name: K, public payload?: ErrorPayloadOpt<K>) {
+    const info = ERRORS_INFO_BY_NAME[name]
     super(info.message)
-    this.name = type
+    this.name = name
     this.statusCode = info.statusCode
   }
 
@@ -78,8 +78,8 @@ export default class AppError<
   }
 
   static info<K extends AppErrorType>(
-    type: K,
-  ): typeof ERRORINFO_BY_TYPE[K] & { type: K } {
-    return { ...ERRORINFO_BY_TYPE[type], type }
+    name: K,
+  ): { name: K } & typeof ERRORS_INFO_BY_NAME[K] {
+    return { name, ...ERRORS_INFO_BY_NAME[name] }
   }
 }
