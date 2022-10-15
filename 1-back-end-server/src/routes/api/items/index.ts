@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import { ItemWriteRequest } from './types.js'
+import { ItemCreateRequest } from './types.js'
 import { ITEMS_POST_SCHEMA } from './schema.js'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
 
@@ -16,7 +16,7 @@ export default itemsRoute
 
 const itemsAuthRoute = createAuthRoute(async (fastify) => {
   /* 이곳에 작성된 엔드포인트 핸들러는 인증접속을 요구함 */
-  fastify.post<ItemWriteRequest>(
+  fastify.post<ItemCreateRequest>(
     '/',
     { schema: ITEMS_POST_SCHEMA },
     ({ body }) => {

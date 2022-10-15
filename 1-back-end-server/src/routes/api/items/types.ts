@@ -1,6 +1,8 @@
 import { RequestGenericInterface } from 'fastify/types/request'
-import { ItemWriteBody } from './schema.js'
+import { Static } from '@sinclair/typebox'
+import { ITEM_CREATE_SCHEMA } from './schema'
 
-export interface ItemWriteRequest extends RequestGenericInterface {
-  Body: ItemWriteBody
+export interface ItemCreateRequest extends RequestGenericInterface {
+  Body: ItemCreateBody
 }
+export type ItemCreateBody = Static<typeof ITEM_CREATE_SCHEMA>
