@@ -1,40 +1,61 @@
 import { FastifySchema } from 'fastify'
-import {
-  APP_ERROR,
-  composeExample,
-  errorExample,
-  REQUEST_LOGIN_USERINFO,
-  REQUEST_REFRESH_POST,
-  RESPONSE_AUTH_RESULT,
-  RESPONSE_REFRESH_POST,
-} from '../../../common/schema/common-schema.js'
+import { Static, Type } from '@sinclair/typebox'
+import { createAppErrorSchema } from '../../../common/schema/common-schema.js'
 
-// { body, querystring, params, headers, response } 등
-// HTTP 통신에 필요한 파라미터 설정
+// Typebox Schema
 
-export const AUTH_REGISTER_POST: FastifySchema = {
-  body: REQUEST_LOGIN_USERINFO,
+const AUTH_BODY_SCHEMA = Type.Object({
+  username: Type.String(),
+  password: Type.String(),
+})
+export type AuthBody = Static<typeof AUTH_BODY_SCHEMA>
+
+const REFRESH_TOKEN_BODY_SCHEMA = Type.Object({
+  refreshToken: Type.Optional(Type.String()),
+})
+export type RefreshTokenBody = Static<typeof REFRESH_TOKEN_BODY_SCHEMA>
+
+const TOKENS_SCHEMA = Type.Object({
+  accessToken: Type.String(),
+  refreshToken: Type.String(),
+})
+
+const AUTH_RESULT_SCHEMA = Type.Object({
+  tokens: TOKENS_SCHEMA,
+  user: AUTH_BODY_SCHEMA,
+})
+export type AuthResult = Static<typeof AUTH_RESULT_SCHEMA>
+
+// FastifySchema
+
+export const REGISTER_SCHEMA: FastifySchema = {
+  tags: ['auth'],
+  body: AUTH_BODY_SCHEMA,
   response: {
-    201: RESPONSE_AUTH_RESULT,
-    409: composeExample(APP_ERROR, errorExample('UserExistsError')),
+    200: AUTH_RESULT_SCHEMA,
+    409: createAppErrorSchema('UserExistsError'),
   },
 }
 
-export const AUTH_LOGIN_POST: FastifySchema = {
-  /* 주의!: get 방식은 body 가 포함될 경우, 애러발생 */
-  body: REQUEST_LOGIN_USERINFO,
+export const LOGIN_SCHEMA: FastifySchema = {
+  tags: ['auth'],
+  body: AUTH_BODY_SCHEMA,
   response: {
-    200: RESPONSE_AUTH_RESULT,
-    401: composeExample(APP_ERROR, errorExample('AuthenticationError')),
+    200: AUTH_RESULT_SCHEMA,
+    401: createAppErrorSchema('AuthenticationError'),
   },
 }
 
-export const AUTH_REFRESH_POST: FastifySchema = {
-  /* 주의!: get 방식은 body 가 포함될 경우, 애러발생 */
-  body: REQUEST_REFRESH_POST,
+export const REFRESH_TOKEN_SCHEMA: FastifySchema = {
+  tags: ['auth'],
+  body: Type.Required(
+    Type.Object({
+      refreshToken: Type.String(),
+    }),
+  ),
   response: {
-    200: RESPONSE_REFRESH_POST,
-    400: composeExample(APP_ERROR, errorExample('BadReqeustError')),
-    401: composeExample(APP_ERROR, errorExample('RefreshTokenError')),
+    200: TOKENS_SCHEMA,
+    400: createAppErrorSchema('BadReqeustError'),
+    401: createAppErrorSchema('RefreshTokenError'),
   },
 }

@@ -8,7 +8,7 @@ import {
   endpointAuthPlugin,
   globalAuthPlugin,
 } from './common/config/fastify/plugin/authentication-plugins.js'
-import { MAIN_PING_GET, MAIN_PING_POST } from './schema.js'
+import { PING_GET_SCHEMA, PING_POST_SCHEMA } from './schema.js'
 
 const server: FastifyInstance = fastify({
   logger: true,
@@ -28,11 +28,15 @@ const server: FastifyInstance = fastify({
 /* URI tests */
 {
   // Public URI
-  server.get('/ping', { schema: MAIN_PING_GET }, async () => '`pong` from GET')
+  server.get(
+    '/ping',
+    { schema: PING_GET_SCHEMA },
+    async () => '`pong` from GET',
+  )
   /* Secure URI특정 URI(/ping:post) 에 보안검사 플러긴을 적용한 예: */
   server.register(async (fi) => {
     fi.register(endpointAuthPlugin) //
-    fi.post('/ping', { schema: MAIN_PING_POST }, async (reqest, reply) => {
+    fi.post('/ping', { schema: PING_POST_SCHEMA }, async (reqest, reply) => {
       return '`pong✅` from POST'
     })
   })

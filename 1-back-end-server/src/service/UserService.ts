@@ -1,9 +1,9 @@
 import * as bcrypt from 'bcrypt'
 import { User } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
-import { UserAuthInfo } from '../routes/api/auth/types.js'
 import AppError from '../common/error/AppError.js'
 import TokenService, { TokenStringMap } from './TokenService.js'
+import { AuthBody } from '../routes/api/auth/schema.js'
 
 const SOLT_ROUNDS = 10
 
@@ -21,10 +21,7 @@ class UserService {
     return UserService.instance
   }
 
-  async register({
-    username,
-    password,
-  }: UserAuthInfo): Promise<AuthTokensAndUser> {
+  async register({ username, password }: AuthBody): Promise<TokensAndUser> {
     const exists = await db.user.findUnique({ where: { username } })
     if (exists) throw new AppError('UserExistsError')
 
@@ -45,10 +42,7 @@ class UserService {
   /**
    * 사용자를 못찾거나 PW가 틀릴경우, 보안상 모두 동일한 `AuthenticationError` 발생시킨다.
    */
-  async login({
-    username,
-    password,
-  }: UserAuthInfo): Promise<AuthTokensAndUser> {
+  async login({ username, password }: AuthBody): Promise<TokensAndUser> {
     const existsUser = await db.user.findUnique({ where: { username } })
     // Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
     try {
@@ -104,4 +98,4 @@ class UserService {
 }
 export default UserService
 
-type AuthTokensAndUser = { tokens: TokenStringMap; user: User }
+type TokensAndUser = { tokens: TokenStringMap; user: User }

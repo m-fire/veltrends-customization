@@ -1,101 +1,40 @@
-import { SchemaStruct, AnySchema } from '../config/fastify/types.js'
-import AppError, { ErrorPayloadOpt } from '../error/AppError.js'
+import { Static, TSchema, Type } from '@sinclair/typebox'
+import AppError from '../error/AppError.js'
 
 // Routes
 
-export const AUTHORIZED_USERINFO: SchemaStruct = {
-  type: 'object',
-  properties: {
-    id: { type: 'number' },
-    username: { type: 'string' },
+export const AUTH_USER_INFO_SCHEMA = Type.Object(
+  {
+    id: Type.Number(),
+    username: Type.String(),
   },
-  example: {
-    id: 1,
-    username: 'exam-user',
+  {
+    example: {
+      id: 1,
+      username: 'exam-user',
+    },
   },
-}
+)
+export type AuthUserInfo = Static<typeof AUTH_USER_INFO_SCHEMA>
 
-// Errors
+/* Error Schema Utils */
 
-export const APP_ERROR: SchemaStruct = {
-  type: 'object',
-  properties: {
-    type: { type: 'string' },
-    message: { type: 'string' },
-    statusCode: { type: 'number' },
-    payload: { type: 'object' },
-  },
-}
-
-// Requests
-
-export const REQUEST_LOGIN_USERINFO: SchemaStruct = {
-  type: 'object',
-  properties: {
-    username: { type: 'string' },
-    password: { type: 'string' },
-  },
-  required: ['username', 'password'],
-}
-
-export const REQUEST_REFRESH_POST: SchemaStruct = {
-  type: 'object',
-  properties: {
-    refreshToken: { type: 'string' },
-  },
-}
-
-// Responses
-
-export const RESPONSE_AUTH_RESULT: SchemaStruct = {
-  type: 'object',
-  properties: {
-    tokens: {
-      type: 'object',
-      properties: {
-        accessToken: { type: 'string' },
-        refreshToken: { type: 'string' },
+export function createAppErrorSchema<
+  K extends Parameters<typeof AppError.info>[0],
+>(type: K, payloadSchema?: TSchema) {
+  const errorExample = AppError.info(type)
+  return Type.Object(
+    {
+      type: Type.String(),
+      message: Type.String(),
+      statusCode: Type.Number(),
+      ...(payloadSchema && { payload: payloadSchema }),
+    },
+    errorExample && {
+      example: {
+        ...errorExample,
+        ...{ payload: payloadSchema?.example },
       },
     },
-    user: AUTHORIZED_USERINFO,
-  },
-}
-
-export const RESPONSE_REFRESH_POST: SchemaStruct = {
-  type: 'object',
-  properties: {
-    accessToken: { type: 'string' },
-    refreshToken: { type: 'string' },
-  },
-}
-
-/* Schema Utils */
-
-export function composeExample<
-  T extends SchemaStruct,
-  Ex extends AnySchema,
-  P extends SchemaStruct,
->(target: T, example: Ex, payloadSchema?: P) {
-  return {
-    ...target,
-    properties: {
-      ...target.properties,
-      ...(payloadSchema && {
-        payload: payloadSchema,
-      }),
-    },
-    example,
-  }
-}
-
-export function errorExample<
-  K extends Parameters<typeof AppError.info>[0],
-  P extends ErrorPayloadOpt<K>,
->(type: K, payloadSchema?: P) {
-  return {
-    ...AppError.info(type),
-    ...(payloadSchema && {
-      payload: payloadSchema,
-    }),
-  }
+  )
 }

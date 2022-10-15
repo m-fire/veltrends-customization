@@ -1,17 +1,17 @@
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
-import { CookieTokens } from '../../../common/config/fastify/types.js'
 import { TokenStringMap } from '../../../service/TokenService.js'
 import {
-  UserLoginRequest,
+  CookieTokens,
   RefreshTokenRequest,
+  UserLoginRequest,
   UserRegisterRequest,
 } from './types.js'
 import {
-  AUTH_LOGIN_POST,
-  AUTH_REFRESH_POST,
-  AUTH_REGISTER_POST,
+  LOGIN_SCHEMA,
+  REFRESH_TOKEN_SCHEMA,
+  REGISTER_SCHEMA,
 } from './schema.js'
 
 // Route Definition
@@ -22,7 +22,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post<UserLoginRequest>(
     '/login',
     {
-      schema: AUTH_LOGIN_POST,
+      schema: LOGIN_SCHEMA,
     },
     async ({ body: auth }, reply) => {
       const tokensAndUser = await userService.login(auth)
@@ -34,7 +34,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post<UserRegisterRequest>(
     '/register',
     {
-      schema: AUTH_REGISTER_POST,
+      schema: REGISTER_SCHEMA,
     },
     async ({ body: userInfo }, reply) => {
       const tokensAndUser = await userService.register(userInfo)
@@ -47,7 +47,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post<RefreshTokenRequest>(
     '/refresh',
     {
-      schema: AUTH_REFRESH_POST,
+      schema: REFRESH_TOKEN_SCHEMA,
     },
     async (request, reply) => {
       const oldToken =

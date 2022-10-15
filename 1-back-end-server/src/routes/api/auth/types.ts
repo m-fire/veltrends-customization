@@ -1,18 +1,19 @@
 import { RequestGenericInterface } from 'fastify/types/request'
-
-export interface UserAuthInfo {
-  username: string
-  password: string
-}
+import { AuthBody, RefreshTokenBody } from './schema.js'
 
 export interface UserRegisterRequest extends RequestGenericInterface {
-  Body: UserAuthInfo
+  Body: AuthBody
 }
 
 export interface UserLoginRequest extends RequestGenericInterface {
-  Body: UserAuthInfo
+  Body: AuthBody
 }
 
 export interface RefreshTokenRequest extends RequestGenericInterface {
-  Body: { refreshToken?: string }
+  Body: RefreshTokenBody
+}
+
+export interface CookieTokens {
+  access_token?: string
+  refresh_token?: string
 }
