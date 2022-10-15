@@ -4,13 +4,26 @@ import { createAppErrorSchema } from '../../../common/schema/common-schema.js'
 
 // Typebox Schema
 
-const AUTH_BODY_SCHEMA = Type.Object({
+export const AUTH_BODY_SCHEMA = Type.Object({
   username: Type.String(),
   password: Type.String(),
 })
 export type AuthBody = Static<typeof AUTH_BODY_SCHEMA>
 
-const REFRESH_TOKEN_BODY_SCHEMA = Type.Object({
+export const AUTH_USER_INFO_SCHEMA = Type.Object(
+  {
+    id: Type.Number(),
+    username: Type.String(),
+  },
+  {
+    example: {
+      id: 1,
+      username: 'test-user',
+    },
+  },
+)
+
+export const REFRESH_TOKEN_BODY_SCHEMA = Type.Object({
   refreshToken: Type.Optional(Type.String()),
 })
 export type RefreshTokenBody = Static<typeof REFRESH_TOKEN_BODY_SCHEMA>
@@ -22,7 +35,7 @@ const TOKENS_SCHEMA = Type.Object({
 
 const AUTH_RESULT_SCHEMA = Type.Object({
   tokens: TOKENS_SCHEMA,
-  user: AUTH_BODY_SCHEMA,
+  user: AUTH_USER_INFO_SCHEMA,
 })
 export type AuthResult = Static<typeof AUTH_RESULT_SCHEMA>
 
