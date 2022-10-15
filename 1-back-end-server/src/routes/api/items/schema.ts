@@ -1,6 +1,7 @@
 import { FastifySchema } from 'fastify'
 import { Type } from '@sinclair/typebox'
 import { createAppErrorSchema } from '../../../common/util/schema-util.js'
+import { Nullable } from '../../../common/config/typebox/type-util.js'
 
 export const ITEM_CREATE_SCHEMA = Type.Object({
   title: Type.String(),
@@ -15,7 +16,7 @@ export const ITEM_CREATE_RESULT_SCHEMA = Type.Object(
     title: Type.String(),
     body: Type.String(),
     link: Type.String(),
-    thumbnail: Type.Union([Type.String(), Type.Null()]),
+    thumbnail: Nullable(Type.String()),
     createdAt: Type.String(),
     updatedAt: Type.String(),
   },
