@@ -7,7 +7,7 @@ import AppError from './common/error/AppError.js'
 import {
   endpointAuthPlugin,
   globalAuthPlugin,
-} from './common/config/fastify/plugin/authentication-plugins.js'
+} from './common/config/fastify/plugin/auth-plugins.js'
 import { PING_GET_SCHEMA, PING_POST_SCHEMA } from './schema.js'
 
 const server: FastifyInstance = fastify({
