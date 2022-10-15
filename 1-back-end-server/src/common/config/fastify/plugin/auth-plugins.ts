@@ -1,4 +1,5 @@
 import fp from 'fastify-plugin'
+import { FastifyPluginAsync } from 'fastify'
 import jwt from 'jsonwebtoken'
 import { AccessTokenPayload, validateToken } from '../../jwt/tokens.js'
 import AppError from '../../../error/AppError.js'
@@ -52,6 +53,14 @@ export const globalAuthPlugin = fp(
     name: 'authGlobalPlugin',
   },
 )
+
+export function createAuthRoute(plugin: FastifyPluginAsync) {
+  const wrappedPlugin: FastifyPluginAsync = async (fastify, opts) => {
+    fastify.register(endpointAuthPlugin)
+    return plugin(fastify, opts)
+  }
+  return wrappedPlugin
+}
 
 // 특정 엔드포인트 인증용 플러그인
 
