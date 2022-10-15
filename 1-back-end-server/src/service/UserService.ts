@@ -77,7 +77,7 @@ class UserService {
       /* Outer n Inner refreshed count validation(with rotationCounter) */
 
       // 토큰갱신횟수가 일치하지 않으면, 이상접근으로 blocked 처리
-      const { rotationCounter: inCount, user } = tokenWithUser
+      const { rotationCounter: inCount } = tokenWithUser
       if (inCount !== outCount) {
         await db.token.update({ where: { id }, data: { blocked: true } })
         throw new Error('Rotation counter does not match.')
@@ -88,7 +88,10 @@ class UserService {
         data: { rotationCounter: inCount + 1 },
       })
 
-      const refreshedTokens = await ts.generateTokens(user, updated)
+      const refreshedTokens = await ts.generateTokens(
+        tokenWithUser.User,
+        updated,
+      )
       // console.log(`UserService.refreshToken() refreshedTokens:`, refreshedTokens)
       return refreshedTokens
     } catch (e) {
