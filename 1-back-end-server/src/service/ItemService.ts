@@ -17,10 +17,11 @@ class ItemService {
     userId: number,
     { title, body, link, tags }: ItemCreateBody,
   ) {
-    const newItem = await db.item.create({
+    const newItemWithUser = await db.item.create({
       data: { title, body, link, userId },
+      include: { User: true },
     })
-    return newItem
+    return newItemWithUser
   }
 }
 export default ItemService
