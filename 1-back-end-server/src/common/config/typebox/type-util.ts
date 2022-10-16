@@ -1,4 +1,4 @@
-import { Type, Static, TSchema } from '@sinclair/typebox'
+import { Type, TSchema } from '@sinclair/typebox'
 
 // ref: https://github.com/sinclairzx81/typebox#generic
 
