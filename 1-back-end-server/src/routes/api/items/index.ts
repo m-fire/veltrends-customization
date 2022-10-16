@@ -28,6 +28,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
     { schema: ITEM_READ_SCHEMA },
     async ({ params: { id } }, reply) => {
       const item = await itemService.getItem(id)
+      if (!item) reply.statusCode = 404
       return item
     },
   )

@@ -5,6 +5,7 @@ import {
   Pagination,
   PaginationOptions,
 } from '../common/config/fastify/types.js'
+import AppError from '../common/error/AppError.js'
 
 class ItemService {
   private static instance: ItemService
@@ -34,6 +35,8 @@ class ItemService {
       where: { id },
       include: { User: true },
     })
+
+    if (!itemWithUser) throw new AppError('NotFoundError')
     return itemWithUser
   }
 
