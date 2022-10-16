@@ -25,7 +25,7 @@ class ItemService {
   ) {
     const newItemWithUser = await db.item.create({
       data: { title, body, link, userId },
-      include: { User: true },
+      include: { User: { select: { id: true } } },
     })
     return newItemWithUser
   }
@@ -33,7 +33,7 @@ class ItemService {
   async getItem(id: number) {
     const itemWithUser = await db.item.findUnique({
       where: { id },
-      include: { User: true },
+      include: { User: { select: { id: true } } },
     })
 
     if (!itemWithUser) throw new AppError('NotFoundError')

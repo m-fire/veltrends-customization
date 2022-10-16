@@ -42,7 +42,7 @@ export default class TokenService {
   async getTokenWithUser(tokenId: number) {
     return db.token.findUnique({
       where: { id: tokenId },
-      include: { User: true },
+      include: { User: { select: { id: true, username: true } } },
     })
   }
 
