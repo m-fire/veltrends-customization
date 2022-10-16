@@ -1,21 +1,32 @@
 import { FastifyPluginAsync } from 'fastify'
-import { ItemCreateRequest, ItemReadRequest } from './types.js'
-import { ITEM_CREATE_POST_SCHEMA, ITEM_READ_GET_SCHEMA } from './schema.js'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
+import { ItemsCreateRequest, ItemsReadRequest } from './types.js'
+import {
+  ITEM_CREATE_SCHEMA,
+  ITEM_LIST_READ_SCHEMA,
+  ITEM_READ_SCHEMA,
+} from './schema.js'
 
 const itemsRoute: FastifyPluginAsync = async (fastify) => {
   const itemService = ItemService.getInstance()
 
-  fastify.get('/', async (request) => {
-    return 'GET api/items/index.ts'
-  })
+  fastify.get<ItemsReadRequest>(
+    '/',
+    { schema: ITEM_LIST_READ_SCHEMA },
+    async ({ query: { cursor } }, reply) => {
+      const itemList = await itemService.getItemList({
+        mode: 'recent',
+        cursor: cursor ? parseInt(cursor, 10) : null,
+      })
+      return itemList
+    },
+  )
 
-  fastify.get<ItemReadRequest>(
+  fastify.get<ItemsReadRequest>(
     '/:id',
-    { schema: ITEM_READ_GET_SCHEMA },
-    async (request) => {
-      const { id } = request.params
+    { schema: ITEM_READ_SCHEMA },
+    async ({ params: { id } }, reply) => {
       const item = await itemService.getItem(id)
       return item
     },

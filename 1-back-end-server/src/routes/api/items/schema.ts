@@ -13,36 +13,28 @@ export const REQ_ITEM_CREATE_BODY_SCHEMA = Type.Object({
   tags: Type.Array(Type.String()),
 })
 
+export const REQ_ITEM_READ_QUERYSTRING_SCHEMA = Type.Object({
+  cursor: Type.Optional(Type.String()),
+})
+
 export const REQ_ITEM_READ_PARAMS_SCHEMA = Type.Object({
-  id: Type.Integer(),
+  id: Type.Integer({ default: 30 }),
 })
 
 // Response Schema
 
-export const RES_ITEM_SCHEMA = Type.Object(
-  {
-    id: Type.String(),
-    title: Type.String(),
-    body: Type.String(),
-    link: Type.String(),
-    thumbnail: Nullable(Type.String()),
-    createdAt: Type.String(),
-    updatedAt: Type.String(),
-    User: RES_AUTH_USER_INFO_SCHEMA,
-  },
-  {
-    example: {
-      id: 1,
-      title: 'test_title',
-      body: 'test_body',
-      link: 'https://test.com/test',
-      thumbnail: null,
-      createdAt: '2022-10-15T23:16:21.901Z',
-      updatedAt: '2022-10-15T23:16:21.901Z',
-      User: RES_AUTH_USER_INFO_SCHEMA.example,
-    },
-  },
-)
+export const RES_ITEM_SCHEMA = Type.Object({
+  id: Type.Integer({ default: 30 }),
+  title: Type.String({ default: 'test_title' }),
+  body: Type.String({ default: 'test_body' }),
+  link: Type.String({ default: 'https://test.com/test' }),
+  thumbnail: Nullable(Type.String()),
+  createdAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
+  updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
+  User: Type.Object({
+    id: Type.Integer({ default: 12 }),
+  }),
+})
 
 // FastifySchema
 
@@ -55,11 +47,20 @@ export const ITEM_CREATE_POST_SCHEMA: FastifySchema = {
   },
 }
 
-export const ITEM_READ_GET_SCHEMA: FastifySchema = {
+export const ITEM_LIST_READ_SCHEMA: FastifySchema = {
+  tags: ['item'],
+  querystring: REQ_ITEM_READ_QUERYSTRING_SCHEMA,
+  response: {
+    200: createPaginationSchema(RES_ITEM_SCHEMA),
+    404: RES_EMPTY_LIST_SCHEMA,
+  },
+}
+
+export const ITEM_READ_SCHEMA: FastifySchema = {
   tags: ['item'],
   params: REQ_ITEM_READ_PARAMS_SCHEMA,
   response: {
     200: RES_ITEM_SCHEMA,
-    // todo 204: 아이탬을 찾을수없는 스키마 향후 필요,
+    404: createAppErrorSchema('NotFoundError'),
   },
 }
