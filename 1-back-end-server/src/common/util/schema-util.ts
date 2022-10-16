@@ -9,7 +9,7 @@ export function createAppErrorSchema<
     {
       name: Type.String(),
       message: Type.String(),
-      statusCode: Type.Number(),
+      statusCode: Type.Integer(),
       ...(payloadSchema && { payload: payloadSchema }),
     },
     errorExample && {

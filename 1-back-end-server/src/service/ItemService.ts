@@ -23,5 +23,13 @@ class ItemService {
     })
     return newItemWithUser
   }
+
+  async getItem(id: number) {
+    const itemWithUser = await db.item.findUnique({
+      where: { id },
+      include: { User: true },
+    })
+    return itemWithUser
+  }
 }
 export default ItemService
