@@ -4,6 +4,7 @@ export type AppErrorType =
   | 'UnauthorizedError'
   | 'BadReqeustError'
   | 'RefreshTokenError'
+  | 'ForbiddenError'
   | 'NotFoundError'
   | 'UnknownError'
 
@@ -19,6 +20,8 @@ export type ErrorPayloadOpt<K extends AppErrorType> =
     : K extends 'BadReqeustError'
     ? undefined
     : K extends 'RefreshTokenError'
+    ? undefined
+    : K extends 'ForbiddenError'
     ? undefined
     : K extends 'NotFoundError'
     ? undefined
@@ -51,6 +54,10 @@ const ERRORS_INFO_BY_NAME: Record<AppErrorType, ErrorInfo> = {
   RefreshTokenError: {
     message: 'Failed to refresh token',
     statusCode: 401,
+  },
+  ForbiddenError: {
+    message: 'Forbidden',
+    statusCode: 403,
   },
   NotFoundError: {
     message: 'Not found',

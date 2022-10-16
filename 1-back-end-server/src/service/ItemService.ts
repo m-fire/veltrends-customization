@@ -1,5 +1,5 @@
 import db from '../common/config/prisma/db-client.js'
-import { ItemCreateBody } from '../routes/api/items/types.js'
+import { ItemCreateBody, ItemUpdateBody } from '../routes/api/items/types.js'
 import {
   Pagination,
   PaginationOptions,
@@ -85,6 +85,18 @@ class ItemService {
       },
     })
   }
+
+  async updateItem({ itemId, userId, title, body }: ItemUpdateParams) {
+    const existsItem = await this.getItem(itemId)
+    if (existsItem.userId !== userId) throw new AppError('ForbiddenError')
+
+    const itemWithUser = await db.item.update({
+      where: { id: itemId },
+      data: { title, body },
+      include: { User: { select: { id: true } } },
+    })
+    return itemWithUser
+  }
 }
 export default ItemService
 
@@ -98,3 +110,8 @@ type ItemListPagingOption = PaginationOptions &
         date: string
       }
   )
+
+type ItemUpdateParams = ItemUpdateBody & {
+  userId: number
+  itemId: number
+}
