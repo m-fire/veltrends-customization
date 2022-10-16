@@ -4,7 +4,7 @@ Accept: application/json
 
 > {%
 var status = 200;
-client.test("/api/items 해더토큰 접근", function() {
+client.test("/api/items 아이탬 목록 조회", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -23,7 +23,7 @@ client.test("/api/items 해더토큰 접근", function() {
 
 POST http://{{host}}:{{port}}/api/items
 Content-Type: application/json
-#Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 {
 	"title":  "test_title",
@@ -33,8 +33,8 @@ Content-Type: application/json
 }
 
 > {%
-var status = 200;
-client.test("/api/items 쿠키토큰 접근", function() {
+var status = 201;
+client.test("/api/items Item 등록 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
