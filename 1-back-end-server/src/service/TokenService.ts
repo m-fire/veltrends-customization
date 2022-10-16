@@ -1,10 +1,11 @@
-import { User, Token } from '@prisma/client'
+import { Token } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import {
   generateToken,
   RefreshTokenPayload,
   validateToken,
 } from '../common/config/jwt/tokens.js'
+import { AuthUserInfo } from '../routes/api/auth/types.js'
 
 export default class TokenService {
   private static instance: TokenService
@@ -18,8 +19,10 @@ export default class TokenService {
     return TokenService.instance
   }
 
-  async generateTokens(user: User, token?: Token): Promise<TokenStringMap> {
-    const { id: userId, username } = user
+  async generateTokens(
+    { id: userId, username }: AuthUserInfo,
+    token?: Token,
+  ): Promise<TokenStringMap> {
     const { id: tokenId, rotationCounter } =
       token ?? (await db.token.create({ data: { userId } }))
 

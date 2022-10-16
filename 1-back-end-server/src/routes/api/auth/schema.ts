@@ -17,18 +17,10 @@ export const REQ_REFRESH_TOKEN_BODY_SCHEMA = Type.Required(
 
 // Response Schema
 
-export const RES_AUTH_USER_INFO_SCHEMA = Type.Object(
-  {
-    id: Type.Integer(),
-    username: Type.String(),
-  },
-  {
-    example: {
-      id: 1,
-      username: 'test-user',
-    },
-  },
-)
+export const RES_AUTH_USER_INFO_SCHEMA = Type.Object({
+  id: Type.Integer({ default: 1 }),
+  username: Type.String({ default: 'test-user' }),
+})
 
 export const RES_TOKENS_SCHEMA = Type.Object({
   accessToken: Type.String(),
