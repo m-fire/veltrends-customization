@@ -1,6 +1,6 @@
 import { FastifySchema } from 'fastify'
 import { Type } from '@sinclair/typebox'
-import { createAppErrorSchema } from './common/util/schema-util.js'
+import { createAppErrorSchema } from './common/config/typebox/schema-util.js'
 
 export const PING_GET_SCHEMA: FastifySchema = {
   /* GET 방식은 response 스키마만 정의한다. */

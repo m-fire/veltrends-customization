@@ -1,5 +1,5 @@
 import { TSchema, Type } from '@sinclair/typebox'
-import AppError from '../error/AppError.js'
+import AppError from '../../error/AppError.js'
 
 export function createAppErrorSchema<
   K extends Parameters<typeof AppError.info>[0],

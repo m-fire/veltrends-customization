@@ -1,6 +1,6 @@
 import { FastifySchema } from 'fastify'
 import { Type } from '@sinclair/typebox'
-import { createAppErrorSchema } from '../../../common/util/schema-util.js'
+import { createAppErrorSchema } from '../../../common/config/typebox/schema-util.js'
 
 // Reqeust Schema
 

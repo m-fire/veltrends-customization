@@ -1,6 +1,6 @@
 import { FastifySchema } from 'fastify'
 import { Type } from '@sinclair/typebox'
-import { createAppErrorSchema } from '../../../common/util/schema-util.js'
+import { createAppErrorSchema } from '../../../common/config/typebox/schema-util.js'
 import { Nullable } from '../../../common/config/typebox/type-util.js'
 import { RES_AUTH_USER_INFO_SCHEMA } from '../auth/schema.js'
 
