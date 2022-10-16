@@ -24,6 +24,11 @@ export const REQ_ITEM_READ_PARAMS_SCHEMA = Type.Object({
   id: Type.Integer({ default: 30 }),
 })
 
+export const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
+  title: Type.String({ default: 'test_title' }),
+  body: Type.String({ default: 'test_body' }),
+})
+
 // Response Schema
 
 export const RES_ITEM_SCHEMA = Type.Object({
@@ -64,6 +69,17 @@ export const ITEM_READ_SCHEMA: FastifySchema = {
   params: REQ_ITEM_READ_PARAMS_SCHEMA,
   response: {
     200: RES_ITEM_SCHEMA,
+    404: createAppErrorSchema('NotFoundError'),
+  },
+}
+
+export const ITEM_UPDATE_SCHEMA: FastifySchema = {
+  tags: ['item'],
+  params: REQ_ITEM_READ_PARAMS_SCHEMA,
+  body: REQ_ITEM_UPDATE_BODY_SCHEMA,
+  response: {
+    202: RES_ITEM_SCHEMA,
+    403: createAppErrorSchema('ForbiddenError'),
     404: createAppErrorSchema('NotFoundError'),
   },
 }
