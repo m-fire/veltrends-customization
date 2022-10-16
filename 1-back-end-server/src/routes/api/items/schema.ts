@@ -59,7 +59,7 @@ export const ITEM_READ_GET_SCHEMA: FastifySchema = {
   tags: ['item'],
   params: REQ_ITEM_READ_PARAMS_SCHEMA,
   response: {
-    201: RES_ITEM_SCHEMA,
-    401: createAppErrorSchema('AuthenticationError'),
+    200: RES_ITEM_SCHEMA,
+    // todo 204: 아이탬을 찾을수없는 스키마 향후 필요,
   },
 }
