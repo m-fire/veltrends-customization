@@ -115,3 +115,59 @@ client.test("/api/items/9999 - 아이탬 조회실패", function() {
 %}
 
 ### 특정 item 조회실패
+
+PATCH http://{{host}}:{{port}}/api/items/10
+Content-Type: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"title":  "updated_title",
+	"body": "updated_body"
+}
+
+> {%
+var status = 202;
+client.test("/api/items - 업데이트", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### item 업데이트 성공
+
+PATCH http://{{host}}:{{port}}/api/items/9999
+Content-Type: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"title":  "updated_title",
+	"body": "updated_body"
+}
+
+> {%
+var status = 404;
+client.test("/api/items - 업데이트 실패", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### item 업데이트 실패

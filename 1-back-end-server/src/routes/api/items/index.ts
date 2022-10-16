@@ -1,11 +1,16 @@
 import { FastifyPluginAsync } from 'fastify'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
-import { ItemsCreateRequest, ItemsReadRequest } from './types.js'
+import {
+  ItemsCreateRequest,
+  ItemsReadRequest,
+  ItemsUpdateRequest,
+} from './types.js'
 import {
   ITEM_CREATE_SCHEMA,
   ITEM_LIST_READ_SCHEMA,
   ITEM_READ_SCHEMA,
+  ITEM_UPDATE_SCHEMA,
 } from './schema.js'
 
 const itemsRoute: FastifyPluginAsync = async (fastify) => {
@@ -46,12 +51,27 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
   fastify.post<ItemsCreateRequest>(
     '/',
     { schema: ITEM_CREATE_SCHEMA },
-    async ({ body: itemCreateBody, user }, reply) => {
+    async ({ body, user }, reply) => {
       // 인증 승인이 된 요청이고, user 가 반드시 존재하기 때문에, `!`처리됨.
       const userId = user!.id
-      const newItem = await itemService.createItem(userId, itemCreateBody)
+      const newItem = await itemService.createItem(userId, body)
       reply.statusCode = 201
       return newItem
+    },
+  )
+
+  fastify.patch<ItemsUpdateRequest>(
+    '/:id',
+    { schema: ITEM_UPDATE_SCHEMA },
+    async ({ params: { id: itemId }, body: { title, body }, user }, reply) => {
+      const updatedItem = await itemService.updateItem({
+        itemId,
+        title,
+        body,
+        userId: user!.id,
+      })
+      reply.statusCode = 202
+      return updatedItem
     },
   )
 })
