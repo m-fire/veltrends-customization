@@ -43,9 +43,9 @@ export default itemsRoute
 const itemsAuthRoute = createAuthRoute(async (fastify) => {
   const itemService = ItemService.getInstance()
 
-  fastify.post<ItemCreateRequest>(
+  fastify.post<ItemsCreateRequest>(
     '/',
-    { schema: ITEM_CREATE_POST_SCHEMA },
+    { schema: ITEM_CREATE_SCHEMA },
     async ({ body: itemCreateBody, user }, reply) => {
       // 인증 승인이 된 요청이고, user 가 반드시 존재하기 때문에, `!`처리됨.
       const userId = user!.id

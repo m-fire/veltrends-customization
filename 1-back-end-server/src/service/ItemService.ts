@@ -1,4 +1,3 @@
-import { ItemCreateBody } from '../routes/api/items/types.js'
 import db from '../common/config/prisma/db-client.js'
 import { ItemCreateBody } from '../routes/api/items/types.js'
 import {

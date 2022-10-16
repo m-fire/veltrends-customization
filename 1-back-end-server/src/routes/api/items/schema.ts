@@ -1,15 +1,18 @@
 import { FastifySchema } from 'fastify'
 import { Type } from '@sinclair/typebox'
-import { createAppErrorSchema } from '../../../common/config/typebox/schema-util.js'
 import { Nullable } from '../../../common/config/typebox/type-util.js'
-import { RES_AUTH_USER_INFO_SCHEMA } from '../auth/schema.js'
+import {
+  createAppErrorSchema,
+  createPaginationSchema,
+} from '../../../common/config/typebox/schema-util.js'
+import { RES_EMPTY_LIST_SCHEMA } from '../../../common/config/typebox/common-schema.js'
 
 // Reqeust Schema
 
 export const REQ_ITEM_CREATE_BODY_SCHEMA = Type.Object({
-  title: Type.String(),
-  body: Type.String(),
-  link: Type.String(),
+  title: Type.String({ default: 'test_title' }),
+  body: Type.String({ default: 'test_body' }),
+  link: Type.String({ default: 'https://test.com/test' }),
   tags: Type.Array(Type.String()),
 })
 
@@ -38,7 +41,7 @@ export const RES_ITEM_SCHEMA = Type.Object({
 
 // FastifySchema
 
-export const ITEM_CREATE_POST_SCHEMA: FastifySchema = {
+export const ITEM_CREATE_SCHEMA: FastifySchema = {
   tags: ['item'],
   body: REQ_ITEM_CREATE_BODY_SCHEMA,
   response: {

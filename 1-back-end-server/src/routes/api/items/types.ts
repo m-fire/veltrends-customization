@@ -6,7 +6,7 @@ import {
   REQ_ITEM_READ_QUERYSTRING_SCHEMA,
 } from './schema.js'
 
-export interface ItemCreateRequest extends RequestGenericInterface {
+export interface ItemsCreateRequest extends RequestGenericInterface {
   Body: ItemCreateBody
 }
 export type ItemCreateBody = Static<typeof REQ_ITEM_CREATE_BODY_SCHEMA>
