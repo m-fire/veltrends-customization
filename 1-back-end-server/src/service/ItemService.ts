@@ -39,7 +39,7 @@ class ItemService {
     return itemWithUser
   }
 
-  async getItemList({ mode, limit, cursor }: ItemListPagingOption) {
+  async getItemList({ mode, limit, cursor }: ItemListReadPagingOptions) {
     if (mode === 'recent') {
       const [totalCount, list] = await Promise.all([
         db.item.count(),
@@ -97,12 +97,19 @@ class ItemService {
     })
     return itemWithUser
   }
+
+  async deleteItem({ itemId, userId }: ItemDeleteParams) {
+    const existsItem = await this.getItem(itemId)
+    if (existsItem.userId !== userId) throw new AppError('ForbiddenError')
+
+    await db.item.delete({ where: { id: itemId } })
+  }
 }
 export default ItemService
 
 // types
 
-type ItemListPagingOption = PaginationOptions &
+type ItemListReadPagingOptions = PaginationOptions &
   (
     | { mode: 'trending' | 'recent' }
     | {
@@ -112,6 +119,11 @@ type ItemListPagingOption = PaginationOptions &
   )
 
 type ItemUpdateParams = ItemUpdateBody & {
+  userId: number
+  itemId: number
+}
+
+type ItemDeleteParams = {
   userId: number
   itemId: number
 }
