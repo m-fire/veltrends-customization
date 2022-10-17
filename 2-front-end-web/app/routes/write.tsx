@@ -1,18 +1,14 @@
 import React, { ReactNode } from 'react'
-import BasicLayout from '~/components/layout/BasicLayout'
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { Authenticator } from '~/common/api/auth'
+import { Outlet } from '@remix-run/react'
 
 type WriteProps = {
   children?: ReactNode
 }
 
-function Write({ children }: WriteProps) {
-  return (
-    <BasicLayout title="새 글 작성" hasBackButton>
-      {children}
-    </BasicLayout>
-  )
+function Write({}: WriteProps) {
+  return <Outlet />
 }
 export default Write
 
