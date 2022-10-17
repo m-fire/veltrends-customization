@@ -3,11 +3,13 @@ import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plug
 import ItemService from '../../../service/ItemService.js'
 import {
   ItemsCreateRequest,
+  ItemsDeleteRequest,
   ItemsReadRequest,
   ItemsUpdateRequest,
 } from './types.js'
 import {
   ITEM_CREATE_SCHEMA,
+  ITEM_DELETE_SCHEMA,
   ITEM_LIST_READ_SCHEMA,
   ITEM_READ_SCHEMA,
   ITEM_UPDATE_SCHEMA,
@@ -71,6 +73,18 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       })
       reply.statusCode = 202
       return updatedItem
+    },
+  )
+
+  fastify.delete<ItemsDeleteRequest>(
+    '/:id',
+    { schema: ITEM_DELETE_SCHEMA },
+    async ({ params: { id: itemId }, user }, reply) => {
+      await itemService.deleteItem({
+        itemId,
+        userId: user!.id,
+      })
+      reply.statusCode = 204
     },
   )
 })

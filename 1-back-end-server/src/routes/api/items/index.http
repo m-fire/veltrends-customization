@@ -207,3 +207,25 @@ client.test("/api/items - 없는 item 업데이트불가", function() {
 %}
 
 ### 없는 item 업데이트 실패
+
+DELETE http://{{host}}:{{port}}/api/items/{{$randomInt}}
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 204;
+client.test("/api/items - 랜덤아이디 삭제시도(성공/실패)", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### item 랜덤아이디 삭제시도(성공/실패)
