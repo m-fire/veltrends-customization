@@ -58,6 +58,6 @@ export const REFRESH_TOKEN_SCHEMA: FastifySchema = {
   response: {
     200: RES_TOKENS_SCHEMA,
     400: createAppErrorSchema('BadReqeustError'),
-    401: createAppErrorSchema('RefreshTokenError'),
+    401: createAppErrorSchema('RefreshFailureError'),
   },
 }

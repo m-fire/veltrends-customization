@@ -3,31 +3,19 @@ export type AppErrorType =
   | 'AuthenticationError'
   | 'UnauthorizedError'
   | 'BadReqeustError'
-  | 'RefreshTokenError'
+  | 'RefreshFailureError'
   | 'ForbiddenError'
   | 'NotFoundError'
   | 'UnknownError'
 
 export type ErrorPayloadOpt<K extends AppErrorType> =
-  K extends 'UserExistsError'
-    ? undefined
-    : K extends 'AuthenticationError'
-    ? undefined
-    : K extends 'UnauthorizedError'
+  K extends 'UnauthorizedError'
     ? {
         isExpiredToken: boolean
       }
     : K extends 'BadReqeustError'
-    ? undefined
-    : K extends 'RefreshTokenError'
-    ? undefined
-    : K extends 'ForbiddenError'
-    ? undefined
-    : K extends 'NotFoundError'
-    ? undefined
-    : K extends 'UnknownError'
-    ? undefined
-    : never
+    ? any
+    : undefined
 
 interface ErrorInfo {
   message: string
@@ -51,7 +39,7 @@ const ERRORS_INFO_BY_NAME: Record<AppErrorType, ErrorInfo> = {
     message: 'Bad reqeust',
     statusCode: 400,
   },
-  RefreshTokenError: {
+  RefreshFailureError: {
     message: 'Failed to refresh token',
     statusCode: 401,
   },

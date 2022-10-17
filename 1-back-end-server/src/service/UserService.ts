@@ -95,7 +95,7 @@ class UserService {
       // console.log(`UserService.refreshToken() refreshedTokens:`, refreshedTokens)
       return refreshedTokens
     } catch (e) {
-      throw new AppError('RefreshTokenError')
+      throw new AppError('RefreshFailureError')
     }
   }
 }
