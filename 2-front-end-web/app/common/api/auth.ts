@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { client, URL_API_SERVER } from '~/common/api/client'
+import { client, setClientCookie, URL_API_SERVER } from '~/common/api/client'
 import { isString } from '~/common/util/strings'
 
 // Constants
@@ -25,8 +25,9 @@ export class Authenticator {
 
   static async checkRequest(request: Request) {
     const cookie = request.headers.get('Cookie')
-
     if (!cookie || !cookie.includes('access_token')) return false
+
+    setClientCookie(cookie)
     try {
       await Authenticator.getAccount()
     } catch (e) {
