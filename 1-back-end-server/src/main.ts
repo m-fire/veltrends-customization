@@ -44,14 +44,12 @@ const server: FastifyInstance = fastify({
 
 server.setErrorHandler(async (error, request, reply) => {
   reply.statusCode = error.statusCode || 500
-  return error instanceof AppError
-    ? {
-        name: error.name,
-        message: error.message,
-        statusCode: error.statusCode,
-        payload: error.payload,
-      }
-    : error // FastifyError
+  return {
+    ...(error instanceof AppError && error),
+    name: error.name,
+    message: error.message,
+    statusCode: error.statusCode,
+  }
 })
 
 server.listen({ port: 4000 })

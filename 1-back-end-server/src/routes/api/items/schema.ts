@@ -90,6 +90,7 @@ export const ITEM_DELETE_SCHEMA: FastifySchema = {
   params: REQ_ITEM_PARAMS_SCHEMA,
   response: {
     204: Type.Null(),
+    400: createAppErrorSchema('BadReqeustError'),
     403: createAppErrorSchema('ForbiddenError'),
     404: createAppErrorSchema('NotFoundError'),
   },

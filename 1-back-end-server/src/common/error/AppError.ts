@@ -16,6 +16,11 @@ export type ErrorPayloadOpt<K extends AppErrorType> =
     : K extends 'BadReqeustError'
     ? any
     : undefined
+// : K extends '....Error'
+// ? {
+//     key: boolean
+//   }
+// : undefined
 
 interface ErrorInfo {
   message: string
