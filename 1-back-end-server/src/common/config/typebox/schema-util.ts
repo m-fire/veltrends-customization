@@ -23,7 +23,7 @@ export function createAppErrorSchema<
 
 export const createPaginationSchema = <T extends TSchema>(
   schema: T,
-  example?: Record<string, any>,
+  // example?: Record<string, any>,
 ) =>
   Type.Object({
     list: Type.Array(schema),
