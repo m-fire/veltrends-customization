@@ -3,6 +3,7 @@ import { useNavigate } from '@remix-run/react'
 import BasicLayout from '~/components/layout/BasicLayout'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { useWriteContext } from '~/context/WriteContext'
+import LabelInput from '~/components/system/LabelInput'
 
 function WriteLink() {
   const navigate = useNavigate()
@@ -23,7 +24,12 @@ function WriteLink() {
         buttonText="다음"
         onSubmit={onSubmit}
       >
-        링크 입력 페이지 컨탠츠영역
+        <LabelInput
+          label="URL"
+          placeholder="https://example.com"
+          name="url"
+          defaultValue={state.url}
+        />
       </WriteFormTemplate>
       {/* <Button onClick={() => navigate('/write/intro')}>다음</Button> */}
     </BasicLayout>

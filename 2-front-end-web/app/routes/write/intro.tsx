@@ -1,4 +1,5 @@
 import { FormEventHandler } from 'react'
+import LabelInput from '~/components/system/LabelInput'
 import BasicLayout from '~/components/layout/BasicLayout'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 
@@ -18,7 +19,7 @@ function Intro() {
         buttonText="등록하기"
         onSubmit={onSubmit}
       >
-        뉴스 소개 페이지 컨탠츠영역
+        <LabelInput label="제목" name="title" />
       </WriteFormTemplate>
     </BasicLayout>
   )

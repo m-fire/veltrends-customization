@@ -31,8 +31,8 @@ const LabelInput = forwardRef<HTMLInputElement, LabelInputProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             errorMessage={errorMessage}
-            {...rest}
             ref={ref}
+            {...rest}
           />
         </Block>
       </>
