@@ -63,12 +63,11 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
   fastify.patch<ItemsUpdateRequest>(
     '/:id',
     { schema: ITEM_UPDATE_SCHEMA },
-    async ({ params: { id: itemId }, body: { title, body }, user }, reply) => {
+    async ({ params: { id: itemId }, body, user }, reply) => {
       const updatedItem = await itemService.updateItem({
         itemId,
-        title,
-        body,
         userId: user!.id,
+        ...body,
       })
       reply.statusCode = 202
       return updatedItem

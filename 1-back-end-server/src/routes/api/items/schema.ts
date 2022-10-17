@@ -27,6 +27,7 @@ export const REQ_ITEM_READ_PARAMS_SCHEMA = Type.Object({
 export const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
   title: Type.String({ default: 'test_title' }),
   body: Type.String({ default: 'test_body' }),
+  tags: Type.Array(Type.String()),
 })
 
 // Response Schema

@@ -86,7 +86,7 @@ class ItemService {
     })
   }
 
-  async updateItem({ itemId, userId, title, body }: ItemUpdateParams) {
+  async updateItem({ itemId, userId, title, body, tags }: ItemUpdateParams) {
     const existsItem = await this.getItem(itemId)
     if (existsItem.userId !== userId) throw new AppError('ForbiddenError')
 
