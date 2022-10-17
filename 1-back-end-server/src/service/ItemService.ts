@@ -24,7 +24,7 @@ class ItemService {
   ) {
     const newItemWithUser = await db.item.create({
       data: { title, body, link, userId },
-      include: { User: { select: { id: true } } },
+      include: { user: { select: { id: true } } },
     })
     return newItemWithUser
   }
@@ -32,7 +32,7 @@ class ItemService {
   async getItem(id: number) {
     const itemWithUser = await db.item.findUnique({
       where: { id },
-      include: { User: { select: { id: true } } },
+      include: { user: { select: { id: true } } },
     })
 
     if (!itemWithUser) throw new AppError('NotFoundError')
@@ -77,7 +77,7 @@ class ItemService {
         id: cursor ? { lt: cursor } : undefined,
       },
       include: {
-        User: { select: { id: true } },
+        user: { select: { id: true } },
       },
       take: limit ?? this.LIMIT_PER_FIND,
       orderBy: {
@@ -93,7 +93,7 @@ class ItemService {
     const itemWithUser = await db.item.update({
       where: { id: itemId },
       data: { title, body },
-      include: { User: { select: { id: true } } },
+      include: { user: { select: { id: true } } },
     })
     return itemWithUser
   }

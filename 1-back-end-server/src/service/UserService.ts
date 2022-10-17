@@ -89,7 +89,7 @@ class UserService {
       })
 
       const refreshedTokens = await ts.generateTokens(
-        tokenWithUser.User,
+        tokenWithUser.user,
         updated,
       )
       // console.log(`UserService.refreshToken() refreshedTokens:`, refreshedTokens)

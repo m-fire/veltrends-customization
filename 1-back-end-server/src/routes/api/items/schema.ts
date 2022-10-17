@@ -39,7 +39,7 @@ export const RES_ITEM_SCHEMA = Type.Object({
   thumbnail: Nullable(Type.String()),
   createdAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
   updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
-  User: Type.Object({
+  user: Type.Object({
     id: Type.Integer({ default: 12 }),
   }),
 })

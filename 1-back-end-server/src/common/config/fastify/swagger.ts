@@ -26,7 +26,7 @@ export const swaggerOptions: SwaggerOptions = {
       // { name: 'code', description: '코드 관련 엔드포인트' },
     ],
     // definitions: {
-    //   User: {
+    //   user: {
     //     type: 'object',
     //     required: ['id', 'email'],
     //     properties: {

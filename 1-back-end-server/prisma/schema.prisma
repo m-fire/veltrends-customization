@@ -18,8 +18,8 @@ model User {
   passwordHash String
   createdAt    DateTime @default(now())
 
-  Item  Item[]
-  Token Token[]
+  item  Item[]
+  token Token[]
 }
 
 model Token {
@@ -28,7 +28,7 @@ model Token {
   createdAt       DateTime @default(now())
   blocked         Boolean  @default(false)
 
-  User            User     @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id])
   userId          Int
 }
 
@@ -44,9 +44,9 @@ model Item {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  User       User @relation(fields: [userId], references: [id])
+  user       User @relation(fields: [userId], references: [id])
   userId     Int
-  SiteInfo   SiteInfo? @relation(fields: [siteInfoId], references: [id])
+  siteInfo   SiteInfo? @relation(fields: [siteInfoId], references: [id])
   siteInfoId Int?
 
   @@index([createdAt(sort: Desc)])
@@ -64,15 +64,15 @@ model Tag {
   id        Int         @id @default(autoincrement())
   name      String      @unique
 
-  Item      Item?       @relation(fields: [itemId], references: [id])
+  item      Item?       @relation(fields: [itemId], references: [id])
   itemId    Int?
   itemsTags ItemsTags[]
 }
 
 model ItemsTags {
-  Item   Item @relation(fields: [itemId], references: [id])
+  item   Item @relation(fields: [itemId], references: [id])
   itemId Int
-  Tag    Tag  @relation(fields: [tagId], references: [id])
+  tag    Tag  @relation(fields: [tagId], references: [id])
   tagId  Int
 
   @@id([itemId, tagId])
