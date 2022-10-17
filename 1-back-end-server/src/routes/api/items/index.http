@@ -116,13 +116,17 @@ client.test("/api/items/9999 - 아이탬 조회실패", function() {
 
 ### 특정 item 조회실패
 
-PATCH http://{{host}}:{{port}}/api/items/10
+PATCH http://{{host}}:{{port}}/api/items/1
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 {
 	"title":  "updated_title",
-	"body": "updated_body"
+	"body": "updated_body",
+	"tags": [
+      "tag1",
+      "tag2"
+    ]
 }
 
 > {%
@@ -144,7 +148,7 @@ client.test("/api/items - 업데이트", function() {
 
 ### item 업데이트 성공
 
-PATCH http://{{host}}:{{port}}/api/items/9999
+PATCH http://{{host}}:{{port}}/api/items/2
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
@@ -155,7 +159,7 @@ Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 404;
-client.test("/api/items - 업데이트 실패", function() {
+client.test("/api/items - 업데이트실패(필수요소누락)", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -170,4 +174,36 @@ client.test("/api/items - 업데이트 실패", function() {
 })
 %}
 
-### item 업데이트 실패
+### item 업데이트 요소누락실패
+
+PATCH http://{{host}}:{{port}}/api/items/9999
+Content-Type: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"title":  "updated_title",
+	"body": "updated_body",
+	"tags": [
+		"tag1",
+		"tag2"
+	]
+}
+
+> {%
+var status = 404;
+client.test("/api/items - 없는 item 업데이트불가", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### 없는 item 업데이트 실패
