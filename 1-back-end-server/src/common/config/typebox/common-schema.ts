@@ -7,3 +7,16 @@ export const PAGINATION_OPTION_SCHEMA = Type.Object({
 })
 export const RES_EMPTY_LIST_SCHEMA = Type.Array(Type.Void())
 export const RES_EMPTY_OBJECT_SCHEMA = Type.Undefined()
+
+/* Error schema */
+
+export const ERROR_PAYLOAD_EXPIRED_SCHEMA = Type.Object(
+  {
+    isExpiredToken: Type.Boolean(),
+  },
+  {
+    example: {
+      isExpiredToken: true,
+    },
+  },
+)
