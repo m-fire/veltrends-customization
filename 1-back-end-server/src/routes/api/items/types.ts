@@ -26,3 +26,7 @@ export interface ItemsUpdateRequest extends RequestGenericInterface {
   Body: ItemUpdateBody
 }
 export type ItemUpdateBody = Static<typeof REQ_ITEM_UPDATE_BODY_SCHEMA>
+
+export interface ItemsDeleteRequest extends RequestGenericInterface {
+  Params: ItemParams
+}

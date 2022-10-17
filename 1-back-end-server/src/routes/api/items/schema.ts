@@ -84,3 +84,13 @@ export const ITEM_UPDATE_SCHEMA: FastifySchema = {
     404: createAppErrorSchema('NotFoundError'),
   },
 }
+
+export const ITEM_DELETE_SCHEMA: FastifySchema = {
+  tags: ['item'],
+  params: REQ_ITEM_PARAMS_SCHEMA,
+  response: {
+    204: Type.Null(),
+    403: createAppErrorSchema('ForbiddenError'),
+    404: createAppErrorSchema('NotFoundError'),
+  },
+}
