@@ -12,8 +12,7 @@ function WriteLink() {
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const url = formData.get('url') as string
-    actions.setUrl(url)
+    actions.setLink(formData.get('url') as string)
     navigate('/write/intro')
   }
 
@@ -28,7 +27,7 @@ function WriteLink() {
           label="URL"
           placeholder="https://example.com"
           name="url"
-          defaultValue={state.url}
+          defaultValue={state.link}
         />
       </WriteFormTemplate>
       {/* <Button onClick={() => navigate('/write/intro')}>다음</Button> */}
