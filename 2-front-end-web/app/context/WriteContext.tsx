@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
-type WriteContextType = {
+type WriteContextMap = {
   state: { url: string }
   actions: {
     setUrl: (url: string) => void
@@ -8,17 +8,17 @@ type WriteContextType = {
   }
 }
 
-const WriteContext = createContext<WriteContextType | null>(null)
+const WriteContext = createContext<WriteContextMap | null>(null)
 
 interface WriteProviderProps {
   children: ReactNode
 }
 
-export function WriteProvider({ children }: WriteProviderProps) {
-  const [state, setState] = useState<WriteContextType['state']>({
+export function WriteContextProvider({ children }: WriteProviderProps) {
+  const [state, setState] = useState<WriteContextMap['state']>({
     url: '',
   })
-  const actions: WriteContextType['actions'] = useMemo(
+  const actions: WriteContextMap['actions'] = useMemo(
     () => ({
       reset() {
         setState({

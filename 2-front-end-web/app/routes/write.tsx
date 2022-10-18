@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { Authenticator } from '~/common/api/auth'
 import { Outlet } from '@remix-run/react'
-import { WriteProvider } from '~/context/WriteContext'
+import { WriteContextProvider } from '~/context/WriteContext'
 
 type WriteProps = {
   children?: ReactNode
@@ -10,9 +10,9 @@ type WriteProps = {
 
 function Write({}: WriteProps) {
   return (
-    <WriteProvider>
+    <WriteContextProvider>
       <Outlet />
-    </WriteProvider>
+    </WriteContextProvider>
   )
 }
 export default Write
