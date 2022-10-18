@@ -29,16 +29,18 @@ type UseFormParams<K extends string> = {
  *    - for form
  *    - external message settings
  */
-export function useForm<InputName extends string>({
+export function useForm<InputNameProp extends string>({
   mode = 'submit',
   inputs,
   initialValues,
   shouldPreventDefault,
-}: UseFormParams<InputName>) {
-  const [errors, setErrors] = useState(<UseFormErrorMap<InputName>>{})
+}: UseFormParams<InputNameProp>) {
+  const [errors, setErrors] = useState(
+    <Record<InputNameProp, string | undefined | null>>{},
+  )
   const errorsRef = useRef(errors)
   const setError = useCallback(
-    (name: InputName, error: string | null | undefined) => {
+    (name: InputNameProp, error: string | null | undefined) => {
       if (errorsRef.current[name] === error) return
       errorsRef.current[name] = error
       setErrors((prevErrors) => ({
@@ -49,24 +51,15 @@ export function useForm<InputName extends string>({
     [],
   )
 
-  const inputElementsRef = useRef(<Record<InputName, HTMLInputElement>>{})
+  const inputElementsRef = useRef(<Record<InputNameProp, HTMLInputElement>>{})
 
   const inputProps = useMemo(() => {
-    const initialProps = {} as InputProps<InputName>
-    const configByNameEntries = <[InputName, FormInputConfig][]>(
+    const initialProps = {} as InputProps<InputNameProp>
+    const configByNameEntries = <[InputNameProp, FormInputConfig][]>(
       Object.entries(inputs)
     )
-
     configByNameEntries.forEach(([name, inputConfig]) => {
       const { validate, errorMessage } = inputConfig
-      const handleValidation = (text: string) => {
-        if (validate == null) return
-        const errorMessageOrNull = validate(text)
-          ? null
-          : errorMessage ?? DEFAULT_VALIDATE_ERROR_MESSAGE
-        setError(name, errorMessageOrNull)
-      }
-
       const { onChange: postOnChange, onBlur: postOnBlur } = inputConfig
       initialProps[name] = {
         onChange: (e) => {
@@ -86,20 +79,28 @@ export function useForm<InputName extends string>({
           inputElementsRef.current[name] = inputEl
         },
       }
+
+      function handleValidation(text: string) {
+        if (validate == null) return
+        const errorMessageOrNull = validate(text)
+          ? null
+          : errorMessage ?? DEFAULT_VALIDATE_MESSAGE
+        setError(name, errorMessageOrNull)
+      }
     })
 
     return initialProps
   }, [mode, setError, inputs])
 
-  const handleSubmit: HandleSubmitFn<InputName> = useCallback(
+  const handleSubmit: HandleSubmitFn<InputNameProp> = useCallback(
     (onSubmit) => {
       return (e) => {
         const formData = new FormData(e.currentTarget)
-        const valueByNames = <InputValues<InputName>>(
+        const valueByNames = <InputValues<InputNameProp>>(
           Object.fromEntries(formData)
         )
         const valueByNameEntries = Object.entries(valueByNames) as [
-          InputName,
+          InputNameProp,
           string,
         ][]
 
@@ -108,12 +109,11 @@ export function useForm<InputName extends string>({
             const { validate, errorMessage } = inputs[name]
             if (validate?.(inputValue) === true) return isValid
 
-            setError(name, errorMessage ?? DEFAULT_VALIDATE_ERROR_MESSAGE)
+            setError(name, errorMessage ?? DEFAULT_VALIDATE_MESSAGE)
             return false
           },
           true,
         )
-
         if (!isValid) return e.preventDefault()
 
         if (shouldPreventDefault ?? true) e.preventDefault()
@@ -124,7 +124,9 @@ export function useForm<InputName extends string>({
   )
 
   useEffect(() => {
-    const configByName = <[InputName, FormInputConfig][]>Object.entries(inputs)
+    const configByName = <[InputNameProp, FormInputConfig][]>(
+      Object.entries(inputs)
+    )
     configByName.forEach(([name, config]) => {
       const initialValueOrNull =
         initialValues?.[name] ?? config?.initialValue ?? null
@@ -152,11 +154,6 @@ type FormInputConfig = {
   onBlur?: FocusEventHandler<HTMLInputElement>
 }
 
-type UseFormErrorMap<Key extends string> = Record<
-  Key,
-  string | undefined | null
->
-
 type HandleSubmitFn<K extends string> = (
   onSubmit: SubmitCustomHandler<K>,
 ) => FormEventHandler<HTMLFormElement>
@@ -178,4 +175,4 @@ type InputProps<K extends string> = Record<
   }
 >
 
-const DEFAULT_VALIDATE_ERROR_MESSAGE = 'Validation Error'
+const DEFAULT_VALIDATE_MESSAGE = 'Validation Error'
