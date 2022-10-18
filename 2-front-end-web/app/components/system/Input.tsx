@@ -4,13 +4,14 @@ import { colors } from '~/common/style/colors'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string | null
+  defaultValue?: string | number | readonly string[]
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ errorMessage, ...props }, ref) => {
+  ({ errorMessage, defaultValue, ...props }, ref) => {
     return (
       <>
-        <StyledInput {...props} />
+        <StyledInput defaultValue={defaultValue} {...props} />
         {errorMessage ? <Message>{errorMessage}</Message> : null}
       </>
     )

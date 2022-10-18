@@ -8,10 +8,11 @@ interface LabelInputProps extends InputProps {
   errorMessage?: InputProps['errorMessage']
   onFocus?: FocusEventHandler<HTMLInputElement>
   onBlur?: FocusEventHandler<HTMLInputElement>
+  defaultValue?: InputProps['defaultValue']
 }
 
 const LabelInput = forwardRef<HTMLInputElement, LabelInputProps>(
-  ({ label, errorMessage, onFocus, onBlur, ...rest }, ref) => {
+  ({ label, errorMessage, onFocus, onBlur, defaultValue, ...rest }, ref) => {
     const [focused, setFocused] = useState(false)
 
     const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
@@ -31,6 +32,7 @@ const LabelInput = forwardRef<HTMLInputElement, LabelInputProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             errorMessage={errorMessage}
+            defaultValue={defaultValue}
             ref={ref}
             {...rest}
           />

@@ -10,10 +10,21 @@ import { colors } from '~/common/style/colors'
 interface LabelTextAreaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string
+  defaultValue?: string | number | readonly string[]
 }
 
 const LabelTextArea = forwardRef<HTMLTextAreaElement, LabelTextAreaProps>(
-  ({ label, onBlur, onFocus, className, ...rest }: LabelTextAreaProps, ref) => {
+  (
+    {
+      label,
+      onBlur,
+      onFocus,
+      className,
+      defaultValue,
+      ...rest
+    }: LabelTextAreaProps,
+    ref,
+  ) => {
     const [focused, setFocused] = useState(false)
     const handleFocus: FocusEventHandler<HTMLTextAreaElement> = (e) => {
       onFocus?.(e)
@@ -30,8 +41,9 @@ const LabelTextArea = forwardRef<HTMLTextAreaElement, LabelTextAreaProps>(
         <StyledTextArea
           onFocus={handleFocus}
           onBlur={handleBlur}
-          {...rest}
+          defaultValue={defaultValue}
           ref={ref}
+          {...rest}
         />
       </Block>
     )
