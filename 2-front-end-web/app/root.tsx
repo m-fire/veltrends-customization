@@ -9,13 +9,14 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import GlobalStyle from '~/GlobalStyle'
-import { Authenticator, User } from '~/common/api/auth'
-import { setClientCookie } from '~/common/api/client'
+import { Authenticator } from '~/common/api/auth'
+import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
 import { UserContext } from '~/context/UserContext'
+import { User } from '~/common/api/types'
 
 export default function App() {
-  const data = useLoaderData<User | undefined>()
+  const data = useLoaderData<User | null>()
 
   return (
     <html lang="ko">
@@ -53,7 +54,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 */
   // if (!cookie) return redirectIfNeeded()
   if (!cookie) return null
-  setClientCookie(cookie)
+  Clients.setCookie(cookie)
   try {
     const userAndTokens = await Authenticator.getAccount()
     console.log(`Root.loader() getAccount() try!`)

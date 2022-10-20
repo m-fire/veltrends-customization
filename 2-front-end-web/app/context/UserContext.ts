@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { User } from '~/common/api/auth'
+import { User } from '~/common/api/types'
 
 /**
  * <h2>UserContext</h2>

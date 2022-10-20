@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios'
-import { client, setClientCookie, URL_API_SERVER } from '~/common/api/client'
+import { client, Clients, URL_API_SERVER } from '~/common/api/client'
 import { isString } from '~/common/util/strings'
+import { User } from '~/common/api/types'
 
 // Constants
 
@@ -23,11 +24,11 @@ export class Authenticator {
     return Authenticator.authorizedAccountMemo
   }
 
-  static async checkRequest(request: Request) {
+  static async checkAuthenticated(request: Request) {
     const cookie = request.headers.get('Cookie')
     if (!cookie || !cookie.includes('access_token')) return false
 
-    setClientCookie(cookie)
+    Clients.setCookie(cookie)
     try {
       await Authenticator.getAccount()
     } catch (e) {
@@ -73,11 +74,6 @@ export class Cookies {
     }
     return headers
   }
-}
-
-export interface User {
-  id: number
-  username: string
 }
 
 export interface AuthResult {
