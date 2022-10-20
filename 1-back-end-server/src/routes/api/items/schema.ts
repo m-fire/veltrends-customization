@@ -13,7 +13,7 @@ export const REQ_ITEM_CREATE_BODY_SCHEMA = Type.Object({
   title: Type.String({ default: 'test_title' }),
   body: Type.String({ default: 'test_body' }),
   link: Type.String({ default: 'https://test.com/test' }),
-  tags: Type.Array(Type.String()),
+  tags: Type.Optional(Type.Array(Type.String())),
 })
 
 export const REQ_ITEM_LIST_QUERYSTRING_SCHEMA = Type.Object({
