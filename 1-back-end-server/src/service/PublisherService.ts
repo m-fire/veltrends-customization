@@ -1,5 +1,5 @@
 import { Publisher } from '@prisma/client'
-import db from '../common/config/prisma/db-client'
+import db from '../common/config/prisma/db-client.js'
 
 export default class PublisherService {
   private static instance: PublisherService

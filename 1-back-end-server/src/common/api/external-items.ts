@@ -1,5 +1,5 @@
-import { client } from '../config/axios/client'
-import AppError from '../error/AppError'
+import { client } from '../config/axios/client.js'
+import AppError from '../error/AppError.js'
 import { ExternalItemInfo, HtmlInfo } from './types.js'
 import { Validator } from '../util/validates.js'
 import metascraper from 'metascraper'

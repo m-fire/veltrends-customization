@@ -5,8 +5,8 @@ import {
   PaginationOptions,
 } from '../common/config/fastify/types.js'
 import AppError from '../common/error/AppError.js'
-import PublisherService from './PublisherService'
-import { getOriginItemInfo } from '../common/api/external-items'
+import PublisherService from './PublisherService.js'
+import { getOriginItemInfo } from '../common/api/external-items.js'
 
 class ItemService {
   private static instance: ItemService
