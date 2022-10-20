@@ -5,9 +5,12 @@ import {
   PaginationOptions,
 } from '../common/config/fastify/types.js'
 import AppError from '../common/error/AppError.js'
+import PublisherService from './PublisherService'
+import { getOriginItemInfo } from '../common/api/external-items'
 
 class ItemService {
   private static instance: ItemService
+  private publisherService = PublisherService.getInstance()
 
   static getInstance() {
     if (!ItemService.instance) {
@@ -22,10 +25,25 @@ class ItemService {
     userId: number,
     { title, body, link, tags }: ItemCreateBody,
   ) {
+    const info = await getOriginItemInfo(link)
+    const newPublisher = await this.publisherService.createPublisher({
+      domain: info.domain,
+      name: info.og.publisher,
+      favicon: info.og.favicon,
+    })
+
     const newItemWithUser = await db.item.create({
-      data: { title, body, link, userId },
+      data: {
+        title,
+        body,
+        link: info.url,
+        userId,
+        author: info.og.author,
+        publisherId: newPublisher.id,
+      },
       include: { user: { select: { id: true } } },
     })
+
     return newItemWithUser
   }
 
