@@ -1,4 +1,7 @@
-import { ExternalItemInfo } from './types.js'
+import { client } from '../config/axios/client'
+import AppError from '../error/AppError'
+import { ExternalItemInfo, HtmlInfo } from './types.js'
+import { Validator } from '../util/validates.js'
 import metascraper from 'metascraper'
 import publisherRule from 'metascraper-publisher'
 import authorRule from 'metascraper-author'
@@ -32,5 +35,46 @@ export async function getOriginItemInfo(
       thumbnail: og.image,
       favicon: og.logo,
     },
+  }
+}
+
+async function extractValidHtmlInfo(url: string): Promise<HtmlInfo> {
+  let html: string
+
+  if (Validator.URL.hasProtocol(url)) {
+    try {
+      const response = await client.get(url)
+      html = response.data
+
+      return { url, html }
+    } catch (e) {
+      throw new AppError('InvalidUrlError')
+    }
+  }
+
+  const withHttps = `https://${url}`
+  const withHttp = `http://${url}`
+
+  type FulfilledHtmlResult = PromiseFulfilledResult<{ data: string }>
+  const [https, http] = await Promise.allSettled<FulfilledHtmlResult['value']>([
+    // all: Promise state 중 하나라도 rejected 가 되면 모두 rejected
+    // allSettled: 각각의 Promise state 결과를 배열에 담아 반환
+    client.get(withHttps),
+    client.get(withHttp),
+  ])
+
+  switch ('fulfilled') {
+    case https.status:
+      return {
+        url: withHttps,
+        html: (https as FulfilledHtmlResult).value.data,
+      }
+    case http.status:
+      return {
+        url: withHttp,
+        html: (http as FulfilledHtmlResult).value.data,
+      }
+    default:
+      throw new AppError('InvalidUrlError')
   }
 }

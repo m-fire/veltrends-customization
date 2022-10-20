@@ -6,6 +6,7 @@ export type AppErrorType =
   | 'RefreshFailureError'
   | 'ForbiddenError'
   | 'NotFoundError'
+  | 'InvalidUrlError'
   | 'UnknownError'
 
 export type ErrorPayloadOpt<K extends AppErrorType> =
@@ -55,6 +56,10 @@ const ERRORS_INFO_BY_NAME: Record<AppErrorType, ErrorInfo> = {
   NotFoundError: {
     message: 'Not found',
     statusCode: 404,
+  },
+  InvalidUrlError: {
+    message: 'Invalid URL',
+    statusCode: 422,
   },
   UnknownError: {
     message: 'Unknown error',
