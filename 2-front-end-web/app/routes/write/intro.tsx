@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useFetcher } from '@remix-run/react'
+import { ActionFunction, redirect } from '@remix-run/node'
 import styled from 'styled-components'
 import LabelInput from '~/components/system/LabelInput'
 import BasicLayout from '~/components/layout/BasicLayout'
@@ -62,6 +63,26 @@ function Intro({}: IntroProps) {
   )
 }
 export default Intro
+
+/* Remix routes handler */
+
+export const action: ActionFunction = async ({ request }) => {
+  const isAuthenticated = await Authenticator.checkAuthenticated(request)
+  if (!isAuthenticated) throw new Error('Not logged in')
+
+  const form = await request.formData()
+
+  const link = form.get('link') as string
+  const title = form.get('title') as string
+  const body = form.get('body') as string
+  try {
+    await createItem({ link, title, body })
+  } catch (e) {
+    // ...
+  }
+
+  return redirect('/')
+}
 
 // Inner Components
 
