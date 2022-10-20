@@ -27,7 +27,12 @@
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.3",
     "fastify": "^4.6.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "metascraper": "^5.31.1",
+    "metascraper-author": "^5.31.1",
+    "metascraper-image": "^5.31.1",
+    "metascraper-logo-favicon": "^5.31.1",
+    "metascraper-publisher": "^5.31.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
