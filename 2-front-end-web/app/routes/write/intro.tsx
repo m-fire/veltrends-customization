@@ -81,7 +81,18 @@ export const action: ActionFunction = async ({ request }) => {
   }
 }
 
-  return redirect('/')
+export function CatchBoundary() {
+  const caught = useAppErrorCatch()
+  const { actions } = useWriteContext()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (caught.status === APP_ERRORS_INFO.InvalidUrlError.statusCode) {
+      navigate(-1)
+      actions.setError(caught.data)
+    }
+  }, [caught, navigate, actions])
+
+  return <Intro />
 }
 
 // Inner Components
