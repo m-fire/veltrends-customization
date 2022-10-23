@@ -1,5 +1,5 @@
 import { client, URL_API_SERVER } from './client.js'
-import { Item } from './types.js'
+import { Item, ItemListPagination } from './types.js'
 
 const URL_ITEMS = URL_API_SERVER + '/api/items'
 
@@ -12,4 +12,9 @@ type CreateItemParams = {
   link: string
   title: string
   body: string
+}
+
+export async function getItemList() {
+  const response = await client.get<ItemListPagination>(URL_ITEMS)
+  return response.data
 }
