@@ -38,7 +38,7 @@ class ItemService {
         body,
         link: info.url,
         userId,
-        author: info.og.author,
+        author: info.og.author ?? undefined,
         publisherId: newPublisher.id,
       },
       include: { user: { select: { id: true } } },
