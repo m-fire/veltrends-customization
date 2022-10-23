@@ -14,7 +14,8 @@ type IntroProps = {}
 
 function Intro({}: IntroProps) {
   const {
-    state: { link },
+    state: { form },
+    actions,
   } = useWriteContext()
   const initialForm = { title: '', body: '' }
   const [form, setForm] = useState(initialForm)
@@ -22,39 +23,35 @@ function Intro({}: IntroProps) {
   /* Remix submitting hooks */
   const fetcher = useFetcher<typeof initialForm>()
 
+  const onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (
+    e,
+  ) => {
+    const key = e.target.name as keyof Omit<typeof form, 'link'>
+    const { value } = e.target
+    actions.change(key, value)
+  }
+
   return (
     <BasicLayout title="뉴스 소개" hasBackButton>
       <WriteFormTemplate
         description="공유할 뉴스를 소개하세요."
         buttonText="등록하기"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault()
-          fetcher.submit({ link, ...form }, { method: 'post' })
-          console.log(`Intro.onSubmit() fetcher.submit()`)
+          fetcher.submit(form, { method: 'post' })
         }}
       >
         <Group>
           <LabelInput
             label="제목"
             name="title"
-            onChange={(e) => {
-              const key = e.target.name
-              const { value } = e.target
-              setForm({ ...form, [key]: value })
-            }}
+            onChange={onChange}
             value={form.title}
           />
           <IntroLabelTextArea
             label="내용"
             name="body"
-            onChange={(e) => {
-              const key = e.target.name
-              const { value } = e.target
-              setForm({
-                ...form,
-                [key]: value,
-              })
-            }}
+            onChange={onChange}
             value={form.body}
           />
         </Group>
@@ -77,9 +74,12 @@ export const action: ActionFunction = async ({ request }) => {
   const body = form.get('body') as string
   try {
     await createItem({ link, title, body })
+
+    return redirect('/')
   } catch (e) {
     // ...
   }
+}
 
   return redirect('/')
 }
