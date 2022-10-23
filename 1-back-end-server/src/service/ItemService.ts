@@ -41,7 +41,10 @@ class ItemService {
         author: info.og.author ?? undefined,
         publisherId: newPublisher.id,
       },
-      include: { user: { select: { id: true } } },
+      include: {
+        user: { select: { id: true } },
+        publisher: true,
+      },
     })
 
     return newItemWithUser
@@ -50,7 +53,10 @@ class ItemService {
   async getItem(id: number) {
     const itemWithUser = await db.item.findUnique({
       where: { id },
-      include: { user: { select: { id: true } } },
+      include: {
+        user: { select: { id: true } },
+        publisher: true,
+      },
     })
 
     if (!itemWithUser) throw new AppError('NotFoundError')
@@ -96,6 +102,7 @@ class ItemService {
       },
       include: {
         user: { select: { id: true } },
+        publisher: true,
       },
       take: limit ?? this.LIMIT_PER_FIND,
       orderBy: {
@@ -111,7 +118,10 @@ class ItemService {
     const itemWithUser = await db.item.update({
       where: { id: itemId },
       data: { title, body },
-      include: { user: { select: { id: true } } },
+      include: {
+        user: { select: { id: true } },
+        publisher: true,
+      },
     })
     return itemWithUser
   }
