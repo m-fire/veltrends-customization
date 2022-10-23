@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { useFetcher } from '@remix-run/react'
-import { ActionFunction, redirect } from '@remix-run/node'
+import { ChangeEventHandler, useEffect, useState } from 'react'
+import { useFetcher, useNavigate } from '@remix-run/react'
+import { ActionFunction, json, redirect } from '@remix-run/node'
 import styled from 'styled-components'
 import LabelInput from '~/components/system/LabelInput'
 import BasicLayout from '~/components/layout/BasicLayout'
@@ -9,6 +9,9 @@ import LabelTextArea from '~/components/system/LabelTextArea'
 import { Authenticator } from '~/common/api/auth'
 import { createItem } from '~/common/api/items'
 import { useWriteContext } from '~/context/WriteContext'
+import AppError, { APP_ERRORS_INFO } from '~/common/error/AppError'
+import { useAppErrorCatch } from '~/common/hooks/useAppErrorCatch'
+import { colors } from '~/common/style/colors'
 
 type IntroProps = {}
 
@@ -17,10 +20,10 @@ function Intro({}: IntroProps) {
     state: { form },
     actions,
   } = useWriteContext()
-  const initialForm = { title: '', body: '' }
-  const [form, setForm] = useState(initialForm)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   /* Remix submitting hooks */
+  const initialForm = { title: '', body: '' }
   const fetcher = useFetcher<typeof initialForm>()
 
   const onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (
@@ -38,6 +41,10 @@ function Intro({}: IntroProps) {
         buttonText="등록하기"
         onSubmit={async (e) => {
           e.preventDefault()
+          if (form.title === '' || form.body === '') {
+            setErrorMessage('제목과 내용을 모두 입력하세요')
+            return
+          }
           fetcher.submit(form, { method: 'post' })
         }}
       >
@@ -54,6 +61,7 @@ function Intro({}: IntroProps) {
             onChange={onChange}
             value={form.body}
           />
+          {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
     </BasicLayout>
@@ -77,7 +85,8 @@ export const action: ActionFunction = async ({ request }) => {
 
     return redirect('/')
   } catch (e) {
-    // ...
+    const error = AppError.extract(e)
+    throw json(error, { status: error.statusCode })
   }
 }
 
@@ -112,4 +121,11 @@ const IntroLabelTextArea = styled(LabelTextArea)`
     resize: none;
     font-family: inherit;
   }
+`
+
+const Message = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  color: ${colors.secondary1};
+  text-align: center;
 `
