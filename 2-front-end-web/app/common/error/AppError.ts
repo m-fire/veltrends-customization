@@ -6,6 +6,7 @@ type AppErrorType =
   | 'UnauthorizedError'
   | 'BadReqeustError'
   | 'RefreshFailureError'
+  | 'InvalidUrlError'
   | 'UnknownError'
 
 export type ErrorPayloadOpt<K extends AppErrorType> =
@@ -22,7 +23,7 @@ interface ErrorInfo {
   statusCode: number
 }
 
-const ERRORINFO_BY_TYPE: Record<AppErrorType, ErrorInfo> = {
+export const APP_ERRORS_INFO: Record<AppErrorType, ErrorInfo> = {
   UserExistsError: {
     message: 'User already exists',
     statusCode: 409,
@@ -43,6 +44,10 @@ const ERRORINFO_BY_TYPE: Record<AppErrorType, ErrorInfo> = {
     message: 'Failed to refresh token',
     statusCode: 401,
   },
+  InvalidUrlError: {
+    message: 'Invalid URL',
+    statusCode: 422,
+  },
   UnknownError: {
     message: 'Unknown error',
     statusCode: 500,
@@ -57,7 +62,7 @@ export default class AppError<
   public readonly statusCode: number
 
   constructor(public readonly type: K, public payload?: ErrorPayloadOpt<K>) {
-    const info = ERRORINFO_BY_TYPE[type]
+    const info = APP_ERRORS_INFO[type]
     super(info.message)
     this.name = type
     this.statusCode = info.statusCode
@@ -73,8 +78,8 @@ export default class AppError<
 
   static info<K extends AppErrorType>(
     type: K,
-  ): typeof ERRORINFO_BY_TYPE[K] & { type: K } {
-    return { ...ERRORINFO_BY_TYPE[type], type }
+  ): typeof APP_ERRORS_INFO[K] & { type: K } {
+    return { ...APP_ERRORS_INFO[type], type }
   }
 
   static extract(error: unknown): AppError {
