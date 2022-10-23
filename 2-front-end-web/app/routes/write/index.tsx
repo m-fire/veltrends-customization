@@ -1,15 +1,18 @@
-import { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { useNavigate } from '@remix-run/react'
 import BasicLayout from '~/components/layout/BasicLayout'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { useWriteContext } from '~/context/WriteContext'
 import LabelInput from '~/components/system/LabelInput'
+import { APP_ERRORS_INFO } from '~/common/error/AppError'
+
+const ERROR_CODE_INVALID_URL = APP_ERRORS_INFO.InvalidUrlError.statusCode
 
 function WriteLink() {
   const navigate = useNavigate()
   const {
     state: {
       form: { link },
+      error,
     },
     actions,
   } = useWriteContext()
@@ -32,6 +35,11 @@ function WriteLink() {
           onChange={(e) => {
             actions.change('link', e.target.value)
           }}
+          errorMessage={
+            error?.statusCode === ERROR_CODE_INVALID_URL
+              ? '유효하지 않은 URL 입니다'
+              : undefined
+          }
         />
       </WriteFormTemplate>
       {/* <Button onClick={() => navigate('/write/intro')}>다음</Button> */}
