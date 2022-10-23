@@ -44,6 +44,12 @@ export const RES_ITEM_SCHEMA = Type.Object({
   user: Type.Object({
     id: Type.Integer({ default: 12 }),
   }),
+  publisher: Type.Object({
+    id: Type.Integer(),
+    name: Type.String(),
+    domain: Type.String(),
+    favicon: Nullable(Type.String()),
+  }),
 })
 
 // FastifySchema
