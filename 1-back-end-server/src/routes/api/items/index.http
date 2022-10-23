@@ -3,9 +3,9 @@ Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 {
-	"title":  "test_title",
-	"body": "test_body",
-	"link":  "https://test.com/test",
+	"link": "https://youtu.be/C6KXeAE4fq0?t=2408",
+	"title": "리스팅 기능 구현",
+	"body": "벨로퍼트 강의영상",
 	"tags": "tag=tag1&tag=tag2&tag=tag3"
 }
 
