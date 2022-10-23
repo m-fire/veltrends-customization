@@ -1,11 +1,32 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
 type WriteContextMap = {
-  state: { link: string }
-  actions: {
-    setLink: (link: string) => void
-    reset: () => void
+  state: WriteContextState
+  actions: WriteContextActions
+}
+
+export type WriteContextState = {
+  form: {
+    link: string
+    title: string
+    body: string
   }
+}
+
+export type WriteContextActions = {
+  reset(): void
+  change<K extends keyof WriteContextState['form']>(
+    key: K,
+    value: WriteContextState['form'][K],
+  ): void
+}
+
+const initialState = {
+  form: {
+    link: '',
+    title: '',
+    body: '',
+  },
 }
 
 const WriteContext = createContext<WriteContextMap | null>(null)
@@ -15,18 +36,21 @@ interface WriteProviderProps {
 }
 
 export function WriteContextProvider({ children }: WriteProviderProps) {
-  const [state, setState] = useState<WriteContextMap['state']>({
-    link: '',
-  })
-  const actions: WriteContextMap['actions'] = useMemo(
+  const [state, setState] = useState<WriteContextState>(initialState)
+
+  const actions: WriteContextActions = useMemo(
     () => ({
-      reset() {
-        setState({
-          link: '',
-        })
+      reset: () => {
+        setState(initialState)
       },
-      setLink(url: string) {
-        setState((prev) => ({ ...prev, link: url }))
+      change: (key, value) => {
+        setState((prev) => ({
+          ...prev,
+          form: {
+            ...prev.form,
+            [key]: value,
+          },
+        }))
       },
     }),
     [],
