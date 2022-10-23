@@ -1,25 +1,5 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
-
-type WriteContextMap = {
-  state: WriteContextState
-  actions: WriteContextActions
-}
-
-export type WriteContextState = {
-  form: {
-    link: string
-    title: string
-    body: string
-  }
-}
-
-export type WriteContextActions = {
-  reset(): void
-  change<K extends keyof WriteContextState['form']>(
-    key: K,
-    value: WriteContextState['form'][K],
-  ): void
-}
+import AppError from '~/common/error/AppError'
 
 const initialState = {
   form: {
@@ -27,6 +7,7 @@ const initialState = {
     title: '',
     body: '',
   },
+  // error: undefined,
 }
 
 const WriteContext = createContext<WriteContextMap | null>(null)
@@ -52,6 +33,12 @@ export function WriteContextProvider({ children }: WriteProviderProps) {
           },
         }))
       },
+      setError: (error) => {
+        setState((prev) => ({
+          ...prev,
+          error,
+        }))
+      },
     }),
     [],
   )
@@ -66,4 +53,27 @@ export function useWriteContext() {
     throw new Error('useWriteContext must be used within a WriteProvider')
   }
   return context
+}
+
+type WriteContextMap = {
+  state: WriteContextState
+  actions: WriteContextActions
+}
+
+export type WriteContextState = {
+  form: {
+    link: string
+    title: string
+    body: string
+  }
+  error?: AppError
+}
+
+export type WriteContextActions = {
+  reset(): void
+  change<K extends keyof WriteContextState['form']>(
+    key: K,
+    value: WriteContextState['form'][K],
+  ): void
+  setError(error?: AppError): void
 }
