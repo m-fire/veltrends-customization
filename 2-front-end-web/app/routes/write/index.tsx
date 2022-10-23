@@ -7,33 +7,31 @@ import LabelInput from '~/components/system/LabelInput'
 
 function WriteLink() {
   const navigate = useNavigate()
-  const { state, actions } = useWriteContext()
-  const [link, setLink] = useState(state.link)
-
-  const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault()
-    actions.setLink(link)
-    navigate('/write/intro')
-  }
-
-  const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setLink(e.target.value)
-  }
+  const {
+    state: {
+      form: { link },
+    },
+    actions,
+  } = useWriteContext()
 
   return (
     <BasicLayout title="링크 입력" hasBackButton>
       <WriteFormTemplate
         description="공유하고 싶은 URL을 입력하세요."
         buttonText="다음"
-        onSubmit={onSubmit}
+        onSubmit={(e) => {
+          e.preventDefault()
+          navigate('/write/intro')
+        }}
       >
         <LabelInput
           label="URL"
           placeholder="https://example.com"
           name="url"
           value={link}
-          defaultValue={state.link}
-          onChange={onChange}
+          onChange={(e) => {
+            actions.change('link', e.target.value)
+          }}
         />
       </WriteFormTemplate>
       {/* <Button onClick={() => navigate('/write/intro')}>다음</Button> */}
