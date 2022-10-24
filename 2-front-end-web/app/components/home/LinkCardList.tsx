@@ -10,7 +10,6 @@ type LinkCardListProps = {
 function LinkCardList({ items }: LinkCardListProps) {
   return (
     <List>
-      LinkCadd List
       {items.map((item) => (
         <LinkCard key={item.id} item={item} />
       ))}
@@ -21,7 +20,7 @@ export default LinkCardList
 
 // Inner Components
 
-const List = styled.div`
+const List = styled.ul`
   display: flex;
   flex-direction: column;
 `

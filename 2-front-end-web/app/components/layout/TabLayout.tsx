@@ -24,7 +24,7 @@ export default TabLayout
 
 // Inner Components
 
-const Content = styled.div`
+const Content = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;

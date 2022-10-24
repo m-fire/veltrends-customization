@@ -3,12 +3,17 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { getItemList } from '~/common/api/items'
 import { useLoaderData } from '@remix-run/react'
 import { ItemListPagination } from '~/common/api/types'
+import LinkCardList from '~/components/home/LinkCardList'
 
 export default function Index() {
   const data = useLoaderData<ItemListPagination>()
   console.log(`routes.Index() data:`, data)
 
-  return <TabLayout>Index route</TabLayout>
+  return (
+    <TabLayout>
+      <LinkCardList items={data.list} />
+    </TabLayout>
+  )
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
