@@ -8,6 +8,11 @@ const GlobalStyle = createGlobalStyle`
 	body {
 		margin: 0;
 	}
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	} 
 	
 	/* 컨탠츠 Full-height 설정 방법 2가지 */
 

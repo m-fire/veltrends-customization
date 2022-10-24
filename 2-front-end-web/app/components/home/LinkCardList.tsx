@@ -23,4 +23,5 @@ export default LinkCardList
 const List = styled.ul`
   display: flex;
   flex-direction: column;
+  gap: 30px;
 `

@@ -28,4 +28,7 @@ const Content = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: scroll;
+  padding-left: 16px;
+  padding-right: 16px;
 `
