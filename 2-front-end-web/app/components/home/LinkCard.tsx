@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react'
-import styled from 'styled-components'
+import React from 'react'
+import styled, { css, CSSProperties } from 'styled-components'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
+import { Earth } from '~/components/generate/svg'
 
 type LinkCardProps = {
   item: Item
@@ -25,6 +26,19 @@ function LinkCard({
     <ListItem>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
       <h3>{title}</h3>
+      <Publisher>
+        {publisher.favicon ? (
+          <img src={publisher.favicon} alt="favicon" />
+        ) : (
+          <Earth />
+        )}
+        {author && (
+          <>
+            <strong>{author}</strong> {`· `}
+          </>
+        )}
+        {author ? `${publisher.domain}` : <strong>{publisher.domain}</strong>}
+      </Publisher>
       {body && <p>{body}</p>}
     </ListItem>
   )
@@ -61,6 +75,21 @@ const Thumbnail = styled.img`
   box-shadow: 0 0 3px rgba(0 0 0 / 15%);
 
   margin-bottom: 8px;
+`
+
+const Publisher = styled.div`
+  display: flex;
+  ${getFontStyles('12px', 400, colors.grey2, 1.33)};
+  gap: 4px;
+  margin-bottom: 8px;
+  img,
+  svg {
+    display: inline-block;
+    width: 18px;
+  }
+  strong {
+    ${getFontStyles('12px', 600, colors.grey3, 1.33)};
+  }
 `
 
 function getFontStyles(
