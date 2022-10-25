@@ -23,5 +23,8 @@ export default LinkCardList
 const List = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 80px;
+  &:last-child {
+    margin-bottom: 80px;
+  }
 `
