@@ -2,11 +2,14 @@ import React from 'react'
 import styled, { css, CSSProperties } from 'styled-components'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
-import { Earth } from '~/components/generate/svg'
+import { Earth, HeartActive, HeartInactive } from '~/components/generate/svg'
 
 type LinkCardProps = {
   item: Item
 }
+
+let toggle = false
+const toggling = () => (toggle = !toggle)
 
 function LinkCard({
   item: {
@@ -22,6 +25,9 @@ function LinkCard({
     updatedAt,
   },
 }: LinkCardProps) {
+  const voteCount = 11
+  const pastDistance = '1시간 전'
+
   return (
     <ListItem>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
@@ -40,6 +46,15 @@ function LinkCard({
         {author ? `${publisher.domain}` : <strong>{publisher.domain}</strong>}
       </Publisher>
       {body && <p>{body}</p>}
+      <ItemFooter>
+        <Vote>
+          {toggling() ? <StyledHeartInactive /> : <StyledHeartActive />}
+          <b>{voteCount}</b>
+        </Vote>
+        <UserInfo>
+          by <b>{user.username}</b> · {pastDistance}
+        </UserInfo>
+      </ItemFooter>
     </ListItem>
   )
 }
@@ -90,6 +105,44 @@ const Publisher = styled.div`
   strong {
     ${getFontStyles('12px', 600, colors.grey3, 1.33)};
   }
+`
+
+const ItemFooter = styled.div`
+  ${getFlexBlockStyles(null, 'center', 'space-between')};
+  ${getFontStyles('12px', 400, colors.grey2, 1.5)};
+  // HeartVote, UserInfo 공통스타일
+  div {
+    ${getFlexBlockStyles(null, 'center')};
+    gap: 4px;
+  }
+`
+
+const Vote = styled.div`
+  b {
+    ${getFontStyles(null, 700, null, 1.5)};
+    color: ${colors.grey4};
+  }
+`
+
+const UserInfo = styled.div`
+  b {
+    ${getFontStyles(null, 600, null, 1.5)};
+    color: ${colors.grey3};
+  }
+`
+
+/* Wrap styled from SVG Components */
+
+const StyledHeartInactive = styled(HeartInactive)`
+  width: 18px;
+  height: 18px;
+  color: ${colors.grey2};
+`
+
+const StyledHeartActive = styled(HeartActive)`
+  width: 18px;
+  height: 18px;
+  //color: ${colors.primary1};
 `
 
 function getFontStyles(
