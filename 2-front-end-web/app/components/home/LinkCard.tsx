@@ -21,7 +21,7 @@ function LinkCard({
     author,
     body,
     user,
-    publisher,
+    publisher: { domain, favicon },
     createdAt,
     updatedAt,
   },
@@ -32,20 +32,20 @@ function LinkCard({
   return (
     <ListItem>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
-      <h3>{title}</h3>
-      <Publisher>
-        {publisher.favicon ? (
-          <img src={publisher.favicon} alt="favicon" />
-        ) : (
-          <Earth />
-        )}
-        {author && (
+      <Publisher hasThumbnail={!!thumbnail}>
+        {favicon ? <img src={favicon} alt="favicon" /> : <Earth />}
+        {author ? (
           <>
-            <strong>{author}</strong> {`· `}
+            <strong>{author}</strong>
+            {`· ${domain}`}
+          </>
+        ) : (
+          <>
+            <strong>{domain}</strong>
           </>
         )}
-        {author ? `${publisher.domain}` : <strong>{publisher.domain}</strong>}
       </Publisher>
+      <h3>{title}</h3>
       {body && <p>{body}</p>}
       <ItemFooter>
         <Vote>
@@ -64,19 +64,19 @@ export default LinkCard
 // Inner Components
 
 const ListItem = styled.li`
-  ${getFlexBlockStyles('column')};
-  & h3,
+  ${displayFlexStyles('column')};
+  h3,
   p,
   span {
     margin: 0;
     padding: 0;
   }
-  & h3 {
-    ${getFontStyles('18px', 800, colors.grey4)};
-    margin-bottom: 2px;
+  & > h3 {
+    ${fontStyles('18px', 800, colors.grey4)};
+    margin-bottom: 8px;
   }
-  p {
-    ${getFontStyles('12px', 500, colors.grey3)};
+  & > p {
+    ${fontStyles('12px', 500, colors.grey3)};
     display: block;
     margin-bottom: 8px;
   }
@@ -90,44 +90,46 @@ const Thumbnail = styled.img`
   border-radius: 6px;
   box-shadow: 0 0 3px rgba(0 0 0 / 15%);
 
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 `
 
-const Publisher = styled.div`
+const Publisher = styled.div<{ hasThumbnail: boolean }>`
   display: flex;
-  ${getFontStyles('12px', 400, colors.grey2, 1.33)};
+  ${fontStyles('12px', 400, colors.grey2, 1.33)};
   gap: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
   img,
   svg {
     display: inline-block;
-    width: 18px;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
   }
   strong {
-    ${getFontStyles('12px', 600, colors.grey3, 1.33)};
+    ${fontStyles('12px', 600, colors.grey3, 1.33)};
   }
 `
 
 const ItemFooter = styled.div`
-  ${getFlexBlockStyles(null, 'center', 'space-between')};
-  ${getFontStyles('12px', 400, colors.grey2, 1.5)};
+  ${displayFlexStyles(null, 'center', 'space-between')};
+  ${fontStyles('12px', 400, colors.grey2, 1.5)};
   // HeartVote, UserInfo 공통스타일
   div {
-    ${getFlexBlockStyles(null, 'center')};
+    ${displayFlexStyles(null, 'center')};
     gap: 4px;
   }
 `
 
 const Vote = styled.div`
   b {
-    ${getFontStyles(null, 700, null, 1.5)};
+    ${fontStyles(null, 700, null, 1.5)};
     color: ${colors.grey4};
   }
 `
 
 const UserInfo = styled.div`
   b {
-    ${getFontStyles(null, 600, null, 1.5)};
+    ${fontStyles(null, 600, null, 1.5)};
     color: ${colors.grey3};
   }
 `
@@ -146,7 +148,7 @@ const StyledHeartActive = styled(HeartActive)`
   //color: ${colors.primary1};
 `
 
-function getFontStyles(
+function fontStyles(
   fontSize?: CSSProperties['fontSize'] | null,
   fontWeight?: CSSProperties['fontWeight'] | null,
   color?: CSSProperties['color'] | null,
@@ -172,7 +174,7 @@ function getFontStyles(
   `
 }
 
-function getFlexBlockStyles<OptKey extends keyof CSSProperties>(
+function displayFlexStyles<OptKey extends keyof CSSProperties>(
   direction?: CSSProperties['flexDirection'] | null,
   alignItems?: CSSProperties['alignItems'] | null,
   justifyContent?: CSSProperties['justifyContent'] | null,
