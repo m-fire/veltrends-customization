@@ -29,7 +29,7 @@ export interface Publisher {
   id: number
   name: string
   domain: string
-  favicon: string
+  favicon: string | null
 }
 
 export type ItemListPagination = GenericListPagination<Item>
