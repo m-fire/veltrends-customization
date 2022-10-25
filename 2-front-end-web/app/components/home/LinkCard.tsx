@@ -3,6 +3,7 @@ import styled, { css, CSSProperties } from 'styled-components'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
 import { Earth, HeartActive, HeartInactive } from '~/components/generate/svg'
+import { useDateDistance } from '~/common/hooks/useDateDistance'
 
 type LinkCardProps = {
   item: Item
@@ -26,7 +27,7 @@ function LinkCard({
   },
 }: LinkCardProps) {
   const voteCount = 11
-  const pastDistance = '1시간 전'
+  const pastDistance = useDateDistance(createdAt)
 
   return (
     <ListItem>
