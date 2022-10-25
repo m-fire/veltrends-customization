@@ -37,18 +37,23 @@ export const RES_ITEM_SCHEMA = Type.Object({
   title: Type.String({ default: 'test_title' }),
   body: Type.String({ default: 'test_body' }),
   link: Type.String({ default: 'https://test.com/test' }),
-  thumbnail: Nullable(Type.String({ default: 'https://image.com/test.png' })),
+  thumbnail: Nullable(
+    Type.String({ default: 'https://image.com/thumbnail.png' }),
+  ),
   createdAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
   updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
   author: Type.String(),
   user: Type.Object({
     id: Type.Integer({ default: 12 }),
+    username: Type.String({ default: 'test_username' }),
   }),
   publisher: Type.Object({
-    id: Type.Integer(),
-    name: Type.String(),
-    domain: Type.String(),
-    favicon: Nullable(Type.String()),
+    id: Type.Integer({ default: 15 }),
+    name: Type.String({ default: 'test_publisher' }),
+    domain: Type.String({ default: 'https://test-domain.com/test_api' }),
+    favicon: Nullable(
+      Type.String({ default: 'https://image.com/favicon.png' }),
+    ),
   }),
 })
 

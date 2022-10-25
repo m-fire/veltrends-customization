@@ -42,7 +42,7 @@ class ItemService {
         publisherId: newPublisher.id,
       },
       include: {
-        user: { select: { id: true } },
+        user: { select: { id: true, username: true } },
         publisher: true,
       },
     })
@@ -54,7 +54,7 @@ class ItemService {
     const itemWithUser = await db.item.findUnique({
       where: { id },
       include: {
-        user: { select: { id: true } },
+        user: { select: { id: true, username: true } },
         publisher: true,
       },
     })
@@ -101,7 +101,7 @@ class ItemService {
         id: cursor ? { lt: cursor } : undefined,
       },
       include: {
-        user: { select: { id: true } },
+        user: { select: { id: true, username: true } },
         publisher: true,
       },
       take: limit ?? this.LIMIT_PER_FIND,
@@ -119,7 +119,7 @@ class ItemService {
       where: { id: itemId },
       data: { title, body },
       include: {
-        user: { select: { id: true } },
+        user: { select: { id: true, username: true } },
         publisher: true,
       },
     })
