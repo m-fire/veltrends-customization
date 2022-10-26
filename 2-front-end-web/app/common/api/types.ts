@@ -4,7 +4,7 @@ export type GenericListPagination<T> = {
   pageInfo: PageInfo
 }
 export interface PageInfo {
-  endCursor: number
+  lastCursor: number | null
   hasNextPage: boolean
 }
 

@@ -4,6 +4,7 @@ import { getItemList } from '~/common/api/items'
 import { useLoaderData } from '@remix-run/react'
 import { ItemListPagination } from '~/common/api/types'
 import LinkCardList from '~/components/home/LinkCardList'
+import { Requests } from '~/common/util/https'
 
 export default function Index() {
   const data = useLoaderData<ItemListPagination>()
@@ -17,7 +18,10 @@ export default function Index() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const itemList = await getItemList()
+  const { cursor } = Requests.parseUrlParams<{ cursor?: string }>(request.url)
+  const parsedCursor = cursor != null ? parseInt(cursor, 10) : undefined
+
+  const itemList = await getItemList(parsedCursor)
   return json(itemList)
 }
 
