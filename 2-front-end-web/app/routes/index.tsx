@@ -17,7 +17,6 @@ export default function Index() {
       lastCursor: null,
       hasNextPage: false,
     }
-    console.log(`routes.Index.onClick() hasNextPage:`, hasNextPage)
     if (!hasNextPage) return null
 
     fetcher.load(
@@ -27,12 +26,15 @@ export default function Index() {
   }
 
   useEffect(() => {
-    console.log(`routes.Index.useEffect() fetcher.data:`, fetcher.data)
+    const page = fetcher.data
+    if (!page || pages.includes(page)) return
+    setPages(pages.concat(page))
   }, [fetcher.data, pages])
 
+  const items = pages.flatMap((p) => p.list)
   return (
     <TabLayout>
-      <LinkCardList items={data.list} />
+      <LinkCardList items={items} />
       <button onClick={onClick}>ClickMe</button>
     </TabLayout>
   )
