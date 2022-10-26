@@ -6,6 +6,7 @@ import { useFetcher, useLoaderData } from '@remix-run/react'
 import { ItemListPagination } from '~/common/api/types'
 import LinkCardList from '~/components/home/LinkCardList'
 import { Requests } from '~/common/util/https'
+import { useInfiniteScroll } from '~/common/hooks/useInfiniteScroll'
 
 export default function Index() {
   const data = useLoaderData<ItemListPagination>()
@@ -35,34 +36,13 @@ export default function Index() {
 
   // 감지영역에 screen 이 도달한 경우, 목록 끝에 다음페이지 붙이기
   const intersectRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (!intersectRef.current) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return
-          fetchNext()
-        })
-      },
-      {
-        root: intersectRef.current.parentElement,
-        rootMargin: '64px',
-        threshold: 1,
-      },
-    )
-    observer.observe(intersectRef.current)
-    return () => {
-      observer.disconnect()
-    }
-  }, [fetchNext])
+  useInfiniteScroll(intersectRef, fetchNext)
 
   const items = pages.flatMap((p) => p.list)
   return (
     <TabLayout>
       <LinkCardList items={items} />
-      {/* IntersectionOpserver 적용 구현 */}
-      <div ref={intersectRef}>인터섹션 옵저버 적용구현영역</div>
+      <div ref={intersectRef} />
     </TabLayout>
   )
 }
