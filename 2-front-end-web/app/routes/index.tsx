@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useState } from 'react'
+import { MouseEventHandler, useEffect, useRef, useState } from 'react'
 import TabLayout from '~/components/layout/TabLayout'
 import { json, LoaderFunction } from '@remix-run/node'
 import { getItemList } from '~/common/api/items'
@@ -11,6 +11,8 @@ export default function Index() {
   const data = useLoaderData<ItemListPagination>()
   const [pages, setPages] = useState([data])
   const fetcher = useFetcher<ItemListPagination>()
+
+  const intersectRef = useRef<HTMLDivElement>(null)
 
   const onClick: MouseEventHandler = (e) => {
     const { hasNextPage, lastCursor } = pages.at(-1)?.pageInfo ?? {
@@ -31,11 +33,20 @@ export default function Index() {
     setPages(pages.concat(page))
   }, [fetcher.data, pages])
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(() => {}, {
+      root: intersectRef.current?.parentElement,
+      rootMargin: '0px',
+      threshold: 1.0,
+    })
+  }, [fetcher.data, pages])
+
   const items = pages.flatMap((p) => p.list)
   return (
     <TabLayout>
       <LinkCardList items={items} />
-      <button onClick={onClick}>ClickMe</button>
+      {/* IntersectionOpserver 적용 구현 */}
+      <div ref={intersectRef}>인터섹션 옵저버 적용구현영역</div>
     </TabLayout>
   )
 }
