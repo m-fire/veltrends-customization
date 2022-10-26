@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import TabLayout from '~/components/layout/TabLayout'
 import { json, LoaderFunction } from '@remix-run/node'
 import { getItemList } from '~/common/api/items'
@@ -14,18 +14,18 @@ export default function Index() {
 
   const intersectRef = useRef<HTMLDivElement>(null)
 
-  const onClick: MouseEventHandler = (e) => {
+  const fetchNext = useCallback(() => {
     const { hasNextPage, lastCursor } = pages.at(-1)?.pageInfo ?? {
       lastCursor: null,
       hasNextPage: false,
     }
-    if (!hasNextPage) return null
-
+    if (fetcher.state === 'loading') return
+    if (!hasNextPage) return
     fetcher.load(
       /* Remix 특징: '&index' 를 붙여야 함 */
       `/?cursor=${lastCursor}` + '&index',
     )
-  }
+  }, [fetcher, pages])
 
   useEffect(() => {
     const page = fetcher.data
@@ -39,10 +39,8 @@ export default function Index() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          console.log(
-            `routes.Index.useEffect() e.isIntersecting:`,
-            e.isIntersecting,
-          )
+          if (!e.isIntersecting) return
+          fetchNext()
         })
         console.log(`routes.Index.useEffect() entries:`, entries)
       },
@@ -58,7 +56,7 @@ export default function Index() {
     return () => {
       observer.disconnect()
     }
-  }, [])
+  }, [fetchNext])
 
   const items = pages.flatMap((p) => p.list)
   return (
