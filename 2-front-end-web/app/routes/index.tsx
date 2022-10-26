@@ -34,12 +34,31 @@ export default function Index() {
   }, [fetcher.data, pages])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(() => {}, {
-      root: intersectRef.current?.parentElement,
-      rootMargin: '0px',
-      threshold: 1.0,
-    })
-  }, [fetcher.data, pages])
+    if (!intersectRef.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          console.log(
+            `routes.Index.useEffect() e.isIntersecting:`,
+            e.isIntersecting,
+          )
+        })
+        console.log(`routes.Index.useEffect() entries:`, entries)
+      },
+      {
+        root: intersectRef.current.parentElement,
+        rootMargin: '64px',
+        threshold: 1,
+      },
+    )
+
+    observer.observe(intersectRef.current)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const items = pages.flatMap((p) => p.list)
   return (
