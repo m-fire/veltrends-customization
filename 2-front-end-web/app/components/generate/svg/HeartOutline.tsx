@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SVGProps } from 'react'
 
-const SvgHeartInactive = (props: SVGProps<SVGSVGElement>) => (
+const SvgHeartOutline = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 17 17"
     fill="none"
@@ -16,4 +16,4 @@ const SvgHeartInactive = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 )
 
-export default SvgHeartInactive
+export default SvgHeartOutline

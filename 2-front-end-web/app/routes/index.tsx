@@ -12,8 +12,14 @@ export default function Index() {
   const [pages, setPages] = useState([data])
   const fetcher = useFetcher<ItemListPagination>()
 
-  const intersectRef = useRef<HTMLDivElement>(null)
+  // 새 페이지가 있으면, 기존목록에 새 페이지 추가
+  useEffect(() => {
+    const page = fetcher.data
+    if (!page || pages.includes(page)) return
+    setPages(pages.concat(page))
+  }, [fetcher.data, pages])
 
+  // 다음 목록페이지 요청
   const fetchNext = useCallback(() => {
     const { hasNextPage, lastCursor } = pages.at(-1)?.pageInfo ?? {
       lastCursor: null,
@@ -27,12 +33,8 @@ export default function Index() {
     )
   }, [fetcher, pages])
 
-  useEffect(() => {
-    const page = fetcher.data
-    if (!page || pages.includes(page)) return
-    setPages(pages.concat(page))
-  }, [fetcher.data, pages])
-
+  // 감지영역에 screen 이 도달한 경우, 목록 끝에 다음페이지 붙이기
+  const intersectRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!intersectRef.current) return
 
@@ -42,7 +44,6 @@ export default function Index() {
           if (!e.isIntersecting) return
           fetchNext()
         })
-        console.log(`routes.Index.useEffect() entries:`, entries)
       },
       {
         root: intersectRef.current.parentElement,
@@ -50,9 +51,7 @@ export default function Index() {
         threshold: 1,
       },
     )
-
     observer.observe(intersectRef.current)
-
     return () => {
       observer.disconnect()
     }

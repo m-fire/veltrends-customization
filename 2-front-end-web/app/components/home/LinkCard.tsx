@@ -2,8 +2,8 @@ import React from 'react'
 import styled, { css, CSSProperties } from 'styled-components'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
-import { Earth, HeartActive, HeartInactive } from '~/components/generate/svg'
-import { useDateDistance } from '~/common/hooks/useDateDistance'
+import { Earth, HeartFill, HeartOutline } from '~/components/generate/svg'
+import { useDateDistanceRefresh } from '~/common/hooks/useDateDistanceRefresh'
 
 type LinkCardProps = {
   item: Item
@@ -27,11 +27,12 @@ function LinkCard({
   },
 }: LinkCardProps) {
   const voteCount = 11
-  const pastDistance = useDateDistance(createdAt)
+  const pastDistance = useDateDistanceRefresh(createdAt)
 
   return (
     <ListItem>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
+
       <Publisher hasThumbnail={!!thumbnail}>
         {favicon ? <img src={favicon} alt="favicon" /> : <Earth />}
         {author ? (
@@ -40,16 +41,15 @@ function LinkCard({
             {`· ${domain}`}
           </>
         ) : (
-          <>
-            <strong>{domain}</strong>
-          </>
+          <strong>{domain}</strong>
         )}
       </Publisher>
       <h3>{title}</h3>
       {body && <p>{body}</p>}
+
       <ItemFooter>
         <Vote>
-          {toggling() ? <StyledHeartInactive /> : <StyledHeartActive />}
+          {toggling() ? <StyledHeartOutline /> : <StyledHeartFill />}
           <b>{voteCount}</b>
         </Vote>
         <UserInfo>
@@ -136,13 +136,13 @@ const UserInfo = styled.div`
 
 /* Wrap styled from SVG Components */
 
-const StyledHeartInactive = styled(HeartInactive)`
+const StyledHeartOutline = styled(HeartOutline)`
   width: 18px;
   height: 18px;
   color: ${colors.grey2};
 `
 
-const StyledHeartActive = styled(HeartActive)`
+const StyledHeartFill = styled(HeartFill)`
   width: 18px;
   height: 18px;
   //color: ${colors.primary1};

@@ -24,7 +24,7 @@ const List = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 72px;
-  &:last-child {
+  & > li:last-child {
     margin-bottom: 72px;
   }
 `
