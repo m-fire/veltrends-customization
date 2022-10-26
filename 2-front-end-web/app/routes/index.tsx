@@ -1,18 +1,39 @@
+import { MouseEventHandler, useEffect, useState } from 'react'
 import TabLayout from '~/components/layout/TabLayout'
 import { json, LoaderFunction } from '@remix-run/node'
 import { getItemList } from '~/common/api/items'
-import { useLoaderData } from '@remix-run/react'
+import { useFetcher, useLoaderData } from '@remix-run/react'
 import { ItemListPagination } from '~/common/api/types'
 import LinkCardList from '~/components/home/LinkCardList'
 import { Requests } from '~/common/util/https'
 
 export default function Index() {
   const data = useLoaderData<ItemListPagination>()
-  console.log(`routes.Index() data:`, data)
+  const [pages, setPages] = useState([data])
+  const fetcher = useFetcher<ItemListPagination>()
+
+  const onClick: MouseEventHandler = (e) => {
+    const { hasNextPage, lastCursor } = pages.at(-1)?.pageInfo ?? {
+      lastCursor: null,
+      hasNextPage: false,
+    }
+    console.log(`routes.Index.onClick() hasNextPage:`, hasNextPage)
+    if (!hasNextPage) return null
+
+    fetcher.load(
+      /* Remix 특징: '&index' 를 붙여야 함 */
+      `/?cursor=${lastCursor}` + '&index',
+    )
+  }
+
+  useEffect(() => {
+    console.log(`routes.Index.useEffect() fetcher.data:`, fetcher.data)
+  }, [fetcher.data, pages])
 
   return (
     <TabLayout>
       <LinkCardList items={data.list} />
+      <button onClick={onClick}>ClickMe</button>
     </TabLayout>
   )
 }
