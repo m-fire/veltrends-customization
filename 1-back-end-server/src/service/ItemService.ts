@@ -9,6 +9,8 @@ import PublisherService from './PublisherService.js'
 import ItemStatusService from './ItemStatusService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 
+const LIMIT_PER_FIND = 20
+
 class ItemService {
   private static instance: ItemService
   private publisherService = PublisherService.getInstance()
@@ -34,12 +36,13 @@ class ItemService {
       favicon: info.og.favicon,
     })
 
-    const newItemWithUser = await db.item.create({
+    const newItem = await db.item.create({
       data: {
         title,
         body,
         link: info.url,
         userId,
+        thumbnail: info.og.thumbnail,
         author: info.og.author ?? undefined,
         publisherId: newPublisher.id,
       },
@@ -59,8 +62,25 @@ class ItemService {
     }
   }
 
+  async getItemList({ mode, limit, cursor }: ItemListReadPagingOptions) {
+    if (mode !== 'recent') return []
+
+    const [totalCount, list] = await Promise.all([
+      db.item.count(),
+      this.findItemWithUserListByCursor(cursor, limit),
+    ])
+    const lastCursor = list.at(-1)?.id ?? null
+    const hasNextPage = await this.hasNextPageByCursor(lastCursor)
+
+    return <Pagination<typeof list[0]>>{
+      list,
+      totalCount,
+      pageInfo: { hasNextPage, lastCursor },
+    }
+  }
+
   async getItem(id: number) {
-    const itemWithUser = await db.item.findUnique({
+    const item = await db.item.findUnique({
       where: { id },
       include: {
         user: { select: { id: true, username: true } },
@@ -69,26 +89,8 @@ class ItemService {
       },
     })
 
-    if (!itemWithUser) throw new AppError('NotFoundError')
-    return itemWithUser
-  }
-
-  async getItemList({ mode, limit, cursor }: ItemListReadPagingOptions) {
-    if (mode === 'recent') {
-      const [totalCount, list] = await Promise.all([
-        db.item.count(),
-        this.findItemWithUserListByCursor(cursor, limit),
-      ])
-      const lastCursor = list.at(-1)?.id ?? null
-      const hasNextPage = await this.hasNextPageByCursor(lastCursor)
-
-      return <Pagination<typeof list[0]>>{
-        list,
-        totalCount,
-        pageInfo: { hasNextPage, lastCursor },
-      }
-    }
-    return []
+    if (!item) throw new AppError('NotFoundError')
+    return item
   }
 
   private async hasNextPageByCursor(cursor: number | null) {
@@ -99,8 +101,6 @@ class ItemService {
     })
     return totalPage > 0
   }
-
-  private readonly LIMIT_PER_FIND = 20
 
   private async findItemWithUserListByCursor(
     cursor: number | null | undefined,
@@ -115,7 +115,7 @@ class ItemService {
         publisher: true,
         itemStatus: { select: { id: true, likes: true } },
       },
-      take: limit ?? this.LIMIT_PER_FIND,
+      take: limit ?? LIMIT_PER_FIND,
       orderBy: {
         createdAt: 'desc',
       },
@@ -126,7 +126,7 @@ class ItemService {
     const existsItem = await this.getItem(itemId)
     if (existsItem.userId !== userId) throw new AppError('ForbiddenError')
 
-    const itemWithUser = await db.item.update({
+    const updatedItem = await db.item.update({
       where: { id: itemId },
       data: { title, body },
       include: {
@@ -135,7 +135,7 @@ class ItemService {
         itemStatus: true,
       },
     })
-    return itemWithUser
+    return updatedItem
   }
 
   async deleteItem({ itemId, userId }: ItemDeleteParams) {
@@ -159,11 +159,11 @@ type ItemListReadPagingOptions = PaginationOptions &
   )
 
 type ItemUpdateParams = ItemUpdateBody & {
-  userId: number
   itemId: number
+  userId: number
 }
 
 type ItemDeleteParams = {
-  userId: number
   itemId: number
+  userId: number
 }

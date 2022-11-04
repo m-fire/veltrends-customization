@@ -54,11 +54,13 @@ export default itemsRoute
 /* 이곳에 작성된 엔드포인트 핸들러는 인증접속을 요구함 */
 const itemsAuthRoute = createAuthRoute(async (fastify) => {
   const itemService = ItemService.getInstance()
+  const itemLikeService = ItemLikeService.getInstance()
 
   fastify.post<ItemsCreateRequest>(
     '/',
     { schema: ITEM_CREATE_SCHEMA },
-    async ({ body, user }, reply) => {
+    async (request, reply) => {
+      const { body, user } = request
       // 인증 승인이 된 요청이고, user 가 반드시 존재하기 때문에, `!`처리됨.
       const userId = user!.id
       const newItem = await itemService.createItem(userId, body)
@@ -70,7 +72,12 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
   fastify.patch<ItemsUpdateRequest>(
     '/:id',
     { schema: ITEM_UPDATE_SCHEMA },
-    async ({ params: { id: itemId }, body, user }, reply) => {
+    async (request, reply) => {
+      const {
+        params: { id: itemId },
+        body,
+        user,
+      } = request
       const updatedItem = await itemService.updateItem({
         itemId,
         userId: user!.id,
@@ -84,7 +91,11 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
   fastify.delete<ItemsDeleteRequest>(
     '/:id',
     { schema: ITEM_DELETE_SCHEMA },
-    async ({ params: { id: itemId }, user }, reply) => {
+    async (request, reply) => {
+      const {
+        params: { id: itemId },
+        user,
+      } = request
       await itemService.deleteItem({
         itemId,
         userId: user!.id,
