@@ -55,6 +55,15 @@ export const RES_ITEM_SCHEMA = Type.Object({
       Type.String({ default: 'https://image.com/favicon.png' }),
     ),
   }),
+  itemStatus: Type.Object({
+    id: Type.Integer({ default: 6 }),
+    likes: Type.Integer({ default: 12 }),
+  }),
+})
+
+const RES_ITEM_LIKE_SCHEMA = Type.Object({
+  id: Type.Integer({ default: 1 }),
+  likes: Type.Integer({ default: 11 }),
 })
 
 // FastifySchema
@@ -105,5 +114,19 @@ export const ITEM_DELETE_SCHEMA: FastifySchema = {
     400: createAppErrorSchema('BadReqeustError'),
     403: createAppErrorSchema('ForbiddenError'),
     404: createAppErrorSchema('NotFoundError'),
+  },
+}
+
+export const ITEM_LIKE_SCHEMA: FastifySchema = {
+  params: REQ_ITEM_PARAMS_SCHEMA,
+  response: {
+    202: RES_ITEM_LIKE_SCHEMA,
+  },
+}
+
+export const ITEM_UNLIKE_SCHEMA: FastifySchema = {
+  params: REQ_ITEM_PARAMS_SCHEMA,
+  response: {
+    202: RES_ITEM_LIKE_SCHEMA,
   },
 }

@@ -19,7 +19,6 @@ export interface ItemsReadRequest extends RequestGenericInterface {
 export type ItemListQuerystring = Static<
   typeof REQ_ITEM_LIST_QUERYSTRING_SCHEMA
 >
-export type ItemParams = Static<typeof REQ_ITEM_PARAMS_SCHEMA>
 
 export interface ItemsUpdateRequest extends RequestGenericInterface {
   Params: ItemParams
@@ -30,3 +29,13 @@ export type ItemUpdateBody = Static<typeof REQ_ITEM_UPDATE_BODY_SCHEMA>
 export interface ItemsDeleteRequest extends RequestGenericInterface {
   Params: ItemParams
 }
+
+export interface ItemLikeRequest {
+  Params: ItemParams
+}
+
+export interface UnlikeItemRequest {
+  Params: ItemParams
+}
+
+export type ItemParams = Static<typeof REQ_ITEM_PARAMS_SCHEMA>

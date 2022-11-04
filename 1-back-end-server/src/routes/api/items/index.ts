@@ -1,17 +1,22 @@
 import { FastifyPluginAsync } from 'fastify'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
+import ItemLikeService from '../../../service/ItemLikeService.js'
 import {
   ItemsCreateRequest,
   ItemsDeleteRequest,
   ItemsReadRequest,
   ItemsUpdateRequest,
+  ItemLikeRequest,
+  UnlikeItemRequest,
 } from './types.js'
 import {
   ITEM_CREATE_SCHEMA,
   ITEM_DELETE_SCHEMA,
+  ITEM_LIKE_SCHEMA,
   ITEM_LIST_READ_SCHEMA,
   ITEM_READ_SCHEMA,
+  ITEM_UNLIKE_SCHEMA,
   ITEM_UPDATE_SCHEMA,
 } from './schema.js'
 
@@ -85,6 +90,35 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
         userId: user!.id,
       })
       reply.statusCode = 204
+    },
+  )
+
+  // Item Like process
+  fastify.post<ItemLikeRequest>(
+    '/:id/likes',
+    { schema: ITEM_LIKE_SCHEMA },
+    async (request, reply) => {
+      const {
+        params: { id: itemId },
+        user,
+      } = request
+      const userId = user!.id
+      const likes = await itemLikeService.like({ itemId, userId })
+      reply.statusCode = 202
+      return { id: itemId, likes }
+    },
+  )
+
+  // Item Unlike process
+  fastify.delete<UnlikeItemRequest>(
+    '/:id/likes',
+    { schema: ITEM_UNLIKE_SCHEMA },
+    async (request, reply) => {
+      const { id: itemId } = request.params
+      const userId = request.user!.id
+      const likes = await itemLikeService.unlike({ itemId, userId })
+      reply.statusCode = 202
+      return { id: itemId, likes }
     },
   )
 })

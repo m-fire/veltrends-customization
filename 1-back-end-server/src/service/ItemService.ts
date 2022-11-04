@@ -6,11 +6,13 @@ import {
 } from '../common/config/fastify/types.js'
 import AppError from '../common/error/AppError.js'
 import PublisherService from './PublisherService.js'
+import ItemStatusService from './ItemStatusService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 
 class ItemService {
   private static instance: ItemService
   private publisherService = PublisherService.getInstance()
+  private itemStatusService = ItemStatusService.getInstance()
 
   static getInstance() {
     if (!ItemService.instance) {
@@ -47,7 +49,14 @@ class ItemService {
       },
     })
 
-    return newItemWithUser
+    const newItemStatus = await this.itemStatusService.createItemStatus(
+      newItem.id,
+    )
+
+    return {
+      ...newItem,
+      itemStatus: newItemStatus,
+    }
   }
 
   async getItem(id: number) {
@@ -56,6 +65,7 @@ class ItemService {
       include: {
         user: { select: { id: true, username: true } },
         publisher: true,
+        itemStatus: true,
       },
     })
 
@@ -103,6 +113,7 @@ class ItemService {
       include: {
         user: { select: { id: true, username: true } },
         publisher: true,
+        itemStatus: { select: { id: true, likes: true } },
       },
       take: limit ?? this.LIMIT_PER_FIND,
       orderBy: {
@@ -121,6 +132,7 @@ class ItemService {
       include: {
         user: { select: { id: true, username: true } },
         publisher: true,
+        itemStatus: true,
       },
     })
     return itemWithUser
