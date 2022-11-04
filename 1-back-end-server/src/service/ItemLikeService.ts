@@ -1,0 +1,62 @@
+import db from '../common/config/prisma/db-client.js'
+import ItemStatusService from './ItemStatusService.js'
+
+class ItemLikeService {
+  private static instance: ItemLikeService
+  private itemStatusService = ItemStatusService.getInstance()
+
+  static getInstance() {
+    if (!ItemLikeService.instance) {
+      ItemLikeService.instance = new ItemLikeService()
+    }
+    return ItemLikeService.instance
+  }
+
+  private constructor() {}
+
+  async like({ itemId, userId }: ItemLikeParams) {
+    const alreadyLiked = await db.itemLike.findUnique({
+      where: { itemId_userId: { itemId, userId } },
+    })
+    // 사용자가 like 하지 않았다면,
+    if (!alreadyLiked) {
+      try {
+        // itemStatus.likes 를 생성하고,
+        await db.itemLike.create({ data: { itemId, userId } })
+        // like 했다면(이미 존재), like 생성오류 무시
+      } catch (e) {}
+    }
+    return this.getLikes(itemId)
+  }
+
+  async unlike({ itemId, userId }: ItemUnlikeParams) {
+    await db.itemLike.delete({
+      where: { itemId_userId: { itemId, userId } },
+    })
+    return this.getLikes(itemId)
+  }
+
+  private async getLikes(itemId: number) {
+    const likes = await db.itemLike.count({ where: { itemId } })
+    await this.itemStatusService.updateLikes({ itemId, likes })
+    return likes
+  }
+}
+export default ItemLikeService
+
+// types
+
+type ItemLikeParams = {
+  itemId: number
+  userId: number
+}
+
+type ItemUnlikeParams = {
+  itemId: number
+  userId: number
+}
+
+type ItemLikeUpdateParams = {
+  itemId: number
+  likes: number
+}
