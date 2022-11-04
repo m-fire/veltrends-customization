@@ -229,3 +229,47 @@ client.test("/api/items - 랜덤아이디 삭제시도(성공/실패)", function
 %}
 
 ### item 랜덤아이디 삭제시도(성공/실패)
+
+POST http://{{host}}:{{port}}/api/items/1/likes
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 202;
+client.test("/api/items/1/likes 1번 item like(맘에듬) 처리 - 로그인필수", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### 1번 item like 처리
+
+DELETE http://{{host}}:{{port}}/api/items/1/likes
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 202;
+client.test("/api/items/1/likes 1번 item unlike(맘에안듬) 처리 - 로그인필수", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### 1번 item unlike 처리
