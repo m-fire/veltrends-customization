@@ -1,7 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
-import ItemLikeService from '../../../service/ItemLikeService.js'
 import {
   ItemsCreateRequest,
   ItemsDeleteRequest,
@@ -54,7 +53,6 @@ export default itemsRoute
 /* 이곳에 작성된 엔드포인트 핸들러는 인증접속을 요구함 */
 const itemsAuthRoute = createAuthRoute(async (fastify) => {
   const itemService = ItemService.getInstance()
-  const itemLikeService = ItemLikeService.getInstance()
 
   fastify.post<ItemsCreateRequest>(
     '/',
@@ -114,7 +112,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
         user,
       } = request
       const userId = user!.id
-      const likes = await itemLikeService.like({ itemId, userId })
+      const itemStatus = await itemService.likeItem({ itemId, userId })
       reply.statusCode = 202
       return { itemId, itemStatus }
     },
@@ -127,7 +125,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
     async (request, reply) => {
       const { id: itemId } = request.params
       const userId = request.user!.id
-      const likes = await itemLikeService.unlike({ itemId, userId })
+      const itemStatus = await itemService.unlikeItem({ itemId, userId })
       reply.statusCode = 202
       return { itemId, itemStatus }
     },

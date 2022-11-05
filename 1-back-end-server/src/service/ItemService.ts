@@ -7,6 +7,7 @@ import {
 import AppError from '../common/error/AppError.js'
 import PublisherService from './PublisherService.js'
 import ItemStatusService from './ItemStatusService.js'
+import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 
 const LIMIT_PER_FIND = 20
@@ -15,6 +16,7 @@ class ItemService {
   private static instance: ItemService
   private publisherService = PublisherService.getInstance()
   private itemStatusService = ItemStatusService.getInstance()
+  private itemLikeService = ItemLikeService.getInstance()
 
   static getInstance() {
     if (!ItemService.instance) {
@@ -143,6 +145,16 @@ class ItemService {
     if (existsItem.userId !== userId) throw new AppError('ForbiddenError')
 
     await db.item.delete({ where: { id: itemId } })
+  }
+
+  async likeItem({ itemId, userId }: ItemDeleteParams) {
+    const itemStatus = await this.itemLikeService.like({ itemId, userId })
+    return itemStatus
+  }
+
+  async unlikeItem({ itemId, userId }: ItemDeleteParams) {
+    const itemStatus = await this.itemLikeService.unlike({ itemId, userId })
+    return itemStatus
   }
 }
 export default ItemService
