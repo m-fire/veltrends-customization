@@ -32,6 +32,16 @@ export const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
 
 // Response Schema
 
+const RES_ITEM_STATUS_SCHEMA = Type.Object({
+  id: Type.Integer({ default: 1 }),
+  likes: Type.Integer({ default: 11 }),
+})
+
+export const RES_ITEM_LIKE_UPDATE_BODY_SCHEMA = Type.Object({
+  id: Type.Integer({ default: 6 }),
+  itemStatus: RES_ITEM_STATUS_SCHEMA,
+})
+
 export const RES_ITEM_SCHEMA = Type.Object({
   id: Type.Integer({ default: 30 }),
   title: Type.String({ default: 'test_title' }),
@@ -55,15 +65,7 @@ export const RES_ITEM_SCHEMA = Type.Object({
       Type.String({ default: 'https://image.com/favicon.png' }),
     ),
   }),
-  itemStatus: Type.Object({
-    id: Type.Integer({ default: 6 }),
-    likes: Type.Integer({ default: 12 }),
-  }),
-})
-
-const RES_ITEM_LIKE_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 1 }),
-  likes: Type.Integer({ default: 11 }),
+  itemStatus: RES_ITEM_STATUS_SCHEMA,
 })
 
 // FastifySchema
@@ -120,13 +122,13 @@ export const ITEM_DELETE_SCHEMA: FastifySchema = {
 export const ITEM_LIKE_SCHEMA: FastifySchema = {
   params: REQ_ITEM_PARAMS_SCHEMA,
   response: {
-    202: RES_ITEM_LIKE_SCHEMA,
+    202: RES_ITEM_LIKE_UPDATE_BODY_SCHEMA,
   },
 }
 
 export const ITEM_UNLIKE_SCHEMA: FastifySchema = {
   params: REQ_ITEM_PARAMS_SCHEMA,
   response: {
-    202: RES_ITEM_LIKE_SCHEMA,
+    202: RES_ITEM_LIKE_UPDATE_BODY_SCHEMA,
   },
 }

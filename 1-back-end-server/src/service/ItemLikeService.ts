@@ -26,20 +26,20 @@ class ItemLikeService {
         // like 했다면(이미 존재), like 생성오류 무시
       } catch (e) {}
     }
-    return this.getLikes(itemId)
+    return this.getItemStatus(itemId)
   }
 
   async unlike({ itemId, userId }: ItemUnlikeParams) {
     await db.itemLike.delete({
       where: { itemId_userId: { itemId, userId } },
     })
-    return this.getLikes(itemId)
+    return this.getItemStatus(itemId)
   }
 
-  private async getLikes(itemId: number) {
+  private async getItemStatus(itemId: number) {
     const likes = await db.itemLike.count({ where: { itemId } })
-    await this.itemStatusService.updateLikes({ itemId, likes })
-    return likes
+    const status = await this.itemStatusService.updateLikes({ itemId, likes })
+    return status
   }
 }
 export default ItemLikeService
