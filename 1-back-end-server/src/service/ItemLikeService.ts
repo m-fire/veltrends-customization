@@ -55,8 +55,3 @@ type ItemUnlikeParams = {
   itemId: number
   userId: number
 }
-
-type ItemLikeUpdateParams = {
-  itemId: number
-  likes: number
-}

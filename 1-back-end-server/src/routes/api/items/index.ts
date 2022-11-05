@@ -2,11 +2,11 @@ import { FastifyPluginAsync } from 'fastify'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
 import {
+  ItemLikeRequest,
   ItemsCreateRequest,
   ItemsDeleteRequest,
   ItemsReadRequest,
   ItemsUpdateRequest,
-  ItemLikeRequest,
   UnlikeItemRequest,
 } from './types.js'
 import {
@@ -114,7 +114,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const userId = user!.id
       const itemStatus = await itemService.likeItem({ itemId, userId })
       reply.statusCode = 202
-      return { itemId, itemStatus }
+      return { id: itemId, itemStatus }
     },
   )
 
@@ -127,7 +127,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const userId = request.user!.id
       const itemStatus = await itemService.unlikeItem({ itemId, userId })
       reply.statusCode = 202
-      return { itemId, itemStatus }
+      return { id: itemId, itemStatus }
     },
   )
 })
