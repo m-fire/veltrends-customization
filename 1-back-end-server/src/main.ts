@@ -9,10 +9,20 @@ import {
   globalAuthPlugin,
 } from './common/config/fastify/plugin/auth-plugins.js'
 import { PING_GET_SCHEMA, PING_POST_SCHEMA } from './schema.js'
+import { fastifyCors } from '@fastify/cors'
 
 const server: FastifyInstance = fastify({
   logger: true,
 })
+
+console.log(`Veltrend BE Server - main.ts NODE_ENV:`, process.env.NODE_ENV)
+if (process.env.NODE_ENV === 'development') {
+  server.register(fastifyCors, {
+    origin: /localhost/,
+    allowedHeaders: ['Cookie'],
+    credentials: true,
+  })
+}
 
 /* register server plugins */
 {
