@@ -11,7 +11,7 @@ import ItemStatusService from './ItemStatusService.js'
 import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 
-const LIMIT_PER_FIND = 20
+const LIMIT_PER_FIND = 20 as const
 
 class ItemService {
   private static instance: ItemService
