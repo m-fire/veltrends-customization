@@ -150,12 +150,12 @@ class ItemService {
 
   async likeItem({ itemId, userId }: ItemActionParams) {
     const itemStatus = await this.itemLikeService.like({ itemId, userId })
-    return { ...itemStatus, isLiked: true }
+    return itemStatus
   }
 
   async unlikeItem({ itemId, userId }: ItemActionParams) {
     const itemStatus = await this.itemLikeService.unlike({ itemId, userId })
-    return { ...itemStatus, isLiked: false }
+    return itemStatus
   }
 
   private static mergeItemLike(
@@ -164,10 +164,7 @@ class ItemService {
   ) {
     return {
       ...item,
-      itemStatus: {
-        ...(item as ItemWithStatus)?.itemStatus,
-        isLiked: !!itemLike ?? false,
-      },
+      isLiked: !!itemLike ?? false,
     }
   }
 

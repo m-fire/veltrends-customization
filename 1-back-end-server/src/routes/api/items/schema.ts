@@ -35,7 +35,6 @@ export const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
 const RES_ITEM_STATUS_SCHEMA = Type.Object({
   id: Type.Integer({ default: 1 }),
   likes: Type.Integer({ default: 11 }),
-  isLiked: Type.Boolean({ default: false }),
 })
 
 export const RES_ITEM_LIKE_UPDATE_BODY_SCHEMA = Type.Object({
@@ -67,6 +66,13 @@ export const RES_ITEM_SCHEMA = Type.Object({
     ),
   }),
   itemStatus: RES_ITEM_STATUS_SCHEMA,
+  isLiked: Type.Boolean({ default: false }),
+})
+
+export const RES_ITEM_LIKE_SCHEMA = Type.Object({
+  id: Type.Integer({ default: 22 }),
+  itemStatus: RES_ITEM_STATUS_SCHEMA,
+  isLiked: Type.Boolean({ default: false }),
 })
 
 // FastifySchema

@@ -123,7 +123,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const userId = user!.id
       const itemStatus = await itemService.likeItem({ itemId, userId })
       reply.statusCode = 202
-      return { id: itemId, itemStatus }
+      return { id: itemId, itemStatus, isLiked: true }
     },
   )
 
@@ -136,7 +136,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const userId = request.user!.id
       const itemStatus = await itemService.unlikeItem({ itemId, userId })
       reply.statusCode = 202
-      return { id: itemId, itemStatus }
+      return { id: itemId, itemStatus, isLiked: false }
     },
   )
 })
