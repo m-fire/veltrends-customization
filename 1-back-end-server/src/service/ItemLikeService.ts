@@ -1,3 +1,4 @@
+import { ItemLike } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import ItemStatusService from './ItemStatusService.js'
 
@@ -41,6 +42,23 @@ class ItemLikeService {
     const status = await this.itemStatusService.updateLikes({ itemId, likes })
     return status
   }
+
+  async itemLikeByIdsMap({ itemIds, userId }: ItemLikeByIdsMapParams) {
+    const itemLikeList = await db.itemLike.findMany({
+      where: {
+        itemId: { in: itemIds },
+        userId,
+      },
+    })
+
+    return itemLikeList.reduce<Record<number, ItemLike>>(
+      (itemLikeByIdMap, itemLike) => {
+        itemLikeByIdMap[itemLike.itemId] = itemLike
+        return itemLikeByIdMap
+      },
+      {},
+    )
+  }
 }
 export default ItemLikeService
 
@@ -53,5 +71,10 @@ type ItemLikeParams = {
 
 type ItemUnlikeParams = {
   itemId: number
+  userId: number
+}
+
+interface ItemLikeByIdsMapParams {
+  itemIds: number[]
   userId: number
 }

@@ -25,10 +25,15 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
   fastify.get<ItemsReadRequest>(
     '/',
     { schema: ITEM_LIST_READ_SCHEMA },
-    async ({ query: { cursor } }, reply) => {
+    async (request, reply) => {
+      const {
+        query: { cursor },
+        user,
+      } = request
       const itemList = await itemService.getItemList({
         mode: 'recent',
         cursor: cursor ? parseInt(cursor, 10) : null,
+        userId: user?.id,
       })
       return itemList
     },
@@ -37,8 +42,12 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
   fastify.get<ItemsReadRequest>(
     '/:id',
     { schema: ITEM_READ_SCHEMA },
-    async ({ params: { id } }, reply) => {
-      const item = await itemService.getItem(id)
+    async (request, reply) => {
+      const {
+        params: { id },
+        user,
+      } = request
+      const item = await itemService.getItem({ itemId: id, userId: user?.id })
       if (!item) reply.statusCode = 404
       return item
     },

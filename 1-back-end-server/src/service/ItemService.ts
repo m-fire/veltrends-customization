@@ -1,3 +1,4 @@
+import { Item, ItemLike, ItemStatus } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import { ItemCreateBody, ItemUpdateBody } from '../routes/api/items/types.js'
 import {
@@ -58,32 +59,55 @@ class ItemService {
       newItem.id,
     )
 
-    return {
+    const newItemWithStatus = {
       ...newItem,
       itemStatus: newItemStatus,
     }
+
+    const itemLikeByIdsMap = userId
+      ? await this.itemLikeService.itemLikeByIdsMap({
+          itemIds: [newItem.id],
+          userId,
+        })
+      : null
+
+    return ItemService.mergeItemLike(
+      newItemWithStatus,
+      itemLikeByIdsMap?.[newItem.id],
+    )
   }
 
-  async getItemList({ mode, limit, cursor }: ItemListReadPagingOptions) {
+  async getItemList({ mode, limit, cursor, userId }: ItemListPagingOptions) {
     if (mode !== 'recent') return []
 
-    const [totalCount, list] = await Promise.all([
+    const [totalCount, itemList] = await Promise.all([
       db.item.count(),
-      this.findItemWithUserListByCursor(cursor, limit),
+      ItemService.findItemListFromCursor(cursor, limit),
     ])
-    const lastCursor = list.at(-1)?.id ?? null
-    const hasNextPage = await this.hasNextPageByCursor(lastCursor)
 
-    return <Pagination<typeof list[0]>>{
-      list,
+    const itemLikeByIdsMap = userId
+      ? await this.itemLikeService.itemLikeByIdsMap({
+          itemIds: itemList.map((item) => item.id),
+          userId: userId,
+        })
+      : null
+    const itemWithLikeList = itemList.map((item) =>
+      ItemService.mergeItemLike(item, itemLikeByIdsMap?.[item.id]),
+    )
+
+    const lastCursor = itemList.at(-1)?.id ?? null
+    const hasNextPage = await ItemService.hasNextPageByCursor(lastCursor)
+
+    return <Pagination<ItemOrItemWithStatus>>{
+      list: itemWithLikeList,
       totalCount,
       pageInfo: { hasNextPage, lastCursor },
     }
   }
 
-  async getItem(id: number) {
+  async getItem({ itemId, userId }: GetItemParams) {
     const item = await db.item.findUnique({
-      where: { id },
+      where: { id: itemId },
       include: {
         user: { select: { id: true, username: true } },
         publisher: true,
@@ -92,42 +116,19 @@ class ItemService {
     })
 
     if (!item) throw new AppError('NotFoundError')
-    return item
+
+    const itemLikeByIdsOrNull = userId
+      ? await this.itemLikeService.itemLikeByIdsMap({
+          itemIds: [itemId],
+          userId,
+        })
+      : null
+
+    return ItemService.mergeItemLike(item, itemLikeByIdsOrNull?.[itemId])
   }
 
-  private async hasNextPageByCursor(cursor: number | null) {
-    if (!cursor) return false
-    const totalPage = await db.item.count({
-      where: { id: { lt: cursor } },
-      orderBy: { createdAt: 'desc' },
-    })
-    return totalPage > 0
-  }
-
-  private async findItemWithUserListByCursor(
-    cursor: number | null | undefined,
-    limit?: number | null,
-  ) {
-    return db.item.findMany({
-      where: {
-        id: cursor ? { lt: cursor } : undefined,
-      },
-      include: {
-        user: { select: { id: true, username: true } },
-        publisher: true,
-        itemStatus: { select: { id: true, likes: true } },
-      },
-      take: limit ?? LIMIT_PER_FIND,
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
-  }
-
-  async updateItem({ itemId, userId, title, body, tags }: ItemUpdateParams) {
-    const existsItem = await this.getItem(itemId)
-    if (existsItem.userId !== userId) throw new AppError('ForbiddenError')
-
+  async updateItem({ itemId, userId, title, body, tags }: UpdateItemParams) {
+    await ItemService.findItemOrThrow(itemId, userId)
     const updatedItem = await db.item.update({
       where: { id: itemId },
       data: { title, body },
@@ -140,28 +141,75 @@ class ItemService {
     return updatedItem
   }
 
-  async deleteItem({ itemId, userId }: ItemDeleteParams) {
-    const existsItem = await this.getItem(itemId)
-    if (existsItem.userId !== userId) throw new AppError('ForbiddenError')
-
+  async deleteItem({ itemId, userId }: DeleteItemParams) {
+    await ItemService.findItemOrThrow(itemId, userId)
     await db.item.delete({ where: { id: itemId } })
   }
 
-  async likeItem({ itemId, userId }: ItemDeleteParams) {
+  /* Item Action methods */
+
+  async likeItem({ itemId, userId }: ItemActionParams) {
     const itemStatus = await this.itemLikeService.like({ itemId, userId })
-    return itemStatus
+    return { ...itemStatus, isLiked: true }
   }
 
-  async unlikeItem({ itemId, userId }: ItemDeleteParams) {
+  async unlikeItem({ itemId, userId }: ItemActionParams) {
     const itemStatus = await this.itemLikeService.unlike({ itemId, userId })
-    return itemStatus
+    return { ...itemStatus, isLiked: false }
+  }
+
+  private static mergeItemLike(
+    item: ItemOrItemWithStatus,
+    itemLike?: ItemLike,
+  ) {
+    return {
+      ...item,
+      itemStatus: {
+        ...(item as ItemWithStatus)?.itemStatus,
+        isLiked: !!itemLike ?? false,
+      },
+    }
+  }
+
+  private static async hasNextPageByCursor(cursor: number | null) {
+    if (!cursor) return false
+    const totalPage = await db.item.count({
+      where: { id: { lt: cursor } },
+      orderBy: { createdAt: 'desc' },
+    })
+    return totalPage > 0
+  }
+
+  private static async findItemListFromCursor(
+    cursor: number | null | undefined,
+    limit?: number | null,
+  ) {
+    return db.item.findMany({
+      where: { id: cursor ? { lt: cursor } : undefined },
+      include: {
+        user: { select: { id: true, username: true } },
+        publisher: true,
+        itemStatus: { select: { id: true, likes: true } },
+      },
+      take: limit ?? LIMIT_PER_FIND,
+      orderBy: { createdAt: 'desc' },
+    })
+  }
+
+  private static async findItemOrThrow(itemId: number, userId: number) {
+    const item = await db.item.findUnique({
+      where: { id: itemId },
+      include: { user: { select: { id: true } } },
+    })
+    if (item?.userId !== userId) throw new AppError('ForbiddenError')
+    return item
   }
 }
 export default ItemService
 
 // types
 
-type ItemListReadPagingOptions = PaginationOptions &
+type ItemListPagingOptions = PaginationOptions &
   (
     | { mode: 'trending' | 'recent' }
     | {
@@ -170,12 +218,25 @@ type ItemListReadPagingOptions = PaginationOptions &
       }
   )
 
-type ItemUpdateParams = ItemUpdateBody & {
+type GetItemParams = {
+  itemId: number
+  userId?: number
+}
+
+type ItemOrItemWithStatus = Item | ItemWithStatus
+type ItemWithStatus = Item & { itemStatus: ItemStatus | null }
+
+type UpdateItemParams = ItemUpdateBody & {
   itemId: number
   userId: number
 }
 
-type ItemDeleteParams = {
+type DeleteItemParams = {
+  itemId: number
+  userId: number
+}
+
+type ItemActionParams = {
   itemId: number
   userId: number
 }
