@@ -52,10 +52,10 @@ function LinkCard({ item }: LinkCardProps) {
         {author ? (
           <>
             <strong>{author}</strong>
-            {`· ${domain}`}
+            {`· ${publisher.domain}`}
           </>
         ) : (
-          <strong>{domain}</strong>
+          <strong>{publisher.domain}</strong>
         )}
       </Publisher>
       <h3>{title}</h3>

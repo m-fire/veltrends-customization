@@ -8,7 +8,7 @@ import LinkCardList from '~/components/home/LinkCardList'
 import { Requests } from '~/common/util/https'
 import { useInfiniteScroll } from '~/common/hooks/useInfiniteScroll'
 
-export default function Index() {
+function Index() {
   const data = useLoaderData<ItemListPagination>()
   const [pages, setPages] = useState([data])
   const fetcher = useFetcher<ItemListPagination>()
@@ -46,6 +46,9 @@ export default function Index() {
     </TabLayout>
   )
 }
+export default Index
+
+// Remix handler
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { cursor } = Requests.parseUrlParams<{ cursor?: string }>(request.url)
