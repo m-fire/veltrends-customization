@@ -5,37 +5,50 @@ import { colors } from '~/common/style/colors'
 import { Earth, HeartFill, HeartOutline } from '~/components/generate/svg'
 import { useDateDistanceRefresh } from '~/common/hooks/useDateDistanceRefresh'
 import LikeButton from '~/components/system/LikeButton'
+import { useItemOverrideById } from '~/context/ItemStatusContext'
+import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
 
 type LinkCardProps = {
   item: Item
 }
 
-let toggle = false
-const toggling = () => (toggle = !toggle)
-
-function LinkCard({
-  item: {
+function LinkCard({ item }: LinkCardProps) {
+  const {
     id,
-    link,
     thumbnail,
     title,
     author,
     body,
     user,
-    publisher: { domain, favicon },
+    publisher,
     createdAt,
-    updatedAt,
-  },
-}: LinkCardProps) {
-  const voteCount = 11
+    itemStatus,
+  } = item
+
   const pastDistance = useDateDistanceRefresh(createdAt)
+  const itemOverride = useItemOverrideById(id)
+  const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
+  const isLiked = itemOverride?.isLiked ?? item.isLiked
+
+  const { like, unlike } = useItemLikeActions()
+  const toggleLike = async () => {
+    if (isLiked) {
+      await unlike(id, itemStatus)
+    } else {
+      await like(id, itemStatus)
+    }
+  }
 
   return (
     <ListItem>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
 
       <Publisher hasThumbnail={!!thumbnail}>
-        {favicon ? <img src={favicon} alt="favicon" /> : <Earth />}
+        {publisher.favicon ? (
+          <img src={publisher.favicon} alt="favicon" />
+        ) : (
+          <Earth />
+        )}
         {author ? (
           <>
             <strong>{author}</strong>
@@ -49,10 +62,7 @@ function LinkCard({
       {body && <p>{body}</p>}
 
       <ItemFooter>
-        <Vote>
-          {toggling() ? <StyledHeartOutline /> : <StyledHeartFill />}
-          <b>{voteCount}</b>
-        </Vote>
+        <LikeButton onClick={toggleLike} isLiked={isLiked} />
         <UserInfo>
           by <b>{user.username}</b> · {pastDistance}
         </UserInfo>
