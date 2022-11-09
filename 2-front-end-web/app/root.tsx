@@ -13,6 +13,7 @@ import { Authenticator } from '~/common/api/auth'
 import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
 import { UserContext } from '~/context/UserContext'
+import { ItemOverrideProvider } from '~/context/ItemStatusContext'
 import { User } from '~/common/api/types'
 
 export default function App() {
@@ -28,7 +29,9 @@ export default function App() {
       <body>
         <GlobalStyle />
         <UserContext.Provider value={data}>
-          <Outlet />
+          <ItemOverrideProvider>
+            <Outlet />
+          </ItemOverrideProvider>
         </UserContext.Provider>
         <ScrollRestoration />
         <Scripts />
