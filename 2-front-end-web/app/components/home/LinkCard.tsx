@@ -4,6 +4,7 @@ import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
 import { Earth, HeartFill, HeartOutline } from '~/components/generate/svg'
 import { useDateDistanceRefresh } from '~/common/hooks/useDateDistanceRefresh'
+import LikeButton from '~/components/system/LikeButton'
 
 type LinkCardProps = {
   item: Item
@@ -132,20 +133,6 @@ const UserInfo = styled.div`
     ${fontStyles(null, 600, null, 1.5)};
     color: ${colors.grey3};
   }
-`
-
-/* Wrap styled from SVG Components */
-
-const StyledHeartOutline = styled(HeartOutline)`
-  width: 18px;
-  height: 18px;
-  color: ${colors.grey2};
-`
-
-const StyledHeartFill = styled(HeartFill)`
-  width: 18px;
-  height: 18px;
-  //color: ${colors.primary1};
 `
 
 function fontStyles(
