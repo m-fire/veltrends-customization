@@ -60,6 +60,9 @@ function LinkCard({ item }: LinkCardProps) {
       </Publisher>
       <h3>{title}</h3>
       {body && <p>{body}</p>}
+      {likes === 0 ? null : (
+        <LikeCount>좋아요 {likes.toLocaleString()}개</LikeCount>
+      )}
 
       <ItemFooter>
         <LikeButton onClick={toggleLike} isLiked={isLiked} />
@@ -131,11 +134,12 @@ const ItemFooter = styled.div`
   }
 `
 
-const Vote = styled.div`
-  b {
-    ${fontStyles(null, 700, null, 1.5)};
-    color: ${colors.grey4};
-  }
+const LikeCount = styled.div`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${colors.grey4};
+  line-height: 1.5;
+  margin-bottom: 8px;
 `
 
 const UserInfo = styled.div`
