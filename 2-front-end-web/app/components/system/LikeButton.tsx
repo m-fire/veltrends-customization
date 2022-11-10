@@ -22,19 +22,25 @@ const StyledButton = styled.div`
   border: none;
   outline: none;
   background: none;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 `
 
 /* Wrap styled from SVG Components */
 
 const StyledHeartFill = styled(HeartFill)`
-  width: 18px;
-  height: 18px;
   //color: ${colors.primary1};
 `
 
 const StyledHeartOutline = styled(HeartOutline)`
-  width: 18px;
-  height: 18px;
   color: ${colors.grey2};
 `
 
