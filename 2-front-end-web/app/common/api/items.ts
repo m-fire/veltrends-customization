@@ -21,16 +21,19 @@ export async function getItemList(cursor?: number) {
   return response.data
 }
 
-export async function likeItem(itemId?: number) {
+export async function likeItem(itemId: number, controller?: AbortController) {
   const response = await client.post<LikeItemResult>(
     `${URL_ITEMS}/${itemId}/likes`,
+    {},
+    { signal: controller?.signal },
   )
   return response.data
 }
 
-export async function unlikeItem(itemId?: number) {
-  const response = await client.delete<UnlikeItemResult>(
+export async function unlikeItem(itemId: number, controller?: AbortController) {
+  const response = await client.delete<LikeItemResult>(
     `${URL_ITEMS}/${itemId}/likes`,
+    { signal: controller?.signal },
   )
   return response.data
 }

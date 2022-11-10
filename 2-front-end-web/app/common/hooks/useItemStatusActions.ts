@@ -5,8 +5,12 @@ import { ItemStatus } from '~/common/api/types'
 
 export function useItemLikeActions() {
   const { actions } = useItemOverride()
-  /* 사용자가 like 버튼을 다발적으로 누를경우 대비 */
-  const concurrentCountRef = useRef<Map<number, number>>(new Map())
+
+  // Item ID 별로 반복요청 취소를 위한 AbortController 관리용 MapRef
+  // MDN AbortController ref: https://developer.mozilla.org/ko/docs/Web/API/AbortController
+  const abortControllerByIds = useRef<Map<number, AbortController>>(
+    new Map(),
+  ).current
 
   const like = useCallback(
     async (itemId: number, initialStatus: ItemStatus) => {
@@ -17,16 +21,17 @@ export function useItemLikeActions() {
             ...initialStatus,
             likes: initialStatus.likes + 1,
           },
-          callApi: likeItem,
           isLiked: true,
+          apiCaller: likeItem,
         })
       } catch (e) {
         // todo: handler error...
         console.error(e)
       }
     },
-    [actions],
+    [actions, abortControllerByIds],
   )
+
   const unlike = useCallback(
     async (itemId: number, initialStatus: ItemStatus) => {
       try {
@@ -36,20 +41,18 @@ export function useItemLikeActions() {
             ...initialStatus,
             likes: initialStatus.likes - 1,
           },
-          callApi: unlikeItem,
           isLiked: false,
+          apiCaller: unlikeItem,
         })
       } catch (e) {
         // todo: handler error...
         console.error(e)
       }
     },
-    [actions],
+    [actions, abortControllerByIds],
   )
 
   return { like, unlike }
-
-  // refactoring
 
   /**
    * 사용자가 like API 요청->응답 중간에 like 를 여러번 재요청 할 경우,
@@ -59,28 +62,31 @@ export function useItemLikeActions() {
   async function applyLikeItemResult({
     itemId,
     initialStatus,
-    callApi,
     isLiked,
+    apiCaller,
   }: ApplyLikeItemResultParams) {
-    const usersLikeCountMap = concurrentCountRef.current
+    // 직전에 API 호출이 있었다면, 직전 호출 취소!
+    const prevController = abortControllerByIds.get(itemId)
+    prevController?.abort()
+
+    // 첫 API호출 시 AbortController 세팅
+    const newController = new AbortController()
+    abortControllerByIds.set(itemId, newController)
+    // action 모델 초기화
     actions.set(itemId, { itemStatus: initialStatus, isLiked })
+    const result = await apiCaller(itemId, newController)
 
-    // 사용자의 like 요청 수 세기
-    const likeCount = (usersLikeCountMap.get(itemId) ?? 0) + 1
-    usersLikeCountMap.set(itemId, likeCount)
-
-    const result = await callApi(itemId)
-    if (usersLikeCountMap.get(itemId) !== likeCount) return
-
+    // 호출직후, 등록된 AbortController 제거 및 action 모델에 변경값 적용
+    abortControllerByIds.delete(itemId)
     actions.set(itemId, { itemStatus: result.itemStatus, isLiked })
   }
-}
+} // end useItemLikeActions()
 
 // types
 
 type ApplyLikeItemResultParams = {
   itemId: number
   initialStatus: ItemStatus
-  callApi: (...args: any[]) => Promise<LikeItemResult>
+  apiCaller: (...args: any[]) => Promise<LikeItemResult>
   isLiked: boolean
 }
