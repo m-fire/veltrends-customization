@@ -13,20 +13,13 @@ type LinkCardProps = {
 }
 
 function LinkCard({ item }: LinkCardProps) {
-  const {
-    id,
-    thumbnail,
-    title,
-    author,
-    body,
-    user,
-    publisher,
-    createdAt,
-    itemStatus,
-  } = item
+  const { id, thumbnail, title, author, body, user, publisher, createdAt } =
+    item
 
   const pastDistance = useDateDistanceRefresh(createdAt)
+
   const itemOverride = useItemOverrideById(id)
+  const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
   const isLiked = itemOverride?.isLiked ?? item.isLiked
 
