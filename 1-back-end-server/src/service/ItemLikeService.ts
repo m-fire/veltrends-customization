@@ -31,9 +31,11 @@ class ItemLikeService {
   }
 
   async unlike({ itemId, userId }: ItemUnlikeParams) {
-    await db.itemLike.delete({
-      where: { itemId_userId: { itemId, userId } },
-    })
+    try {
+      await db.itemLike.delete({
+        where: { itemId_userId: { itemId, userId } },
+      })
+    } catch (e) {}
     return this.getItemStatus(itemId)
   }
 
