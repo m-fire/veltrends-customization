@@ -2,6 +2,7 @@ import React, { MouseEventHandler, ReactNode } from 'react'
 import styled from 'styled-components'
 import { HeartFill, HeartOutline } from '~/components/generate/svg'
 import { colors } from '~/common/style/colors'
+import { AnimatePresence, motion } from 'framer-motion'
 
 type LikeButtonProps = {
   onClick: MouseEventHandler
@@ -11,7 +12,27 @@ type LikeButtonProps = {
 function LikeButton({ onClick, isLiked }: LikeButtonProps) {
   return (
     <StyledButton onClick={onClick}>
-      {isLiked ? <StyledHeartFill /> : <StyledHeartOutline />}
+      <AnimatePresence initial={false}>
+        {isLiked ? (
+          <MotionWrapper
+            key="fill"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+          >
+            <StyledHeartFill key="fill" />
+          </MotionWrapper>
+        ) : (
+          <MotionWrapper
+            key="outline"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+          >
+            <StyledHeartOutline key="outline" />
+          </MotionWrapper>
+        )}
+      </AnimatePresence>
     </StyledButton>
   )
 }
@@ -32,6 +53,14 @@ const StyledButton = styled.div`
     left: 0;
     top: 0;
   }
+`
+
+const MotionWrapper = styled(motion.span)`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
 `
 
 /* Wrap styled from SVG Components */
