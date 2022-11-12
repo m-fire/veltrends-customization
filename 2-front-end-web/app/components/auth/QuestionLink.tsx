@@ -37,7 +37,7 @@ const Block = styled.div<Pick<QuestionLinkProps, 'disabled'>>`
     padding-right: 8px;
   }
   a {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     color: ${colors.grey5};
     transition: color 0.25s ease-in-out;

@@ -59,7 +59,7 @@ function LinkCard({ item }: LinkCardProps) {
           <LikeCount
             key="likes"
             initial={{ height: 0, opacity: 0, y: 10 }}
-            animate={{ height: 20, opacity: 1, y: 0 }}
+            animate={{ height: 22, opacity: 1, y: 0 }}
             transition={{ stiffness: 100 }}
             exit={{ height: 0, opacity: 0 }}
           >
@@ -143,7 +143,6 @@ const LikeCount = styled(motion.div)`
   font-weight: 600;
   color: ${colors.grey3};
   line-height: 1.5;
-  height: 20px;
   display: flex;
 `
 

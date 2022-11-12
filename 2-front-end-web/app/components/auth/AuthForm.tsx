@@ -3,13 +3,18 @@ import styled from 'styled-components'
 import LabelInput from '~/components/system/LabelInput'
 import Button from '~/components/system/Button'
 import QuestionLink from '~/components/auth/QuestionLink'
-import { Form } from '@remix-run/react'
+import { Form, useSearchParams } from '@remix-run/react'
 import { useSubmitLoading } from '~/common/hooks/useSubmitLoading'
 import { Key, Write } from '~/components/generate/svg'
 import AppError from '~/common/error/AppError'
 import { colors } from '~/common/style/colors'
 import { useFormValidation } from '~/common/hooks/useFormValidation'
 import { Validator } from '~/common/util/validates'
+
+type AuthFormProps = {
+  mode: 'login' | 'register'
+  error?: AppError
+}
 
 function AuthForm({ mode, error }: AuthFormProps) {
   const {
@@ -32,9 +37,20 @@ function AuthForm({ mode, error }: AuthFormProps) {
     shouldPreventDefault: false,
   })
 
+  const {
+    placeholder: placeholderByMode,
+    submitButton: submitBtnByMode,
+    action: actionByMode,
+  } = formDescriptions[mode]
+  const [searchParams] = useSearchParams()
+  const next = searchParams.get('next')
+  const isLoading = useSubmitLoading()
+  const onSubmit = handleSubmit((values) => {
+    // console.log(`AuthForm.onSubmit() { handleSubmit values :`, values)
+  })
+
   useEffect(() => {
     if (error == null) return
-    console.log(`AuthForm.() error.name:`, error.name)
     let message: string
     switch (error.name) {
       case 'UserExistsError':
@@ -52,16 +68,6 @@ function AuthForm({ mode, error }: AuthFormProps) {
     setError('username', message)
   }, [error, setError])
 
-  const {
-    placeholder: placeholderByMode,
-    submitButton: submitBtnByMode,
-    action: actionByMode,
-  } = formDescriptions[mode]
-  const onSubmit = handleSubmit((values) => {
-    console.log(`AuthForm.onSubmit() { handleSubmit values :`, values)
-  })
-  const isLoading = useSubmitLoading()
-
   return (
     <>
       <StyledFormRef method="post" onSubmit={onSubmit}>
@@ -73,6 +79,7 @@ function AuthForm({ mode, error }: AuthFormProps) {
             errorMessage={formErrors.username}
             {...inputProps.username}
           />
+
           <LabelInput
             type="password"
             label="비밀번호"
@@ -92,10 +99,11 @@ function AuthForm({ mode, error }: AuthFormProps) {
             <span>{submitBtnByMode.icon}</span>
             {submitBtnByMode.text}
           </Button>
+
           <QuestionLink
             question={actionByMode.question}
             name={actionByMode.name}
-            to={actionByMode.link}
+            to={next ? `${actionByMode.link}?next=${next}` : actionByMode.link}
             disabled={isLoading}
           />
         </ActionBox>
@@ -132,21 +140,11 @@ const formDescriptions = {
     },
     action: {
       question: '계정이 없으신가요?',
-      name: '가입',
+      name: '회원가입',
       link: '/register',
     },
   },
 } as const
-
-export type AuthFormSumitData = {
-  username: string
-  password: string
-}
-
-type AuthFormProps = {
-  mode: 'login' | 'register'
-  error?: AppError
-}
 
 // Inner Components
 
