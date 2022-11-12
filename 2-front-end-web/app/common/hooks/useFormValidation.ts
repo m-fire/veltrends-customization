@@ -107,7 +107,9 @@ export function useFormValidation<InputName extends string>({
 
         const isValid = textByInputEntries.reduce((valid, [name, text]) => {
           const { validate, errorMessage } = inputsMap[name]
-          if (validate?.(text) === true) return valid
+          if (validate == null) return true
+
+          if (validate(text) === true) return valid
           setError(name, errorMessage ?? DEFAULT_VALIDATE_MESSAGE)
           return false
         }, true)
