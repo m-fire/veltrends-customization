@@ -6,12 +6,15 @@ import { isString } from '~/common/util/strings'
 import { Authenticator } from '~/common/api/auth'
 import AppError from '~/common/error/AppError'
 import BasicLayout from '~/components/layout/BasicLayout'
+import { useAuthRedirect } from '~/common/hooks/useAuthRedirect'
 
 type LoginProps = {
   error?: AppError
 }
 
 function Login({ error }: LoginProps) {
+  useAuthRedirect()
+
   return (
     <BasicLayout title="로그인" hasBackButton>
       <AuthForm mode="login" error={error} />
