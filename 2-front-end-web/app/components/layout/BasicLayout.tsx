@@ -23,7 +23,7 @@ function BasicLayout({
   onGoBack,
   children,
 }: BasicLayoutProps) {
-  const goBack = useGoBack
+  const goBack = useGoBack()
 
   return (
     <FullHeightPage>
