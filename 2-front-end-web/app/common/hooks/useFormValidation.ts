@@ -15,7 +15,7 @@ type ValidateMode = 'all' | 'change' | 'submit' | 'blur'
 
 type UseFormParams<K extends string> = {
   mode?: ValidateMode
-  inputs: Record<K, FormInputConfig>
+  form: Record<K, FormInputConfig>
   initialValues?: InputValues<K>
   shouldPreventDefault?: boolean
 }
@@ -29,18 +29,18 @@ type UseFormParams<K extends string> = {
  *    - for form
  *    - external message settings
  */
-export function useForm<InputNameProp extends string>({
+export function useFormValidation<InputName extends string>({
   mode = 'submit',
-  inputs,
+  form: inputsMap,
   initialValues,
   shouldPreventDefault,
-}: UseFormParams<InputNameProp>) {
+}: UseFormParams<InputName>) {
   const [errors, setErrors] = useState(
-    <Record<InputNameProp, string | undefined | null>>{},
+    <Record<InputName, string | undefined | null>>{},
   )
   const errorsRef = useRef(errors)
   const setError = useCallback(
-    (name: InputNameProp, error: string | null | undefined) => {
+    (name: InputName, error: string | null | undefined) => {
       if (errorsRef.current[name] === error) return
       errorsRef.current[name] = error
       setErrors((prevErrors) => ({
@@ -51,28 +51,27 @@ export function useForm<InputNameProp extends string>({
     [],
   )
 
-  const inputElementsRef = useRef(<Record<InputNameProp, HTMLInputElement>>{})
+  const inputElementsRef = useRef(<Record<InputName, HTMLInputElement>>{})
 
   const inputProps = useMemo(() => {
-    const initialProps = {} as InputProps<InputNameProp>
-    const configByNameEntries = <[InputNameProp, FormInputConfig][]>(
-      Object.entries(inputs)
+    const initialProps = {} as InputProps<InputName>
+    const configByNameEntries = <[InputName, FormInputConfig][]>(
+      Object.entries(inputsMap)
     )
     configByNameEntries.forEach(([name, inputConfig]) => {
-      const { validate, errorMessage } = inputConfig
       const { onChange: postOnChange, onBlur: postOnBlur } = inputConfig
       initialProps[name] = {
         onChange: (e) => {
           postOnChange?.(e)
           const modes: ValidateMode[] = ['change', 'all']
           if (!modes.includes(mode)) return
-          handleValidation(e.target.value)
+          validateInputText(e.target.value)
         },
         onBlur: (e) => {
           postOnBlur?.(e)
           const modes: ValidateMode[] = ['blur', 'all']
           if (!modes.includes(mode)) return
-          handleValidation(e.target.value)
+          validateInputText(e.target.value)
         },
         name,
         ref: (inputEl: HTMLInputElement) => {
@@ -80,8 +79,10 @@ export function useForm<InputNameProp extends string>({
         },
       }
 
-      function handleValidation(text: string) {
-        if (validate == null) return
+      function validateInputText(text: string) {
+        const { validate, errorMessage } = inputConfig
+        if (!validate) return
+
         const errorMessageOrNull = validate(text)
           ? null
           : errorMessage ?? DEFAULT_VALIDATE_MESSAGE
@@ -90,42 +91,41 @@ export function useForm<InputNameProp extends string>({
     })
 
     return initialProps
-  }, [mode, setError, inputs])
+  }, [mode, setError, inputsMap])
 
-  const handleSubmit: HandleSubmitFn<InputNameProp> = useCallback(
+  const handleSubmit: HandleSubmitFn<InputName> = useCallback(
     (onSubmit) => {
       return (e) => {
         const formData = new FormData(e.currentTarget)
-        const valueByNames = <InputValues<InputNameProp>>(
+        const valueByNames = <InputValues<InputName>>(
           Object.fromEntries(formData)
         )
-        const valueByNameEntries = Object.entries(valueByNames) as [
-          InputNameProp,
+        const textByInputEntries = Object.entries(valueByNames) as [
+          InputName,
           string,
         ][]
 
-        const isValid = valueByNameEntries.reduce(
-          (isValid, [name, inputValue]) => {
-            const { validate, errorMessage } = inputs[name]
-            if (validate?.(inputValue) === true) return isValid
+        const isValid = textByInputEntries.reduce((valid, [name, text]) => {
+          const { validate, errorMessage } = inputsMap[name]
+          if (validate?.(text) === true) return valid
+          setError(name, errorMessage ?? DEFAULT_VALIDATE_MESSAGE)
+          return false
+        }, true)
 
-            setError(name, errorMessage ?? DEFAULT_VALIDATE_MESSAGE)
-            return false
-          },
-          true,
-        )
-        if (!isValid) return e.preventDefault()
-
+        if (!isValid) {
+          e.preventDefault()
+          return
+        }
         if (shouldPreventDefault ?? true) e.preventDefault()
         onSubmit(valueByNames, e)
       }
     },
-    [shouldPreventDefault, setError, inputs],
+    [shouldPreventDefault, setError, inputsMap],
   )
 
   useEffect(() => {
-    const configByName = <[InputNameProp, FormInputConfig][]>(
-      Object.entries(inputs)
+    const configByName = <[InputName, FormInputConfig][]>(
+      Object.entries(inputsMap)
     )
     configByName.forEach(([name, config]) => {
       const initialValueOrNull =
@@ -135,7 +135,7 @@ export function useForm<InputNameProp extends string>({
         inputEl.value = initialValueOrNull
       }
     })
-  }, [initialValues, inputs])
+  }, [initialValues, inputsMap])
 
   return {
     inputProps,
