@@ -15,6 +15,7 @@ import AppError from '~/common/error/AppError'
 import { UserContext } from '~/context/UserContext'
 import { ItemOverrideProvider } from '~/context/ItemStatusContext'
 import { User } from '~/common/api/types'
+import Modal from '~/components/system/Modal'
 
 export default function App() {
   const data = useLoaderData<User | null>()
@@ -32,6 +33,7 @@ export default function App() {
           <ItemOverrideProvider>
             <Outlet />
           </ItemOverrideProvider>
+          <Modal>Hello Modal window!</Modal>
         </UserContext.Provider>
         <ScrollRestoration />
         <Scripts />

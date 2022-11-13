@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import Overlay from '~/components/system/Overlay'
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 type ModalProps = {
   children?: ReactNode
@@ -12,7 +12,16 @@ function Modal({ children }: ModalProps) {
     <>
       <Overlay />
       <Positioner>
-        <Block>{children}</Block>
+        <AnimatePresence>
+          <Block
+            initial={{ y: '30vh', opacity: 0 }}
+            animate={{ y: '0vh', opacity: 1 }}
+            exit={{ y: '30vh', opacity: 0 }}
+            transition={{ type: 'spring', bounce: 0.22 }}
+          >
+            {children}
+          </Block>
+        </AnimatePresence>
       </Positioner>
     </>
   )
@@ -30,4 +39,6 @@ const Positioner = styled.div`
 
 const Block = styled(motion.div)`
   background: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.4);
 `
