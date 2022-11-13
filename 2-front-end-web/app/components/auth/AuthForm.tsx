@@ -126,7 +126,7 @@ const formDescriptions = {
     action: {
       question: '이미 계정이 있으신가요?',
       name: '로그인',
-      link: '/login',
+      link: '/auth/login',
     },
   },
   login: {
@@ -141,7 +141,7 @@ const formDescriptions = {
     action: {
       question: '계정이 없으신가요?',
       name: '회원가입',
-      link: '/register',
+      link: '/auth/register',
     },
   },
 } as const

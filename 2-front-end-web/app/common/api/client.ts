@@ -2,8 +2,8 @@ import axios from 'axios'
 
 export type RoutePath =
   | '/'
-  | '/login'
-  | '/register'
+  | '/auth/login'
+  | '/auth/register'
   | '/search'
   | '/write'
   | '/bookmarks'
