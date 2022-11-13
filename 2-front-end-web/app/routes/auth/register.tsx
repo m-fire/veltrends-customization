@@ -37,6 +37,8 @@ export const action: ActionFunction = async ({ request }) => {
   /* Todo: Remix 의 route 모듈 root 에 `action` 이름의 비동기 함수를
            export 하는것으로 useActionData() 를 통해 데이터 핸들링 할 수 있다 */
 
+  /* Todo: 사용자가 로그인 후, 인증이 되었다면 home 으로 이동 */
+
   // handle form data
   const form = await request.formData()
   const username = form.get('username')
