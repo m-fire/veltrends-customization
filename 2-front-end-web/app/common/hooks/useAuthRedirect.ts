@@ -1,17 +1,19 @@
-import { useActionData, useNavigate, useSearchParams } from '@remix-run/react'
 import { useEffect } from 'react'
+import { useActionData, useNavigate, useSearchParams } from '@remix-run/react'
+import { CatchValue } from '@remix-run/react/dist/transition'
 import { AuthResult } from '~/common/api/auth'
 
 export function useAuthRedirect() {
-  const authResult = useActionData<AuthResult>()
-  console.log({ authResult })
+  const resultOrError = useActionData<AuthResult | CatchValue>()
 
   const [searchParams] = useSearchParams()
   const next = searchParams.get('next') ?? '/'
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!authResult) return
+    if (!resultOrError) return
+    if ('status' in resultOrError) return // login failed
+
     navigate(next)
-  }, [authResult, navigate, next])
+  }, [resultOrError, navigate, next])
 }
