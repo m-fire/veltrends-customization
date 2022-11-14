@@ -35,6 +35,7 @@ const StyledButton = styled.button<ButtonProps>`
   ${({ variant }) => variantStyles[variant!]}
   transition: filter 0.25s ease-in-out;
   white-space: nowrap;
+  font-family: Pretendard;
 
   & span {
     padding-right: 6px;
@@ -60,6 +61,7 @@ const variantStyles = {
   `,
   nobg: css`
     background: none;
-    color: ${colors.primary1};
+    color: ${colors.grey5};
+    font-weight: 800;
   `,
 }
