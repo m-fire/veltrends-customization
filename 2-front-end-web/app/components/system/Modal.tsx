@@ -1,26 +1,31 @@
 import React, { ReactNode } from 'react'
-import Overlay from '~/components/system/Overlay'
 import styled from 'styled-components'
+import Overlay from '~/components/system/Overlay'
 import { AnimatePresence, motion } from 'framer-motion'
 
 type ModalProps = {
-  children?: ReactNode
+  className?: string
+  children: ReactNode
+  visible: boolean
 }
 
-function Modal({ children }: ModalProps) {
+function Modal({ className, children, visible }: ModalProps) {
   return (
     <>
-      <Overlay />
+      <Overlay visible={visible} />
       <Positioner>
         <AnimatePresence>
-          <Block
-            initial={{ y: '30vh', opacity: 0 }}
-            animate={{ y: '0vh', opacity: 1 }}
-            exit={{ y: '30vh', opacity: 0 }}
-            transition={{ type: 'spring', bounce: 0.22 }}
-          >
-            {children}
-          </Block>
+          {visible && (
+            <Block
+              className={className}
+              initial={{ y: '10vh', opacity: 0 }}
+              animate={{ y: '0vh', opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: 'spring', bounce: 0.32 }}
+            >
+              {children}
+            </Block>
+          )}
         </AnimatePresence>
       </Positioner>
     </>
