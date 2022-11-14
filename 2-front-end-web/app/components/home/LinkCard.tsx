@@ -1,5 +1,4 @@
 import React from 'react'
-import { useNavigate } from '@remix-run/react'
 import styled, { css, CSSProperties } from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Item } from '~/common/api/types'
@@ -10,45 +9,33 @@ import LikeButton from '~/components/system/LikeButton'
 import { useItemOverrideById } from '~/context/ItemStatusContext'
 import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
 import { useAuthUser } from '~/context/UserContext'
-import { useDialog } from '~/context/DialogContext'
+import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 
 type LinkCardProps = {
   item: Item
 }
 
 function LinkCard({ item }: LinkCardProps) {
-  const { id, thumbnail, title, author, body, user, publisher, createdAt } =
-    item
-
-  const likeActions = useItemLikeActions()
-  const navigate = useNavigate()
-  const dialog = useDialog()
-  const currentUser = useAuthUser()
+  // Dialog settings
+  const { like, unlike } = useItemLikeActions()
+  const openDialog = useOpenDialog()
+  const authUser = useAuthUser()
   const toggleLike = async () => {
-    if (!currentUser) {
-      dialog.open({
-        textConfig: {
-          title: '로그인 후 이용해주세요',
-          description:
-            '이 글이 마음에 드시나요? 이 글을 다른 사람들에게 추천하기 위해서 로그인이 필요합니다.',
-          confirmText: '로그인',
-          cancelText: '닫기',
-        },
-        onConfirm() {
-          navigate('/auth/login')
-        },
-      })
+    if (!authUser) {
+      openDialog('LIKE_ITEM-LOGIN')
       return
     }
     if (isLiked) {
-      await likeActions.unlike(id, itemStatus)
+      await unlike(id, itemStatus)
     } else {
-      await likeActions.like(id, itemStatus)
+      await like(id, itemStatus)
     }
   }
 
+  // define Data
+  const { id, thumbnail, title, author, body, user, publisher, createdAt } =
+    item
   const pastDistance = useDateDistanceRefresh(createdAt)
-
   const itemOverride = useItemOverrideById(id)
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
@@ -75,6 +62,7 @@ function LinkCard({ item }: LinkCardProps) {
       </Publisher>
       <h3>{title}</h3>
       {body && <p>{body}</p>}
+
       <AnimatePresence initial={false}>
         {likes === 0 ? null : (
           <LikeCount
