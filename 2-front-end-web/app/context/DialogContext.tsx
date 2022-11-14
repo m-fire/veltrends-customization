@@ -43,7 +43,7 @@ export function DialogContextProvider({
           title: textConfig?.title ?? '',
           description: textConfig?.description ?? '',
           confirmText: textConfig?.confirmText ?? '',
-          cancelText: textConfig?.cancelText ?? '',
+          // cancelText: textConfig?.cancelText ?? '',
         }}
         onClose={close}
         onConfirm={confirm}
@@ -53,7 +53,7 @@ export function DialogContextProvider({
   )
 }
 
-export function useDialog() {
+export function getDialogContext() {
   const context = useContext(DialogContext)
   if (!context) {
     throw new Error('useDialog must be used within a DialogContextProvider')
