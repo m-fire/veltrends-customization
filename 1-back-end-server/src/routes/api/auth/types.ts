@@ -1,12 +1,11 @@
 import { Static } from '@sinclair/typebox'
-import {
-  AUTH_SCHEMA_MAP,
+import AUTH_SCHEMA, {
   REQ_AUTH_BODY_SCHEMA,
   RES_AUTH_USER_INFO_SCHEMA,
 } from './schema.js'
 import { RouteRequestMap } from '../../../common/config/fastify/types.js'
 
-export type AuthRequestMap = RouteRequestMap<typeof AUTH_SCHEMA_MAP>
+export type AuthRequestMap = RouteRequestMap<typeof AUTH_SCHEMA>
 
 export interface CookieTokens {
   access_token?: string

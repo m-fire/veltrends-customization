@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox'
 import { Nullable } from '../../../../common/config/typebox/type-util.js'
 import { createFastifySchemaMap } from '../../../../common/config/typebox/schema-util.js'
-import { ITEMS_SCHEMA_MAP } from '../schema.js'
+import ITEMS_SCHEMA from '../schema.js'
 
 const REQ_COMMENT_CREATE_BODY_SCHEMA = Type.Object({
   text: Type.String(),
@@ -17,13 +17,13 @@ const REQ_COMMENT_UPDATE_BODY_SCHEMA = Type.Object({
   text: Type.String(),
 })
 
-export const COMMENTS_SCHEMA_MAP = createFastifySchemaMap({
+const COMMENTS_SCHEMA = createFastifySchemaMap({
   CREATE_COMMENT: {
-    params: ITEMS_SCHEMA_MAP['GET_ITEM']['params'],
+    params: ITEMS_SCHEMA.GET_ITEM.params,
     body: REQ_COMMENT_CREATE_BODY_SCHEMA,
   },
   GET_COMMENT_LIST: {
-    params: ITEMS_SCHEMA_MAP['GET_ITEM']['params'],
+    params: ITEMS_SCHEMA.GET_ITEM.params,
   },
   GET_SUBCOMMENT_LIST: {
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
@@ -42,3 +42,5 @@ export const COMMENTS_SCHEMA_MAP = createFastifySchemaMap({
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
   },
 } as const)
+
+export default COMMENTS_SCHEMA

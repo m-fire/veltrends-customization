@@ -77,7 +77,7 @@ export const RES_ITEM_LIKE_SCHEMA = Type.Object({
 
 // FastifySchema
 
-export const ITEMS_SCHEMA_MAP = createFastifySchemaMap({
+const ITEMS_SCHEMA = createFastifySchemaMap({
   CREATE_ITEM: {
     tags: ['item'],
     body: REQ_ITEM_CREATE_BODY_SCHEMA,
@@ -135,3 +135,5 @@ export const ITEMS_SCHEMA_MAP = createFastifySchemaMap({
     },
   },
 })
+
+export default ITEMS_SCHEMA

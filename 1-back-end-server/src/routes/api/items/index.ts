@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
 import { ItemsRequestMap } from './types.js'
-import { ITEMS_SCHEMA_MAP } from './schema.js'
+import ITEMS_SCHEMA from './schema.js'
 import { commentsRoute } from './comments/index.js'
 
 const itemsRoute: FastifyPluginAsync = async (fastify) => {
@@ -10,7 +10,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
 
   fastify.get<ItemsRequestMap['GET_ITEM_LIST']>(
     '/',
-    { schema: ITEMS_SCHEMA_MAP.GET_ITEM_LIST },
+    { schema: ITEMS_SCHEMA.GET_ITEM_LIST },
     async (request, reply) => {
       const {
         query: { cursor },
@@ -27,7 +27,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
 
   fastify.get<ItemsRequestMap['GET_ITEM']>(
     '/:id',
-    { schema: ITEMS_SCHEMA_MAP.GET_ITEM },
+    { schema: ITEMS_SCHEMA.GET_ITEM },
     async (request, reply) => {
       const {
         params: { id },
@@ -54,7 +54,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
 
   fastify.post<ItemsRequestMap['CREATE_ITEM']>(
     '/',
-    { schema: ITEMS_SCHEMA_MAP.CREATE_ITEM },
+    { schema: ITEMS_SCHEMA.CREATE_ITEM },
     async (request, reply) => {
       const { body, user } = request
       // 인증 승인이 된 요청이고, user 가 반드시 존재하기 때문에, `!`처리됨.
@@ -67,7 +67,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
 
   fastify.patch<ItemsRequestMap['UPDATE_ITEM']>(
     '/:id',
-    { schema: ITEMS_SCHEMA_MAP.UPDATE_ITEM },
+    { schema: ITEMS_SCHEMA.UPDATE_ITEM },
     async (request, reply) => {
       const {
         params: { id: itemId },
@@ -86,7 +86,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
 
   fastify.delete<ItemsRequestMap['DELETE_ITEM']>(
     '/:id',
-    { schema: ITEMS_SCHEMA_MAP.DELETE_ITEM },
+    { schema: ITEMS_SCHEMA.DELETE_ITEM },
     async (request, reply) => {
       const {
         params: { id: itemId },
@@ -103,7 +103,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
   // Item Like process
   fastify.post<ItemsRequestMap['LIKE_ITEM']>(
     '/:id/likes',
-    { schema: ITEMS_SCHEMA_MAP.LIKE_ITEM },
+    { schema: ITEMS_SCHEMA.LIKE_ITEM },
     async (request, reply) => {
       const {
         params: { id: itemId },
@@ -119,7 +119,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
   // Item Unlike process
   fastify.delete<ItemsRequestMap['UNLIKE_ITEM']>(
     '/:id/likes',
-    { schema: ITEMS_SCHEMA_MAP.UNLIKE_ITEM },
+    { schema: ITEMS_SCHEMA.UNLIKE_ITEM },
     async (request, reply) => {
       const { id: itemId } = request.params
       const userId = request.user!.id

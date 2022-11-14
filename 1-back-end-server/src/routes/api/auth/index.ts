@@ -3,7 +3,7 @@ import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
 import { TokenStringMap } from '../../../service/TokenService.js'
 import { AuthRequestMap, CookieTokens } from './types.js'
-import { AUTH_SCHEMA_MAP } from './schema.js'
+import AUTH_SCHEMA from './schema.js'
 
 // Route Definition
 
@@ -12,9 +12,9 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
 
   fastify.post<AuthRequestMap['LOGIN']>(
     '/login',
-    { schema: AUTH_SCHEMA_MAP.LOGIN },
-    async ({ body: auth }, reply) => {
-      const tokensAndUser = await userService.login(auth)
+    { schema: AUTH_SCHEMA.LOGIN },
+    async ({ body: authBody }, reply) => {
+      const tokensAndUser = await userService.login(authBody)
       setTokenCookies(reply, tokensAndUser.tokens)
       return tokensAndUser
     },
@@ -22,7 +22,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
 
   fastify.post<AuthRequestMap['REGISTER']>(
     '/register',
-    { schema: AUTH_SCHEMA_MAP.REGISTER },
+    { schema: AUTH_SCHEMA.REGISTER },
     async ({ body: userInfo }, reply) => {
       const tokensAndUser = await userService.register(userInfo)
       setTokenCookies(reply, tokensAndUser.tokens)
@@ -33,7 +33,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
 
   fastify.post<AuthRequestMap['REFRESH_TOKEN']>(
     '/refresh',
-    { schema: AUTH_SCHEMA_MAP.REFRESH_TOKEN },
+    { schema: AUTH_SCHEMA.REFRESH_TOKEN },
     async (request, reply) => {
       const oldToken =
         request.body?.refreshToken ??

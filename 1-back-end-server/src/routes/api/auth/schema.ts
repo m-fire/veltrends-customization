@@ -36,7 +36,7 @@ const RES_TOKENS_N_USER_SCHEMA = Type.Object({
 
 // FastifySchema
 
-export const AUTH_SCHEMA_MAP = createFastifySchemaMap({
+const AUTH_SCHEMA = createFastifySchemaMap({
   REGISTER: {
     tags: ['auth'],
     body: REQ_AUTH_BODY_SCHEMA,
@@ -63,3 +63,5 @@ export const AUTH_SCHEMA_MAP = createFastifySchemaMap({
     },
   },
 })
+
+export default AUTH_SCHEMA
