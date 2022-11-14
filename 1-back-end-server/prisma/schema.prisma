@@ -27,27 +27,23 @@ model User {
 model Token {
   id              Int      @id @default(autoincrement())
   rotationCounter Int      @default(1)
-  createdAt       DateTime @default(now())
   blocked         Boolean  @default(false)
-
-  user            User     @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
   userId          Int
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Item {
-  id        Int     @id @default(autoincrement())
-  title     String
-  body      String
-  author    String  @default("")
-  link      String?
-  thumbnail String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user        User      @relation(fields: [userId], references: [id])
+  id          Int      @id @default(autoincrement())
+  title       String
+  body        String
+  author      String   @default("")
+  link        String?
+  thumbnail   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   userId      Int
-  publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   publisherId Int
 
   itemStatus ItemStatus?
@@ -72,19 +68,21 @@ model Publisher {
 }
 
 model Tag {
-  id        Int         @id @default(autoincrement())
-  name      String      @unique
+  id     Int    @id @default(autoincrement())
+  name   String @unique
+  itemId Int?
 
-  item      Item?       @relation(fields: [itemId], references: [id])
-  itemId    Int?
   itemsTags ItemsTags[]
+
+  Item Item? @relation(fields: [itemId], references: [id])
 }
 
 model ItemsTags {
-  item   Item @relation(fields: [itemId], references: [id])
   itemId Int
-  tag    Tag  @relation(fields: [tagId], references: [id])
   tagId  Int
+
+  item Item @relation(fields: [itemId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id])
 
   @@id([itemId, tagId])
   @@index(tagId)
@@ -101,10 +99,9 @@ model TagRelation {
 }
 
 model ItemLike {
-  id     Int @id @default(autoincrement())
-  itemId Int
-  userId Int
-
+  id        Int      @id @default(autoincrement())
+  itemId    Int
+  userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
