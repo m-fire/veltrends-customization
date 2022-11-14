@@ -8,7 +8,7 @@ export type DialogProps = {
   textConfig: {
     title: string
     description: string
-    confirmText: string
+    confirmText?: string
     cancelText?: string
   }
   onConfirm: () => void
@@ -17,7 +17,7 @@ export type DialogProps = {
 }
 
 function Dialog({
-  textConfig: { title, description, confirmText, cancelText = '닫기' },
+  textConfig: { title, description, confirmText = '확인', cancelText = '닫기' },
   onConfirm,
   onClose,
   visible,

@@ -42,7 +42,7 @@ export function DialogContextProvider({
         textConfig={{
           title: textConfig?.title ?? '',
           description: textConfig?.description ?? '',
-          confirmText: textConfig?.confirmText ?? '',
+          // confirmText: textConfig?.confirmText ?? '',
           // cancelText: textConfig?.cancelText ?? '',
         }}
         onClose={close}
