@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Modal from '~/components/system/Modal'
 import { colors } from '~/common/style/colors'
+import Button from '~/components/system/Button'
 
 export type DialogProps = {
   textConfig: {
@@ -25,6 +26,14 @@ function Dialog({
     <StyledModal visible={visible}>
       <Title>{title}</Title>
       <Description>{description}</Description>
+      <Footer>
+        <StyledButton variant="nobg" onClick={onClose}>
+          {cancelText}
+        </StyledButton>
+        <StyledButton variant="primary" onClick={onConfirm}>
+          {confirmText}
+        </StyledButton>
+      </Footer>
     </StyledModal>
   )
 }
@@ -55,4 +64,17 @@ const Description = styled.p`
   color: ${colors.grey2};
   line-height: 1.5;
   white-space: pre-wrap;
+`
+
+const Footer = styled.section`
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+`
+
+const StyledButton = styled(Button)`
+  width: 70px;
+  height: 35px;
+  font-size: 14px;
+  border-radius: 999px;
 `

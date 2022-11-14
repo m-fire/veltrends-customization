@@ -4,42 +4,62 @@ import { colors } from '~/common/style/colors'
 
 type ButtonProps = {
   layoutMode?: 'inline' | 'fullWidth'
+  variant?: 'primary' | 'secondary' | 'nobg'
+  [key: string]: any
 }
 
 function Button({
   layoutMode = 'inline',
+  variant = 'primary',
   ...rest
 }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <StyledButton layoutMode={layoutMode} {...rest} />
+  return <StyledButton layoutMode={layoutMode} variant={variant} {...rest} />
 }
 export default Button
 
 // Inner Components
 
-const StyledButton = styled.button<Pick<ButtonProps, 'layoutMode'>>`
+const StyledButton = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${colors.primary1};
   border: none;
-  color: white;
   height: 48px;
   font-size: 16px;
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 600;
   border-radius: 6px;
+  //background: ${colors.primary1};
+  //color: white;
+  ${({ variant }) => variantStyles[variant!]}
   transition: filter 0.25s ease-in-out;
+  white-space: nowrap;
+
   & span {
     padding-right: 6px;
   }
-
   &:disabled {
     filter: brightness(70%);
   }
-  ${(props) =>
-    props.layoutMode === 'fullWidth' &&
+  ${({ layoutMode: lm }) =>
+    lm === 'fullWidth' &&
     css`
       width: 100%;
     `}
 `
+
+const variantStyles = {
+  primary: css`
+    background: ${colors.primary1};
+    color: white;
+  `,
+  secondary: css`
+    background: ${colors.secondary1};
+    color: white;
+  `,
+  nobg: css`
+    background: none;
+    color: ${colors.primary1};
+  `,
+}
