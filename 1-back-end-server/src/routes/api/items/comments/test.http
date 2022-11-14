@@ -1,0 +1,9 @@
+GET http://{{host}}:{{port}}/api/items/20/comments
+Accept: application/json
+
+###
+
+GET http://{{host}}:{{port}}/api/items/30/comments/50
+Accept: application/json
+
+###

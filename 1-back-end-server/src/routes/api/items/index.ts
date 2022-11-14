@@ -3,6 +3,7 @@ import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plug
 import ItemService from '../../../service/ItemService.js'
 import { ItemsRequestMap } from './types.js'
 import { ITEMS_SCHEMA_MAP } from './schema.js'
+import { commentsRoute } from './comments/index.js'
 
 const itemsRoute: FastifyPluginAsync = async (fastify) => {
   const itemService = ItemService.getInstance()
@@ -39,6 +40,9 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
   )
 
   fastify.register(itemsAuthRoute)
+
+  /* Route from 'items/comments/index.ts' */
+  fastify.register(commentsRoute, { prefix: '/:id/comments' })
 }
 export default itemsRoute
 
