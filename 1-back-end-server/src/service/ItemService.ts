@@ -1,6 +1,6 @@
 import { Item, ItemLike, ItemStatus } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
-import { ItemCreateBody, ItemUpdateBody } from '../routes/api/items/types.js'
+import { ItemsRequestMap } from '../routes/api/items/types.js'
 import {
   Pagination,
   PaginationOptions,
@@ -30,23 +30,27 @@ class ItemService {
 
   async createItem(
     userId: number,
-    { title, body, link, tags }: ItemCreateBody,
+    { title, body, link, tags }: CreateItemParams,
   ) {
-    const info = await getOriginItemInfo(link)
+    const {
+      domain,
+      url: originLink,
+      og: { publisher: name, favicon, thumbnail, author },
+    } = await getOriginItemInfo(link)
     const newPublisher = await this.publisherService.createPublisher({
-      domain: info.domain,
-      name: info.og.publisher,
-      favicon: info.og.favicon,
+      domain,
+      name,
+      favicon,
     })
 
     const newItem = await db.item.create({
       data: {
         title,
         body,
-        link: info.url,
+        link: originLink,
         userId,
-        thumbnail: info.og.thumbnail,
-        author: info.og.author ?? undefined,
+        thumbnail: thumbnail,
+        author: author ?? undefined,
         publisherId: newPublisher.id,
       },
       include: {
@@ -206,6 +210,8 @@ export default ItemService
 
 // types
 
+type CreateItemParams = ItemsRequestMap['CREATE_ITEM']['Body']
+
 type ItemListPagingOptions = PaginationOptions &
   (
     | { mode: 'trending' | 'recent' }
@@ -223,7 +229,7 @@ type GetItemParams = {
 type ItemOrItemWithStatus = Item | ItemWithStatus
 type ItemWithStatus = Item & { itemStatus: ItemStatus | null }
 
-type UpdateItemParams = ItemUpdateBody & {
+type UpdateItemParams = ItemsRequestMap['UPDATE_ITEM']['Body'] & {
   itemId: number
   userId: number
 }
