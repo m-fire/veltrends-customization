@@ -1,5 +1,7 @@
 import React from 'react'
+import { useNavigate } from '@remix-run/react'
 import styled, { css, CSSProperties } from 'styled-components'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
 import { Earth } from '~/components/generate/svg'
@@ -7,7 +9,8 @@ import { useDateDistanceRefresh } from '~/common/hooks/useDateDistanceRefresh'
 import LikeButton from '~/components/system/LikeButton'
 import { useItemOverrideById } from '~/context/ItemStatusContext'
 import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useAuthUser } from '~/context/UserContext'
+import { useDialog } from '~/context/DialogContext'
 
 type LinkCardProps = {
   item: Item
@@ -17,21 +20,39 @@ function LinkCard({ item }: LinkCardProps) {
   const { id, thumbnail, title, author, body, user, publisher, createdAt } =
     item
 
+  const likeActions = useItemLikeActions()
+  const navigate = useNavigate()
+  const dialog = useDialog()
+  const currentUser = useAuthUser()
+  const toggleLike = async () => {
+    if (!currentUser) {
+      dialog.open({
+        textConfig: {
+          title: '로그인 후 이용해주세요',
+          description:
+            '이 글이 마음에 드시나요? 이 글을 다른 사람들에게 추천하기 위해서 로그인이 필요합니다.',
+          confirmText: '로그인',
+          cancelText: '닫기',
+        },
+        onConfirm() {
+          navigate('/auth/login')
+        },
+      })
+      return
+    }
+    if (isLiked) {
+      await likeActions.unlike(id, itemStatus)
+    } else {
+      await likeActions.like(id, itemStatus)
+    }
+  }
+
   const pastDistance = useDateDistanceRefresh(createdAt)
 
   const itemOverride = useItemOverrideById(id)
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
   const isLiked = itemOverride?.isLiked ?? item.isLiked
-
-  const { like, unlike } = useItemLikeActions()
-  const toggleLike = async () => {
-    if (isLiked) {
-      await unlike(id, itemStatus)
-    } else {
-      await like(id, itemStatus)
-    }
-  }
 
   return (
     <ListItem>
