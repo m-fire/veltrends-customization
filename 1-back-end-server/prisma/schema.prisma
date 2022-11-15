@@ -127,7 +127,7 @@ model Comment {
   id              Int       @id @default(autoincrement())
   text            String
   subcommentCount Int       @default(0)
-  likesCount      Int       @default(0)
+  likeCount       Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @default(now()) @updatedAt
   deletedAt       DateTime?
@@ -141,6 +141,10 @@ model Comment {
   item        Item  @relation(fields: [itemId], references: [id])
   user        User  @relation("user", fields: [userId], references: [id])
   mentionUser User? @relation("mentionUser", fields: [mentionUserId], references: [id])
+
+  @@index(deletedAt)
+  @@index(createdAt)
+  @@index(parentCommentId)
 }
 
 model CommentLike {
