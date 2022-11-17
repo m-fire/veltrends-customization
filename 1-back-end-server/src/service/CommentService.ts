@@ -3,6 +3,9 @@ import { Comment } from '@prisma/client'
 import AppError from '../common/error/AppError.js'
 import CommentLikeService from './CommentLikeService.js'
 
+// prisma include conditions
+const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
+
 class CommentService {
   private static instance: CommentService
   private commentLikeService = CommentLikeService.getInstance()
@@ -22,57 +25,110 @@ class CommentService {
     text,
     parentCommentId,
   }: CreateCommentParams) {
-    const parentCommentOrNull = parentCommentId
+    const parentComment = parentCommentId
       ? await this.getComment(parentCommentId)
       : null
+    const mentionId = parentComment?.userId ?? undefined
+    const parentId = parentComment?.parentCommentId ?? parentCommentId
 
-    const rootIdOrNull = parentCommentOrNull?.parentCommentId ?? null
-
-    const comment = db.comment.create({
+    const comment = await db.comment.create({
       data: {
         itemId,
         text,
         userId,
-        parentCommentId: rootIdOrNull ?? parentCommentId,
-        mentionUserId: parentCommentOrNull?.userId,
+        parentCommentId: parentId,
+        mentionUserId: mentionId,
       },
-      include: { user: { select: { id: true } } },
+      include: { user: INCLUDE_SIMPLE_USER },
     })
-    if (parentCommentId == null) return comment
+    // 댓글의 하위댓글 인 경우, subcommentCount 증가
+    if (parentCommentId != null) {
+      const subcommentCount = await db.comment.count({
+        where: { parentCommentId: parentId },
+      })
+      await db.comment.update({
+        where: { id: parentId },
+        data: { subcommentCount },
+      })
+    }
 
-    // update subcomment count
-    const subcommentCount = await db.comment.count({
-      where: { parentCommentId },
-    })
-    await db.comment.update({
-      where: { id: parentCommentId },
-      data: { subcommentCount },
-    })
-
-    return comment
+    return { ...comment, subcommentList: [] }
   }
-
-  async getComment(commentId: number) {
-    const comment = db.comment.findUnique({
-      where: { id: commentId },
-    })
-    if (!comment) throw new AppError('NotFoundError')
-    return comment
-  }
-
   async getCommentList(itemId: number) {
-    return db.comment.findMany({
+    const commentList = await db.comment.findMany({
       where: { itemId },
       orderBy: { id: 'asc' },
-      include: { user: { select: { id: true } } },
+      include: {
+        user: INCLUDE_SIMPLE_USER,
+        mentionUser: INCLUDE_SIMPLE_USER,
+      },
     })
+    return this.getComposedCommentList(this.remapInvalidComments(commentList))
+  }
+
+  private remapInvalidComments(comments: Comment[]) {
+    return comments.map((c) => {
+      if (!c.deletedAt) return c
+
+      const someDate = new Date(0)
+      return {
+        ...c,
+        text: '',
+        likes: 0,
+        subcommentCount: 0,
+        createdAt: someDate,
+        updatedAt: someDate,
+        user: {
+          id: -1,
+          username: 'deleted',
+        },
+        mentionUser: null,
+        subcommentList: [],
+      }
+    })
+  }
+
+  private async getComposedCommentList(comments: Comment[]) {
+    const rootCommentList = comments.filter((c) => c.parentCommentId === null)
+    const commentsByParentIdMap = new Map<number, Comment[]>()
+
+    comments.forEach((c) => {
+      if (!c.parentCommentId) return
+      const subcommentList = commentsByParentIdMap.get(c.parentCommentId) ?? []
+      subcommentList.push(c)
+      commentsByParentIdMap.set(c.parentCommentId, subcommentList)
+    })
+    const commentsWithSubcomments = rootCommentList.map((parent) => ({
+      ...parent,
+      subcommentList: commentsByParentIdMap.get(parent.id) ?? [],
+    }))
+
+    return commentsWithSubcomments
+  }
+
+  async getComment(commentId: number, includeSubcomments: boolean = false) {
+    const comment = await db.comment.findUnique({
+      where: { id: commentId },
+      include: {
+        user: INCLUDE_SIMPLE_USER,
+        mentionUser: INCLUDE_SIMPLE_USER,
+      },
+    })
+    if (!comment || comment.deletedAt) throw new AppError('NotFoundError')
+    if (!includeSubcomments) return comment
+
+    const subcommentList = await this.getSubcommentList(commentId)
+    return { ...comment, subcommentList }
   }
 
   async getSubcommentList(parentId: number) {
     return db.comment.findMany({
       where: { parentCommentId: parentId },
       orderBy: { id: 'asc' },
-      include: { user: { select: { id: true } } },
+      include: {
+        user: INCLUDE_SIMPLE_USER,
+        mentionUser: INCLUDE_SIMPLE_USER,
+      },
     })
   }
 
@@ -80,12 +136,12 @@ class CommentService {
     const comment = await this.getComment(commentId)
     if (comment!.id !== commentId) new AppError('ForbiddenError')
 
-    const updatedComment = await db.comment.update({
+    await db.comment.update({
       where: { id: commentId },
       data: { text },
-      include: { user: { select: { id: true } } },
+      include: { user: INCLUDE_SIMPLE_USER },
     })
-    return updatedComment
+    return this.getComment(commentId, true)
   }
 
   async deleteComment({ commentId, userId }: CommentParams) {
@@ -95,14 +151,23 @@ class CommentService {
     await db.comment.delete({ where: { id: commentId } })
   }
 
-  async likeComment(params: CommentParams) {
-    const likes = await this.commentLikeService.like(params)
+  async likeComment({ commentId, userId }: CommentLikesParams) {
+    const likes = await this.commentLikeService.like({ commentId, userId })
+    await this.updateLikes({ commentId, likes })
     return likes
   }
 
-  async unlikeComment(params: CommentParams) {
-    const likes = await this.commentLikeService.unlike(params)
+  async unlikeComment({ commentId, userId }: CommentLikesParams) {
+    const likes = await this.commentLikeService.unlike({ commentId, userId })
+    await this.updateLikes({ commentId, likes })
     return likes
+  }
+
+  private async updateLikes({ commentId, likes }: UpdateLikesParams) {
+    await db.comment.update({
+      data: { likes },
+      where: { id: commentId },
+    })
   }
 }
 export default CommentService
@@ -123,4 +188,11 @@ export type CommentParams = {
 
 type UpdateCommentParams = CommentParams & {
   text: string
+}
+
+type UpdateLikesParams = { commentId: number; likes: number }
+
+export type CommentLikesParams = {
+  commentId: number
+  userId: number
 }

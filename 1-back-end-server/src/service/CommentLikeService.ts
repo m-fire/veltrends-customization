@@ -13,28 +13,30 @@ class CommentLikeService {
 
   private constructor() {}
 
-  async like({ userId, commentId }: CommentParams) {
-    const like = db.commentLike.create({
-      data: { userId, commentId },
-    })
-
-    const likeCount = await this.countLike(commentId)
+  async like({ commentId, userId }: CommentParams) {
+    try {
+      await db.commentLike.create({
+        data: { commentId, userId },
+      })
+    } catch (e) {
+      console.log(`CommentLikeService.like() catch error`, { e })
+    }
+    const likeCount = await this.countByCommentId(commentId)
     return likeCount
   }
 
-  async unlike({ userId, commentId }: CommentParams) {
+  async unlike({ commentId, userId }: CommentParams) {
     try {
       await db.commentLike.delete({
-        where: { commentId_userId: { userId, commentId } },
+        where: { commentId_userId: { commentId, userId } },
       })
     } catch (e) {}
-
-    const likeCount = await this.countLike(commentId)
+    const likeCount = await this.countByCommentId(commentId)
     return likeCount
   }
 
-  private async countLike(commentId: number) {
-    const likeCount = db.commentLike.count({ where: { commentId } })
+  private async countByCommentId(commentId: number) {
+    const likeCount = await db.commentLike.count({ where: { commentId } })
     return likeCount
   }
 }
