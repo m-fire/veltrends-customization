@@ -126,14 +126,14 @@ model ItemStatus {
 model Comment {
   id              Int       @id @default(autoincrement())
   text            String
+  likes           Int       @default(0)
   subcommentCount Int       @default(0)
-  likeCount       Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @default(now()) @updatedAt
   deletedAt       DateTime?
   itemId          Int
-  userId          Int
   parentCommentId Int?
+  userId          Int
   mentionUserId   Int?
 
   commentLikes CommentLike[]
