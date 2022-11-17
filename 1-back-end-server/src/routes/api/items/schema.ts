@@ -6,6 +6,7 @@ import {
   createPaginationSchema,
 } from '../../../common/config/typebox/schema-util.js'
 import { RES_EMPTY_LIST_SCHEMA } from '../../../common/config/typebox/common-schema.js'
+import { RES_AUTH_USER_INFO_SCHEMA } from '../auth/schema.js'
 
 // Reqeust Schema
 
@@ -53,10 +54,7 @@ export const RES_ITEM_SCHEMA = Type.Object({
   createdAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
   updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
   author: Type.String(),
-  user: Type.Object({
-    id: Type.Integer({ default: 12 }),
-    username: Type.String({ default: 'test_username' }),
-  }),
+  user: RES_AUTH_USER_INFO_SCHEMA,
   publisher: Type.Object({
     id: Type.Integer({ default: 15 }),
     name: Type.String({ default: 'test_publisher' }),
