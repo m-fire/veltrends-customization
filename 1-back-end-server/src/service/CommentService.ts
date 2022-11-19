@@ -2,7 +2,7 @@ import db from '../common/config/prisma/db-client.js'
 import { Comment } from '@prisma/client'
 import AppError from '../common/error/AppError.js'
 import CommentLikeService from './CommentLikeService.js'
-import ItemStatusService from './ItemStatusService'
+import ItemStatusService from './ItemStatusService.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
