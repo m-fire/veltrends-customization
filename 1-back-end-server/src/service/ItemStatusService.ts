@@ -19,7 +19,7 @@ class ItemStatusService {
     return newItemStatus
   }
 
-  async updateLikes({ itemId, likes }: ItemLikeUpdateParams) {
+  async updateLikes({ itemId, likes }: UpdateItemLikeParams) {
     return db.itemStatus.update({
       data: { likes },
       where: { itemId },
@@ -38,7 +38,7 @@ export default ItemStatusService
 
 // types
 
-interface ItemLikeUpdateParams {
+interface UpdateItemLikeParams {
   itemId: number
   likes: number
 }

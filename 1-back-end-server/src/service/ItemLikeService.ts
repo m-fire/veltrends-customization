@@ -15,7 +15,7 @@ class ItemLikeService {
 
   private constructor() {}
 
-  async like({ itemId, userId }: ItemLikeParams) {
+  async like({ itemId, userId }: LikeItemParams) {
     const alreadyLiked = await db.itemLike.findUnique({
       where: { itemId_userId: { itemId, userId } },
     })
@@ -30,7 +30,7 @@ class ItemLikeService {
     return this.getItemStatus(itemId)
   }
 
-  async unlike({ itemId, userId }: ItemUnlikeParams) {
+  async unlike({ itemId, userId }: UnlikeItemParams) {
     try {
       await db.itemLike.delete({
         where: { itemId_userId: { itemId, userId } },
@@ -66,12 +66,12 @@ export default ItemLikeService
 
 // types
 
-type ItemLikeParams = {
+type LikeItemParams = {
   itemId: number
   userId: number
 }
 
-type ItemUnlikeParams = {
+type UnlikeItemParams = {
   itemId: number
   userId: number
 }

@@ -13,7 +13,7 @@ class CommentLikeService {
 
   private constructor() {}
 
-  async like({ commentId, userId }: CommentParams) {
+  async like({ commentId, userId }: LikeParams) {
     try {
       await db.commentLike.create({
         data: { commentId, userId },
@@ -21,23 +21,29 @@ class CommentLikeService {
     } catch (e) {
       console.log(`CommentLikeService.like() catch error`, { e })
     }
-    const likeCount = await this.countByCommentId(commentId)
+    const likeCount = await this.countCommentLIke(commentId)
     return likeCount
   }
 
-  async unlike({ commentId, userId }: CommentParams) {
+  async unlike({ commentId, userId }: UnlikeParams) {
     try {
       await db.commentLike.delete({
         where: { commentId_userId: { commentId, userId } },
       })
     } catch (e) {}
-    const likeCount = await this.countByCommentId(commentId)
+    const likeCount = await this.countCommentLIke(commentId)
     return likeCount
   }
 
-  private async countByCommentId(commentId: number) {
+  private async countCommentLIke(commentId: number) {
     const likeCount = await db.commentLike.count({ where: { commentId } })
     return likeCount
   }
 }
 export default CommentLikeService
+
+// types
+
+type LikeParams = CommentParams
+
+type UnlikeParams = LikeParams

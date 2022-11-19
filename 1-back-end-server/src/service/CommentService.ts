@@ -33,7 +33,7 @@ class CommentService {
     const mentionId = parentComment?.userId ?? undefined
     const parentId = parentComment?.parentCommentId ?? parentCommentId
 
-    const comment = await db.comment.create({
+    const newComment = await db.comment.create({
       data: {
         itemId,
         text,
@@ -56,8 +56,9 @@ class CommentService {
 
     await this.syncCommentCount(itemId)
 
-    return { ...comment, subcommentList: [] }
+    return { ...newComment, subcommentList: [] }
   }
+
   async getCommentList(itemId: number) {
     const commentList = await db.comment.findMany({
       where: { itemId },
@@ -67,10 +68,13 @@ class CommentService {
         mentionUser: INCLUDE_SIMPLE_USER,
       },
     })
-    return this.getComposedCommentList(this.remapInvalidComments(commentList))
+    // normalize ation 가공
+    const normalizedList = this.normalizeDeletedComment(commentList)
+    const composedCommentList = await this.composeSubcomments(normalizedList)
+    return composedCommentList
   }
 
-  private remapInvalidComments(comments: Comment[]) {
+  private normalizeDeletedComment(comments: Comment[]) {
     return comments.map((c) => {
       if (!c.deletedAt) return c
 
@@ -92,7 +96,7 @@ class CommentService {
     })
   }
 
-  private async getComposedCommentList(comments: Comment[]) {
+  private async composeSubcomments(comments: Comment[]) {
     const rootCommentList = comments.filter((c) => c.parentCommentId === null)
     const commentsByParentIdMap = new Map<number, Comment[]>()
 
@@ -159,17 +163,17 @@ class CommentService {
 
   async likeComment({ commentId, userId }: CommentLikesParams) {
     const likes = await this.commentLikeService.like({ commentId, userId })
-    await this.updateLikes({ commentId, likes })
+    await this.syncLikes({ commentId, likes })
     return likes
   }
 
   async unlikeComment({ commentId, userId }: CommentLikesParams) {
     const likes = await this.commentLikeService.unlike({ commentId, userId })
-    await this.updateLikes({ commentId, likes })
+    await this.syncLikes({ commentId, likes })
     return likes
   }
 
-  private async updateLikes({ commentId, likes }: UpdateLikesParams) {
+  private async syncLikes({ commentId, likes }: UpdateLikesParams) {
     await db.comment.update({
       data: { likes },
       where: { id: commentId },
