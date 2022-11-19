@@ -30,7 +30,9 @@ function BasicLayout({
       <Header
         title={title}
         headerLeft={
-          hasBackButton && <HeaderBackButton onClick={onGoBack ?? goBack} />
+          hasBackButton ? (
+            <HeaderBackButton onClick={onGoBack ?? goBack} />
+          ) : null
         }
       />
       <Content>{children}</Content>

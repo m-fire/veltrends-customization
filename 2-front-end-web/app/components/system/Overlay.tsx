@@ -9,13 +9,13 @@ type OverlayProps = {
 function Overlay({ visible }: OverlayProps) {
   return (
     <AnimatePresence initial={false}>
-      {visible && (
+      {visible ? (
         <Fill
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         />
-      )}
+      ) : null}
     </AnimatePresence>
   )
 }

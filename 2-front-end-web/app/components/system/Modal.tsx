@@ -15,7 +15,7 @@ function Modal({ className, children, visible }: ModalProps) {
       <Overlay visible={visible} />
       <Positioner>
         <AnimatePresence>
-          {visible && (
+          {visible ? (
             <Block
               className={className}
               initial={{ y: '10vh', opacity: 0 }}
@@ -25,7 +25,7 @@ function Modal({ className, children, visible }: ModalProps) {
             >
               {children}
             </Block>
-          )}
+          ) : null}
         </AnimatePresence>
       </Positioner>
     </>

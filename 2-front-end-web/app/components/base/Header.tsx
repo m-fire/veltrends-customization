@@ -16,9 +16,13 @@ function Header({
 }: HeaderProps) {
   return (
     <Block>
-      {headerLeft && <HeaderSide position={'left'}>{headerLeft}</HeaderSide>}
+      {headerLeft ? (
+        <HeaderSide position={'left'}>{headerLeft}</HeaderSide>
+      ) : null}
       <Title>{title}</Title>
-      {headerRight && <HeaderSide position={'right'}>{headerRight}</HeaderSide>}
+      {headerRight ? (
+        <HeaderSide position={'right'}>{headerRight}</HeaderSide>
+      ) : null}
     </Block>
   )
 }
