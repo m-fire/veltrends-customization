@@ -25,6 +25,14 @@ class ItemStatusService {
       where: { itemId },
     })
   }
+
+  async updateCommentCount({ itemId, commentCount }: UpdateCommentCountParams) {
+    const updatedItemStatus = await db.itemStatus.update({
+      where: { itemId },
+      data: { commentCount },
+    })
+    return updatedItemStatus
+  }
 }
 export default ItemStatusService
 
@@ -33,4 +41,9 @@ export default ItemStatusService
 interface ItemLikeUpdateParams {
   itemId: number
   likes: number
+}
+
+interface UpdateCommentCountParams {
+  itemId: number
+  commentCount: number
 }

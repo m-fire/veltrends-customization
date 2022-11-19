@@ -2,6 +2,7 @@ import db from '../common/config/prisma/db-client.js'
 import { Comment } from '@prisma/client'
 import AppError from '../common/error/AppError.js'
 import CommentLikeService from './CommentLikeService.js'
+import ItemStatusService from './ItemStatusService'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
@@ -9,6 +10,7 @@ const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
 class CommentService {
   private static instance: CommentService
   private commentLikeService = CommentLikeService.getInstance()
+  private itemStatusSerivce = ItemStatusService.getInstance()
 
   static getInstance() {
     if (!CommentService.instance) {
@@ -51,6 +53,8 @@ class CommentService {
         data: { subcommentCount },
       })
     }
+
+    await this.syncCommentCount(itemId)
 
     return { ...comment, subcommentList: [] }
   }
@@ -149,6 +153,8 @@ class CommentService {
     if (comment!.id !== commentId) new AppError('ForbiddenError')
 
     await db.comment.delete({ where: { id: commentId } })
+
+    await this.syncCommentCount(comment.itemId)
   }
 
   async likeComment({ commentId, userId }: CommentLikesParams) {
@@ -167,6 +173,16 @@ class CommentService {
     await db.comment.update({
       data: { likes },
       where: { id: commentId },
+    })
+  }
+
+  private async syncCommentCount(itemId: number) {
+    const commentCount = await db.comment.count({
+      where: { itemId },
+    })
+    await this.itemStatusSerivce.updateCommentCount({
+      itemId,
+      commentCount,
     })
   }
 }
