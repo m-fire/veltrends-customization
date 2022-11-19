@@ -6,7 +6,7 @@ import { useGoBack } from '~/common/hooks/useGoBack'
 import styled from 'styled-components'
 
 type BasicLayoutProps = {
-  title?: string
+  title?: ReactNode
   hasBackButton?: boolean
   onGoBack?: () => void
   children?: ReactNode
@@ -47,4 +47,5 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: scroll;
 `

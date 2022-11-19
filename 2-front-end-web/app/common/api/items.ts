@@ -21,6 +21,11 @@ export async function getItemList(cursor?: number) {
   return response.data
 }
 
+export async function getItem(itemId: number) {
+  const response = await client.get<Item>(`${URL_ITEMS}/${itemId}`)
+  return response.data
+}
+
 export async function likeItem(itemId: number, controller?: AbortController) {
   const response = await client.post<LikeItemResult>(
     `${URL_ITEMS}/${itemId}/likes`,

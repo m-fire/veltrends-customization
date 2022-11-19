@@ -19,7 +19,7 @@ export interface Item {
   title: string
   body: string
   link: string
-  thumbnail: string
+  thumbnail: string | null
   createdAt: string
   updatedAt: string
   author: string
@@ -39,6 +39,7 @@ export interface Publisher {
 export interface ItemStatus {
   id: number
   likes: number
+  commentCount: number
 }
 
 export type ItemListPagination = GenericListPagination<Item>

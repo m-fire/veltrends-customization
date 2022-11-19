@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css, CSSProperties } from 'styled-components'
+import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
@@ -40,28 +41,32 @@ function LinkCard({ item }: LinkCardProps) {
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
   const isLiked = itemOverride?.isLiked ?? item.isLiked
+  const link = `/items/${item.id}`
 
   return (
     <ListItem>
-      {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
+      <StyledLink to={link}>
+        {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
 
-      <Publisher hasThumbnail={!!thumbnail}>
-        {publisher.favicon ? (
-          <img src={publisher.favicon} alt="favicon" />
-        ) : (
-          <Earth />
-        )}
-        {author ? (
-          <>
-            <strong>{author}</strong>
-            {`· ${publisher.domain}`}
-          </>
-        ) : (
-          <strong>{publisher.domain}</strong>
-        )}
-      </Publisher>
-      <h3>{title}</h3>
-      {body && <p>{body}</p>}
+        <Publisher hasThumbnail={!!thumbnail}>
+          {publisher.favicon ? (
+            <img src={publisher.favicon} alt="favicon" />
+          ) : (
+            <Earth />
+          )}
+
+          {author ? (
+            <>
+              <strong>{author}</strong> {`· ${publisher.domain}`}
+            </>
+          ) : (
+            <strong>{publisher.domain}</strong>
+          )}
+        </Publisher>
+        <h3>{title}</h3>
+
+        {body ? <p>{body}</p> : null}
+      </StyledLink>
 
       <AnimatePresence initial={false}>
         {likes === 0 ? null : (
@@ -89,9 +94,14 @@ function LinkCard({ item }: LinkCardProps) {
 export default LinkCard
 
 // Inner Components
-
 const ListItem = styled.li`
-  ${displayFlexStyles('column')};
+  ${displayFlex({ direction: 'column' })};
+`
+
+// <a></a>
+const StyledLink = styled(Link)`
+  ${displayFlex({ direction: 'column' })};
+  text-decoration: none;
   h3,
   p,
   span {
@@ -99,11 +109,11 @@ const ListItem = styled.li`
     padding: 0;
   }
   & > h3 {
-    ${fontStyles('18px', 800, colors.grey4)};
+    ${fontStyles({ size: '18px', weight: 800, color: colors.grey4 })}
     margin-bottom: 8px;
   }
   & > p {
-    ${fontStyles('12px', 500, colors.grey3)};
+    ${fontStyles({ size: '12px', weight: 500, color: colors.grey3 })}
     display: block;
     margin-bottom: 8px;
   }
@@ -121,8 +131,13 @@ const Thumbnail = styled.img`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  display: flex;
-  ${fontStyles('12px', 400, colors.grey2, 1.33)};
+  ${displayFlex()};
+  ${fontStyles({
+    size: '12px',
+    weight: 400,
+    color: colors.grey2,
+    lineHeight: 1.33,
+  })}
   gap: 4px;
   margin-bottom: 2px;
   img,
@@ -133,16 +148,26 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
     border-radius: 2px;
   }
   strong {
-    ${fontStyles('12px', 600, colors.grey3, 1.33)};
+    ${fontStyles({
+      size: '12px',
+      weight: 600,
+      color: colors.grey3,
+      lineHeight: 1.33,
+    })};
   }
 `
 
 const ItemFooter = styled.div`
-  ${displayFlexStyles(null, 'center', 'space-between')};
-  ${fontStyles('12px', 400, colors.grey2, 1.5)};
+  ${displayFlex({ alignItems: 'center', justifyContent: 'space-between' })};
+  ${fontStyles({
+    size: '12px',
+    weight: 400,
+    color: colors.grey2,
+    lineHeight: 1.5,
+  })};
   // HeartVote, UserInfo 공통스타일
   div {
-    ${displayFlexStyles(null, 'center')};
+    ${displayFlex({ alignItems: 'center' })};
     gap: 4px;
   }
 `
@@ -157,25 +182,26 @@ const LikeCount = styled(motion.div)`
 
 const UserInfo = styled.div`
   b {
-    ${fontStyles(null, 600, null, 1.5)};
+    ${fontStyles({ weight: 600, lineHeight: 1.5 })}
     color: ${colors.grey3};
   }
 `
 
-function fontStyles(
-  fontSize?: CSSProperties['fontSize'] | null,
-  fontWeight?: CSSProperties['fontWeight'] | null,
-  color?: CSSProperties['color'] | null,
-  lineHeight?: CSSProperties['lineHeight'] | null,
-) {
+export function fontStyles({
+  size,
+  weight,
+  color,
+  lineHeight,
+  letterSpacing,
+}: FontStylesParams) {
   return css`
-    ${fontSize &&
+    ${size &&
     css`
-      font-size: ${fontSize};
+      font-size: ${size};
     `}
-    ${fontWeight &&
+    ${weight &&
     css`
-      font-weight: ${fontWeight};
+      font-weight: ${weight};
     `}
     ${color &&
     css`
@@ -185,16 +211,28 @@ function fontStyles(
     css`
       line-height: ${lineHeight};
     `}
+    ${letterSpacing &&
+    css`
+      letter-spacing: ${letterSpacing};
+    `}
   `
 }
+type FontStylesParams = {
+  size?: CSSProperties['fontSize'] | null
+  weight?: CSSProperties['fontWeight'] | null
+  color?: CSSProperties['color'] | null
+  lineHeight?: CSSProperties['lineHeight'] | null
+  letterSpacing?: CSSProperties['letterSpacing'] | null
+}
 
-function displayFlexStyles<OptKey extends keyof CSSProperties>(
-  direction?: CSSProperties['flexDirection'] | null,
-  alignItems?: CSSProperties['alignItems'] | null,
-  justifyContent?: CSSProperties['justifyContent'] | null,
-) {
+export function displayFlex<OptKey extends keyof CSSProperties>({
+  direction,
+  alignItems,
+  justifyContent,
+}: FlexStylesParams = {}) {
   return css`
     display: flex;
+
     ${direction &&
     css`
       flex-direction: ${direction};
@@ -208,4 +246,10 @@ function displayFlexStyles<OptKey extends keyof CSSProperties>(
       justify-content: ${justifyContent};
     `}
   `
+}
+
+type FlexStylesParams = {
+  direction?: CSSProperties['flexDirection'] | null
+  alignItems?: CSSProperties['alignItems'] | null
+  justifyContent?: CSSProperties['justifyContent'] | null
 }
