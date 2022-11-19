@@ -112,13 +112,13 @@ model ItemLike {
 }
 
 model ItemStatus {
-  id            Int      @id @default(autoincrement())
-  likes         Int      @default(0)
-  clicks        Int      @default(0)
-  score         Int      @default(0)
-  commentsCount Int      @default(0)
-  updatedAt     DateTime @default(now()) @updatedAt
-  itemId        Int      @unique
+  id           Int      @id @default(autoincrement())
+  likes        Int      @default(0)
+  clicks       Int      @default(0)
+  score        Int      @default(0)
+  commentCount Int      @default(0)
+  updatedAt    DateTime @default(now()) @updatedAt
+  itemId       Int      @unique
 
   item Item @relation(fields: [itemId], references: [id])
 }
