@@ -35,14 +35,13 @@ function Index() {
   }, [fetcher, pages])
 
   // 감지영역에 screen 이 도달한 경우, 목록 끝에 다음페이지 붙이기
-  const intersectRef = useRef<HTMLDivElement>(null)
-  useInfiniteScroll(intersectRef, fetchNext)
+  const intersectionRef = useRef<HTMLDivElement>(null)
+  useInfiniteScroll(intersectionRef, fetchNext)
 
   const items = pages.flatMap((p) => p.list)
   return (
     <TabLayout>
       <LinkCardList items={items} />
-      <div ref={intersectRef} />
     </TabLayout>
   )
 }

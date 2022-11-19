@@ -1,8 +1,8 @@
-import { client, URL_API_SERVER } from './client.js'
+import { client } from './client.js'
 import { Item, ItemListPagination, ItemStatus } from './types.js'
 import qs from 'qs'
 
-const URL_ITEMS = URL_API_SERVER + '/api/items'
+const URL_ITEMS = '/api/items'
 
 export async function createItem(params: CreateItemParams) {
   const response = await client.post<Item>(URL_ITEMS, params)

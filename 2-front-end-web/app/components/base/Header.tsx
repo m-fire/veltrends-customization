@@ -50,6 +50,7 @@ const Block = styled.header`
   align-items: center;
   justify-content: center;
 `
+
 const Title = styled.div`
   color: ${colors.grey5};
   font-size: 18px;
