@@ -75,8 +75,8 @@ function ItemViewer({ item }: ItemViewerProps) {
         </Publisher>
         <Title>{title}</Title>
         <OriginLink to={link}>
+          원문 바로가기
           <Shortcut />
-          바로가기
         </OriginLink>
 
         <Body>{body}</Body>
@@ -96,7 +96,7 @@ function ItemViewer({ item }: ItemViewerProps) {
                   animate={{ height: -26, opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                 >
-                  좋아요 {likes.toLocaleString()}개
+                  좋아요 {likes.toLocaleString()}
                 </LikesCount>
               )}
             </AnimatePresence>
@@ -124,7 +124,7 @@ const Thumbnail = styled.img`
 
 const Content = styled.div`
   padding: 30px;
-  border-bottom: 1px solid ${colors.grey1};
+  border-bottom: 4px solid ${colors.grey1};
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
@@ -167,8 +167,7 @@ const Title = styled.h2`
 
 const OriginLink = styled(Link)`
   ${displayFlex({
-    direction: 'row-reverse',
-    justifyContent: 'end',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   })}
   ${fontStyles({

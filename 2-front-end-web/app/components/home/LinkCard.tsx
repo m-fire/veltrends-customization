@@ -77,7 +77,7 @@ function LinkCard({ item }: LinkCardProps) {
             transition={{ stiffness: 100 }}
             exit={{ height: 0, opacity: 0 }}
           >
-            좋아요 {likes.toLocaleString()}개
+            좋아요 {likes.toLocaleString()}
           </LikeCount>
         )}
       </AnimatePresence>
