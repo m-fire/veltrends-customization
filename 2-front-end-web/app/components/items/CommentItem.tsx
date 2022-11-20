@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/components/system/LikeButton'
 import React from 'react'
 import CommentButton from '~/components/system/CommentButton'
+import SubcommentList from '~/components/items/SubcommentList'
 
 export interface CommentItemProps {
   type: CommentType
@@ -69,7 +70,13 @@ function CommentItem({
         </ReplyItem>
       </ReplyMenu>
 
-      {isMainComment && hasSubcomment ? '대댓글 목록 출력...' : null}
+      {isMainComment && hasSubcomment ? (
+        <SubcommentList
+          commentList={subcommentList}
+          toggleLike={toggleLike}
+          onReply={onReply}
+        />
+      ) : null}
     </Block>
   )
 }
