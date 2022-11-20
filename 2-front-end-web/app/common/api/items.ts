@@ -43,6 +43,13 @@ export async function unlikeItem(itemId: number, controller?: AbortController) {
   return response.data
 }
 
+export async function getCommentList(itemId: number) {
+  const response = await client.get<Comment[]>(
+    `${URL_ITEMS}/${itemId}/comments`,
+  )
+  return response.data
+}
+
 // Types
 
 type CreateItemParams = {

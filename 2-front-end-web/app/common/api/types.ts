@@ -43,3 +43,15 @@ export interface ItemStatus {
 }
 
 export type ItemListPagination = GenericListPagination<Item>
+
+export interface Comment {
+  id: number
+  text: string
+  createdAt: string
+  updatedAt: string
+  likes: number
+  subcommentCount: number
+  user: User
+  /* Subcomment 의 subcommentList 는 undefined 인 경우를 위한 `?` 처리 */
+  subcommentList?: Comment[]
+}
