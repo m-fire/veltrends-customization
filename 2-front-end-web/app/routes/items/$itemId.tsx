@@ -4,6 +4,7 @@ import { getCommentList, getItem } from '~/common/api/items'
 import { Item, Comment } from '~/common/api/types'
 import BasicLayout from '~/components/layout/BasicLayout'
 import ItemViewer from '~/components/items/ItemViewer'
+import CommentList from '~/components/items/CommentList'
 
 type ItemProps = {}
 
@@ -14,6 +15,7 @@ function Item({}: ItemProps) {
   return (
     <BasicLayout hasBackButton title={null}>
       <ItemViewer item={item} />
+      <CommentList commentList={commentList} />
     </BasicLayout>
   )
 }
