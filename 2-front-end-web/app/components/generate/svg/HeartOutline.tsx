@@ -3,7 +3,8 @@ import { SVGProps } from 'react'
 
 const SvgHeartOutline = (props: SVGProps<SVGSVGElement>) => (
   <svg
-    viewBox="0 0 17 17"
+    preserveAspectRatio="none"
+    viewBox="1 1 16 16"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     role="img"

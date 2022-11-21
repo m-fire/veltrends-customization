@@ -3,7 +3,7 @@ import { SVGProps } from 'react'
 
 const SvgLogoVeltrend = (props: SVGProps<SVGSVGElement>) => (
   <svg
-    viewBox="0 0 130 30"
+    viewBox="5 0 125 30"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     role="img"
