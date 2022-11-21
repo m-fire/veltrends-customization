@@ -14,11 +14,11 @@ import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
 import { UserContext } from '~/context/UserContext'
 import { ItemOverrideProvider } from '~/context/ItemStatusContext'
-import { User } from '~/common/api/types'
+import { SimpleUser } from '~/common/api/types'
 import { DialogContextProvider } from '~/context/DialogContext'
 
 export default function App() {
-  const data = useLoaderData<User | null>()
+  const data = useLoaderData<SimpleUser | null>()
 
   return (
     <html lang="ko">

@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { client, Clients, URL_API_SERVER } from '~/common/api/client'
 import { isString } from '~/common/util/strings'
-import { User } from '~/common/api/types'
+import { SimpleUser } from '~/common/api/types'
 
 // Constants
 
@@ -78,7 +78,7 @@ export class Cookies {
 
 export interface AuthResult {
   tokens: Tokens
-  user: User
+  user: SimpleUser
 }
 
 interface AuthParams {

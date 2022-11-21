@@ -1,4 +1,4 @@
-export interface User {
+export interface SimpleUser {
   id: number
   username: string
 }
@@ -23,7 +23,7 @@ export interface Item {
   createdAt: string
   updatedAt: string
   author: string
-  user: User
+  user: SimpleUser
   publisher: Publisher
   itemStatus: ItemStatus
   isLiked: boolean
@@ -51,7 +51,7 @@ export interface Comment {
   updatedAt: string
   likes: number
   subcommentCount: number
-  user: User
+  user: SimpleUser
   /* Subcomment 의 subcommentList 는 undefined 인 경우를 위한 `?` 처리 */
   subcommentList?: Comment[]
 }

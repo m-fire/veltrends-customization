@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { User } from '~/common/api/types'
+import { SimpleUser } from '~/common/api/types'
 
 /**
  * <h2>UserContext</h2>
@@ -10,7 +10,7 @@ import { User } from '~/common/api/types'
  *     </ul>
  * </ol>
  */
-export const UserContext = createContext<User | null | undefined>(null)
+export const UserContext = createContext<SimpleUser | null | undefined>(null)
 
 export function useAuthUser() {
   const getAuthUser = useContext(UserContext)
