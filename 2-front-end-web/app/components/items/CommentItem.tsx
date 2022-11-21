@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Comment } from '~/common/api/types'
-import { useDateDistanceRefresh } from '~/common/hooks/useDateDistanceRefresh'
+import { useDateDistance } from '~/common/hooks/useDateDistance'
 import { displayFlex } from '~/components/home/LinkCard'
 import { colors } from '~/common/style/colors'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -32,7 +32,7 @@ function CommentItem({
     mentionUser,
   } = comment
 
-  const pastDistance = useDateDistanceRefresh(createdAt)
+  const pastDistance = useDateDistance(createdAt)
 
   const isMainComment = type === 'main'
   const hasSubcomment = comment.subcommentCount > 0

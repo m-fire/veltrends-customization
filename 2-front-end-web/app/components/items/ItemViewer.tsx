@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/components/system/LikeButton'
 import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { useItemOverrideById } from '~/context/ItemStatusContext'
-import { useDateDistanceRefresh } from '~/common/hooks/useDateDistanceRefresh'
+import { useDateDistance } from '~/common/hooks/useDateDistance'
 import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import { useAuthUser } from '~/context/UserContext'
@@ -31,7 +31,7 @@ function ItemViewer({ item }: ItemViewerProps) {
     link,
   } = item
   const itemOverride = useItemOverrideById(id)
-  const pastDistance = useDateDistanceRefresh(createdAt)
+  const pastDistance = useDateDistance(createdAt)
 
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const isLiked = itemOverride?.isLiked ?? item.isLiked

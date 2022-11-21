@@ -2,7 +2,7 @@ import { useEffect, useMemo, useReducer } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import ko from 'date-fns/locale/ko'
 
-export function useDateDistanceRefresh(past: string | Date) {
+export function useDateDistance(past: string | Date) {
   const [value, rerender] = useReducer((state) => !state, false)
 
   useEffect(() => {

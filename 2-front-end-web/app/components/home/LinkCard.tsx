@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
 import { Earth } from '~/components/generate/svg'
-import { useDateDistanceRefresh } from '~/common/hooks/useDateDistanceRefresh'
+import { useDateDistance } from '~/common/hooks/useDateDistance'
 import LikeButton from '~/components/system/LikeButton'
 import { useItemOverrideById } from '~/context/ItemStatusContext'
 import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
@@ -36,7 +36,7 @@ function LinkCard({ item }: LinkCardProps) {
   // define Data
   const { id, thumbnail, title, author, body, user, publisher, createdAt } =
     item
-  const pastDistance = useDateDistanceRefresh(createdAt)
+  const pastDistance = useDateDistance(createdAt)
   const itemOverride = useItemOverrideById(id)
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
