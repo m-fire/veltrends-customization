@@ -27,24 +27,28 @@ class CommentService {
     text,
     parentCommentId,
   }: CreateCommentParams) {
-    const parentComment = parentCommentId
-      ? await this.getComment(parentCommentId)
-      : null
-    const mentionId = parentComment?.userId ?? undefined
-    const parentId = parentComment?.parentCommentId ?? parentCommentId
+    const parentComment =
+      parentCommentId != null ? await this.getComment(parentCommentId) : null
+    const rootId = parentComment?.parentCommentId
+    const parentId = rootId ?? parentCommentId
+    const metionUserId = parentComment?.userId
+
+    const shouldMentionUser = rootId != null && metionUserId != null
+    const isSubcomment = parentId != null
 
     const newComment = await db.comment.create({
       data: {
         itemId,
         text,
         userId,
-        parentCommentId: parentId,
-        mentionUserId: mentionId,
+        parentCommentId: isSubcomment ? parentId : null,
+        mentionUserId: shouldMentionUser ? metionUserId : null,
       },
       include: { user: INCLUDE_SIMPLE_USER },
     })
-    // 댓글의 하위댓글 인 경우, subcommentCount 증가
-    if (parentCommentId != null) {
+
+    // 하위댓글 인 경우, subcommentCount 증가 후, 댓글 수 동기화
+    if (isSubcomment) {
       const subcommentCount = await db.comment.count({
         where: { parentCommentId: parentId },
       })
