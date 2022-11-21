@@ -28,7 +28,7 @@ export const colors = {
   // rgb(235, 235, 235),
   grey1: '#EBEBEB',
   // rgb(204, 204, 204),
-  grey2: '#CCC',
+  grey2: '#BFBFBF',
   // rgb(153, 153, 153),
   grey3: '#999',
   // rgb(82, 82, 82),
