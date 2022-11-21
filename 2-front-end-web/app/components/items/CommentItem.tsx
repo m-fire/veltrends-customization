@@ -29,6 +29,7 @@ function CommentItem({
     createdAt,
     likes,
     subcommentList = [],
+    mentionUser,
   } = comment
 
   const pastDistance = useDateDistanceRefresh(createdAt)
@@ -46,7 +47,13 @@ function CommentItem({
         <Username onClick={handleOnReply}>{user.username}</Username>·
         <Time>{pastDistance}</Time>
       </CommentHead>
-      <Text>{text}</Text>
+
+      <Text>
+        {mentionUser != null ? (
+          <Mention onClick={handleOnReply}>@{mentionUser.username}</Mention>
+        ) : null}
+        {text}
+      </Text>
 
       <ReplyMenu>
         <ReplyItem>
@@ -116,6 +123,10 @@ const Text = styled.p`
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: keep-all;
+`
+const Mention = styled.span`
+  color: ${colors.primary1};
+  margin-right: 4px;
 `
 
 const ReplyMenu = styled.div`
