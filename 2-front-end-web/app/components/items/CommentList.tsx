@@ -60,5 +60,5 @@ const List = styled.div`
   ${displayFlex({ direction: 'column' })}
   width: 100%;
   margin-top: 32px;
-  gap: 32px;
+  gap: 40px;
 `

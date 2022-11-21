@@ -3,10 +3,9 @@ import { Comment } from '~/common/api/types'
 import { useDateDistance } from '~/common/hooks/useDateDistance'
 import { displayFlex } from '~/components/home/LinkCard'
 import { colors } from '~/common/style/colors'
-import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/components/system/LikeButton'
 import React from 'react'
-import CommentButton from '~/components/system/CommentButton'
+import ReplyButton from '~/components/system/ReplyButton'
 import SubcommentList from '~/components/items/SubcommentList'
 
 export interface CommentItemProps {
@@ -51,27 +50,22 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
         {text}
       </Text>
 
-      <ReplyMenu>
-        <ReplyItem>
-          <AnimatePresence initial={false}>
-            <LikeButton onClick={handleToggleLike} isLiked={isLiked} />
-            <LikeCount
-              key="likes"
-              initial={{ height: 0, opacity: 0, y: 10 }}
-              animate={{ height: 22, opacity: 1, y: 0 }}
-              transition={{ stiffness: 100 }}
-              exit={{ height: 0, opacity: 0 }}
-            >
-              {likes !== 0 ? likes.toLocaleString() : null}
-            </LikeCount>
-          </AnimatePresence>
-        </ReplyItem>
+      <CommentFooter>
+        <LikeBlock>
+          <LikeButton
+            size={'small'}
+            isLiked={isLiked}
+            onClick={handleToggleLike}
+          />
+          {likes !== 0 ? <LikeCount>{likes.toLocaleString()}</LikeCount> : null}
+          {/*<LikeCount>{likes.toLocaleString()}</LikeCount>*/}
+        </LikeBlock>
 
-        <ReplyItem>
-          <CommentButton onClick={handleOnReply} />
+        <ReplyBlock onClick={handleOnReply}>
+          <ReplyButton size={'small'} />
           답글
-        </ReplyItem>
-      </ReplyMenu>
+        </ReplyBlock>
+      </CommentFooter>
 
       {isMainComment && hasSubcomment ? (
         <SubcommentList
@@ -95,11 +89,12 @@ const Block = styled.div`
   letter-spacing: -0.5px;
 `
 
+// Header
+
 const CommentHead = styled.div`
   ${displayFlex({ alignItems: 'center' })};
   font-weight: 500;
   gap: 4px;
-  margin: 0;
 `
 
 const Username = styled.div`
@@ -112,37 +107,54 @@ const Time = styled.div`
   color: ${colors.grey2};
 `
 
-const Text = styled.p`
-  margin: 0;
-  font-size: 14px;
-  color: ${colors.grey5};
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: keep-all;
-`
+// Content
+
 const Mention = styled.span`
   color: ${colors.primary1};
-  margin-right: 4px;
+  margin-right: 6px;
 `
 
-const ReplyMenu = styled.div`
-  ${displayFlex()};
-  padding-top: 8px;
-  gap: 12px;
+const Text = styled.p`
+  font-size: 14px;
+  color: ${colors.grey6};
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  margin: 0;
+  margin-bottom: 4px;
 `
 
-const ReplyItem = styled.div`
-  ${displayFlex({ alignItems: 'center', justifyContent: 'flex-start' })};
-  font-size: 12px;
-  gap: 4px;
-`
+// Footer
 
-const LikeCount = styled(motion.div)`
-  display: flex;
+const CommentFooter = styled.div`
+  display: inline-flex;
+  color: ${colors.grey3};
   font-size: 12px;
   font-weight: 600;
-  color: ${colors.grey6};
-  line-height: 1.5;
+  line-height: 1;
+  gap: 10px;
+`
+
+const LikeBlock = styled.div`
+  ${displayFlex({ alignItems: 'center' })};
+  color: ${colors.grey4};
+  font-weight: 700;
+  gap: 4px;
+  & svg {
+    color: ${colors.grey2};
+  }
+`
+
+const LikeCount = styled.span`
+  min-width: 16px;
+`
+
+const ReplyBlock = styled.div`
+  ${displayFlex({ alignItems: 'center' })};
+  gap: 2px;
+  & svg {
+    color: ${colors.grey2};
+  }
 `
 
 // types

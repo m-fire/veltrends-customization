@@ -36,7 +36,7 @@ export default SubcommentList
 
 const List = styled.div`
   ${displayFlex({ direction: 'column' })};
-  padding: 24px 0 0 40px;
+  padding: 24px 0 0 48px;
   gap: 24px;
 `
 

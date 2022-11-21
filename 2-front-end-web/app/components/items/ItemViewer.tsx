@@ -75,7 +75,7 @@ function ItemViewer({ item }: ItemViewerProps) {
         </Publisher>
         <Title>{title}</Title>
         <OriginLink to={link}>
-          원문 바로가기
+          이동
           <Shortcut />
         </OriginLink>
 
@@ -87,7 +87,11 @@ function ItemViewer({ item }: ItemViewerProps) {
           </UserInfo>
 
           <LikeBlock>
-            <StyledLikeButton isLiked={isLiked} onClick={toggleLike} />
+            <StyledLikeButton
+              size="large"
+              isLiked={isLiked}
+              onClick={toggleLike}
+            />
             <AnimatePresence initial={false}>
               {likes === 0 ? null : (
                 <LikesCount
@@ -167,22 +171,22 @@ const Title = styled.h2`
 
 const OriginLink = styled(Link)`
   ${displayFlex({
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
   })}
   ${fontStyles({
-    size: '12px',
-    weight: 800,
-    color: colors.grey3,
+    size: '18px',
+    weight: 600,
+    color: colors.primary1,
+    lineHeight: 1,
   })};
   text-decoration: none;
-  gap: 4px;
   margin: 0 0 30px;
+  gap: 6px;
   & > svg {
     display: inline-block;
     width: 20px;
     height: 20px;
-    color: ${colors.grey6};
   }
 `
 
@@ -219,6 +223,9 @@ const UserInfo = styled.div`
 const LikeBlock = styled.div`
   ${displayFlex({ direction: 'column', alignItems: 'center' })}
   gap: 4px;
+  & svg {
+    color: ${colors.grey2};
+  }
 `
 
 const StyledLikeButton = styled(LikeButton)`
