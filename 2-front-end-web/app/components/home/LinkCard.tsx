@@ -166,9 +166,12 @@ const ItemFooter = styled.div`
     lineHeight: 1.5,
   })};
   // HeartVote, UserInfo 공통스타일
-  div {
+  & div {
     ${displayFlex({ alignItems: 'center' })};
     gap: 4px;
+  }
+  & svg {
+    color: ${colors.grey2};
   }
 `
 

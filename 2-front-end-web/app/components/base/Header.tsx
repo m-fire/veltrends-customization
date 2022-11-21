@@ -53,8 +53,8 @@ const Block = styled.header`
 
 const Title = styled.div`
   color: ${colors.grey5};
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 800;
   svg {
     display: block;
     width: 130px;

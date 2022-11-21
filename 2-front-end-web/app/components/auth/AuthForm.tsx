@@ -95,10 +95,14 @@ function AuthForm({ mode, error }: AuthFormProps) {
             <ActionErrorMessage>잘못된 계정정보 입니다.</ActionErrorMessage>
           ) : null}
 
-          <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>
+          <StyledButton
+            type="submit"
+            layoutMode="fullWidth"
+            disabled={isLoading}
+          >
             <span>{submitBtnByMode.icon}</span>
             {submitBtnByMode.text}
-          </Button>
+          </StyledButton>
 
           <QuestionLink
             question={actionByMode.question}
@@ -169,6 +173,13 @@ const ActionBox = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 24px;
+`
+
+const StyledButton = styled(Button)`
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 `
 
 const ActionErrorMessage = styled.div`
