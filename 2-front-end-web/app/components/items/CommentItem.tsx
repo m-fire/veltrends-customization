@@ -16,18 +16,14 @@ export interface CommentItemProps {
   onReply: (params: OnReplyParams) => void
 }
 
-function CommentItem({
-  comment,
-  type = 'main',
-  toggleLike,
-  onReply,
-}: CommentItemProps) {
+function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
   const {
     id: commentId,
     user,
     text,
     createdAt,
     likes,
+    subcommentCount,
     subcommentList = [],
     mentionUser,
   } = comment
@@ -35,10 +31,10 @@ function CommentItem({
   const pastDistance = useDateDistance(createdAt)
 
   const isMainComment = type === 'main'
-  const hasSubcomment = comment.subcommentCount > 0
+  const hasSubcomment = subcommentCount > 0
   const isLiked = false
 
-  const handleLikeAction = () => toggleLike({ commentId })
+  const handleToggleLike = () => toggleLike({ commentId })
   const handleOnReply = () => onReply({ commentId })
 
   return (
@@ -58,7 +54,7 @@ function CommentItem({
       <ReplyMenu>
         <ReplyItem>
           <AnimatePresence initial={false}>
-            <LikeButton onClick={handleLikeAction} isLiked={isLiked} />
+            <LikeButton onClick={handleToggleLike} isLiked={isLiked} />
             <LikeCount
               key="likes"
               initial={{ height: 0, opacity: 0, y: 10 }}
