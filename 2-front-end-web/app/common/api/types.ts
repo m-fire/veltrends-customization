@@ -38,7 +38,7 @@ export interface Publisher {
 
 export interface ItemStatus {
   id: number
-  likes: number
+  likeCount: number
   commentCount: number
 }
 
@@ -47,10 +47,10 @@ export type ItemListPagination = GenericListPagination<Item>
 export interface Comment {
   id: number
   text: string
+  likeCount: number
+  subcommentCount: number
   createdAt: string
   updatedAt: string
-  likes: number
-  subcommentCount: number
   user: SimpleUser
   mentionUser: SimpleUser | null
   /* Subcomment 의 subcommentList 는 undefined 인 경우를 위한 `?` 처리 */

@@ -86,7 +86,7 @@ class CommentService {
       return {
         ...c,
         text: '',
-        likes: 0,
+        likeCount: 0,
         subcommentCount: 0,
         createdAt: someDate,
         updatedAt: someDate,
@@ -165,21 +165,24 @@ class CommentService {
     await this.syncCommentCount(comment.itemId)
   }
 
-  async likeComment({ commentId, userId }: CommentLikesParams) {
-    const likes = await this.commentLikeService.like({ commentId, userId })
-    await this.syncLikes({ commentId, likes })
-    return likes
+  async likeComment({ commentId, userId }: LikeCommentParams) {
+    const likeCount = await this.commentLikeService.like({ commentId, userId })
+    await this.syncLikeCount({ commentId, likeCount })
+    return likeCount
   }
 
-  async unlikeComment({ commentId, userId }: CommentLikesParams) {
-    const likes = await this.commentLikeService.unlike({ commentId, userId })
-    await this.syncLikes({ commentId, likes })
-    return likes
+  async unlikeComment({ commentId, userId }: UnlikeCommentParams) {
+    const likeCount = await this.commentLikeService.unlike({
+      commentId,
+      userId,
+    })
+    await this.syncLikeCount({ commentId, likeCount })
+    return likeCount
   }
 
-  private async syncLikes({ commentId, likes }: UpdateLikesParams) {
+  private async syncLikeCount({ commentId, likeCount }: UpdateLikeCountParams) {
     await db.comment.update({
-      data: { likes },
+      data: { likeCount },
       where: { id: commentId },
     })
   }
@@ -214,9 +217,11 @@ type UpdateCommentParams = CommentParams & {
   text: string
 }
 
-type UpdateLikesParams = { commentId: number; likes: number }
+type UpdateLikeCountParams = { commentId: number; likeCount: number }
 
-export type CommentLikesParams = {
+export type LikeCommentParams = {
   commentId: number
   userId: number
 }
+
+export type UnlikeCommentParams = LikeCommentParams

@@ -22,7 +22,7 @@ class ItemLikeService {
     // 사용자가 like 하지 않았다면,
     if (!alreadyLiked) {
       try {
-        // itemStatus.likes 를 생성하고,
+        // itemStatus.likeCount 를 생성하고,
         await db.itemLike.create({ data: { itemId, userId } })
         // like 했다면(이미 존재), like 생성오류 무시
       } catch (e) {}
@@ -40,8 +40,11 @@ class ItemLikeService {
   }
 
   private async getItemStatus(itemId: number) {
-    const likes = await db.itemLike.count({ where: { itemId } })
-    const status = await this.itemStatusService.updateLikes({ itemId, likes })
+    const likeCount = await db.itemLike.count({ where: { itemId } })
+    const status = await this.itemStatusService.updateLikeCount({
+      itemId,
+      likeCount,
+    })
     return status
   }
 

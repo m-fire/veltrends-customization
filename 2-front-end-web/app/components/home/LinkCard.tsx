@@ -39,7 +39,7 @@ function LinkCard({ item }: LinkCardProps) {
   const pastDistance = useDateDistance(createdAt)
   const itemOverride = useItemOverrideById(id)
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
-  const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
+  const likeCount = itemOverride?.itemStatus.likeCount ?? itemStatus.likeCount
   const isLiked = itemOverride?.isLiked ?? item.isLiked
   const link = `/items/${item.id}`
 
@@ -69,15 +69,15 @@ function LinkCard({ item }: LinkCardProps) {
       </StyledLink>
 
       <AnimatePresence initial={false}>
-        {likes === 0 ? null : (
+        {likeCount === 0 ? null : (
           <LikeCount
-            key="likes"
+            key="likeCount"
             initial={{ height: 0, opacity: 0, y: 10 }}
             animate={{ height: 22, opacity: 1, y: 0 }}
             transition={{ stiffness: 100 }}
             exit={{ height: 0, opacity: 0 }}
           >
-            좋아요 {likes.toLocaleString()}
+            좋아요 {likeCount.toLocaleString()}
           </LikeCount>
         )}
       </AnimatePresence>

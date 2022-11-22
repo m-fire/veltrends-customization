@@ -21,7 +21,7 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
     user,
     text,
     createdAt,
-    likes,
+    likeCount,
     subcommentCount,
     subcommentList = [],
     mentionUser,
@@ -57,8 +57,10 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
             isLiked={isLiked}
             onClick={handleToggleLike}
           />
-          {likes !== 0 ? <LikeCount>{likes.toLocaleString()}</LikeCount> : null}
-          {/*<LikeCount>{likes.toLocaleString()}</LikeCount>*/}
+          {likeCount !== 0 ? (
+            <LikeCount>{likeCount.toLocaleString()}</LikeCount>
+          ) : null}
+          {/*<LikeCount>{likeCount.toLocaleString()}</LikeCount>*/}
         </LikeBlock>
 
         <ReplyBlock onClick={handleOnReply}>

@@ -99,11 +99,11 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
         user,
       } = request
       reply.status(202)
-      const likes = await commentService.likeComment({
+      const likeCount = await commentService.likeComment({
         commentId,
         userId: user!.id,
       })
-      return { id: commentId, likes }
+      return { id: commentId, likeCount }
     },
   )
 
@@ -116,11 +116,11 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
         user,
       } = request
       reply.status(202)
-      const likes = await commentService.unlikeComment({
+      const likeCount = await commentService.unlikeComment({
         commentId,
         userId: user!.id,
       })
-      return { id: commentId, likes }
+      return { id: commentId, likeCount }
     },
   )
 })

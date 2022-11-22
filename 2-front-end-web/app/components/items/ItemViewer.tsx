@@ -35,7 +35,7 @@ function ItemViewer({ item }: ItemViewerProps) {
 
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const isLiked = itemOverride?.isLiked ?? item.isLiked
-  const likes = itemOverride?.itemStatus.likes ?? itemStatus.likes
+  const likeCount = itemOverride?.itemStatus.likeCount ?? itemStatus.likeCount
 
   const { like, unlike } = useItemLikeActions()
   const openDialog = useOpenDialog()
@@ -93,14 +93,14 @@ function ItemViewer({ item }: ItemViewerProps) {
               onClick={toggleLike}
             />
             <AnimatePresence initial={false}>
-              {likes === 0 ? null : (
+              {likeCount === 0 ? null : (
                 <LikesCount
-                  key="likes"
+                  key="likeCount"
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: -26, opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                 >
-                  좋아요 {likes.toLocaleString()}
+                  좋아요 {likeCount.toLocaleString()}
                 </LikesCount>
               )}
             </AnimatePresence>

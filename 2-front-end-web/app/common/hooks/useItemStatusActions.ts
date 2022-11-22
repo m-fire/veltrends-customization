@@ -19,7 +19,7 @@ export function useItemLikeActions() {
           itemId,
           initialStatus: {
             ...initialStatus,
-            likes: initialStatus.likes + 1,
+            likeCount: initialStatus.likeCount + 1,
           },
           isLiked: true,
           apiCaller: likeItem,
@@ -39,7 +39,7 @@ export function useItemLikeActions() {
           itemId,
           initialStatus: {
             ...initialStatus,
-            likes: initialStatus.likes - 1,
+            likeCount: initialStatus.likeCount - 1,
           },
           isLiked: false,
           apiCaller: unlikeItem,

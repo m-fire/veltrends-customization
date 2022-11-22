@@ -35,7 +35,7 @@ const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
 
 const RES_ITEM_STATUS_SCHEMA = Type.Object({
   id: Type.Integer({ default: 1 }),
-  likes: Type.Integer({ default: 11 }),
+  likeCount: Type.Integer({ default: 11 }),
   commentCount: Type.Integer({ default: 4 }),
 })
 

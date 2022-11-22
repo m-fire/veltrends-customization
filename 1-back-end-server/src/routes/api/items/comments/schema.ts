@@ -25,7 +25,7 @@ const REQ_COMMENT_UPDATE_BODY_SCHEMA = Type.Object({
 const COMMENT_SCHEMA = Type.Object({
   id: Type.Integer({ default: 11 }),
   text: Type.String({ default: 'example_comment_text' }),
-  likes: Type.Number({ default: 3 }),
+  likeCount: Type.Number({ default: 3 }),
   subcommentCount: Type.Number({ default: 7 }),
   createdAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
   updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
@@ -36,11 +36,12 @@ const COMMENT_SCHEMA = Type.Object({
 const RES_COMMENT_SCHEMA = Type.Object({
   ...COMMENT_SCHEMA.properties,
   subcommentList: Type.Optional(Type.Array(COMMENT_SCHEMA)),
+  isDeleted: Type.Boolean({ default: false }),
 })
 
 const RES_COMMENT_LIKE_SCHEMA = Type.Object({
   id: Type.Integer(),
-  likes: Type.Number(),
+  likeCount: Type.Number(),
 })
 
 // FastifySchema

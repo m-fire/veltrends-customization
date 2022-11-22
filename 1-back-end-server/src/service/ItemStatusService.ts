@@ -19,9 +19,9 @@ class ItemStatusService {
     return newItemStatus
   }
 
-  async updateLikes({ itemId, likes }: UpdateItemLikeParams) {
+  async updateLikeCount({ itemId, likeCount }: UpdateLikeCountParams) {
     return db.itemStatus.update({
-      data: { likes },
+      data: { likeCount },
       where: { itemId },
     })
   }
@@ -38,9 +38,9 @@ export default ItemStatusService
 
 // types
 
-interface UpdateItemLikeParams {
+interface UpdateLikeCountParams {
   itemId: number
-  likes: number
+  likeCount: number
 }
 
 interface UpdateCommentCountParams {

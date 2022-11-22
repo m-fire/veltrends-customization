@@ -190,7 +190,7 @@ class ItemService {
       include: {
         user: { select: { id: true, username: true } },
         publisher: true,
-        itemStatus: { select: { id: true, likes: true } },
+        itemStatus: { select: { id: true, likeCount: true } },
       },
       take: limit ?? LIMIT_PER_FIND,
       orderBy: { createdAt: 'desc' },
