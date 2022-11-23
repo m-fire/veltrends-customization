@@ -1,5 +1,5 @@
 import { client } from './client.js'
-import { Item, ItemListPagination, ItemStatus } from './types.js'
+import { Item, ItemListPagination, ItemStatus, Comment } from './types.js'
 import qs from 'qs'
 
 const URL_ITEMS = '/api/items'
