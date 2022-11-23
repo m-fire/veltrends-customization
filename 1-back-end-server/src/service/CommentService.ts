@@ -80,7 +80,11 @@ class CommentService {
 
   private normalizeDeletedComment(comments: Comment[]) {
     return comments.map((c) => {
-      if (!c.deletedAt) return c
+      if (!c.deletedAt)
+        return {
+          ...c,
+          isDeleted: false,
+        }
 
       const someDate = new Date(0)
       return {
@@ -96,26 +100,32 @@ class CommentService {
         },
         mentionUser: null,
         subcommentList: [],
+        isDeleted: true,
       }
     })
   }
 
   private async composeSubcomments(comments: Comment[]) {
-    const rootCommentList = comments.filter((c) => c.parentCommentId === null)
+    const rootComments = comments.filter((c) => c.parentCommentId == null)
     const commentsByParentIdMap = new Map<number, Comment[]>()
 
     comments.forEach((c) => {
       if (!c.parentCommentId) return
-      const subcommentList = commentsByParentIdMap.get(c.parentCommentId) ?? []
-      subcommentList.push(c)
-      commentsByParentIdMap.set(c.parentCommentId, subcommentList)
+      if (c.deletedAt != null) return
+      const subComments = commentsByParentIdMap.get(c.parentCommentId) ?? []
+      subComments.push(c)
+      commentsByParentIdMap.set(c.parentCommentId, subComments)
     })
-    const commentsWithSubcomments = rootCommentList.map((parent) => ({
-      ...parent,
-      subcommentList: commentsByParentIdMap.get(parent.id) ?? [],
-    }))
+    const composedList = rootComments
+      .map((c) => ({
+        ...c,
+        subcommentList: commentsByParentIdMap.get(c.id) ?? [],
+      }))
+      .filter((c) => {
+        return c.deletedAt == null || c.subcommentList.length > 0
+      })
 
-    return commentsWithSubcomments
+    return composedList
   }
 
   async getComment(commentId: number, includeSubcomments: boolean = false) {
