@@ -21,7 +21,7 @@ class CommentLikeService {
     } catch (e) {
       console.log(`CommentLikeService.like() catch error`, { e })
     }
-    const likeCount = await this.countCommentLIke(commentId)
+    const likeCount = await this.countCommentLike(commentId)
     return likeCount
   }
 
@@ -31,11 +31,11 @@ class CommentLikeService {
         where: { commentId_userId: { commentId, userId } },
       })
     } catch (e) {}
-    const likeCount = await this.countCommentLIke(commentId)
+    const likeCount = await this.countCommentLike(commentId)
     return likeCount
   }
 
-  private async countCommentLIke(commentId: number) {
+  private async countCommentLike(commentId: number) {
     const likeCount = await db.commentLike.count({ where: { commentId } })
     return likeCount
   }

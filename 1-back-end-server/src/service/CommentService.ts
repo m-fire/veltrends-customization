@@ -73,12 +73,12 @@ class CommentService {
       },
     })
     // normalize ation 가공
-    const normalizedList = this.normalizeDeletedComment(commentList)
+    const normalizedList = this.normalizeDeletedCommentInList(commentList)
     const composedCommentList = await this.composeSubcomments(normalizedList)
     return composedCommentList
   }
 
-  private normalizeDeletedComment(comments: Comment[]) {
+  private normalizeDeletedCommentInList(comments: Comment[]): Comment[] {
     return comments.map((c) => {
       if (!c.deletedAt)
         return {

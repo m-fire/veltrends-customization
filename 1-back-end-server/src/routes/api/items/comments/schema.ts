@@ -44,6 +44,10 @@ const RES_COMMENT_LIKE_SCHEMA = Type.Object({
   likeCount: Type.Number(),
 })
 
+const RES_COMMENT_LIST_SCHEMA = Type.Array(RES_COMMENT_SCHEMA)
+
+const RES_EMPTY_OBJECT_SCHEMA = Type.Object({})
+
 // FastifySchema
 
 const COMMENTS_SCHEMA = createFastifySchemaMap({
@@ -63,13 +67,13 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
   GET_COMMENT_LIST: {
     params: ITEMS_SCHEMA.GET_ITEM.params,
     response: {
-      200: Type.Array(RES_COMMENT_SCHEMA),
+      200: RES_COMMENT_LIST_SCHEMA,
     },
   },
   GET_SUBCOMMENT_LIST: {
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
-      200: Type.Array(RES_COMMENT_SCHEMA),
+      200: RES_COMMENT_LIST_SCHEMA,
     },
   },
   UPDATE_COMMENT: {
@@ -82,7 +86,7 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
   DELETE_COMMENT: {
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
-      204: {},
+      204: RES_EMPTY_OBJECT_SCHEMA,
     },
   },
   LIKE_COMMENT: {
