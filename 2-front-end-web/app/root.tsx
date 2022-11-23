@@ -16,6 +16,9 @@ import { UserContext } from '~/context/UserContext'
 import { ItemOverrideProvider } from '~/context/ItemStatusContext'
 import { SimpleUser } from '~/common/api/types'
 import { DialogContextProvider } from '~/context/DialogContext'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function App() {
   const data = useLoaderData<SimpleUser | null>()
@@ -29,13 +32,17 @@ export default function App() {
       </head>
       <body>
         <GlobalStyle />
-        <DialogContextProvider>
-          <UserContext.Provider value={data}>
-            <ItemOverrideProvider>
-              <Outlet />
-            </ItemOverrideProvider>
-          </UserContext.Provider>
-        </DialogContextProvider>
+
+        <QueryClientProvider client={queryClient}>
+          <DialogContextProvider>
+            <UserContext.Provider value={data}>
+              <ItemOverrideProvider>
+                <Outlet />
+              </ItemOverrideProvider>
+            </UserContext.Provider>
+          </DialogContextProvider>
+        </QueryClientProvider>
+
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
