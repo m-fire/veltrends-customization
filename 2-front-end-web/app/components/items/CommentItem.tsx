@@ -52,31 +52,30 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
           <Time>{pastDistance}</Time>
         </CommentHead>
 
-      <Text>
-        {mentionUser != null ? (
-          <Mention onClick={handleOnReply}>@{mentionUser.username}</Mention>
-        ) : null}
-        {text}
-      </Text>
-
-      <CommentFooter>
-        <LikeBlock>
-          <LikeButton
-            size={'small'}
-            isLiked={isLiked}
-            onClick={handleToggleLike}
-          />
-          {likeCount !== 0 ? (
-            <LikeCount>{likeCount.toLocaleString()}</LikeCount>
+        <CommentText>
+          {mentionUser != null ? (
+            <Mention onClick={handleOnReply}>@{mentionUser.username}</Mention>
           ) : null}
-          {/*<LikeCount>{likeCount.toLocaleString()}</LikeCount>*/}
-        </LikeBlock>
+          {text}
+        </CommentText>
 
-        <ReplyBlock onClick={handleOnReply}>
-          <ReplyButton size={'small'} />
-          답글
-        </ReplyBlock>
-      </CommentFooter>
+        <CommentFooter>
+          <LikeBlock>
+            <LikeButton
+              size={'small'}
+              isLiked={isLiked}
+              onClick={handleToggleLike}
+            />
+            {likeCount !== 0 ? (
+              <LikeCount>{likeCount.toLocaleString()}</LikeCount>
+            ) : null}
+          </LikeBlock>
+
+          <ReplyBlock onClick={handleOnReply}>
+            <ReplyButton size={'small'} />
+            답글
+          </ReplyBlock>
+        </CommentFooter>
 
         {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
       </Block>
@@ -133,7 +132,7 @@ const Mention = styled.span`
   margin-right: 6px;
 `
 
-const Text = styled.p`
+const CommentText = styled.p`
   font-size: 14px;
   color: ${colors.grey6};
   line-height: 1.6;
@@ -190,3 +189,8 @@ type ToggleLikeParams = {
 }
 
 type OnReplyParams = ToggleLikeParams
+
+type GetSubcommentsOrNull = {
+  isRootComment: boolean
+  hasSubcomments: boolean
+}
