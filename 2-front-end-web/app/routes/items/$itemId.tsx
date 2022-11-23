@@ -1,6 +1,7 @@
 import { useLoaderData } from '@remix-run/react'
 import { json, LoaderFunction } from '@remix-run/node'
-import { getCommentList, getItem } from '~/common/api/items'
+import { getItem } from '~/common/api/items'
+import { getCommentList } from '~/common/api/items$comments'
 import { Item, Comment } from '~/common/api/types'
 import BasicLayout from '~/components/layout/BasicLayout'
 import ItemViewer from '~/components/items/ItemViewer'
