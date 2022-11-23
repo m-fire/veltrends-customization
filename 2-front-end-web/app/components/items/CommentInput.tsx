@@ -2,13 +2,16 @@ import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { CommentItemProps } from '~/components/items/CommentItem'
+import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
 
 type CommentInputParams = {
   onReply: CommentItemProps['onReply']
 }
 
 function CommentInput({}: CommentInputParams) {
-  return <PseudoInput>댓글을 입력하세요</PseudoInput>
+  const open = useCommentInputStore((store) => store.open)
+
+  return <PseudoInput onClick={open}>댓글을 입력하세요</PseudoInput>
 }
 
 const PseudoInput = styled.div`

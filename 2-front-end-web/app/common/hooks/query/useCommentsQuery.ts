@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { getCommentList } from '~/common/api/items'
+import { getCommentList } from '~/common/api/items$comments'
 
 export function useCommentsQuery(
   itemId: number,
