@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 import Overlay from '../system/Overlay'
+import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
 
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
-  const visible = true
+  const visible = useCommentInputStore((store) => store.visible)
 
   return (
     <>
@@ -17,7 +18,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
             animate={{ y: 0 }}
             exit={{ y: 48 }}
             transition={{
-              damping: 0,
+              damping: 0 /* 에니메이션 제동 */,
             }}
           />
         )}
