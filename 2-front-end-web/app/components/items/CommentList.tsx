@@ -25,7 +25,7 @@ function CommentList({ commentList }: CommentListProps) {
       <List>
         {commentList.map((comment) => (
           <CommentItem
-            type="main"
+            type="root"
             comment={comment}
             key={comment.id}
             toggleLike={toggleLike}

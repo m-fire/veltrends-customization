@@ -29,7 +29,7 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
 
   const pastDistance = useDateDistance(createdAt)
 
-  const isMainComment = type === 'main'
+  const isMainComment = type === 'root'
   const hasSubcomment = subcommentCount > 0
   const isLiked = false
 
@@ -161,7 +161,7 @@ const ReplyBlock = styled.div`
 
 // types
 
-type CommentType = 'main' | 'sub'
+type CommentType = 'root' | 'sub'
 
 type ToggleLikeParams = {
   commentId: number
