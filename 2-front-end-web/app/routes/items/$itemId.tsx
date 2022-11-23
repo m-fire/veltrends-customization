@@ -7,6 +7,7 @@ import BasicLayout from '~/components/layout/BasicLayout'
 import ItemViewer from '~/components/items/ItemViewer'
 import CommentList from '~/components/items/CommentList'
 import { useCommentsQuery } from '~/common/hooks/query/useCommentsQuery'
+import CommentInputOverlay from '~/components/items/CommentInputOverlay'
 
 type ItemProps = {}
 
@@ -28,6 +29,7 @@ function Item({}: ItemProps) {
     <BasicLayout hasBackButton title={null}>
       <ItemViewer item={loaderData.item} />
       <CommentList commentList={commentList!} />
+      <CommentInputOverlay />
     </BasicLayout>
   )
 }
