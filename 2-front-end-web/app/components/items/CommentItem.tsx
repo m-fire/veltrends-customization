@@ -25,23 +25,32 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
     subcommentCount,
     subcommentList = [],
     mentionUser,
+    isDeleted,
   } = comment
 
   const pastDistance = useDateDistance(createdAt)
 
-  const isMainComment = type === 'root'
-  const hasSubcomment = subcommentCount > 0
+  const isRootComment = type === 'root'
+  const hasSubcomments = subcommentList.length > 0
   const isLiked = false
 
   const handleToggleLike = () => toggleLike({ commentId })
   const handleOnReply = () => onReply({ commentId })
 
-  return (
-    <Block>
-      <CommentHead>
-        <Username onClick={handleOnReply}>{user.username}</Username>·
-        <Time>{pastDistance}</Time>
-      </CommentHead>
+  if (isDeleted) {
+    return (
+      <Block>
+        <DeletedCommentMessage>· 삭제된 댓글입니다 ·</DeletedCommentMessage>
+        {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
+      </Block>
+    )
+  } else {
+    return (
+      <Block>
+        <CommentHead>
+          <Username onClick={handleOnReply}>{user.username}</Username> ·
+          <Time>{pastDistance}</Time>
+        </CommentHead>
 
       <Text>
         {mentionUser != null ? (
@@ -69,15 +78,23 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
         </ReplyBlock>
       </CommentFooter>
 
-      {isMainComment && hasSubcomment ? (
-        <SubcommentList
-          commentList={subcommentList}
-          toggleLike={toggleLike}
-          onReply={onReply}
-        />
-      ) : null}
-    </Block>
-  )
+        {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
+      </Block>
+    )
+  }
+
+  function getSubcommentsOrNull({
+    isRootComment,
+    hasSubcomments,
+  }: GetSubcommentsOrNull) {
+    return isRootComment && hasSubcomments ? (
+      <SubcommentList
+        commentList={subcommentList}
+        toggleLike={toggleLike}
+        onReply={onReply}
+      />
+    ) : null
+  }
 }
 export default CommentItem
 
@@ -124,6 +141,11 @@ const Text = styled.p`
   word-break: keep-all;
   margin: 0;
   margin-bottom: 4px;
+`
+
+const DeletedCommentMessage = styled(CommentText)`
+  color: ${colors.grey2};
+  margin: 0;
 `
 
 // Footer
