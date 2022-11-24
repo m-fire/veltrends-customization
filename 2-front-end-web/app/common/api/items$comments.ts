@@ -1,6 +1,6 @@
-import { client } from './client.js'
-import { Comment } from './types.js'
-import { URL_ITEMS } from '~/common/api/items.js'
+import { client } from './client'
+import { Comment } from './types'
+import { URL_ITEMS } from '~/common/api/items'
 
 const URL_COMMENTS = '/comments'
 

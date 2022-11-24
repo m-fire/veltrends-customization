@@ -13,7 +13,7 @@ type CommentInputParams = {
 function CommentInput({}: CommentInputParams) {
   const authUser = useAuthUser()
   const openDialog = useOpenDialog()
-  const { open: openCommentInput } = useCommentInputStore((store) => store)
+  const { open: openCommentInput } = useCommentInputStore()
 
   const onClick = () => {
     if (!authUser) {

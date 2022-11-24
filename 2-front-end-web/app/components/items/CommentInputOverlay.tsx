@@ -10,9 +10,7 @@ import { useEffect, useState } from 'react'
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
-  const { visible, close: closeCommentInput } = useCommentInputStore(
-    (store) => store,
-  )
+  const { visible, close: closeCommentInput } = useCommentInputStore()
   const onClick = () => {
     closeCommentInput()
   }
