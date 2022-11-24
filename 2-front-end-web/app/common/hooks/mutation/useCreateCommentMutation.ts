@@ -4,7 +4,7 @@ import { createComment } from '~/common/api/items$comments'
 export function useCreateCommentMutation(
   options: UseMutationOptionsOf<typeof createComment> = {},
 ) {
-  return useMutation(createComment)
+  return useMutation(createComment, options)
 }
 
 // UseMutationOptions<Comment, unknown, { itemId: number; parentCommentId?: number | undefined; }, unknown>, "mutationFn">
