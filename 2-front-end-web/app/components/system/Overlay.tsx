@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 
 type OverlayProps = {
   visible: boolean
+  onClick?: MouseEventHandler<HTMLElement>
 }
 
-function Overlay({ visible }: OverlayProps) {
+function Overlay({ visible, onClick }: OverlayProps) {
   return (
     <AnimatePresence initial={false}>
       {visible ? (
@@ -14,6 +15,7 @@ function Overlay({ visible }: OverlayProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          onClick={onClick}
         />
       ) : null}
     </AnimatePresence>

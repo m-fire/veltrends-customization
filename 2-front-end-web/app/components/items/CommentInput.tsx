@@ -9,14 +9,18 @@ type CommentInputParams = {
 }
 
 function CommentInput({}: CommentInputParams) {
-  const open = useCommentInputStore((store) => store.open)
+  const { open: openCommentInput } = useCommentInputStore((store) => store)
 
-  return <PseudoInput onClick={open}>댓글을 입력하세요</PseudoInput>
+  const onClick = () => {
+    openCommentInput(null)
+  }
+
+  return <PseudoInput onClick={onClick}>댓글을 입력하세요</PseudoInput>
 }
 
 const PseudoInput = styled.div`
-  ${displayFlex({ alignItems: 'center' })}
-  ${fontStyles({ size: '14px', color: colors.grey1 })}
+  ${displayFlex({ alignItems: 'center' })};
+  ${fontStyles({ size: '14px', color: colors.grey1 })};
   width: 100%;
   height: 40px;
   border-radius: 4px;
