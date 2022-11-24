@@ -5,6 +5,7 @@ import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
 import { displayFlex } from '~/components/home/LinkCard'
 import { SpeechBubble } from '~/components/generate/svg'
 import { colors } from '~/common/style/colors'
+import { useEffect, useState } from 'react'
 
 type CommentInputOverlayParams = {}
 
@@ -15,6 +16,13 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
   const onClick = () => {
     closeCommentInput()
   }
+
+  const [text, setText] = useState('')
+  useEffect(() => {
+    if (visible) {
+      setText('')
+    }
+  }, [visible])
 
   return (
     <>
@@ -29,7 +37,12 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
               damping: 0 /* 에니메이션 제동 */,
             }}
           >
-            <StyledInput placeholder="댓글을 입력하세요" autoFocus={true} />
+            <StyledInput
+              value={text}
+              placeholder="댓글을 입력하세요"
+              onChange={(e) => setText(e.target.value)}
+              autoFocus={true}
+            />
             <TransparentButton onClick={onClick}>
               <StyledSpeechBubble />
             </TransparentButton>
