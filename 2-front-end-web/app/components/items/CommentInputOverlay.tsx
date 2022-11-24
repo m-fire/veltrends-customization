@@ -7,25 +7,45 @@ import { SpeechBubble } from '~/components/generate/svg'
 import { colors } from '~/common/style/colors'
 import { useEffect, useState } from 'react'
 import Spinner from '~/components/system/Spinner'
+import { useItemIdParams } from '~/common/hooks/useItemIdParams'
+import { useCreateCommentMutation } from '~/common/hooks/mutation/useCreateCommentMutation'
 
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
-  const { visible, close: closeCommentInput } = useCommentInputStore()
-  const onClick = () => {
-    closeCommentInput()
-  }
+  const inputStore = useCommentInputStore()
+
+  const { close: closeCommentInput } = inputStore
+  const createCommentMutation = useCreateCommentMutation({
+    onSuccess(data) {
+      // @todo: do sth with data
+      console.log('hello world')
+      closeCommentInput()
+    },
+  })
 
   const [text, setText] = useState('')
+  const { mutate } = createCommentMutation
+  const itemId = useItemIdParams()
+  const onClick = () => {
+    if (!itemId) return
+    mutate({
+      itemId,
+      text,
+    })
+  }
+
+  const { visible } = inputStore
   useEffect(() => {
     if (visible) {
       setText('')
     }
   }, [visible])
 
+  const { isLoading } = createCommentMutation
   return (
     <>
-      <Overlay onClick={onClick} visible={visible} />
+      <Overlay onClick={closeCommentInput} visible={visible} />
       <AnimatePresence initial={false}>
         {visible && (
           <Footer
