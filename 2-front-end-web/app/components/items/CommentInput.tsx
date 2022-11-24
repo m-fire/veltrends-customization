@@ -3,15 +3,23 @@ import { colors } from '~/common/style/colors'
 import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { CommentItemProps } from '~/components/items/CommentItem'
 import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
+import { useAuthUser } from '~/context/UserContext'
+import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 
 type CommentInputParams = {
   onReply: CommentItemProps['onReply']
 }
 
 function CommentInput({}: CommentInputParams) {
+  const authUser = useAuthUser()
+  const openDialog = useOpenDialog()
   const { open: openCommentInput } = useCommentInputStore((store) => store)
 
   const onClick = () => {
+    if (!authUser) {
+      openDialog('COMMENT_INPUT-LOGIN')
+      return
+    }
     openCommentInput(null)
   }
 
