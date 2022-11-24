@@ -6,6 +6,7 @@ import { displayFlex } from '~/components/home/LinkCard'
 import { SpeechBubble } from '~/components/generate/svg'
 import { colors } from '~/common/style/colors'
 import { useEffect, useState } from 'react'
+import Spinner from '~/components/system/Spinner'
 
 type CommentInputOverlayParams = {}
 
@@ -41,8 +42,8 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
               onChange={(e) => setText(e.target.value)}
               autoFocus={true}
             />
-            <TransparentButton onClick={onClick}>
-              <StyledSpeechBubble />
+            <TransparentButton onClick={onClick} disabled={isLoading}>
+              {isLoading ? <StyledSpinner /> : <StyledSpeechBubble />}
             </TransparentButton>
           </Footer>
         )}
@@ -83,9 +84,16 @@ const TransparentButton = styled.button`
   border: none;
   outline: none;
   padding: 0 8px;
+  position: relative;
 `
 
 const StyledSpeechBubble = styled(SpeechBubble)`
+  width: 24px;
+  height: 24px;
+  color: ${colors.primary1};
+`
+
+const StyledSpinner = styled(Spinner)`
   width: 24px;
   height: 24px;
   color: ${colors.primary1};
