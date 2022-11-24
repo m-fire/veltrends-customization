@@ -60,7 +60,7 @@ class CommentService {
 
     await this.syncCommentCount(itemId)
 
-    return { ...newComment, subcommentList: [] }
+    return { ...newComment, isDeleted: false, subcommentList: [] }
   }
 
   async getCommentList(itemId: number) {
