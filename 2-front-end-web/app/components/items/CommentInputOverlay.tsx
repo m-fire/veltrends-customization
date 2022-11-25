@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
+import { useQueryClient } from '@tanstack/react-query'
 import Overlay from '../system/Overlay'
 import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
 import { displayFlex } from '~/components/home/LinkCard'
@@ -9,18 +10,27 @@ import { useEffect, useState } from 'react'
 import Spinner from '~/components/system/Spinner'
 import { useItemIdParams } from '~/common/hooks/useItemIdParams'
 import { useCreateCommentMutation } from '~/common/hooks/mutation/useCreateCommentMutation'
+import { getCommentListQueryKey } from '~/common/hooks/query/useCommentListQuery'
+import { Comment } from '~/common/api/types'
 
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
   const [text, setText] = useState('')
   const { visible, close: closeCommentInput } = useCommentInputStore()
+  const queryClient = useQueryClient()
   const itemId = useItemIdParams()
 
   const { mutate, isLoading } = useCreateCommentMutation({
     async onSuccess(commentData) {
-      // @todo: do sth with data
-      console.log('hello world')
+      if (!itemId) return
+
+      const commentListKey = getCommentListQueryKey(itemId)
+      queryClient.setQueryData(commentListKey, (prevCommentList?: Comment[]) =>
+        prevCommentList ? [...prevCommentList, commentData] : [commentData],
+      )
+      await queryClient.invalidateQueries(commentListKey)
+
       closeCommentInput()
     },
   })
