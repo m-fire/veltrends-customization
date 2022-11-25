@@ -15,11 +15,13 @@ export type ErrorPayloadOpt<K extends AppErrorType> =
         isExpiredToken: boolean
       }
     : K extends 'BadReqeustError'
-    ? any
+    ? {
+        message: string
+      }
     : undefined
 // : K extends '....Error'
 // ? {
-//     key: boolean
+//     prop: type
 //   }
 // : undefined
 
