@@ -31,14 +31,18 @@ class CommentService {
 
     const parentComment =
       parentCommentId != null ? await this.getComment(parentCommentId) : null
+
+    const isSubcomment = parentComment != null
     const rootId = parentComment?.parentCommentId
     const parentId = rootId ?? parentCommentId
     const mentionUserId = parentComment?.userId
 
-    const isSubcomment = parentId != null
-    // 등록할 댓글이 하위댓글 이면서, 자신이 아닌 남을 언급했을경우, mention 허용!
-    const shouldMentionUser =
-      isSubcomment && mentionUserId != null && mentionUserId !== userId
+    // 최상위 댓글이 아니고, 부모 ID를 갖으며, 남에게 댓글단 경우: 사용자언급 허용!
+    const shouldMention =
+      isSubcomment &&
+      rootId != null &&
+      mentionUserId != null &&
+      mentionUserId !== userId
 
     const newComment = await db.comment.create({
       data: {
@@ -46,7 +50,7 @@ class CommentService {
         text,
         userId,
         parentCommentId: isSubcomment ? parentId : null,
-        mentionUserId: shouldMentionUser ? mentionUserId : null,
+        mentionUserId: shouldMention ? mentionUserId : null,
       },
       include: { user: INCLUDE_SIMPLE_USER },
     })
