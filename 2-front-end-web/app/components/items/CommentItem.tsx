@@ -22,7 +22,6 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
     text,
     createdAt,
     likeCount,
-    subcommentCount,
     subcommentList = [],
     mentionUser,
     isDeleted,
@@ -37,50 +36,50 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
   const handleToggleLike = () => toggleLike({ commentId })
   const handleOnReply = () => onReply({ commentId })
 
-  if (isDeleted) {
-    return (
-      <Block>
-        <DeletedCommentMessage>· 삭제된 댓글입니다 ·</DeletedCommentMessage>
-        {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
-      </Block>
-    )
-  } else {
-    return (
-      <Block>
-        <CommentHead>
-          <Username onClick={handleOnReply}>{user.username}</Username> ·
-          <Time>{pastDistance}</Time>
-        </CommentHead>
+  return (
+    <Block>
+      {isDeleted ? (
+        <>
+          <DeletedCommentMessage>· 삭제된 댓글입니다 ·</DeletedCommentMessage>
+          {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
+        </>
+      ) : (
+        <>
+          <CommentHead>
+            <Username onClick={handleOnReply}>{user.username}</Username> ·
+            <Time>{pastDistance}</Time>
+          </CommentHead>
 
-        <CommentText>
-          {mentionUser != null ? (
-            <Mention onClick={handleOnReply}>@{mentionUser.username}</Mention>
-          ) : null}
-          {text}
-        </CommentText>
-
-        <CommentFooter>
-          <LikeBlock>
-            <LikeButton
-              size={'small'}
-              isLiked={isLiked}
-              onClick={handleToggleLike}
-            />
-            {likeCount !== 0 ? (
-              <LikeCount>{likeCount.toLocaleString()}</LikeCount>
+          <CommentText>
+            {mentionUser != null ? (
+              <Mention onClick={handleOnReply}>@{mentionUser.username}</Mention>
             ) : null}
-          </LikeBlock>
+            {text}
+          </CommentText>
 
-          <ReplyBlock onClick={handleOnReply}>
-            <ReplyButton size={'small'} />
-            답글
-          </ReplyBlock>
-        </CommentFooter>
+          <CommentFooter>
+            <LikeBlock>
+              <LikeButton
+                size={'small'}
+                isLiked={isLiked}
+                onClick={handleToggleLike}
+              />
+              {likeCount !== 0 ? (
+                <LikeCount>{likeCount.toLocaleString()}</LikeCount>
+              ) : null}
+            </LikeBlock>
 
-        {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
-      </Block>
-    )
-  }
+            <ReplyBlock onClick={handleOnReply}>
+              <ReplyButton size={'small'} />
+              답글
+            </ReplyBlock>
+          </CommentFooter>
+
+          {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
+        </>
+      )}
+    </Block>
+  )
 
   function getSubcommentsOrNull({
     isRootComment,
