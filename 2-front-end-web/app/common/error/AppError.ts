@@ -4,7 +4,7 @@ type AppErrorType =
   | 'UserExistsError'
   | 'AuthenticationError'
   | 'UnauthorizedError'
-  | 'BadReqeustError'
+  | 'BadRequestError'
   | 'RefreshFailureError'
   | 'InvalidUrlError'
   | 'UnknownError'
@@ -38,7 +38,7 @@ export const APP_ERRORS_INFO: Record<AppErrorType, ErrorInfo> = {
     message: 'Unauthorized',
     statusCode: 401,
   },
-  BadReqeustError: {
+  BadRequestError: {
     message: 'Bad reqeust',
     statusCode: 400,
   },
