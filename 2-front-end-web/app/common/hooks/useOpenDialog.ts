@@ -23,14 +23,15 @@ export function useOpenDialog({ gotoLogin = false }: UseOpenDialogParams = {}) {
   const gotoLoginPage = () => navigate(`/auth/login?next=${location.pathname}`)
 
   const { open } = getDialogContext()
-
   const openDialog = useCallback(
     (type: ConfigType, options: OpenFnParams = {}) => {
       const { mode = 'YESNO', onConfirm = () => {} } = options
       const textConfig = textConfigMap[type]
+
       open({
         textConfig,
-        onConfirm: () => navigate(`/auth/login?next=${location.pathname}`),
+        onConfirm: gotoLogin ? gotoLoginPage : onConfirm,
+        mode: mode ?? 'YESNO',
       })
     },
     [location, navigate, open],
