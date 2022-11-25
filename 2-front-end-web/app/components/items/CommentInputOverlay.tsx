@@ -13,20 +13,18 @@ import { useCreateCommentMutation } from '~/common/hooks/mutation/useCreateComme
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
-  const inputStore = useCommentInputStore()
+  const [text, setText] = useState('')
+  const { visible, close: closeCommentInput } = useCommentInputStore()
+  const itemId = useItemIdParams()
 
-  const { close: closeCommentInput } = inputStore
-  const createCommentMutation = useCreateCommentMutation({
-    onSuccess(data) {
+  const { mutate, isLoading } = useCreateCommentMutation({
+    async onSuccess(commentData) {
       // @todo: do sth with data
       console.log('hello world')
       closeCommentInput()
     },
   })
 
-  const [text, setText] = useState('')
-  const { mutate } = createCommentMutation
-  const itemId = useItemIdParams()
   const onClick = () => {
     if (!itemId) return
     mutate({
@@ -35,14 +33,12 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
     })
   }
 
-  const { visible } = inputStore
   useEffect(() => {
     if (visible) {
       setText('')
     }
   }, [visible])
 
-  const { isLoading } = createCommentMutation
   return (
     <>
       <Overlay onClick={closeCommentInput} visible={visible} />
@@ -57,10 +53,10 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
             }}
           >
             <StyledInput
+              autoFocus
               value={text}
               placeholder="댓글을 입력하세요"
               onChange={(e) => setText(e.target.value)}
-              autoFocus={true}
             />
             <TransparentButton onClick={onClick} disabled={isLoading}>
               {isLoading ? <StyledSpinner /> : <StyledSpeechBubble />}
