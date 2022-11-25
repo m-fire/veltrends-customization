@@ -13,6 +13,7 @@ import { useCreateCommentMutation } from '~/common/hooks/mutation/useCreateComme
 import { getCommentListQueryKey } from '~/common/hooks/query/useCommentListQuery'
 import { Comment } from '~/common/api/types'
 import produce from 'immer'
+import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 
 type CommentInputOverlayParams = {}
 
@@ -24,6 +25,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
   const queryClient = useQueryClient()
   const itemId = useItemIdParams()
 
+  const openDialog = useOpenDialog()
   const commentsMutation = useCreateCommentMutation({
     async onSuccess(commentData) {
       if (!itemId) return
@@ -57,22 +59,39 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
 
       closeCommentInput()
     },
-  })
 
-  const { mutate } = commentsMutation
-  const onReply = () => {
-    if (!itemId) return
-    mutate({
-      itemId,
-      parentCommentId: parentCommentId ?? undefined,
-      text,
-    })
-  }
+    onError() {
+      openDialog('PRIVATE_ERROR', {
+        mode: 'OK',
+        onConfirm: () => {},
+      })
+    },
+  })
 
   const { visible } = commentInputStore
   useEffect(() => {
     if (visible) setText('')
   }, [visible])
+
+  const { mutate } = commentsMutation
+  const onReply = () => {
+    if (!itemId) return
+
+    const trimText = text.trim()
+    if (trimText.length <= 0 || trimText.length > 300) {
+      openDialog('INVALID_COMMENT_LENGTH', {
+        mode: 'OK',
+        onConfirm: () => {},
+      })
+      return
+    }
+
+    mutate({
+      itemId,
+      parentCommentId: parentCommentId ?? undefined,
+      text: trimText,
+    })
+  }
 
   const { isLoading } = commentsMutation
   return (

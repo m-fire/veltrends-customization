@@ -13,6 +13,14 @@ const textConfigMap = {
     title: '로그인 후 이용해주세요.',
     description: '댓글을 작성하기 위해서 로그인을 해주세요.',
   },
+  INVALID_COMMENT_LENGTH: <DialogProps['textConfig']>{
+    title: '댓글 확인',
+    description: '댓글은 1~300자 까지 입력이 가능합니다.',
+  },
+  PRIVATE_ERROR: <DialogProps['textConfig']>{
+    title: '오류',
+    description: '댓글 작성 실패.',
+  },
 }
 
 type ConfigType = keyof typeof textConfigMap
