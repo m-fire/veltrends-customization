@@ -48,6 +48,7 @@ export function DialogContextProvider({
         onClose={close}
         onConfirm={confirm}
         visible={visible}
+        mode={config?.mode ?? 'OK'}
       />
     </DialogContext.Provider>
   )
@@ -67,5 +68,7 @@ type DialogActions = {
   open(config: DialogConfig): void
 }
 
-type DialogConfig = Omit<DialogProps, 'onClose' | 'visible'> &
-  Partial<Pick<DialogProps, 'onClose'>>
+export type DialogConfig = Omit<DialogProps, 'onClose' | 'visible'> &
+  Partial<Pick<DialogProps, 'onConfirm' | 'onClose'>> & {
+    mode?: 'OK' | 'YESNO'
+  }

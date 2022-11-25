@@ -14,6 +14,7 @@ export type DialogProps = {
   onConfirm: () => void
   onClose: () => void
   visible: boolean
+  mode?: 'OK' | 'YESNO'
 }
 
 function Dialog({
@@ -21,18 +22,27 @@ function Dialog({
   onConfirm,
   onClose,
   visible,
+  mode = 'OK',
 }: DialogProps) {
   return (
     <StyledModal visible={visible}>
       <Title>{title}</Title>
       <Description>{description}</Description>
       <Footer>
-        <StyledButton variant="nobg" onClick={onClose}>
-          {cancelText}
-        </StyledButton>
-        <StyledButton variant="primary" onClick={onConfirm}>
-          {confirmText}
-        </StyledButton>
+        {mode === 'OK' ? (
+          <StyledButton variant="primary" onClick={onConfirm}>
+            {confirmText}
+          </StyledButton>
+        ) : (
+          <>
+            <StyledButton variant="nobg" onClick={onClose}>
+              {cancelText}
+            </StyledButton>
+            <StyledButton variant="primary" onClick={onConfirm}>
+              {confirmText}
+            </StyledButton>
+          </>
+        )}
       </Footer>
     </StyledModal>
   )
