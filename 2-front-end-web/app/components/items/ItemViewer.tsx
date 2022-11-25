@@ -43,7 +43,7 @@ function ItemViewer({ item }: ItemViewerProps) {
 
   const toggleLike = async () => {
     if (!authUser) {
-      openDialog('LIKE_ITEM-LOGIN')
+      openDialog('LIKE_ITEM>>LOGIN')
       return
     }
     if (isLiked) {

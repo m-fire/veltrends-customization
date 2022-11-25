@@ -23,7 +23,7 @@ function LinkCard({ item }: LinkCardProps) {
   const authUser = useAuthUser()
   const toggleLike = async () => {
     if (!authUser) {
-      openDialog('LIKE_ITEM-LOGIN')
+      openDialog('LIKE_ITEM>>LOGIN')
       return
     }
     if (isLiked) {

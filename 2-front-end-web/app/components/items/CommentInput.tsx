@@ -14,7 +14,7 @@ function CommentInput({}: CommentInputParams) {
 
   const onClick = () => {
     if (!authUser) {
-      openDialog('COMMENT_INPUT-LOGIN')
+      openDialog('COMMENT_INPUT>>LOGIN')
       return
     }
     openCommentInput(null)
