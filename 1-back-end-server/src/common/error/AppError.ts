@@ -2,7 +2,7 @@ export type AppErrorType =
   | 'UserExistsError'
   | 'AuthenticationError'
   | 'UnauthorizedError'
-  | 'BadReqeustError'
+  | 'BadRequestError'
   | 'RefreshFailureError'
   | 'ForbiddenError'
   | 'NotFoundError'
@@ -14,7 +14,7 @@ export type ErrorPayloadOpt<K extends AppErrorType> =
     ? {
         isExpiredToken: boolean
       }
-    : K extends 'BadReqeustError'
+    : K extends 'BadRequestError'
     ? {
         message: string
       }
@@ -43,7 +43,7 @@ const ERRORS_INFO_BY_NAME: Record<AppErrorType, ErrorInfo> = {
     message: 'Unauthorized',
     statusCode: 401,
   },
-  BadReqeustError: {
+  BadRequestError: {
     message: 'Bad reqeust',
     statusCode: 400,
   },

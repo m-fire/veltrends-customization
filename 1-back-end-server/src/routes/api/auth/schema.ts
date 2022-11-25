@@ -58,7 +58,7 @@ const AUTH_SCHEMA = createFastifySchemaMap({
     body: REQ_REFRESH_TOKEN_BODY_SCHEMA,
     response: {
       200: RES_TOKENS_SCHEMA,
-      400: createAppErrorSchema('BadReqeustError'),
+      400: createAppErrorSchema('BadRequestError'),
       401: createAppErrorSchema('RefreshFailureError'),
     },
   },

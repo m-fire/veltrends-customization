@@ -217,7 +217,7 @@ class CommentService {
   private static validateTextLength(text: string) {
     const textLength = text.length
     if (textLength > 300 || textLength === 0) {
-      throw new AppError('BadReqeustError', { message: 'text is invalid' })
+      throw new AppError('BadRequestError', { message: 'text is invalid' })
     }
   }
 }

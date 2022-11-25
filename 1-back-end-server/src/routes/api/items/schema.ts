@@ -116,7 +116,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     response: {
       204: Type.Null(),
-      400: createAppErrorSchema('BadReqeustError'),
+      400: createAppErrorSchema('BadRequestError'),
       403: createAppErrorSchema('ForbiddenError'),
       404: createAppErrorSchema('NotFoundError'),
     },
