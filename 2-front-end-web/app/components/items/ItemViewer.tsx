@@ -38,7 +38,7 @@ function ItemViewer({ item }: ItemViewerProps) {
   const likeCount = itemOverride?.itemStatus.likeCount ?? itemStatus.likeCount
 
   const { like, unlike } = useItemLikeActions()
-  const openDialog = useOpenDialog()
+  const openDialog = useOpenDialog({ gotoLogin: true })
   const authUser = useAuthUser()
 
   const toggleLike = async () => {

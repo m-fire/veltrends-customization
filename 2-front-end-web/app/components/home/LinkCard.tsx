@@ -19,7 +19,7 @@ type LinkCardProps = {
 function LinkCard({ item }: LinkCardProps) {
   // Dialog settings
   const { like, unlike } = useItemLikeActions()
-  const openDialog = useOpenDialog()
+  const openDialog = useOpenDialog({ gotoLogin: true })
   const authUser = useAuthUser()
   const toggleLike = async () => {
     if (!authUser) {

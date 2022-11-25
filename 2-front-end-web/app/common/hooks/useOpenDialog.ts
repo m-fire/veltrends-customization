@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useCallback } from 'react'
-import { getDialogContext } from '~/context/DialogContext'
+import { DialogConfig, getDialogContext } from '~/context/DialogContext'
 import { DialogProps } from '~/components/system/Dialog'
 
 const textConfigMap = {
@@ -15,13 +15,18 @@ const textConfigMap = {
   },
 }
 
-export function useOpenDialog() {
+type ConfigType = keyof typeof textConfigMap
+
+export function useOpenDialog({ gotoLogin = false }: UseOpenDialogParams = {}) {
   const location = useLocation()
   const navigate = useNavigate()
+  const gotoLoginPage = () => navigate(`/auth/login?next=${location.pathname}`)
+
   const { open } = getDialogContext()
 
   const openDialog = useCallback(
-    (type: keyof typeof textConfigMap) => {
+    (type: ConfigType, options: OpenFnParams = {}) => {
+      const { mode = 'YESNO', onConfirm = () => {} } = options
       const textConfig = textConfigMap[type]
       open({
         textConfig,
@@ -31,4 +36,13 @@ export function useOpenDialog() {
     [location, navigate, open],
   )
   return openDialog
+}
+
+type UseOpenDialogParams = {
+  gotoLogin?: boolean
+}
+
+type OpenFnParams = {
+  mode?: DialogConfig['mode']
+  onConfirm?: () => void
 }
