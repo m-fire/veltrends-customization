@@ -14,6 +14,7 @@ import { getCommentListQueryKey } from '~/common/hooks/query/useCommentListQuery
 import { Comment } from '~/common/api/types'
 import produce from 'immer'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
+import useFocus from '~/common/hooks/useFocus'
 
 type CommentInputOverlayParams = {}
 
@@ -63,7 +64,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
     onError() {
       openDialog('PRIVATE_ERROR', {
         mode: 'OK',
-        onConfirm: () => {},
+        onConfirm: () => focusInput(),
       })
     },
   })
@@ -74,6 +75,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
   }, [visible])
 
   const { mutate } = commentsMutation
+  const [inputRef, focusInput] = useFocus<HTMLInputElement>()
   const onReply = () => {
     if (!itemId) return
 
@@ -81,7 +83,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
     if (trimText.length <= 0 || trimText.length > 300) {
       openDialog('INVALID_COMMENT_LENGTH', {
         mode: 'OK',
-        onConfirm: () => {},
+        onConfirm: () => focusInput(),
       })
       return
     }
@@ -109,6 +111,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
           >
             <StyledInput
               autoFocus
+              ref={inputRef}
               value={text}
               placeholder="댓글을 입력하세요"
               onChange={(e) => setText(e.target.value)}
