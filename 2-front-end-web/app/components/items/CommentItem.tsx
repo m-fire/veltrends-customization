@@ -37,7 +37,7 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
   const handleOnReply = () => onReply({ commentId })
 
   return (
-    <Block>
+    <Block data-comment-id={comment.id}>
       {isDeleted ? (
         <>
           <DeletedCommentMessage>· 삭제된 댓글입니다 ·</DeletedCommentMessage>

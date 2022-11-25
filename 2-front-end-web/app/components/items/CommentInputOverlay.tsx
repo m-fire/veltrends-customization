@@ -31,6 +31,11 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
       )
       await queryClient.invalidateQueries(commentListKey)
 
+      setTimeout(() => {
+        // 추가된 새 데이터 로딩완료 후 0.05 초 지연 및 추가된커맨트로 스크롤이동
+        scrollToComment(commentData.id)
+      }, 50)
+
       closeCommentInput()
     },
   })
@@ -76,6 +81,14 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
       </AnimatePresence>
     </>
   )
+
+  function scrollToComment(commentId: number) {
+    const commentContainerEl = document.body.querySelector<HTMLDivElement>(
+      `[data-comment-id="${commentId}"]`,
+    )
+    if (!commentContainerEl) return
+    commentContainerEl.scrollIntoView()
+  }
 }
 export default CommentInputOverlay
 
