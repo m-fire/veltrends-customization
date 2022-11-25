@@ -7,15 +7,14 @@ import LikeButton from '~/components/system/LikeButton'
 import React from 'react'
 import ReplyButton from '~/components/system/ReplyButton'
 import SubcommentList from '~/components/items/SubcommentList'
+import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
 
 export interface CommentItemProps {
   type: CommentType
   comment: Comment
-  toggleLike: (params: ToggleLikeParams) => void
-  onReply: (params: OnReplyParams) => void
 }
 
-function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
+function CommentItem({ comment, type }: CommentItemProps) {
   const {
     id: commentId,
     user,
@@ -27,15 +26,20 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
     isDeleted,
   } = comment
 
-  const pastDistance = useDateDistance(createdAt)
-
   const isRootComment = type === 'root'
   const hasSubcomments = subcommentList.length > 0
   const isLiked = false
 
-  const handleToggleLike = () => toggleLike({ commentId })
-  const handleOnReply = () => onReply({ commentId })
+  const { open: openCommentInput } = useCommentInputStore()
+  const onReply = () => {
+    openCommentInput(commentId)
+  }
 
+  const toggleLike = () => {
+    window.alert('좋아요')
+  }
+
+  const pastDistance = useDateDistance(createdAt)
   return (
     <Block data-comment-id={comment.id}>
       {isDeleted ? (
@@ -46,13 +50,12 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
       ) : (
         <>
           <CommentHead>
-            <Username onClick={handleOnReply}>{user.username}</Username> ·
-            <Time>{pastDistance}</Time>
+            <Username>{user.username}</Username> · <Time>{pastDistance}</Time>
           </CommentHead>
 
           <CommentText>
             {mentionUser != null ? (
-              <Mention onClick={handleOnReply}>@{mentionUser.username}</Mention>
+              <Mention>@{mentionUser.username}</Mention>
             ) : null}
             {text}
           </CommentText>
@@ -62,14 +65,14 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
               <LikeButton
                 size={'small'}
                 isLiked={isLiked}
-                onClick={handleToggleLike}
+                onClick={toggleLike}
               />
               {likeCount !== 0 ? (
                 <LikeCount>{likeCount.toLocaleString()}</LikeCount>
               ) : null}
             </LikeBlock>
 
-            <ReplyBlock onClick={handleOnReply}>
+            <ReplyBlock onClick={onReply}>
               <ReplyButton size={'small'} />
               답글
             </ReplyBlock>
@@ -86,11 +89,7 @@ function CommentItem({ comment, type, toggleLike, onReply }: CommentItemProps) {
     hasSubcomments,
   }: GetSubcommentsOrNull) {
     return isRootComment && hasSubcomments ? (
-      <SubcommentList
-        commentList={subcommentList}
-        toggleLike={toggleLike}
-        onReply={onReply}
-      />
+      <SubcommentList commentList={subcommentList} />
     ) : null
   }
 }
