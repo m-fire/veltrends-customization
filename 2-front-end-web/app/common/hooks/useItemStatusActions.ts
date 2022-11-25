@@ -1,5 +1,4 @@
 import { useCallback, useRef } from 'react'
-import { useItemOverride } from '~/common/context/ItemStatusContext'
 import { likeItem, LikeItemResult, unlikeItem } from '~/common/api/items'
 import { ItemStatus } from '~/common/api/types'
 import { useItemOverrideStoreSetter } from '~/common/hooks/useItemOverrideStore'
