@@ -5,7 +5,7 @@ import { useWriteContext } from '~/context/WriteContext'
 import LabelInput from '~/components/system/LabelInput'
 import { APP_ERRORS_INFO } from '~/common/error/AppError'
 
-const ERROR_CODE_INVALID_URL = APP_ERRORS_INFO.InvalidUrlError.statusCode
+const ERROR_CODE_INVALID_URL = APP_ERRORS_INFO.InvalidUrl.statusCode
 
 function WriteLink() {
   const navigate = useNavigate()

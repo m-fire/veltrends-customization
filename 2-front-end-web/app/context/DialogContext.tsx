@@ -23,17 +23,19 @@ export function DialogContextProvider({
     setVisible(true)
     setConfig(config)
   }, [])
+
   const close = useCallback(() => {
     config?.onClose?.()
     setVisible(false)
   }, [config])
+
   const confirm = useCallback(() => {
-    config?.onConfirm()
+    config?.onConfirm?.()
     setVisible(false)
   }, [config])
 
-  const value = { open }
   const textConfig = config?.textConfig
+  const value = { open }
   return (
     <DialogContext.Provider value={value}>
       {children}
