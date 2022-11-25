@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
-import { useAuthUser } from '~/context/UserContext'
+import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 
 type CommentInputParams = {}

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { Authenticator } from '~/common/api/auth'
 import { Outlet } from '@remix-run/react'
-import { WriteContextProvider } from '~/context/WriteContext'
+import { WriteContextProvider } from '~/common/context/WriteContext'
 
 type WriteProps = {
   children?: ReactNode

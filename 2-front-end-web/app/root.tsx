@@ -12,10 +12,10 @@ import GlobalStyle from '~/GlobalStyle'
 import { Authenticator } from '~/common/api/auth'
 import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
-import { UserContext } from '~/context/UserContext'
-import { ItemOverrideProvider } from '~/context/ItemStatusContext'
+import { UserContext } from '~/common/context/UserContext'
+import { ItemOverrideProvider } from '~/common/context/ItemStatusContext'
 import { SimpleUser } from '~/common/api/types'
-import { DialogContextProvider } from '~/context/DialogContext'
+import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient()

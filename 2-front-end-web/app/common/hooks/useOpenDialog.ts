@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useCallback } from 'react'
-import { DialogConfig, getDialogContext } from '~/context/DialogContext'
+import { DialogConfig, getDialogContext } from '~/common/context/DialogContext'
 import { DialogProps } from '~/components/system/Dialog'
 
 const textConfigMap = {
