@@ -42,7 +42,7 @@ const AUTH_SCHEMA = createFastifySchemaMap({
     body: REQ_AUTH_BODY_SCHEMA,
     response: {
       200: RES_TOKENS_N_USER_SCHEMA,
-      409: createAppErrorSchema('UserExistsError'),
+      409: createAppErrorSchema('UserExists'),
     },
   },
   LOGIN: {
@@ -50,7 +50,7 @@ const AUTH_SCHEMA = createFastifySchemaMap({
     body: REQ_AUTH_BODY_SCHEMA,
     response: {
       200: RES_TOKENS_N_USER_SCHEMA,
-      401: createAppErrorSchema('AuthenticationError'),
+      401: createAppErrorSchema('Authentication'),
     },
   },
   REFRESH_TOKEN: {
@@ -58,8 +58,8 @@ const AUTH_SCHEMA = createFastifySchemaMap({
     body: REQ_REFRESH_TOKEN_BODY_SCHEMA,
     response: {
       200: RES_TOKENS_SCHEMA,
-      400: createAppErrorSchema('BadRequestError'),
-      401: createAppErrorSchema('RefreshFailureError'),
+      400: createAppErrorSchema('BadRequest'),
+      401: createAppErrorSchema('RefreshFailure'),
     },
   },
 })

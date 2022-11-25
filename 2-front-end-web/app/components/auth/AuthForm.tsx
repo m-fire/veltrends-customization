@@ -53,13 +53,13 @@ function AuthForm({ mode, error }: AuthFormProps) {
     if (error == null) return
     let message: string
     switch (error.name) {
-      case 'UserExistsError':
+      case 'UserExists':
         message = '이미 존재하는 계정입니다.'
         break
-      case 'AuthenticationError':
+      case 'Authentication':
         message = '+입력정보를 다시 확인해주세요'
         break
-      case 'UnknownError':
+      case 'Unknown':
         message = '-입력정보를 다시 확인해주세요'
         break
       default:
@@ -91,7 +91,7 @@ function AuthForm({ mode, error }: AuthFormProps) {
         </InputGroup>
 
         <ActionBox>
-          {error?.name === 'AuthenticationError' ? (
+          {error?.name === 'Authentication' ? (
             <ActionErrorMessage>잘못된 계정정보 입니다.</ActionErrorMessage>
           ) : null}
 

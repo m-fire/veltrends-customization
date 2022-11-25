@@ -144,7 +144,7 @@ class CommentService {
         mentionUser: INCLUDE_SIMPLE_USER,
       },
     })
-    if (!comment || comment.deletedAt) throw new AppError('NotFoundError')
+    if (!comment || comment.deletedAt) throw new AppError('NotFound')
     if (!includeSubcomments) return comment
 
     const subcommentList = await this.getSubcommentList(commentId)
@@ -164,7 +164,7 @@ class CommentService {
 
   async updateComment({ commentId, userId, text }: UpdateCommentParams) {
     const comment = await this.getComment(commentId)
-    if (comment!.id !== commentId) new AppError('ForbiddenError')
+    if (comment!.id !== commentId) new AppError('Forbidden')
 
     await db.comment.update({
       where: { id: commentId },
@@ -176,7 +176,7 @@ class CommentService {
 
   async deleteComment({ commentId, userId }: CommentParams) {
     const comment = await this.getComment(commentId)
-    if (comment!.id !== commentId) new AppError('ForbiddenError')
+    if (comment!.id !== commentId) new AppError('Forbidden')
 
     await db.comment.delete({ where: { id: commentId } })
 
@@ -221,7 +221,7 @@ class CommentService {
   private static validateTextLength(text: string) {
     const textLength = text.length
     if (textLength > 300 || textLength === 0) {
-      throw new AppError('BadRequestError', { message: 'text is invalid' })
+      throw new AppError('BadRequest', { message: 'text is invalid' })
     }
   }
 }

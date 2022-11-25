@@ -119,7 +119,7 @@ class ItemService {
       },
     })
 
-    if (!item) throw new AppError('NotFoundError')
+    if (!item) throw new AppError('NotFound')
 
     const itemLikeByIdsOrNull = userId
       ? await this.itemLikeService.itemLikeByIdsMap({
@@ -202,7 +202,7 @@ class ItemService {
       where: { id: itemId },
       include: { user: { select: { id: true } } },
     })
-    if (item?.userId !== userId) throw new AppError('ForbiddenError')
+    if (item?.userId !== userId) throw new AppError('Forbidden')
     return item
   }
 }

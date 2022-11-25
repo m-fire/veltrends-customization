@@ -75,7 +75,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   } catch (e) {
     console.log(`Root.loader() getAccount() catched!`)
     const error = AppError.extract(e)
-    if (error.name === 'UnauthorizedError') {
+    if (error.name === 'Unauthorized') {
       // console.log(error.payload)
     }
 

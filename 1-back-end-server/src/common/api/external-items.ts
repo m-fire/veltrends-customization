@@ -48,7 +48,7 @@ async function extractValidHtmlInfo(url: string): Promise<HtmlInfo> {
 
       return { url, html }
     } catch (e) {
-      throw new AppError('InvalidUrlError')
+      throw new AppError('InvalidUrl')
     }
   }
 
@@ -75,6 +75,6 @@ async function extractValidHtmlInfo(url: string): Promise<HtmlInfo> {
         html: (http as FulfilledHtmlResult).value.data,
       }
     default:
-      throw new AppError('InvalidUrlError')
+      throw new AppError('InvalidUrl')
   }
 }

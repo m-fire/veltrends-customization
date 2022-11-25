@@ -82,7 +82,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     body: REQ_ITEM_CREATE_BODY_SCHEMA,
     response: {
       201: RES_ITEM_SCHEMA,
-      401: createAppErrorSchema('AuthenticationError'),
+      401: createAppErrorSchema('Authentication'),
     },
   },
   GET_ITEM_LIST: {
@@ -98,7 +98,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_ITEM_SCHEMA,
-      404: createAppErrorSchema('NotFoundError'),
+      404: createAppErrorSchema('NotFound'),
     },
   },
   UPDATE_ITEM: {
@@ -107,8 +107,8 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     body: REQ_ITEM_UPDATE_BODY_SCHEMA,
     response: {
       202: RES_ITEM_SCHEMA,
-      403: createAppErrorSchema('ForbiddenError'),
-      404: createAppErrorSchema('NotFoundError'),
+      403: createAppErrorSchema('Forbidden'),
+      404: createAppErrorSchema('NotFound'),
     },
   },
   DELETE_ITEM: {
@@ -116,9 +116,9 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     response: {
       204: Type.Null(),
-      400: createAppErrorSchema('BadRequestError'),
-      403: createAppErrorSchema('ForbiddenError'),
-      404: createAppErrorSchema('NotFoundError'),
+      400: createAppErrorSchema('BadRequest'),
+      403: createAppErrorSchema('Forbidden'),
+      404: createAppErrorSchema('NotFound'),
     },
   },
   LIKE_ITEM: {

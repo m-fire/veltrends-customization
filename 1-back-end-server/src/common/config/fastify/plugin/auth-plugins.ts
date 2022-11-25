@@ -38,10 +38,10 @@ export const globalAuthPlugin = fp(
         }
       } catch (e) {
         if (e instanceof JsonWebTokenError) {
-          if (e.name === 'TokenExpiredError') {
+          if (e.name === 'TokenExpired') {
             // Todo: 만료된 토큰 처리
             // 1. 애러 던지기-> X: 인증이 불필요한 곳에서 애러발생 No!
-            // throw new AppError('TokenExpiredError')
+            // throw new AppError('TokenExpired')
             // 2. FastifyRequest 타입에 추가된 expired 상태 변경
             request.isExpiredToken = true
           }
@@ -73,12 +73,12 @@ export const endpointAuthPlugin = fp(
       // 3. 개별적용 플러그인을 만들어, 특정 라우터에만 적용
 
       if (request.isExpiredToken) {
-        throw new AppError('UnauthorizedError', {
+        throw new AppError('Unauthorized', {
           isExpiredToken: true, // 만료된 토큰이 들어오면, 애러에 만료상태 설정
         })
       }
       if (!request.user) {
-        throw new AppError('UnauthorizedError', {
+        throw new AppError('Unauthorized', {
           isExpiredToken: false, // 인증정보가 없다면 사용자의 만료토큰 비활성
         })
       }

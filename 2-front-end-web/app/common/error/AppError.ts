@@ -1,24 +1,23 @@
 import axios from 'axios'
 
 type AppErrorType =
-  | 'UserExistsError'
-  | 'AuthenticationError'
-  | 'UnauthorizedError'
-  | 'BadRequestError'
-  | 'RefreshFailureError'
-  | 'InvalidUrlError'
-  | 'UnknownError'
+  | 'UserExists'
+  | 'Authentication'
+  | 'Unauthorized'
+  | 'BadRequest'
+  | 'RefreshFailure'
+  | 'InvalidUrl'
+  | 'Unknown'
 
-export type ErrorPayloadOpt<K extends AppErrorType> =
-  K extends 'UnauthorizedError'
-    ? {
-        isExpiredToken: boolean
-      }
-    : K extends 'BadRequestError'
-    ? {
-        message: string
-      }
-    : undefined
+export type ErrorPayloadOpt<K extends AppErrorType> = K extends 'Unauthorized'
+  ? {
+      isExpiredToken: boolean
+    }
+  : K extends 'BadRequest'
+  ? {
+      message: string
+    }
+  : undefined
 
 interface ErrorInfo {
   message: string
@@ -26,31 +25,31 @@ interface ErrorInfo {
 }
 
 export const APP_ERRORS_INFO: Record<AppErrorType, ErrorInfo> = {
-  UserExistsError: {
+  UserExists: {
     message: 'User already exists',
     statusCode: 409,
   },
-  AuthenticationError: {
+  Authentication: {
     message: 'Invalid username password',
     statusCode: 401,
   },
-  UnauthorizedError: {
+  Unauthorized: {
     message: 'Unauthorized',
     statusCode: 401,
   },
-  BadRequestError: {
+  BadRequest: {
     message: 'Bad reqeust',
     statusCode: 400,
   },
-  RefreshFailureError: {
+  RefreshFailure: {
     message: 'Failed to refresh token',
     statusCode: 401,
   },
-  InvalidUrlError: {
+  InvalidUrl: {
     message: 'Invalid URL',
     statusCode: 422,
   },
-  UnknownError: {
+  Unknown: {
     message: 'Unknown error',
     statusCode: 500,
   },
@@ -92,6 +91,6 @@ export default class AppError<
         return data
       }
     }
-    return new AppError('UnknownError')
+    return new AppError('Unknown')
   }
 }

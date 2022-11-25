@@ -23,7 +23,7 @@ class UserService {
 
   async register({ username, password }: AuthBody): Promise<TokensAndUser> {
     const exists = await db.user.findUnique({ where: { username } })
-    if (exists) throw new AppError('UserExistsError')
+    if (exists) throw new AppError('UserExists')
 
     // 패스워드 암호화 및 사용자 저장
     try {
@@ -35,7 +35,7 @@ class UserService {
       // console.log(`UserService.register() newUser, tokens:`, newUser, tokens)
       return { tokens, user: newUser }
     } catch (e) {
-      throw new AppError('UnknownError')
+      throw new AppError('Unknown')
     }
   }
 
@@ -51,7 +51,7 @@ class UserService {
         !existsUser ||
         !(await bcrypt.compare(password, existsUser.passwordHash))
       )
-        throw new AppError('AuthenticationError')
+        throw new AppError('Authentication')
 
       const tokens = await this.tokenService.generateTokens(existsUser)
       // console.log(`UserService.login() existsUser, tokens:`, existsUser, tokens)
@@ -60,7 +60,7 @@ class UserService {
       // AppError 일 경우, 그대로 re-throw
       if (AppError.equals(e)) throw e
       // 알수없는 애러
-      throw new AppError('UnknownError')
+      throw new AppError('Unknown')
     }
   }
 
@@ -95,7 +95,7 @@ class UserService {
       // console.log(`UserService.refreshToken() refreshedTokens:`, refreshedTokens)
       return refreshedTokens
     } catch (e) {
-      throw new AppError('RefreshFailureError')
+      throw new AppError('RefreshFailure')
     }
   }
 }

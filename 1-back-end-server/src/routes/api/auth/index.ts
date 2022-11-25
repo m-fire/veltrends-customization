@@ -38,7 +38,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       const oldToken =
         request.body?.refreshToken ??
         (request.cookies as CookieTokens)?.refresh_token
-      if (!oldToken) throw new AppError('BadRequestError')
+      if (!oldToken) throw new AppError('BadRequest')
 
       const tokens = await userService.refreshToken(oldToken)
       setTokenCookies(reply, tokens)

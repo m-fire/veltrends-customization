@@ -14,9 +14,6 @@ export const PING_POST_SCHEMA: FastifySchema = {
   /* GET 방식은 response 스키마만 정의한다. */
   response: {
     200: { type: 'string', example: '`pong✅` from POST' },
-    401: createAppErrorSchema(
-      'UnauthorizedError',
-      ERROR_PAYLOAD_EXPIRED_SCHEMA,
-    ),
+    401: createAppErrorSchema('Unauthorized', ERROR_PAYLOAD_EXPIRED_SCHEMA),
   },
 }
