@@ -36,9 +36,7 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <DialogContextProvider>
             <UserContext.Provider value={data}>
-              <ItemOverrideProvider>
-                <Outlet />
-              </ItemOverrideProvider>
+              <Outlet />
             </UserContext.Provider>
           </DialogContextProvider>
         </QueryClientProvider>

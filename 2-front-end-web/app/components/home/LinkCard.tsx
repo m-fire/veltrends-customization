@@ -11,6 +11,7 @@ import { useItemOverrideById } from '~/common/context/ItemStatusContext'
 import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
+import { useItemOverrideStateById } from '~/common/hooks/useItemOverrideStore'
 
 type LinkCardProps = {
   item: Item
@@ -27,17 +28,26 @@ function LinkCard({ item }: LinkCardProps) {
       return
     }
     if (isLiked) {
-      await unlike(id, itemStatus)
+      await unlike(itemId, itemStatus)
     } else {
-      await like(id, itemStatus)
+      await like(itemId, itemStatus)
     }
   }
 
   // define Data
-  const { id, thumbnail, title, author, body, user, publisher, createdAt } =
-    item
+  const {
+    id: itemId,
+    thumbnail,
+    title,
+    author,
+    body,
+    user,
+    publisher,
+    createdAt,
+  } = item
   const pastDistance = useDateDistance(createdAt)
-  const itemOverride = useItemOverrideById(id)
+
+  const itemOverride = useItemOverrideStateById(itemId)
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const likeCount = itemOverride?.itemStatus.likeCount ?? itemStatus.likeCount
   const isLiked = itemOverride?.isLiked ?? item.isLiked

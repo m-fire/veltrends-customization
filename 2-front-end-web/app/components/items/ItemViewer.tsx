@@ -13,6 +13,7 @@ import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/components/generate/svg/Earth'
 import Shortcut from '~/components/generate/svg/Shortcut'
 import { Link } from '@remix-run/react'
+import { useItemOverrideStateById } from '~/common/hooks/useItemOverrideStore'
 
 type ItemViewerProps = {
   item: Item
@@ -20,7 +21,7 @@ type ItemViewerProps = {
 
 function ItemViewer({ item }: ItemViewerProps) {
   const {
-    id,
+    id: itemId,
     thumbnail,
     publisher,
     author,
@@ -30,9 +31,9 @@ function ItemViewer({ item }: ItemViewerProps) {
     createdAt,
     link,
   } = item
-  const itemOverride = useItemOverrideById(id)
   const pastDistance = useDateDistance(createdAt)
 
+  const itemOverride = useItemOverrideStateById(itemId)
   const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
   const isLiked = itemOverride?.isLiked ?? item.isLiked
   const likeCount = itemOverride?.itemStatus.likeCount ?? itemStatus.likeCount
@@ -47,9 +48,9 @@ function ItemViewer({ item }: ItemViewerProps) {
       return
     }
     if (isLiked) {
-      await unlike(id, itemStatus)
+      await unlike(itemId, itemStatus)
     } else {
-      await like(id, itemStatus)
+      await like(itemId, itemStatus)
     }
   }
 

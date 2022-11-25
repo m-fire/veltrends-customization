@@ -2,9 +2,10 @@ import { useCallback, useRef } from 'react'
 import { useItemOverride } from '~/common/context/ItemStatusContext'
 import { likeItem, LikeItemResult, unlikeItem } from '~/common/api/items'
 import { ItemStatus } from '~/common/api/types'
+import { useItemOverrideStoreSetter } from '~/common/hooks/useItemOverrideStore'
 
 export function useItemLikeActions() {
-  const { actions } = useItemOverride()
+  const storeSetter = useItemOverrideStoreSetter()
 
   // Item ID 별로 반복요청 취소를 위한 AbortController 관리용 MapRef
   // MDN AbortController ref: https://developer.mozilla.org/ko/docs/Web/API/AbortController
@@ -29,7 +30,7 @@ export function useItemLikeActions() {
         console.error(e)
       }
     },
-    [actions, abortControllerByIds],
+    [storeSetter, abortControllerByIds],
   )
 
   const unlike = useCallback(
@@ -49,7 +50,7 @@ export function useItemLikeActions() {
         console.error(e)
       }
     },
-    [actions, abortControllerByIds],
+    [storeSetter, abortControllerByIds],
   )
 
   return { like, unlike }
@@ -73,12 +74,12 @@ export function useItemLikeActions() {
     const newController = new AbortController()
     abortControllerByIds.set(itemId, newController)
     // action 모델 초기화
-    actions.set(itemId, { itemStatus: initialStatus, isLiked })
+    storeSetter(itemId, { itemStatus: initialStatus, isLiked })
     const result = await apiCaller(itemId, newController)
 
     // 호출직후, 등록된 AbortController 제거 및 action 모델에 변경값 적용
     abortControllerByIds.delete(itemId)
-    actions.set(itemId, { itemStatus: result.itemStatus, isLiked })
+    storeSetter(itemId, { itemStatus: result.itemStatus, isLiked })
   }
 } // end useItemLikeActions()
 
