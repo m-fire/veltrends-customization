@@ -1,30 +1,18 @@
 import styled from 'styled-components'
 import { Comment } from '~/common/api/types'
-import CommentItem, { CommentItemProps } from '~/components/items/CommentItem'
+import CommentItem from '~/components/items/CommentItem'
 import { displayFlex } from '~/components/home/LinkCard'
 import { colors } from '~/common/style/colors'
 
 type SubcommentListProps = {
   commentList: Comment[]
-  toggleLike: CommentItemProps['toggleLike']
-  onReply: CommentItemProps['onReply']
 }
 
-function SubcommentList({
-  commentList,
-  toggleLike,
-  onReply,
-}: SubcommentListProps) {
+function SubcommentList({ commentList }: SubcommentListProps) {
   return (
     <List>
       {commentList.map((comment) => (
-        <CommentItem
-          type="sub"
-          comment={comment}
-          key={comment.id}
-          toggleLike={toggleLike}
-          onReply={onReply}
-        />
+        <CommentItem type="sub" comment={comment} key={comment.id} />
       ))}
       <EndLine />
     </List>
