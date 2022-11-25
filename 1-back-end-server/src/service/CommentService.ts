@@ -39,10 +39,7 @@ class CommentService {
 
     // 최상위 댓글이 아니고, 부모 ID를 갖으며, 남에게 댓글단 경우: 사용자언급 허용!
     const shouldMention =
-      isSubcomment &&
-      rootId != null &&
-      mentionUserId != null &&
-      mentionUserId !== userId
+      isSubcomment && rootId != null && mentionUserId !== userId
 
     const newComment = await db.comment.create({
       data: {
