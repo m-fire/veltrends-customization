@@ -27,6 +27,8 @@ class CommentService {
     text,
     parentCommentId,
   }: CreateCommentParams) {
+    CommentService.validateTextLength(text)
+
     const parentComment =
       parentCommentId != null ? await this.getComment(parentCommentId) : null
     const rootId = parentComment?.parentCommentId
@@ -205,6 +207,13 @@ class CommentService {
       itemId,
       commentCount,
     })
+  }
+
+  private static validateTextLength(text: string) {
+    const textLength = text.length
+    if (textLength > 300 || textLength === 0) {
+      throw new AppError('BadReqeustError', { message: 'text is invalid' })
+    }
   }
 }
 export default CommentService
