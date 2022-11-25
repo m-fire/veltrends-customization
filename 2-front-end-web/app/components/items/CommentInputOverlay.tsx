@@ -12,48 +12,69 @@ import { useItemIdParams } from '~/common/hooks/useItemIdParams'
 import { useCreateCommentMutation } from '~/common/hooks/mutation/useCreateCommentMutation'
 import { getCommentListQueryKey } from '~/common/hooks/query/useCommentListQuery'
 import { Comment } from '~/common/api/types'
+import produce from 'immer'
 
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
   const [text, setText] = useState('')
-  const { visible, close: closeCommentInput } = useCommentInputStore()
+  const commentInputStore = useCommentInputStore()
+
+  const { parentCommentId, close: closeCommentInput } = commentInputStore
   const queryClient = useQueryClient()
   const itemId = useItemIdParams()
 
-  const { mutate, isLoading } = useCreateCommentMutation({
+  const commentsMutation = useCreateCommentMutation({
     async onSuccess(commentData) {
       if (!itemId) return
 
       const commentListKey = getCommentListQueryKey(itemId)
-      queryClient.setQueryData(commentListKey, (prevCommentList?: Comment[]) =>
-        prevCommentList ? [...prevCommentList, commentData] : [commentData],
+      queryClient.setQueryData(
+        commentListKey,
+        (prevList: Comment[] | undefined) => {
+          if (prevList == null) return undefined
+          if (parentCommentId == null) return prevList.concat(commentData)
+
+          const updatedList = produce(prevList, (draft) => {
+            const rootComment =
+              // first find from 0 level comments
+              draft.find((c) => c.id === parentCommentId) ??
+              // next, find from subcommentList
+              draft.find((c) =>
+                c.subcommentList?.find((sc) => sc.id === parentCommentId),
+              )
+            rootComment?.subcommentList?.push(commentData)
+          })
+          return updatedList
+        },
       )
       await queryClient.invalidateQueries(commentListKey)
 
       setTimeout(() => {
         // 추가된 새 데이터 로딩완료 후 0.05 초 지연 및 추가된커맨트로 스크롤이동
         scrollToComment(commentData.id)
-      }, 50)
+      }, 0)
 
       closeCommentInput()
     },
   })
 
-  const onClick = () => {
+  const { mutate } = commentsMutation
+  const onReply = () => {
     if (!itemId) return
     mutate({
       itemId,
+      parentCommentId: parentCommentId ?? undefined,
       text,
     })
   }
 
+  const { visible } = commentInputStore
   useEffect(() => {
-    if (visible) {
-      setText('')
-    }
+    if (visible) setText('')
   }, [visible])
 
+  const { isLoading } = commentsMutation
   return (
     <>
       <Overlay onClick={closeCommentInput} visible={visible} />
@@ -73,7 +94,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
               placeholder="댓글을 입력하세요"
               onChange={(e) => setText(e.target.value)}
             />
-            <TransparentButton onClick={onClick} disabled={isLoading}>
+            <TransparentButton onClick={onReply} disabled={isLoading}>
               {isLoading ? <StyledSpinner /> : <StyledSpeechBubble />}
             </TransparentButton>
           </Footer>
