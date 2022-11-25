@@ -76,10 +76,10 @@ class CommentService {
         mentionUser: INCLUDE_SIMPLE_USER,
       },
     })
-    // normalize ation 가공
+    // comment list 가공
     const normalizedList = this.normalizeDeletedCommentInList(commentList)
-    const composedCommentList = await this.composeSubcomments(normalizedList)
-    return composedCommentList
+    const composedList = await this.composeSubcommentList(normalizedList)
+    return composedList
   }
 
   private normalizeDeletedCommentInList(comments: Comment[]): Comment[] {
@@ -109,7 +109,7 @@ class CommentService {
     })
   }
 
-  private async composeSubcomments(comments: Comment[]) {
+  private async composeSubcommentList(comments: Comment[]) {
     const rootComments = comments.filter((c) => c.parentCommentId == null)
     const commentsByParentIdMap = new Map<number, Comment[]>()
 
@@ -181,7 +181,7 @@ class CommentService {
 
   async likeComment({ commentId, userId }: LikeCommentParams) {
     const likeCount = await this.commentLikeService.like({ commentId, userId })
-    await this.syncLikeCount({ commentId, likeCount })
+    await CommentService.syncLikeCount({ commentId, likeCount })
     return likeCount
   }
 
@@ -190,11 +190,14 @@ class CommentService {
       commentId,
       userId,
     })
-    await this.syncLikeCount({ commentId, likeCount })
+    await CommentService.syncLikeCount({ commentId, likeCount })
     return likeCount
   }
 
-  private async syncLikeCount({ commentId, likeCount }: UpdateLikeCountParams) {
+  private static async syncLikeCount({
+    commentId,
+    likeCount,
+  }: UpdateLikeCountParams) {
     await db.comment.update({
       data: { likeCount },
       where: { id: commentId },
