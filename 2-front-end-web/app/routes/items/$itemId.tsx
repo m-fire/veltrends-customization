@@ -6,7 +6,7 @@ import { Item, Comment } from '~/common/api/types'
 import BasicLayout from '~/components/layout/BasicLayout'
 import ItemViewer from '~/components/items/ItemViewer'
 import CommentList from '~/components/items/CommentList'
-import { useCommentsQuery } from '~/common/hooks/query/useCommentsQuery'
+import { useCommentListQuery } from '~/common/hooks/query/useCommentListQuery'
 import CommentInputOverlay from '~/components/items/CommentInputOverlay'
 
 type ItemProps = {}
@@ -20,7 +20,7 @@ function Item({}: ItemProps) {
   // 따라서 react-query 의 캐싱기능과 함께 분기로직을 줄이고자 도입하게 되었다.
   // 물론 Remix loader 를 재실행하는 것도 한 방법이지만, 불필요한 호출을 줄이기 위한 방법으로
   // react-query 를 통해 로직간소화를 하게 되었다.
-  const { data: commentList } = useCommentsQuery(loaderData.item.id, {
+  const { data: commentList } = useCommentListQuery(loaderData.item.id, {
     initialData: loaderData.commentList,
   })
 

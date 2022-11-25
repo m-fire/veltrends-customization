@@ -1,16 +1,21 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { getCommentList } from '~/common/api/items$comments'
 
-export function useCommentsQuery(
+export function useCommentListQuery(
   itemId: number,
   options: UseQueryOptionsOf<typeof getCommentList> = {},
 ) {
-  return useQuery(extractKey(itemId), () => getCommentList(itemId), options)
+  return useQuery(
+    getCommentListQueryKey(itemId),
+    () => getCommentList(itemId),
+    options,
+  )
 }
 
-const extractKey = (itemId: number) => ['comments', itemId]
-
-useCommentsQuery.extractKey = extractKey
+export const getCommentListQueryKey = (itemId: number) => [
+  'commentList',
+  itemId,
+]
 
 // types
 

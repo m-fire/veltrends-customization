@@ -22,6 +22,9 @@ const GlobalStyle = createGlobalStyle`
 		padding: 0;
 		margin: 0;
 	}
+	button, input {
+		font-family: inherit;
+	}
 
 	/* 컨탠츠 Full-height 설정 방법 2가지 */
 
