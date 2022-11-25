@@ -4,11 +4,16 @@ import { URL_ITEMS } from '~/common/api/items'
 
 const URL_COMMENTS = '/comments'
 
-export async function createComment({ itemId, text }: CreateCommentParams) {
+export async function createComment({
+  itemId,
+  parentCommentId,
+  text,
+}: CreateCommentParams) {
   const response = await client.post<Comment>(
     `${URL_ITEMS}/${itemId}${URL_COMMENTS}`,
     {
       itemId,
+      parentCommentId,
       text,
     },
   )
@@ -26,5 +31,6 @@ export async function getCommentList(itemId: number) {
 
 type CreateCommentParams = {
   itemId: number
+  parentCommentId?: number
   text: string
 }
