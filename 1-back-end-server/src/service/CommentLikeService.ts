@@ -35,6 +35,29 @@ class CommentLikeService {
     return likeCount
   }
 
+  async getCommentLikeList({ userId, commentIds }: GetCommentLikeListParams) {
+    return await db.commentLike.findMany({
+      where: {
+        userId,
+        commentId: { in: commentIds },
+      },
+      include: { comment: { select: { id: true } } },
+    })
+  }
+
+  async getCommentLikeOrNull({ commentId, userId }: GetCommentLikeOrNull) {
+    if (userId == null) return null
+
+    return await db.commentLike.findUnique({
+      where: {
+        commentId_userId: {
+          commentId,
+          userId,
+        },
+      },
+    })
+  }
+
   private async countCommentLike(commentId: number) {
     const likeCount = await db.commentLike.count({ where: { commentId } })
     return likeCount
@@ -47,3 +70,10 @@ export default CommentLikeService
 type LikeParams = CommentParams
 
 type UnlikeParams = LikeParams
+
+type GetCommentLikeListParams = { userId: number; commentIds: number[] }
+
+type GetCommentLikeOrNull = {
+  commentId: number
+  userId: number | null
+}
