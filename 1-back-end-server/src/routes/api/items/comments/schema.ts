@@ -31,12 +31,13 @@ const COMMENT_SCHEMA = Type.Object({
   updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
   user: RES_AUTH_USER_INFO_SCHEMA,
   mentionUser: Type.Optional(Nullable(RES_AUTH_USER_INFO_SCHEMA)),
+  isDeleted: Type.Boolean({ default: false }),
+  isLiked: Type.Boolean({ default: false }),
 })
 
 const RES_COMMENT_SCHEMA = Type.Object({
   ...COMMENT_SCHEMA.properties,
   subcommentList: Type.Optional(Type.Array(COMMENT_SCHEMA)),
-  isDeleted: Type.Boolean({ default: false }),
 })
 
 const RES_COMMENT_LIKE_SCHEMA = Type.Object({
