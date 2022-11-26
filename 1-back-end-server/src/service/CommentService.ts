@@ -29,10 +29,10 @@ class CommentService {
   }: CreateCommentParams) {
     CommentService.validateTextLength(text)
 
-    const parentComment =
-      parentCommentId != null ? await this.getComment(parentCommentId) : null
-
-    const isSubcomment = parentComment != null
+    const parentComment = await this.getCommentOrNull({
+      commentId: parentCommentId,
+      userId,
+    })
     const rootId = parentComment?.parentCommentId
     const parentId = rootId ?? parentCommentId
     const mentionUserId = parentComment?.userId
@@ -68,7 +68,7 @@ class CommentService {
     return { ...newComment, isDeleted: false, subcommentList: [] }
   }
 
-  async getCommentList(itemId: number) {
+  async getCommentList({ itemId, userId }: GetCommentListParams) {
     const commentList = await db.comment.findMany({
       where: { itemId },
       orderBy: { id: 'asc' },
@@ -133,7 +133,17 @@ class CommentService {
     return composedList
   }
 
-  async getComment(commentId: number, includeSubcomments: boolean = false) {
+  async getCommentOrNull({
+    commentId,
+    withSubcomments = false,
+    userId,
+  }: GetCommentParams) {
+    if (commentId == null) {
+      throw new AppError('BadRequest', {
+        message: `not a valid request`,
+      })
+    }
+
     const comment = await db.comment.findUnique({
       where: { id: commentId },
       include: {
@@ -148,9 +158,15 @@ class CommentService {
     return { ...comment, subcommentList }
   }
 
-  async getSubcommentList(parentId: number) {
-    return db.comment.findMany({
-      where: { parentCommentId: parentId },
+  async getSubcommentList({
+    parentCommentId,
+    userId,
+  }: GetSubcommentListParams) {
+    const subcommentList = await db.comment.findMany({
+      where: {
+        parentCommentId,
+        deletedAt: null,
+      },
       orderBy: { id: 'asc' },
       include: {
         user: INCLUDE_SIMPLE_USER,
@@ -168,7 +184,11 @@ class CommentService {
       data: { text },
       include: { user: INCLUDE_SIMPLE_USER },
     })
-    return this.getComment(commentId, true)
+    return this.getCommentOrNull({
+      commentId,
+      withSubcomments: true,
+      userId: null,
+    })
   }
 
   async deleteComment({ commentId, userId }: CommentParams) {
@@ -230,7 +250,23 @@ type CreateCommentParams = {
   itemId: number
   userId: number
   text: string
-  parentCommentId?: number
+  parentCommentId: number | null
+}
+
+type GetCommentListParams = {
+  itemId: number
+  userId: number | null
+}
+
+type GetCommentParams = {
+  commentId: number | null
+  withSubcomments?: boolean
+  userId: number | null
+}
+
+type GetSubcommentListParams = {
+  parentCommentId: number
+  userId: number | null
 }
 
 export type CommentParams = {
