@@ -1,5 +1,5 @@
 import db from '../common/config/prisma/db-client.js'
-import { CommentParams } from './CommentService.js'
+import { DeleteCommentParams } from './CommentService.js'
 
 class CommentLikeService {
   private static instance: CommentLikeService
@@ -21,8 +21,7 @@ class CommentLikeService {
     } catch (e) {
       console.log(`CommentLikeService.like() catch error`, { e })
     }
-    const likeCount = await this.countCommentLike(commentId)
-    return likeCount
+    return CommentLikeService.countCommentLike(commentId)
   }
 
   async unlike({ commentId, userId }: UnlikeParams) {
@@ -31,8 +30,7 @@ class CommentLikeService {
         where: { commentId_userId: { commentId, userId } },
       })
     } catch (e) {}
-    const likeCount = await this.countCommentLike(commentId)
-    return likeCount
+    return CommentLikeService.countCommentLike(commentId)
   }
 
   async getCommentLikeList({ userId, commentIds }: GetCommentLikeListParams) {
@@ -58,16 +56,15 @@ class CommentLikeService {
     })
   }
 
-  private async countCommentLike(commentId: number) {
-    const likeCount = await db.commentLike.count({ where: { commentId } })
-    return likeCount
+  private static async countCommentLike(commentId: number) {
+    return await db.commentLike.count({ where: { commentId } })
   }
 }
 export default CommentLikeService
 
 // types
 
-type LikeParams = CommentParams
+type LikeParams = DeleteCommentParams
 
 type UnlikeParams = LikeParams
 

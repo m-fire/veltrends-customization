@@ -25,7 +25,7 @@ class CommentService {
     itemId,
     userId,
     text,
-    parentCommentId,
+    parentCommentId = null,
   }: CreateCommentParams) {
     CommentService.validateTextLength(text)
 
@@ -35,6 +35,7 @@ class CommentService {
     })
     const rootId = parentComment?.parentCommentId
     const parentId = rootId ?? parentCommentId
+    const isSubcomment = parentComment != null && parentId != null
     const mentionUserId = parentComment?.userId
 
     // 최상위 댓글이 아니고, 부모 ID를 갖으며, 남에게 댓글단 경우: 사용자언급 허용!
@@ -64,7 +65,6 @@ class CommentService {
     }
 
     await this.syncCommentCount(itemId)
-
     return { ...newComment, isDeleted: false, subcommentList: [] }
   }
 
@@ -136,7 +136,8 @@ class CommentService {
       subComments.push(c)
       commentsByParentIdMap.set(c.parentCommentId, subComments)
     })
-    const composedList = rootComments
+
+    return rootComments
       .map((c) => ({
         ...c,
         subcommentList: commentsByParentIdMap.get(c.id) ?? [],
@@ -144,8 +145,6 @@ class CommentService {
       .filter((c) => {
         return c.deletedAt == null || c.subcommentList.length > 0
       })
-
-    return composedList
   }
 
   async getCommentOrNull({
@@ -166,8 +165,11 @@ class CommentService {
         mentionUser: INCLUDE_SIMPLE_USER,
       },
     })
+
+    // 댓글이 없거나, 지워진 댓글이면 찾을수없음
     if (!comment || comment.deletedAt) throw new AppError('NotFound')
-    if (!includeSubcomments) return comment
+    // 하위댓글목록이 필요없다면 없다면 단일댓글 반환
+    if (!withSubcomments) return comment
 
     const subcommentList = await this.getSubcommentList({
       parentCommentId: commentId,
@@ -214,8 +216,8 @@ class CommentService {
   }
 
   async updateComment({ commentId, userId, text }: UpdateCommentParams) {
-    const comment = await this.getComment(commentId)
-    if (comment!.id !== commentId) new AppError('Forbidden')
+    const comment = await db.comment.findFirst({ where: { id: commentId } })
+    if (comment != null && comment.userId !== userId) new AppError('Forbidden')
 
     await db.comment.update({
       where: { id: commentId },
@@ -229,13 +231,12 @@ class CommentService {
     })
   }
 
-  async deleteComment({ commentId, userId }: CommentParams) {
-    const comment = await this.getComment(commentId)
-    if (comment!.id !== commentId) new AppError('Forbidden')
+  async deleteComment({ commentId, userId }: DeleteCommentParams) {
+    const comment = await db.comment.findFirst({ where: { id: commentId } })
+    if (comment?.userId !== userId) new AppError('Forbidden')
 
     await db.comment.delete({ where: { id: commentId } })
-
-    await this.syncCommentCount(comment.itemId)
+    await this.syncCommentCount(comment!.itemId)
   }
 
   async likeComment({ commentId, userId }: LikeCommentParams) {
@@ -275,7 +276,7 @@ class CommentService {
 
   private static validateTextLength(text: string) {
     const textLength = text.length
-    if (textLength > 300 || textLength === 0) {
+    if (textLength === 0 || textLength > 300) {
       throw new AppError('BadRequest', { message: 'text is invalid' })
     }
   }
@@ -327,12 +328,12 @@ type GetSubcommentListParams = {
   userId: number | null
 }
 
-export type CommentParams = {
+export type DeleteCommentParams = {
   commentId: number
   userId: number
 }
 
-type UpdateCommentParams = CommentParams & {
+type UpdateCommentParams = DeleteCommentParams & {
   text: string
 }
 
