@@ -21,7 +21,7 @@ function CommentItem({ comment, type }: CommentItemProps) {
     text,
     createdAt,
     likeCount,
-    subcommentList = [],
+    subcommentList,
     mentionUser,
     isDeleted,
   } = comment

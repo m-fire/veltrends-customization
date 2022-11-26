@@ -54,6 +54,6 @@ export interface Comment {
   user: SimpleUser
   mentionUser: SimpleUser | null
   /* Subcomment 의 subcommentList 는 undefined 인 경우를 위한 `?` 처리 */
-  subcommentList?: Comment[]
+  subcommentList: Comment[]
   isDeleted: boolean
 }
