@@ -3,6 +3,8 @@ import { createAuthRoute } from '../../../../common/config/fastify/plugin/auth-p
 import { CommentsRequestMap } from './types.js'
 import COMMENTS_SCHEMA from './schema.js'
 import CommentService from '../../../../service/CommentService.js'
+import AppError from '../../../../common/error/AppError.js'
+import { AuthUserInfo } from '../../auth/types.js'
 
 export const commentsRoute: FastifyPluginAsync = async (fastify) => {
   const commentService = CommentService.getInstance()
@@ -44,6 +46,8 @@ export const commentsRoute: FastifyPluginAsync = async (fastify) => {
   fastify.register(commentsAuthRoute)
 }
 
+// AuthRoute
+
 const commentsAuthRoute = createAuthRoute(async (fastify) => {
   const commentService = CommentService.getInstance()
 
@@ -51,18 +55,17 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/',
     { schema: COMMENTS_SCHEMA.CREATE_COMMENT },
     async (request, reply) => {
-      const {
-        params: { id: itemId },
-        body: { text, parentCommentId },
-        user,
-      } = request
-      reply.status(201)
-      return await commentService.createComment({
-        itemId,
-        userId: user!.id,
-        text,
-        parentCommentId: parentCommentId ?? undefined,
+      const { id: userId } = getValidUser(request.user)
+
+      const newComment = await commentService.createComment({
+        itemId: request.params.id,
+        userId,
+        text: request.body.text,
+        parentCommentId: request.body.parentCommentId ?? null,
       })
+
+      reply.status(201)
+      return newComment
     },
   )
 
@@ -70,17 +73,16 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId',
     { schema: COMMENTS_SCHEMA.UPDATE_COMMENT },
     async (request, reply) => {
-      const {
-        params: { commentId },
-        body: { text },
-        user,
-      } = request
-      reply.status(202)
-      return commentService.updateComment({
-        commentId,
-        userId: user!.id,
-        text,
+      const { id: userId } = getValidUser(request.user)
+
+      const updatedComment = await commentService.updateComment({
+        commentId: request.params.commentId,
+        userId,
+        text: request.body.text,
       })
+
+      reply.status(202)
+      return updatedComment
     },
   )
 
@@ -88,12 +90,13 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId',
     { schema: COMMENTS_SCHEMA.DELETE_COMMENT },
     async (request, reply) => {
-      const {
-        params: { commentId },
-        user,
-      } = request
+      const { id: userId } = getValidUser(request.user)
+
       reply.status(204)
-      await commentService.deleteComment({ commentId, userId: user!.id })
+      await commentService.deleteComment({
+        commentId: request.params.commentId,
+        userId,
+      })
     },
   )
 
@@ -101,15 +104,11 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId/likes',
     { schema: COMMENTS_SCHEMA.LIKE_COMMENT },
     async (request, reply) => {
-      const {
-        params: { commentId },
-        user,
-      } = request
+      const { id: userId } = getValidUser(request.user)
+      const { commentId } = request.params
+
+      const likeCount = await commentService.likeComment({ commentId, userId })
       reply.status(202)
-      const likeCount = await commentService.likeComment({
-        commentId,
-        userId: user!.id,
-      })
       return { id: commentId, likeCount }
     },
   )
@@ -118,16 +117,20 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId/likes',
     { schema: COMMENTS_SCHEMA.UNLIKE_COMMENT },
     async (request, reply) => {
-      const {
-        params: { commentId },
-        user,
-      } = request
-      reply.status(202)
+      const { id: userId } = getValidUser(request.user)
+      const { commentId } = request.params
+
       const likeCount = await commentService.unlikeComment({
         commentId,
-        userId: user!.id,
+        userId,
       })
+      reply.status(202)
       return { id: commentId, likeCount }
     },
   )
 })
+
+function getValidUser(user: AuthUserInfo | null): AuthUserInfo {
+  if (user == null || user?.id == null) throw new AppError('Forbidden')
+  return user
+}
