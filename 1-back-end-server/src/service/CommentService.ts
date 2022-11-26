@@ -77,10 +77,25 @@ class CommentService {
         mentionUser: INCLUDE_SIMPLE_USER,
       },
     })
-    // comment list 가공
-    const normalizedList = this.normalizeDeletedCommentInList(commentList)
-    const composedList = await this.composeSubcommentList(normalizedList)
-    return composedList
+
+    // 댓글들의 ID 목록으로, commentId 당 commentLike 맵을 만들어,
+    const commentIds = commentList.map((c) => c.id)
+    const commentLikedMap = await this.getCommentLikeMapOrEmpty({
+      commentIds,
+      userId,
+    })
+    // commentLike 된 댓글들 마다 isLiked 설정
+    const commentListWithIsLiked = commentList.map((c) => ({
+      ...c,
+      isLiked: !!commentLikedMap[c.id],
+    }))
+    // deleted comment 노멀라이징
+    const normalizedList = this.normalizeDeletedCommentInList(
+      commentListWithIsLiked,
+    )
+
+    // 최종적으로 가공된 댓글목록 내보내기
+    return await this.composeSubcommentList(normalizedList)
   }
 
   private normalizeDeletedCommentInList(comments: Comment[]): Comment[] {
@@ -154,8 +169,21 @@ class CommentService {
     if (!comment || comment.deletedAt) throw new AppError('NotFound')
     if (!includeSubcomments) return comment
 
-    const subcommentList = await this.getSubcommentList(commentId)
-    return { ...comment, subcommentList }
+    const subcommentList = await this.getSubcommentList({
+      parentCommentId: commentId,
+      userId,
+    })
+    const commentLike = await this.commentLikeService.getCommentLikeOrNull({
+      commentId,
+      userId,
+    })
+
+    return {
+      ...comment,
+      isLiked: commentLike != null,
+      isDeleted: false,
+      subcommentList,
+    }
   }
 
   async getSubcommentList({
@@ -173,6 +201,16 @@ class CommentService {
         mentionUser: INCLUDE_SIMPLE_USER,
       },
     })
+
+    const commentLikedMapOrEmpty = await this.getCommentLikeMapOrEmpty({
+      userId,
+      commentIds: subcommentList.map((sc) => sc.id),
+    })
+
+    return subcommentList.map((sc) => ({
+      ...sc,
+      isLiked: commentLikedMapOrEmpty[sc.id] != null,
+    }))
   }
 
   async updateComment({ commentId, userId, text }: UpdateCommentParams) {
@@ -241,6 +279,26 @@ class CommentService {
       throw new AppError('BadRequest', { message: 'text is invalid' })
     }
   }
+
+  private async getCommentLikeMapOrEmpty({
+    commentIds,
+    userId,
+  }: GetCommentLikeMapParams) {
+    if (userId == null) return {}
+
+    const commentLikeList = await this.commentLikeService.getCommentLikeList({
+      userId,
+      commentIds,
+    })
+
+    type CommentLikeElement = typeof commentLikeList[0]
+    const commentLikeByIdMap = commentLikeList.reduce((acc, commentLike) => {
+      acc[commentLike.commentId] = commentLike
+      return acc
+    }, {} as Record<number, CommentLikeElement>)
+
+    return commentLikeByIdMap
+  }
 }
 export default CommentService
 
@@ -286,3 +344,8 @@ export type LikeCommentParams = {
 }
 
 export type UnlikeCommentParams = LikeCommentParams
+
+type GetCommentLikeMapParams = {
+  userId: number | null
+  commentIds: number[]
+}
