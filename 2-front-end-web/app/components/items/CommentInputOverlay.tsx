@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useQueryClient } from '@tanstack/react-query'
 import Overlay from '../system/Overlay'
 import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
-import { displayFlex } from '~/components/home/LinkCard'
 import { SpeechBubble } from '~/components/generate/svg'
 import { colors } from '~/common/style/colors'
 import { useEffect, useState } from 'react'
@@ -15,6 +14,7 @@ import { Comment } from '~/common/api/types'
 import produce from 'immer'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import useFocus from '~/common/hooks/useFocus'
+import { displayFlex } from '~/common/style/styled'
 
 type CommentInputOverlayParams = {}
 

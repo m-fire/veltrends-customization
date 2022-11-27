@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css, CSSProperties } from 'styled-components'
+import styled from 'styled-components'
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Item } from '~/common/api/types'
@@ -11,6 +11,7 @@ import { useLikeItemAction } from '~/common/hooks/useActionOfItem'
 import { useOverrideItemById } from '~/common/hooks/store/useOverrideItemStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
+import { displayFlex, fontStyles } from '~/common/style/styled'
 
 type LinkCardProps = {
   item: Item
@@ -195,70 +196,3 @@ const UserInfo = styled.div`
     color: ${colors.grey3};
   }
 `
-
-export function fontStyles({
-  size,
-  weight,
-  color,
-  lineHeight,
-  letterSpacing,
-}: FontStylesParams) {
-  return css`
-    ${size &&
-    css`
-      font-size: ${size};
-    `}
-    ${weight &&
-    css`
-      font-weight: ${weight};
-    `}
-    ${color &&
-    css`
-      color: ${color};
-    `}
-    ${lineHeight &&
-    css`
-      line-height: ${lineHeight};
-    `}
-    ${letterSpacing &&
-    css`
-      letter-spacing: ${letterSpacing};
-    `}
-  `
-}
-type FontStylesParams = {
-  size?: CSSProperties['fontSize'] | null
-  weight?: CSSProperties['fontWeight'] | null
-  color?: CSSProperties['color'] | null
-  lineHeight?: CSSProperties['lineHeight'] | null
-  letterSpacing?: CSSProperties['letterSpacing'] | null
-}
-
-export function displayFlex<OptKey extends keyof CSSProperties>({
-  direction,
-  alignItems,
-  justifyContent,
-}: FlexStylesParams = {}) {
-  return css`
-    display: flex;
-
-    ${direction &&
-    css`
-      flex-direction: ${direction};
-    `}
-    ${alignItems &&
-    css`
-      align-items: ${alignItems};
-    `}
-    ${justifyContent &&
-    css`
-      justify-content: ${justifyContent};
-    `}
-  `
-}
-
-type FlexStylesParams = {
-  direction?: CSSProperties['flexDirection'] | null
-  alignItems?: CSSProperties['alignItems'] | null
-  justifyContent?: CSSProperties['justifyContent'] | null
-}

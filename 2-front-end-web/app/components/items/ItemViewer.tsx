@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/components/system/LikeButton'
-import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { useDateDistance } from '~/common/hooks/useDateDistance'
 import { useLikeItemAction } from '~/common/hooks/useActionOfItem'
 import { useOverrideItemById } from '~/common/hooks/store/useOverrideItemStore'
@@ -13,6 +12,7 @@ import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/components/generate/svg/Earth'
 import Shortcut from '~/components/generate/svg/Shortcut'
 import { Link } from '@remix-run/react'
+import { displayFlex, fontStyles } from '~/common/style/styled'
 
 type ItemViewerProps = {
   item: Item

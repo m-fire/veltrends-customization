@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
+import { displayFlex, fontStyles } from '~/common/style/styled'
 
 type CommentInputParams = {}
 

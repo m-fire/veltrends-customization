@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import { Comment } from '~/common/api/types'
 import CommentInput from '~/components/items/CommentInput'
-import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { colors } from '~/common/style/colors'
 import CommentElement from '~/components/items/CommentElement'
+import { displayFlex, fontStyles } from '~/common/style/styled'
 
 type CommentListProps = {
   commentList: Comment[]

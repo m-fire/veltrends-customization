@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { Comment } from '~/common/api/types'
 import { useDateDistance } from '~/common/hooks/useDateDistance'
-import { displayFlex } from '~/components/home/LinkCard'
 import { colors } from '~/common/style/colors'
 import LikeButton from '~/components/system/LikeButton'
 import React from 'react'
@@ -14,6 +13,7 @@ import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/common/hooks/useItemIdParams'
 import AppError from '~/common/error/AppError'
+import { displayFlex } from '~/common/style/styled'
 
 export interface CommentElementProps {
   type: CommentType
