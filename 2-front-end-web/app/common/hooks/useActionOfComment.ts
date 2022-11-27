@@ -1,96 +1,107 @@
 import { useCallback, useRef } from 'react'
-import { likeComment, LikeCommentResult, unlikeComment } from '~/common/api/items$comments'
-import { useOverrideCommendSetter } from '~/common/hooks/store/useOverrideCommentStore'
-import { ItemStatus } from '~/common/api/types';
-import { likeItem, LikeItemResult, unlikeItem } from '~/common/api/items';
+import { likeComment, unlikeComment } from '~/common/api/items$comments'
+import {
+  OverrideCommentState,
+  useOverrideCommendSetter,
+} from '~/common/hooks/store/useOverrideCommentStore'
+import AppError from '~/common/error/AppError'
 
-export function useCommentLikeActions() {
+export function useLikeCommentAction() {
   const storeSetter = useOverrideCommendSetter()
 
-  const abortControllerByIds = useRef<Map<number, AbortController>>(
-      new Map(),
+  // Item ID 별로 반복요청 취소를 위한 AbortController 관리용 MapRef
+  // MDN AbortController ref: https://developer.mozilla.org/ko/docs/Web/API/AbortController
+  const abortControllerMap = useRef<Map<number, AbortController>>(
+    new Map(),
   ).current
 
   const like = useCallback(
-      async (itemId: number, initialStatus: ) => {
-        try {
-          await applyIsLikeToResult({
-            itemId,
-            initialStatus: {
-              itemId,
-              commentId,
-            },
+    async ({ itemId, commentId, prevLikeCount }: LikeCommentActionParams) => {
+      try {
+        await applyLikeAction({
+          apiCaller: likeComment,
+          targetInfo: { itemId, commentId },
+          overrideState: {
+            likeCount: prevLikeCount + 1,
             isLiked: true,
-            apiCaller: likeItem,
-          })
-        } catch (e) {
-          // todo: handler error...
-          console.error(e)
-        }
-      },
-      [storeSetter, abortControllerByIds],
+          },
+        })
+      } catch (e) {
+        // todo: handler error...
+        console.error(e)
+      }
+    },
+    [storeSetter, abortControllerMap],
   )
 
   const unlike = useCallback(
-      async (itemId: number, initialStatus: ItemStatus) => {
-        try {
-          await applyIsLikeToResult({
-            itemId,
-            initialStatus: {
-              ...initialStatus,
-              likeCount: initialStatus.likeCount - 1,
-            },
+    async ({ itemId, commentId, prevLikeCount }: UnlikeCommentActionParams) => {
+      try {
+        await applyLikeAction({
+          apiCaller: unlikeComment,
+          targetInfo: { itemId, commentId },
+          overrideState: {
+            likeCount: prevLikeCount - 1,
             isLiked: false,
-            apiCaller: unlikeItem,
-          })
-        } catch (e) {
-          // todo: handler error...
-          console.error(e)
-        }
-      },
-      [storeSetter, abortControllerByIds],
+          },
+        })
+      } catch (e) {
+        // todo: handler error...
+        console.error(e)
+      }
+    },
+    [storeSetter, abortControllerMap],
   )
 
-  return { like, unlike }
+  return { likeComment: like, unlikeComment: unlike }
 
   /**
    * 사용자가 like API 요청->응답 중간에 like 를 여러번 재요청 할 경우,
    * API 반복호출을 막고, 첫번째 요청에 대한 결과만 반영.
    * 참고: Axios cancel 이 더 나은 방법일 수 있다.
    */
-  async function applyIsLikeToResult({
-    itemId,
-    initialStatus,
-    isLiked,
+  async function applyLikeAction({
     apiCaller,
-  }: ApplyLikeItemResultParams) {
+    targetInfo: { itemId, commentId },
+    overrideState,
+  }: ApplyLikeActionParams) {
     // 직전에 API 호출이 있었다면, 직전 호출 취소!
-    const prevController = abortControllerByIds.get(itemId)
+    const prevController = abortControllerMap.get(commentId)
     prevController?.abort()
 
     // 첫 API호출 시 AbortController 세팅
-    const newController = new AbortController()
-    abortControllerByIds.set(itemId, newController)
+    const controller = new AbortController()
+    abortControllerMap.set(commentId, controller)
     // action 모델 초기화
-    storeSetter(itemId, { itemStatus: initialStatus, isLiked })
-    const result = await apiCaller(itemId, newController)
+    storeSetter(commentId, { ...overrideState })
+    const result = await apiCaller({ itemId, commentId }, controller)
+
+    if (result.id !== commentId) throw new AppError('Unknown')
 
     // 호출직후, 등록된 AbortController 제거 및 action 모델에 변경값 적용
-    abortControllerByIds.delete(itemId)
-    storeSetter(itemId, { itemStatus: result.itemStatus, isLiked })
+    abortControllerMap.delete(commentId)
+    storeSetter(commentId, {
+      likeCount: result.likeCount,
+      isLiked: overrideState.isLiked,
+    })
   }
 }
 
-type ApplyLikeItemResultParams = {
-  itemId: number
-  initialStatus: ,
-  apiCaller: (...args: any[]) => Promise<LikeCommentResult>
-  isLiked: boolean
+// types
+
+type ApplyLikeActionParams = {
+  apiCaller: typeof likeComment | typeof unlikeComment
+  targetInfo: TargetInfo
+  overrideState: OverrideCommentState
 }
 
-interface LikeParams {
+type TargetInfo = {
   itemId: number
   commentId: number
-  prevLikes: number
 }
-type UnlikeParams = LikeParams
+
+type LikeCommentActionParams = TargetInfo & {
+  prevLikeCount: number
+}
+
+type UnlikeCommentActionParams = LikeCommentActionParams
