@@ -157,11 +157,7 @@ class CommentService {
     withSubcomments = false,
     userId,
   }: GetCommentParams) {
-    if (commentId == null) {
-      throw new AppError('BadRequest', {
-        message: `not a valid request`,
-      })
-    }
+    if (commentId == null) return null
 
     const comment = await db.comment.findUnique({
       where: { id: commentId },
