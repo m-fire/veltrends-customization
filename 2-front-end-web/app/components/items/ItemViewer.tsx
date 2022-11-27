@@ -6,13 +6,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/components/system/LikeButton'
 import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { useDateDistance } from '~/common/hooks/useDateDistance'
-import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
+import { useLikeItemAction } from '~/common/hooks/useActionOfItem'
+import { useOverrideItemById } from '~/common/hooks/store/useOverrideItemStore'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/components/generate/svg/Earth'
 import Shortcut from '~/components/generate/svg/Shortcut'
 import { Link } from '@remix-run/react'
-import { useItemOverrideStateById } from '~/common/hooks/useItemOverrideStore'
 
 type ItemViewerProps = {
   item: Item
@@ -22,7 +22,7 @@ function ItemViewer({ item }: ItemViewerProps) {
   const {
     id: itemId,
     thumbnail,
-    publisher,
+    publisher: { favicon, domain },
     author,
     title,
     body,
@@ -32,45 +32,42 @@ function ItemViewer({ item }: ItemViewerProps) {
   } = item
   const pastDistance = useDateDistance(createdAt)
 
-  const itemOverride = useItemOverrideStateById(itemId)
-  const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
-  const isLiked = itemOverride?.isLiked ?? item.isLiked
-  const likeCount = itemOverride?.itemStatus.likeCount ?? itemStatus.likeCount
+  const overrideItem = useOverrideItemById(itemId)
 
-  const { like, unlike } = useItemLikeActions()
+  // Dialog settings
+  const itemStatus = overrideItem?.itemStatus ?? item.itemStatus
+  const { likeItem, unlikeItem } = useLikeItemAction()
   const openDialog = useOpenDialog({ gotoLogin: true })
   const authUser = useAuthUser()
-
   const toggleLike = async () => {
     if (!authUser) {
       openDialog('LIKE_ITEM>>LOGIN')
       return
     }
     if (isLiked) {
-      await unlike(itemId, itemStatus)
+      await unlikeItem({ itemId, prevItemStatus: itemStatus })
     } else {
-      await like(itemId, itemStatus)
+      await likeItem({ itemId, prevItemStatus: itemStatus })
     }
   }
+
+  const isLiked = overrideItem?.isLiked ?? item.isLiked
+  const likeCount = overrideItem?.itemStatus.likeCount ?? itemStatus.likeCount
 
   return (
     <Block>
       {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
 
       <Content>
-        <Publisher hasThumbnail={!!thumbnail}>
-          {publisher.favicon ? (
-            <img src={publisher.favicon} alt="favicon" />
-          ) : (
-            <Earth />
-          )}
+        <Publisher hasThumbnail={thumbnail != null}>
+          {favicon ? <img src={favicon} alt="favicon" /> : <Earth />}
 
           {author ? (
             <>
-              <strong>{author}</strong> {`· ${publisher.domain}`}
+              <strong>{author}</strong> {`· ${domain}`}
             </>
           ) : (
-            <strong>{publisher.domain}</strong>
+            <strong>{domain}</strong>
           )}
         </Publisher>
         <Title>{title}</Title>

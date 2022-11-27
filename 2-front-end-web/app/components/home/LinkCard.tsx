@@ -5,34 +5,18 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Item } from '~/common/api/types'
 import { colors } from '~/common/style/colors'
 import { Earth } from '~/components/generate/svg'
-import { useDateDistance } from '~/common/hooks/useDateDistance'
 import LikeButton from '~/components/system/LikeButton'
-import { useItemLikeActions } from '~/common/hooks/useItemStatusActions'
+import { useDateDistance } from '~/common/hooks/useDateDistance'
+import { useLikeItemAction } from '~/common/hooks/useActionOfItem'
+import { useOverrideItemById } from '~/common/hooks/store/useOverrideItemStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
-import { useItemOverrideStateById } from '~/common/hooks/useItemOverrideStore'
 
 type LinkCardProps = {
   item: Item
 }
 
 function LinkCard({ item }: LinkCardProps) {
-  // Dialog settings
-  const { like, unlike } = useItemLikeActions()
-  const openDialog = useOpenDialog({ gotoLogin: true })
-  const authUser = useAuthUser()
-  const toggleLike = async () => {
-    if (!authUser) {
-      openDialog('LIKE_ITEM>>LOGIN')
-      return
-    }
-    if (isLiked) {
-      await unlike(itemId, itemStatus)
-    } else {
-      await like(itemId, itemStatus)
-    }
-  }
-
   // define Data
   const {
     id: itemId,
@@ -40,36 +24,49 @@ function LinkCard({ item }: LinkCardProps) {
     title,
     author,
     body,
-    user,
-    publisher,
+    user: { username },
+    publisher: { favicon, domain },
     createdAt,
   } = item
-  const pastDistance = useDateDistance(createdAt)
 
-  const itemOverride = useItemOverrideStateById(itemId)
-  const itemStatus = itemOverride?.itemStatus ?? item.itemStatus
-  const likeCount = itemOverride?.itemStatus.likeCount ?? itemStatus.likeCount
-  const isLiked = itemOverride?.isLiked ?? item.isLiked
-  const link = `/items/${item.id}`
+  const overrideItem = useOverrideItemById(itemId)
+
+  // Dialog settings
+  const itemStatus = overrideItem?.itemStatus ?? item.itemStatus
+  const openDialog = useOpenDialog({ gotoLogin: true })
+  const { likeItem, unlikeItem } = useLikeItemAction()
+  const authUser = useAuthUser()
+  const toggleLike = async () => {
+    if (!authUser) {
+      openDialog('LIKE_ITEM>>LOGIN')
+      return
+    }
+    if (isLiked) {
+      await unlikeItem({ itemId, prevItemStatus: itemStatus })
+    } else {
+      await likeItem({ itemId, prevItemStatus: itemStatus })
+    }
+  }
+
+  const pastDistance = useDateDistance(createdAt)
+  const isLiked = overrideItem?.isLiked ?? item.isLiked
+  const likeCount = overrideItem?.itemStatus.likeCount ?? itemStatus.likeCount
+  const link = `/items/${itemId}`
 
   return (
     <ListItem>
       <StyledLink to={link}>
         {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
 
-        <Publisher hasThumbnail={!!thumbnail}>
-          {publisher.favicon ? (
-            <img src={publisher.favicon} alt="favicon" />
-          ) : (
-            <Earth />
-          )}
+        <Publisher hasThumbnail={thumbnail != null}>
+          {favicon ? <img src={favicon} alt="favicon" /> : <Earth />}
 
           {author ? (
             <>
-              <strong>{author}</strong> {`· ${publisher.domain}`}
+              <strong>{author}</strong> {`· ${domain}`}
             </>
           ) : (
-            <strong>{publisher.domain}</strong>
+            <strong>{domain}</strong>
           )}
         </Publisher>
         <h3>{title}</h3>
@@ -94,7 +91,7 @@ function LinkCard({ item }: LinkCardProps) {
       <ItemFooter>
         <LikeButton onClick={toggleLike} isLiked={isLiked} />
         <UserInfo>
-          by <b>{user.username}</b> · {pastDistance}
+          by <b>{username}</b> · {pastDistance}
         </UserInfo>
       </ItemFooter>
     </ListItem>
