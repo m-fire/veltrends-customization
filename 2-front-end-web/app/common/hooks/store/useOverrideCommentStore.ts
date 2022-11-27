@@ -18,14 +18,15 @@ export function useOverrideCommendById(commentId: number) {
 }
 
 export function useOverrideCommendSetter() {
-  return useOverrideCommentStore((store) => store.set)
+  const storeSetter = useOverrideCommentStore((store) => store.set)
+  return storeSetter
 }
 
 // types
 
 interface OverrideCommentStore {
   stateMap: Record<number, OverrideCommentState | undefined>
-  set(commentId: number, commentLike: OverrideCommentState): void
+  set(commentId: number, overrideState: OverrideCommentState): void
 }
 
 export type OverrideCommentState = {
