@@ -3,7 +3,7 @@ import { Comment } from '~/common/api/types'
 import CommentInput from '~/components/items/CommentInput'
 import { displayFlex, fontStyles } from '~/components/home/LinkCard'
 import { colors } from '~/common/style/colors'
-import CommentItem from '~/components/items/CommentItem'
+import CommentElement from '~/components/items/CommentElement'
 
 type CommentListProps = {
   commentList: Comment[]
@@ -16,7 +16,7 @@ function CommentList({ commentList }: CommentListProps) {
       <CommentInput />
       <List>
         {commentList.map((comment) => (
-          <CommentItem type="root" comment={comment} key={comment.id} />
+          <CommentElement type="root" comment={comment} key={comment.id} />
         ))}
       </List>
     </Block>

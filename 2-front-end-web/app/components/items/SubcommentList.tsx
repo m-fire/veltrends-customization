@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Comment } from '~/common/api/types'
-import CommentItem from '~/components/items/CommentItem'
+import CommentElement from '~/components/items/CommentElement'
 import { displayFlex } from '~/components/home/LinkCard'
 import { colors } from '~/common/style/colors'
 
@@ -12,7 +12,7 @@ function SubcommentList({ commentList }: SubcommentListProps) {
   return (
     <List>
       {commentList.map((comment) => (
-        <CommentItem type="sub" comment={comment} key={comment.id} />
+        <CommentElement type="sub" comment={comment} key={comment.id} />
       ))}
       <EndLine />
     </List>

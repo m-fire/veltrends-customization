@@ -8,40 +8,70 @@ import React from 'react'
 import ReplyButton from '~/components/system/ReplyButton'
 import SubcommentList from '~/components/items/SubcommentList'
 import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
+import { useOverrideCommendById } from '~/common/hooks/store/useOverrideCommentStore'
+import { useLikeCommentAction } from '~/common/hooks/useActionOfComment'
+import { useOpenDialog } from '~/common/hooks/useOpenDialog'
+import { useAuthUser } from '~/common/context/UserContext'
+import { useItemIdParams } from '~/common/hooks/useItemIdParams'
+import AppError from '~/common/error/AppError'
 
-export interface CommentItemProps {
+export interface CommentElementProps {
   type: CommentType
   comment: Comment
 }
 
-function CommentItem({ comment, type }: CommentItemProps) {
+function CommentElement({ comment, type }: CommentElementProps) {
   const {
     id: commentId,
     user,
     text,
     createdAt,
-    likeCount,
     subcommentList = [],
     mentionUser,
     isDeleted,
   } = comment
 
-  const isRootComment = type === 'root'
-  const hasSubcomments = subcommentList.length > 0
-  const isLiked = false
+  const commentStoreState = useOverrideCommendById(commentId)
 
+  //좋아요: 인증사용자인 경우 좋아요 허용, 없다면 로그인유도
+  const likeCount = commentStoreState?.likeCount ?? comment.likeCount
+  const { likeComment, unlikeComment } = useLikeCommentAction()
+  const openDialog = useOpenDialog({ gotoLogin: true })
+  const authUser = useAuthUser()
+  const isLiked = commentStoreState?.isLiked ?? comment.isLiked
+  const itemId = useItemIdParams()
+  const toggleLike = async () => {
+    if (itemId == null) throw new AppError('BadRequest')
+
+    if (authUser == null) {
+      openDialog('LIKE_COMMENT>>LOGIN')
+      return
+    }
+    if (isLiked) {
+      await unlikeComment({ itemId, commentId, prevLikeCount: likeCount })
+    } else {
+      await likeComment({ itemId, commentId, prevLikeCount: likeCount })
+    }
+  }
+
+  //댓글달기: 인증사용자인 경우 댓글달기 UI 제공, 없다면 로그인유도
   const { open: openCommentInput } = useCommentInputStore()
   const onReply = () => {
+    if (itemId == null) throw new AppError('BadRequest')
+
+    if (authUser == null) {
+      openDialog('COMMENT_INPUT>>LOGIN')
+      return
+    }
     openCommentInput(commentId)
   }
 
-  const toggleLike = () => {
-    window.alert('좋아요')
-  }
-
   const pastDistance = useDateDistance(createdAt)
+  const hasSubcomments = subcommentList.length > 0
+  const isRootComment = type === 'root'
+
   return (
-    <Block data-comment-id={comment.id}>
+    <Block data-comment-id={commentId}>
       {isDeleted ? (
         <>
           <DeletedCommentMessage>· 삭제된 댓글입니다 ·</DeletedCommentMessage>
@@ -93,7 +123,7 @@ function CommentItem({ comment, type }: CommentItemProps) {
     ) : null
   }
 }
-export default CommentItem
+export default CommentElement
 
 // Inner Components
 
