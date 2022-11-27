@@ -56,4 +56,5 @@ export interface Comment {
   /* Subcomment 의 subcommentList 는 undefined 인 경우를 위한 `?` 처리 */
   subcommentList?: Comment[]
   isDeleted: boolean
+  isLiked: boolean
 }
