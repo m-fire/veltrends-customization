@@ -5,7 +5,7 @@ import { colors } from '~/common/style/colors'
 import Button from '~/components/system/Button'
 
 export type DialogProps = {
-  textConfig: {
+  description: {
     title: string
     description: string
     confirmText?: string
@@ -18,7 +18,12 @@ export type DialogProps = {
 }
 
 function Dialog({
-  textConfig: { title, description, confirmText = '확인', cancelText = '닫기' },
+  description: {
+    title,
+    description,
+    confirmText = '확인',
+    cancelText = '닫기',
+  },
   onConfirm,
   onClose,
   visible,

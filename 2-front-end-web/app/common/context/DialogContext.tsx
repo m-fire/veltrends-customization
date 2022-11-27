@@ -34,18 +34,18 @@ export function DialogContextProvider({
     setVisible(false)
   }, [config])
 
-  const textConfig = config?.textConfig
+  const description = config?.description
   const value = { open }
   return (
     <DialogContext.Provider value={value}>
       {children}
       {/* 다이얼로그 창을 모든 하위컨탠츠 위에 랜더링 */}
       <Dialog
-        textConfig={{
-          title: textConfig?.title ?? '',
-          description: textConfig?.description ?? '',
-          // confirmText: textConfig?.confirmText ?? '',
-          // cancelText: textConfig?.cancelText ?? '',
+        description={{
+          title: description?.title ?? '',
+          description: description?.description ?? '',
+          // confirmText: description?.confirmText ?? '',
+          // cancelText: description?.cancelText ?? '',
         }}
         onClose={close}
         onConfirm={confirm}
