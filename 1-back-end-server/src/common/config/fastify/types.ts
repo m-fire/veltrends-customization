@@ -28,16 +28,19 @@ interface FastifyRequestProps<SCHEMA extends FastifySchema>
   // Header: SCHEMA['headers'] extends TSchema ? Static<SCHEMA['headers']> : never
 }
 
-/* 라우트 API 의 응답(res) 타입지정을 위해 구현하였으나, 불필요해서 주석처리함
-   향후 쓸모있을 수 있다. */
-// export type RouteResponseCodeMap<T extends Record<string, FastifySchema>> = {
-//   [A in keyof T]: T[A]['response'] extends Record<number, TSchema>
-//     ? FastifyResponseCodeProps<T[A]['response']>
-//     : never
-// }
-//
-// type FastifyResponseCodeProps<Res extends Record<string, TSchema>> = {
-//   [Code in keyof Res]: Res[Code] extends TSchema
-//     ? Record<Code, Static<Res[Code]>>
-//     : never
-// }
+/* 라우트 API 의 응답(res) 타입지정(서비스 메서드 반환 등..)을 위해 구현하였으나,
+  서비스 단의 가공된 반환타입과 SCHEMA 에 정의된 타입이 미묘하게 매치 되지않아
+  쓰이지 않을 것으로 예상.                                                         */
+
+/**
+ * `response` 속성에 정의된 스키마를 [StatusCode: Type] 형태로 TypeMap 을 생성한다.
+ */
+export type RouteResponseCodeMap<T extends Record<string, FastifySchema>> = {
+  [A in keyof T]: T[A]['response'] extends Record<number, TSchema>
+    ? FastifyResponseCodeProps<T[A]['response']>
+    : never
+}
+
+type FastifyResponseCodeProps<Res extends Record<string, TSchema>> = {
+  [Code in keyof Res]: Res[Code] extends TSchema ? Static<Res[Code]> : never
+}
