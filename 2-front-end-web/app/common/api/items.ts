@@ -56,7 +56,4 @@ export type LikeItemResult = {
   itemStatus: ItemStatus
 }
 
-export type UnlikeItemResult = {
-  id: number
-  itemStatus: ItemStatus
-}
+export type UnlikeItemResult = LikeItemResult

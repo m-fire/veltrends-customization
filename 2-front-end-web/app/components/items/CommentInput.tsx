@@ -13,7 +13,7 @@ function CommentInput({}: CommentInputParams) {
   const { open: openCommentInput } = useCommentInputStore()
 
   const onClick = () => {
-    if (!authUser) {
+    if (authUser == null) {
       openDialog('COMMENT_INPUT>>LOGIN')
       return
     }

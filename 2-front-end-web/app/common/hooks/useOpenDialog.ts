@@ -3,12 +3,16 @@ import { useCallback } from 'react'
 import { DialogConfig, getDialogContext } from '~/common/context/DialogContext'
 import { DialogProps } from '~/components/system/Dialog'
 
-const descriptionMap: Record<string, DialogProps['description']> = {
+const descriptionMap = {
   'LIKE_ITEM>>LOGIN': {
     title: '로그인 후 이용해주세요.',
     description: '이 댓글이 마음에 드세요? 로그인 이후 좋아요를 눌러주세요.',
   },
-  'COMMENT_INPUT>>LOGIN': <DialogProps['textConfig']>{
+  'LIKE_COMMENT>>LOGIN': {
+    title: '로그인 후 이용해주세요.',
+    description: '이 댓글이 마음에 드세요? 로그인 이후 좋아요를 눌러주세요.',
+  },
+  'COMMENT_INPUT>>LOGIN': {
     title: '로그인 후 이용해주세요.',
     description: '댓글을 작성하기 위해서 로그인을 해주세요.',
   },
@@ -20,9 +24,9 @@ const descriptionMap: Record<string, DialogProps['description']> = {
     title: '오류',
     description: '댓글 작성 실패.',
   },
-}
+} as const
 
-type descriptionType = keyof typeof descriptionMap
+type DescriptionType = keyof typeof descriptionMap
 
 export function useOpenDialog({ gotoLogin = false }: UseOpenDialogParams = {}) {
   const location = useLocation()
@@ -31,7 +35,7 @@ export function useOpenDialog({ gotoLogin = false }: UseOpenDialogParams = {}) {
 
   const { open } = getDialogContext()
   const openDialog = useCallback(
-    (type: descriptionType, options: OpenFnParams = {}) => {
+    (type: DescriptionType, options: OpenFnParams = {}) => {
       const { mode = 'YESNO', onConfirm = () => {} } = options
       const description = descriptionMap[type]
 

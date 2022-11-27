@@ -26,6 +26,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
   const queryClient = useQueryClient()
   const itemId = useItemIdParams()
 
+  // react-query 설정
   const openDialog = useOpenDialog()
   const commentsMutation = useCreateCommentMutation({
     async onSuccess(commentData) {

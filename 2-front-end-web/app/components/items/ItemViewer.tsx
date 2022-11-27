@@ -30,17 +30,16 @@ function ItemViewer({ item }: ItemViewerProps) {
     createdAt,
     link,
   } = item
-  const pastDistance = useDateDistance(createdAt)
 
-  const overrideItem = useOverrideItemById(itemId)
+  const itemStoreState = useOverrideItemById(itemId)
 
   // Dialog settings
-  const itemStatus = overrideItem?.itemStatus ?? item.itemStatus
+  const itemStatus = itemStoreState?.itemStatus ?? item.itemStatus
   const { likeItem, unlikeItem } = useLikeItemAction()
   const openDialog = useOpenDialog({ gotoLogin: true })
   const authUser = useAuthUser()
   const toggleLike = async () => {
-    if (!authUser) {
+    if (authUser == null) {
       openDialog('LIKE_ITEM>>LOGIN')
       return
     }
@@ -51,8 +50,9 @@ function ItemViewer({ item }: ItemViewerProps) {
     }
   }
 
-  const isLiked = overrideItem?.isLiked ?? item.isLiked
-  const likeCount = overrideItem?.itemStatus.likeCount ?? itemStatus.likeCount
+  const pastDistance = useDateDistance(createdAt)
+  const isLiked = itemStoreState?.isLiked ?? item.isLiked
+  const likeCount = itemStoreState?.itemStatus.likeCount ?? itemStatus.likeCount
 
   return (
     <Block>
