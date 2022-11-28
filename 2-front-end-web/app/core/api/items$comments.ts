@@ -27,6 +27,16 @@ export async function getCommentList(itemId: number) {
   return response.data
 }
 
+export async function deleteComment({
+  itemId,
+  commentId,
+}: DeleteCommentParams) {
+  const response = await client.delete(
+    `${URL_ITEMS}/${itemId}${URL_COMMENTS}/${commentId}`,
+  )
+  return response.data
+}
+
 export async function likeComment(
   { itemId, commentId }: LikeCommentParams,
   controller?: AbortController,
@@ -57,6 +67,8 @@ type CreateCommentParams = {
   parentCommentId?: number
   text: string
 }
+
+type DeleteCommentParams = { itemId: number; commentId: number }
 
 type LikeCommentParams = {
   itemId: number
