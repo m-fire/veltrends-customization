@@ -96,7 +96,7 @@ export function CatchBoundary() {
   const { actions } = useWriteContext()
   const navigate = useNavigate()
   useEffect(() => {
-    if (caught.status === APP_ERRORS_INFO.InvalidUrlError.statusCode) {
+    if (caught.status === APP_ERRORS_INFO.InvalidUrl.statusCode) {
       navigate(-1)
       actions.setError(caught.data)
     }
