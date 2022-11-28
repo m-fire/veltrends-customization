@@ -16,6 +16,7 @@ import AppError from '~/common/error/AppError'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 import { MoreVert } from '~/core/component/generate/svg'
 import useBottomMenuModalStore from '~/common/hook/store/useBottomMenuModalStore'
+import { useDeleteComment } from '~/core/hook/useDeleteComment'
 
 export interface CommentElementProps {
   type: CommentType
@@ -72,6 +73,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
   const openCommentModifiedModal = useBottomMenuModalStore(
     (store) => store.action.open,
   )
+  const deleteComment = useDeleteComment()
   const onClickMore = () => {
     openCommentModifiedModal([
       {
@@ -82,8 +84,8 @@ function CommentElement({ comment, type }: CommentElementProps) {
       },
       {
         name: '삭제',
-        onClick: () => {
-          alert(`댓글(${commentId}) 삭제 시작`)
+        onClick: async () => {
+          await deleteComment(commentId)
         },
       },
     ])
