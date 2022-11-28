@@ -13,7 +13,7 @@ import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/common/hooks/useItemIdParams'
 import AppError from '~/common/error/AppError'
-import { flexStyles } from '~/common/style/styled'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 export interface CommentElementProps {
   type: CommentType
@@ -129,10 +129,12 @@ export default CommentElement
 
 const Block = styled.div`
   ${flexStyles({ direction: 'column' })};
-  font-size: 14px;
-  font-weight: 600;
-  color: ${colors.grey2};
-  letter-spacing: -0.5px;
+  ${fontStyles({
+    size: '14px',
+    weight: 600,
+    color: colors.grey2,
+    letterSpacing: '-0.5px',
+  })};
 `
 
 // Header
@@ -148,9 +150,7 @@ const Username = styled.div`
 `
 
 const Time = styled.div`
-  font-size: 12px;
-  font-weight: 400;
-  color: ${colors.grey2};
+  ${fontStyles({ size: '12px', weight: 400, color: colors.grey2 })};
 `
 
 // Content
@@ -161,9 +161,7 @@ const Mention = styled.span`
 `
 
 const CommentText = styled.p`
-  font-size: 14px;
-  color: ${colors.grey6};
-  line-height: 1.6;
+  ${fontStyles({ size: '14px', color: colors.grey6, lineHeight: 1.6 })};
   white-space: pre-wrap;
   word-break: keep-all;
   margin: 0;
@@ -178,18 +176,19 @@ const DeletedCommentMessage = styled(CommentText)`
 // Footer
 
 const CommentFooter = styled.div`
-  display: inline-flex;
-  color: ${colors.grey3};
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
+  ${flexStyles({ display: 'inline-flex' })};
+  ${fontStyles({
+    size: '12px',
+    weight: 600,
+    color: colors.grey3,
+    lineHeight: 1,
+  })};
   gap: 10px;
 `
 
 const LikeBlock = styled.div`
   ${flexStyles({ alignItems: 'center' })};
-  color: ${colors.grey4};
-  font-weight: 700;
+  ${fontStyles({ weight: 700, color: colors.grey4 })};
   gap: 4px;
   & svg {
     color: ${colors.grey2};

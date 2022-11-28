@@ -116,11 +116,11 @@ const StyledLink = styled(Link)`
     padding: 0;
   }
   & > h3 {
-    ${fontStyles({ size: '18px', weight: 800, color: colors.grey4 })}
+    ${fontStyles({ size: '18px', weight: 800, color: colors.grey4 })};
     margin-bottom: 8px;
   }
   & > p {
-    ${fontStyles({ size: '12px', weight: 500, color: colors.grey3 })}
+    ${fontStyles({ size: '12px', weight: 500, color: colors.grey3 })};
     display: block;
     margin-bottom: 8px;
   }
@@ -144,7 +144,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
     weight: 400,
     color: colors.grey2,
     lineHeight: 1.33,
-  })}
+  })};
   gap: 4px;
   margin-bottom: 2px;
   img,
@@ -183,16 +183,18 @@ const ItemFooter = styled.div`
 `
 
 const LikeCount = styled(motion.div)`
-  font-size: 12px;
-  font-weight: 600;
-  color: ${colors.grey3};
-  line-height: 1.5;
-  display: flex;
+  ${flexStyles()};
+  ${fontStyles({
+    size: '12px',
+    weight: 600,
+    color: colors.grey3,
+    lineHeight: 1.5,
+  })};
 `
 
 const UserInfo = styled.div`
   b {
-    ${fontStyles({ weight: 600, lineHeight: 1.5 })}
+    ${fontStyles({ weight: 600, lineHeight: 1.5 })};
     color: ${colors.grey3};
   }
 `

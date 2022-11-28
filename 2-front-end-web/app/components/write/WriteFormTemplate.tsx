@@ -2,6 +2,7 @@ import { FormEventHandler, ReactNode } from 'react'
 import styled from 'styled-components'
 import Button from '../system/Button'
 import { colors } from '~/common/style/colors'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type WriteFormTemplateProps = {
   description: string
@@ -29,22 +30,16 @@ export default WriteFormTemplate
 // Inner Components
 
 const StyledForm = styled.form`
-  flex: 1;
+  ${flexStyles({ direction: 'column', flex: 1 })};
   padding: 16px 20px 24px;
-  display: flex;
-  flex-direction: column;
 
   h3 {
-    color: ${colors.grey5};
-    line-height: 1.5;
-    font-size: 18px;
+    ${fontStyles({ size: '18px', color: colors.grey5, lineHeight: 1.5 })};
     margin-top: 0;
     margin-bottom: 16px;
   }
 `
 
 const Content = styled.section`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  ${flexStyles({ direction: 'column', flex: 1 })};
 `

@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { Link } from '@remix-run/react'
 import { colors } from '~/common/style/colors'
+import { fontStyles } from '~/common/style/styled'
 
 type QuestionLinkProps = {
   question: string
@@ -30,16 +31,12 @@ export default QuestionLink
 // Inner Components
 
 const Block = styled.div<Pick<QuestionLinkProps, 'disabled'>>`
-  font-size: 12px;
-  color: ${colors.grey3};
-
+  ${fontStyles({ size: '12px', color: colors.grey3 })};
   span {
     padding-right: 8px;
   }
   a {
-    font-size: 14px;
-    font-weight: 600;
-    color: ${colors.grey5};
+    ${fontStyles({ size: '14px', weight: 600, color: colors.grey5 })};
     transition: color 0.25s ease-in-out;
 
     ${({ disabled }) =>

@@ -43,7 +43,7 @@ export default LikeButton
 // Inner Components
 
 const StyledButton = styled.button<{ size: Size }>`
-  ${flexStyles({ display: 'inline-flex' })}
+  ${flexStyles({ display: 'inline-flex' })};
   position: relative;
   ${({ size }) => {
     let fontSize = 14

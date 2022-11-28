@@ -10,6 +10,7 @@ import AppError from '~/common/error/AppError'
 import { colors } from '~/common/style/colors'
 import { useFormValidation } from '~/common/hooks/useFormValidation'
 import { Validator } from '~/common/util/validates'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -153,25 +154,23 @@ const formDescriptions = {
 // Inner Components
 
 const StyledFormRef = styled(Form)`
-  display: flex;
-  flex-direction: column;
+  ${flexStyles({
+    direction: 'column',
+    justifyContent: 'space-between',
+    flex: 1,
+  })};
   padding: 16px 20px;
-  flex: 1;
-  justify-content: space-between;
 `
 
 const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
+  ${flexStyles({ direction: 'column' })};
   gap: 16px; // 사용주의! 구형브라우저 적용불가
 `
 
 // Footer 대용
 const ActionBox = styled.div`
+  ${flexStyles({ direction: 'column', alignItems: 'center' })};
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 24px;
 `
 
@@ -183,7 +182,6 @@ const StyledButton = styled(Button)`
 `
 
 const ActionErrorMessage = styled.div`
+  ${fontStyles({ size: '14px', color: colors.secondary1 })};
   text-align: center;
-  color: ${colors.secondary1};
-  font-size: 14px;
 `

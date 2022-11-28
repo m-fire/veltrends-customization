@@ -2,6 +2,7 @@ import React, { FocusEventHandler, forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import Input, { InputProps } from '~/components/system/Input'
 import { colors } from '~/common/style/colors'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 interface LabelInputProps extends InputProps {
   label: string
@@ -47,9 +48,7 @@ export default LabelInput
 // Inner Components
 
 const Block = styled.div`
-  display: flex;
-  flex-direction: column;
-
+  ${flexStyles({ direction: 'column' })};
   /* 부모컴포넌트에서 gap 속성값(16px) 설정 되었으므로 불필요함 */
   // 주의: 구형브라우저 적용불가
   //& + & {
@@ -58,10 +57,12 @@ const Block = styled.div`
 `
 
 const Label = styled.label<{ focused?: boolean }>`
-  font-size: 16px;
-  line-height: 1.5;
-  color: ${colors.grey4};
-  font-weight: 600;
+  ${fontStyles({
+    size: '16px',
+    weight: 600,
+    color: colors.grey4,
+    lineHeight: 1.5,
+  })};
   margin-bottom: 8px;
   transition: color 0.1s ease-in-out;
 

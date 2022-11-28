@@ -12,6 +12,7 @@ import { useWriteContext } from '~/common/context/WriteContext'
 import AppError, { APP_ERRORS_INFO } from '~/common/error/AppError'
 import { useAppErrorCatch } from '~/common/hooks/useAppErrorCatch'
 import { colors } from '~/common/style/colors'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type IntroProps = {}
 
@@ -107,9 +108,7 @@ export function CatchBoundary() {
 // Inner Components
 
 const Group = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  ${flexStyles({ direction: 'column', flex: 1 })};
   gap: 16px;
   padding-bottom: 16px;
 `
@@ -124,8 +123,7 @@ const IntroLabelTextArea = styled(LabelTextArea)`
 `
 
 const Message = styled.div`
+  ${fontStyles({ size: '14px', color: colors.secondary1 })};
   margin-top: 8px;
-  font-size: 14px;
-  color: ${colors.secondary1};
   text-align: center;
 `

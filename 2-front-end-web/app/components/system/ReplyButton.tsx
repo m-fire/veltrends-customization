@@ -23,7 +23,7 @@ export default ReplyButton
 // Inner Components
 
 const StyledButton = styled.button<{ size: Size }>`
-  ${flexStyles({ display: 'inline-flex', justifyContent: 'flex-start' })}
+  ${flexStyles({ display: 'inline-flex', justifyContent: 'flex-start' })};
   gap: 4px;
   position: relative;
   ${({ size }) => {

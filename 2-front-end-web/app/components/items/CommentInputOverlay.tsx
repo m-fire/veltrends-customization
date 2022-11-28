@@ -14,7 +14,7 @@ import { Comment } from '~/common/api/types'
 import produce from 'immer'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import useFocus from '~/common/hooks/useFocus'
-import { flexStyles } from '~/common/style/styled'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type CommentInputOverlayParams = {}
 
@@ -149,12 +149,11 @@ const Footer = styled(motion.div)`
 `
 
 const StyledInput = styled.input`
-  height: 100%;
   flex: 1;
+  ${fontStyles({ size: '16px', weight: 400 })};
+  height: 100%;
   border: none;
   padding: 0 20px;
-  font-size: 16px;
-  font-weight: 400;
   &::placeholder {
     color: ${colors.grey1};
   }

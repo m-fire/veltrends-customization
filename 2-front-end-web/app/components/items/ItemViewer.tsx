@@ -112,7 +112,7 @@ export default ItemViewer
 // Inner Components
 
 const Block = styled.div`
-  ${flexStyles({ direction: 'column' })}
+  ${flexStyles({ direction: 'column' })};
 `
 
 const Thumbnail = styled.img`
@@ -129,13 +129,13 @@ const Content = styled.div`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${flexStyles({ alignItems: 'center' })}
+  ${flexStyles({ alignItems: 'center' })};
   ${fontStyles({
     size: '12px',
     weight: 400,
     color: colors.grey2,
     lineHeight: 1.33,
-  })}
+  })};
   margin: 0;
   gap: 4px;
   img,
@@ -151,7 +151,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
       weight: 600,
       color: colors.grey3,
       lineHeight: 1.33,
-    })}
+    })};
   }
 `
 
@@ -161,7 +161,7 @@ const Title = styled.h2`
     weight: 800,
     color: colors.grey5,
     letterSpacing: '-0.5px',
-  })}
+  })};
   margin: 0;
   line-height: 1.5;
 `
@@ -170,7 +170,7 @@ const OriginLink = styled(Link)`
   ${flexStyles({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-  })}
+  })};
   ${fontStyles({
     size: '18px',
     weight: 600,
@@ -194,7 +194,7 @@ const Body = styled.p`
     color: colors.grey4,
     lineHeight: 1.5,
     letterSpacing: '-0.5px',
-  })}
+  })};
   line-height: 1.5;
   margin-top: 0;
   margin-bottom: 24px;
@@ -203,13 +203,13 @@ const Body = styled.p`
 `
 
 const UserInfo = styled.div`
-  ${flexStyles({ justifyContent: 'end' })}
+  ${flexStyles({ justifyContent: 'end' })};
   ${fontStyles({
     size: '14px',
     weight: 400,
     color: colors.grey4,
     lineHeight: 1.33,
-  })}
+  })};
   gap: 4px;
   margin-bottom: 40px;
   & b {
@@ -218,7 +218,7 @@ const UserInfo = styled.div`
 `
 
 const LikeBlock = styled.div`
-  ${flexStyles({ direction: 'column', alignItems: 'center' })}
+  ${flexStyles({ direction: 'column', alignItems: 'center' })};
   gap: 4px;
   & svg {
     color: ${colors.grey2};
@@ -232,12 +232,14 @@ const StyledLikeButton = styled(LikeButton)`
 
 const LikesCount = styled(motion.div)`
   ${flexStyles()};
-  font-size: 12px;
-  font-weight: 600;
-  color: ${colors.grey4};
-  line-height: 1.5;
+  ${fontStyles({
+    size: '12px',
+    weight: 600,
+    color: colors.grey4,
+    lineHeight: 1.5,
+  })};
 `
 
 const Footer = styled.div`
-  ${flexStyles({ direction: 'column' })}
+  ${flexStyles({ direction: 'column' })};
 `

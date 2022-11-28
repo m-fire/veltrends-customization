@@ -10,6 +10,7 @@ import {
   Search,
   Setting,
 } from '~/components/generate/svg'
+import { flexStyles } from '~/common/style/styled'
 
 const iconMap = {
   home: Fire,
@@ -45,10 +46,7 @@ export default FooterTabItem
 // Inner Components
 
 const NavLinkItemRef = styled(NavLink)<Partial<FooterTabItemProps>>`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexStyles({ alignItems: 'center', justifyContent: 'center', flex: 1 })};
   position: relative;
   svg {
     color: ${colors.grey5};

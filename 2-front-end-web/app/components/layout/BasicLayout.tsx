@@ -4,6 +4,7 @@ import Header from '~/components/base/Header'
 import HeaderBackButton from '~/components/base/HeaderBackButton'
 import { useGoBack } from '~/common/hooks/useGoBack'
 import styled from 'styled-components'
+import { flexStyles } from '~/common/style/styled'
 
 type BasicLayoutProps = {
   title?: ReactNode
@@ -44,8 +45,6 @@ export default BasicLayout
 // Inner Components
 
 const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  ${flexStyles({ direction: 'column', flex: 1 })};
   overflow: scroll;
 `

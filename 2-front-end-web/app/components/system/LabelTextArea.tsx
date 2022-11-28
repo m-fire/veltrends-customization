@@ -6,6 +6,7 @@ import {
 } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 interface LabelTextAreaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -55,15 +56,16 @@ export default LabelTextArea
 // Inner Components
 
 const Block = styled.div`
-  display: flex;
-  flex-direction: column;
+  ${flexStyles({ direction: 'column' })};
 `
 
 const Label = styled.label<{ focused?: boolean }>`
-  font-size: 16px;
-  line-height: 1.5;
-  color: ${colors.grey4};
-  font-weight: 600;
+  ${fontStyles({
+    size: '16px',
+    weight: 600,
+    color: colors.grey4,
+    lineHeight: 1.5,
+  })};
   margin-bottom: 8px;
   transition: all 0.25s ease-in-out;
   ${({ focused }) =>
@@ -74,13 +76,11 @@ const Label = styled.label<{ focused?: boolean }>`
 `
 
 const StyledTextArea = styled.textarea`
+  ${fontStyles({ size: '16px', color: colors.grey5, lineHeight: 1.5 })};
   border: 1px solid ${colors.grey2};
   border-radius: 4px;
   outline: none;
-  font-size: 16px;
   padding: 16px;
-  line-height: 1.5;
-  color: ${colors.grey5};
   transition: all 0.25s ease-in-out;
 
   &:focus {

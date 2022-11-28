@@ -43,7 +43,7 @@ const CommentTitle = styled.h3`
 `
 
 const List = styled.div`
-  ${flexStyles({ direction: 'column' })}
+  ${flexStyles({ direction: 'column' })};
   width: 100%;
   margin-top: 32px;
   gap: 40px;

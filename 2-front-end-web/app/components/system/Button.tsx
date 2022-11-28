@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, ReactNode, SVGProps } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { flexStyles } from '~/common/style/styled'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type ButtonProps = {
   layoutMode?: 'inline' | 'fullWidth'
@@ -21,12 +21,11 @@ export default Button
 // Inner Components
 
 const StyledButton = styled.button<ButtonProps>`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })}
+  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })};
+  ${fontStyles({ size: '16px', weight: 600 })};
   height: 48px;
-  font-size: 16px;
   padding-left: 20px;
   padding-right: 20px;
-  font-weight: 600;
   border-radius: 6px;
   //background: ${colors.primary1};
   //color: white;
@@ -58,8 +57,7 @@ const variantStyles = {
     color: white;
   `,
   nobg: css`
+    ${fontStyles({ weight: 800, color: colors.grey5 })};
     background: none;
-    color: ${colors.grey5};
-    font-weight: 800;
   `,
 }

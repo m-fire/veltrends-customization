@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 import { Item } from '~/common/api/types'
 import styled from 'styled-components'
 import LinkCard from '~/components/home/LinkCard'
+import { flexStyles } from '~/common/style/styled'
 
 type LinkCardListProps = {
   items: Item[]
@@ -21,8 +22,7 @@ export default LinkCardList
 // Inner Components
 
 const List = styled.ul`
-  display: flex;
-  flex-direction: column;
+  ${flexStyles({ direction: 'column' })};
   gap: 72px;
   & > li:last-child {
     margin-bottom: 72px;
