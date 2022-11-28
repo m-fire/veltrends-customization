@@ -6,7 +6,7 @@ import LikeButton from '~/components/system/LikeButton'
 import React from 'react'
 import ReplyButton from '~/components/system/ReplyButton'
 import SubcommentList from '~/components/items/SubcommentList'
-import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
+import useCommentInputStore from '~/common/hooks/store/useCommentInputStore'
 import { useOverrideCommendById } from '~/common/hooks/store/useOverrideCommentStore'
 import { useLikeCommentAction } from '~/common/hooks/useActionOfComment'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
@@ -15,6 +15,7 @@ import { useItemIdParams } from '~/common/hooks/useItemIdParams'
 import AppError from '~/common/error/AppError'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 import { MoreVert } from '~/components/generate/svg'
+import useBottomMenuModalStore from '~/common/hooks/store/useBottomMenuModalStore'
 
 export interface CommentElementProps {
   type: CommentType
@@ -56,7 +57,8 @@ function CommentElement({ comment, type }: CommentElementProps) {
   }
 
   //댓글달기: 인증사용자인 경우 댓글달기 UI 제공, 없다면 로그인유도
-  const { open: openCommentInput } = useCommentInputStore()
+
+  const openCommentInput = useCommentInputStore((store) => store.action.open)
   const onReply = () => {
     if (itemId == null) throw new AppError('BadRequest')
 
@@ -67,15 +69,30 @@ function CommentElement({ comment, type }: CommentElementProps) {
     openCommentInput(commentId)
   }
 
+  const openCommentModifiedModal = useBottomMenuModalStore(
+    (store) => store.action.open,
+  )
+  const onClickMore = () => {
+    openCommentModifiedModal([
+      {
+        name: '수정',
+        onClick: () => {
+          alert(`댓글(${commentId}) 수정 시작`)
+        },
+      },
+      {
+        name: '삭제',
+        onClick: () => {
+          alert(`댓글(${commentId}) 삭제 시작`)
+        },
+      },
+    ])
+  }
+
   const pastDistance = useDateDistance(createdAt)
   const hasSubcomments = subcommentList.length > 0
   const isMyComment = comment.user.id === authUser?.id
   const isRootComment = type === 'root'
-
-  const onClickMore = () => {
-    //todo: open BottomSheetModal
-    alert(`CommentElement.tsx> CommentElement.onClickMore()`)
-  }
 
   return (
     <Block data-comment-id={commentId}>
@@ -244,8 +261,6 @@ type CommentType = 'root' | 'sub'
 type ToggleLikeParams = {
   commentId: number
 }
-
-type OnReplyParams = ToggleLikeParams
 
 type GetSubcommentsOrNull = {
   isRootComment: boolean
