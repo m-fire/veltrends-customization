@@ -14,6 +14,7 @@ import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/common/hooks/useItemIdParams'
 import AppError from '~/common/error/AppError'
 import { flexStyles, fontStyles } from '~/common/style/styled'
+import { MoreVert } from '~/components/generate/svg'
 
 export interface CommentElementProps {
   type: CommentType
@@ -68,19 +69,32 @@ function CommentElement({ comment, type }: CommentElementProps) {
 
   const pastDistance = useDateDistance(createdAt)
   const hasSubcomments = subcommentList.length > 0
+  const isMyComment = comment.user.id === authUser?.id
   const isRootComment = type === 'root'
+
+  const onClickMore = () => {
+    //todo: open BottomSheetModal
+    alert(`CommentElement.tsx> CommentElement.onClickMore()`)
+  }
 
   return (
     <Block data-comment-id={commentId}>
       {isDeleted ? (
         <>
-          <DeletedCommentMessage>· 삭제된 댓글입니다 ·</DeletedCommentMessage>
+          <DeletedComment>· 삭제된 댓글입니다 ·</DeletedComment>
           {getSubcommentsOrNull({ isRootComment, hasSubcomments })}
         </>
       ) : (
         <>
           <CommentHead>
-            <Username>{user.username}</Username> · <Time>{pastDistance}</Time>
+            <LeftGroup>
+              <Username>{user.username}</Username> · <Time>{pastDistance}</Time>
+            </LeftGroup>
+            {isMyComment ? (
+              <MoreButton onClick={onClickMore}>
+                <MoreVert />
+              </MoreButton>
+            ) : null}
           </CommentHead>
 
           <CommentText>
@@ -142,6 +156,10 @@ const Block = styled.div`
 const CommentHead = styled.div`
   ${flexStyles({ alignItems: 'center', justifyContent: 'space-between' })};
   font-weight: 500;
+`
+
+const LeftGroup = styled.div`
+  ${flexStyles({ alignItems: 'center', justifyContent: 'flex-end' })};
   gap: 4px;
 `
 
@@ -151,6 +169,18 @@ const Username = styled.div`
 
 const Time = styled.div`
   ${fontStyles({ size: '12px', weight: 400, color: colors.grey2 })};
+`
+
+const MoreButton = styled.button`
+  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })};
+  width: 24px;
+  height: 24px;
+  color: ${colors.grey4};
+  svg {
+    width: 14px;
+    height: 14px;
+    //transform: rotateZ(90deg);
+  }
 `
 
 // Content
@@ -168,7 +198,7 @@ const CommentText = styled.p`
   margin-bottom: 4px;
 `
 
-const DeletedCommentMessage = styled(CommentText)`
+const DeletedComment = styled(CommentText)`
   color: ${colors.grey2};
   margin: 0;
 `
@@ -180,7 +210,7 @@ const CommentFooter = styled.div`
   ${fontStyles({
     size: '12px',
     weight: 600,
-    color: colors.grey3,
+    color: colors.grey2,
     lineHeight: 1,
   })};
   gap: 10px;
