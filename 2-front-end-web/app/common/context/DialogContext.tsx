@@ -5,7 +5,7 @@ import {
   useContext,
   useState,
 } from 'react'
-import Dialog, { DialogProps } from '~/components/system/Dialog'
+import Dialog, { DialogProps } from '~/common/component/system/Dialog'
 
 const DialogContext = createContext<DialogActions | null>(null)
 

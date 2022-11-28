@@ -1,8 +1,8 @@
 import { useNavigate } from '@remix-run/react'
-import BasicLayout from '~/components/layout/BasicLayout'
-import WriteFormTemplate from '~/components/write/WriteFormTemplate'
-import { useWriteContext } from '~/common/context/WriteContext'
-import LabelInput from '~/components/system/LabelInput'
+import BasicLayout from '~/common/component/layout/BasicLayout'
+import WriteFormTemplate from '~/core/component/write/WriteFormTemplate'
+import { useWriteContext } from '~/core/context/WriteContext'
+import LabelInput from '~/common/component/system/LabelInput'
 import { APP_ERRORS_INFO } from '~/common/error/AppError'
 
 const ERROR_CODE_INVALID_URL = APP_ERRORS_INFO.InvalidUrl.statusCode

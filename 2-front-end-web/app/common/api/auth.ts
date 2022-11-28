@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { client, Clients, URL_API_SERVER } from '~/common/api/client'
 import { isString } from '~/common/util/strings'
-import { SimpleUser } from '~/common/api/types'
+import { SimpleUser } from '~/core/api/types'
 
 // Constants
 

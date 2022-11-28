@@ -1,12 +1,12 @@
 import React from 'react'
-import AuthForm from '~/components/auth/AuthForm'
+import AuthForm from '~/common/component/auth/AuthForm'
 import { ActionFunction, json } from '@remix-run/node'
 import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { Authenticator } from '~/common/api/auth'
 import AppError from '~/common/error/AppError'
-import BasicLayout from '~/components/layout/BasicLayout'
-import { useAuthRedirect } from '~/common/hooks/useAuthRedirect'
+import BasicLayout from '~/common/component/layout/BasicLayout'
+import { useAuthRedirect } from '~/common/hook/useAuthRedirect'
 
 type RegisterProps = {
   error?: AppError

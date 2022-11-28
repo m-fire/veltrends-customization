@@ -1,13 +1,13 @@
 import { useLoaderData } from '@remix-run/react'
 import { json, LoaderFunction } from '@remix-run/node'
-import { getItem } from '~/common/api/items'
-import { getCommentList } from '~/common/api/items$comments'
-import { Item, Comment } from '~/common/api/types'
-import BasicLayout from '~/components/layout/BasicLayout'
-import ItemViewer from '~/components/items/ItemViewer'
-import CommentList from '~/components/items/CommentList'
-import { useCommentListQuery } from '~/common/hooks/query/useCommentListQuery'
-import CommentInputOverlay from '~/components/items/CommentInputOverlay'
+import { getItem } from '~/core/api/items'
+import { getCommentList } from '~/core/api/items$comments'
+import { Item, Comment } from '~/core/api/types'
+import BasicLayout from '~/common/component/layout/BasicLayout'
+import ItemViewer from '~/core/component/items/ItemViewer'
+import CommentList from '~/core/component/items/CommentList'
+import { useCommentListQuery } from '~/core/hook/query/useCommentListQuery'
+import CommentInputOverlay from '~/core/component/items/CommentInputOverlay'
 
 type ItemProps = {}
 

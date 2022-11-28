@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import TabLayout from '~/components/layout/TabLayout'
+import TabLayout from '~/common/component/layout/TabLayout'
 import { json, LoaderFunction } from '@remix-run/node'
-import { getItemList } from '~/common/api/items'
+import { getItemList } from '~/core/api/items'
 import { useFetcher, useLoaderData } from '@remix-run/react'
-import { ItemListPagination } from '~/common/api/types'
-import LinkCardList from '~/components/home/LinkCardList'
+import { ItemListPagination } from '~/core/api/types'
+import LinkCardList from '~/core/component/home/LinkCardList'
 import { Requests } from '~/common/util/https'
-import { useInfiniteScroll } from '~/common/hooks/useInfiniteScroll'
+import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
 
 function Index() {
   const data = useLoaderData<ItemListPagination>()

@@ -13,10 +13,10 @@ import { Authenticator } from '~/common/api/auth'
 import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
 import { UserContext } from '~/common/context/UserContext'
-import { SimpleUser } from '~/common/api/types'
+import { SimpleUser } from '~/core/api/types'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import GlobalBottomMenuModal from '~/components/system/GlobalBottomMenuModal'
+import GlobalBottomMenuModal from '~/common/component/system/GlobalBottomMenuModal'
 
 const queryClient = new QueryClient()
 
