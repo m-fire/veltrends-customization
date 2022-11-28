@@ -6,12 +6,12 @@ export const useCommentInputStore = create<CommentInputStore>((set) => ({
     parentCommentId: null,
   },
   action: {
-    open: (parentCommentId) =>
+    write: (parentCommentId) =>
       set((s) => ({
         ...s,
         state: {
           ...s.state,
-          parentCommentId,
+          parentCommentId: parentCommentId ?? null,
           visible: true,
         },
       })),
@@ -33,7 +33,7 @@ type CommentInputStore = {
     parentCommentId: number | null
   }
   action: {
-    open(parentCommentId: number | null): void
-    close(): void
+    write: (parentCommentId?: number | null) => void
+    close: () => void
   }
 }

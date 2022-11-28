@@ -59,7 +59,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
 
   //댓글달기: 인증사용자인 경우 댓글달기 UI 제공, 없다면 로그인유도
 
-  const openCommentInput = useCommentInputStore((store) => store.action.open)
+  const writeComment = useCommentInputStore((store) => store.action.write)
   const onReply = () => {
     if (itemId == null) throw new AppError('BadRequest')
 
@@ -67,7 +67,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
       openDialog('COMMENT_INPUT>>LOGIN')
       return
     }
-    openCommentInput(commentId)
+    writeComment(commentId)
   }
 
   const openCommentModifiedModal = useBottomMenuModalStore(

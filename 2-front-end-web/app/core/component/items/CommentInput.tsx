@@ -10,14 +10,14 @@ type CommentInputParams = {}
 function CommentInput({}: CommentInputParams) {
   const authUser = useAuthUser()
   const openDialog = useOpenDialog({ gotoLogin: true })
-  const openCommentInput = useCommentInputStore((store) => store.action.open)
+  const writeComment = useCommentInputStore((store) => store.action.write)
 
   const onClick = () => {
     if (authUser == null) {
       openDialog('COMMENT_INPUT>>LOGIN')
       return
     }
-    openCommentInput(null)
+    writeComment()
   }
 
   return <PseudoInput onClick={onClick}>댓글을 입력하세요</PseudoInput>
