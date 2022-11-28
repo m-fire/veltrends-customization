@@ -210,9 +210,10 @@ class CommentService {
       commentIds: subcommentList.map((sc) => sc.id),
     })
 
-    return subcommentList.map((sc) => ({
-      ...sc,
-      isLiked: commentLikedMapOrEmpty[sc.id] != null,
+    return subcommentList.map((subcomment) => ({
+      ...subcomment,
+      isLiked: commentLikedMapOrEmpty[subcomment.id] != null,
+      isDeleted: false,
     }))
   }
 
