@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 import { useQueryClient } from '@tanstack/react-query'
 import Overlay from '../system/Overlay'
-import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
+import useCommentInputStore from '~/common/hooks/store/useCommentInputStore'
 import { SpeechBubble } from '~/components/generate/svg'
 import { colors } from '~/common/style/colors'
 import { useEffect, useState } from 'react'
@@ -19,14 +19,13 @@ import { flexStyles, fontStyles } from '~/common/style/styled'
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
-  const [text, setText] = useState('')
-  const commentInputStore = useCommentInputStore()
-
-  const { parentCommentId, close: closeCommentInput } = commentInputStore
+  // react-query Store 설정
+  const closeCommentInput = useCommentInputStore((store) => store.action.close)
+  const parentCommentId = useCommentInputStore(
+    (store) => store.state.parentCommentId,
+  )
   const queryClient = useQueryClient()
   const itemId = useItemIdParams()
-
-  // react-query 설정
   const openDialog = useOpenDialog()
   const commentsMutation = useCreateCommentMutation({
     async onSuccess(commentData) {
@@ -70,7 +69,8 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
     },
   })
 
-  const { visible } = commentInputStore
+  const [text, setText] = useState('')
+  const visible = useCommentInputStore((store) => store.state.visible)
   useEffect(() => {
     if (visible) setText('')
   }, [visible])

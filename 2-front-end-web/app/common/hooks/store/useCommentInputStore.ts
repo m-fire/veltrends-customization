@@ -1,18 +1,39 @@
 import create from 'zustand'
 
-export const useCommentInputStore = create<CommentInputStateAndActions>(
-  (set) => ({
+export const useCommentInputStore = create<CommentInputStore>((set) => ({
+  state: {
     visible: false,
     parentCommentId: null,
+  },
+  action: {
     open: (parentCommentId) =>
-      set((s) => ({ ...s, parentCommentId, visible: true })),
-    close: () => set((s) => ({ ...s, visible: false })),
-  }),
-)
+      set((s) => ({
+        ...s,
+        state: {
+          ...s.state,
+          parentCommentId,
+          visible: true,
+        },
+      })),
+    close: () =>
+      set((s) => ({
+        ...s,
+        state: {
+          ...s.state,
+          visible: false,
+        },
+      })),
+  },
+}))
+export default useCommentInputStore
 
-type CommentInputStateAndActions = {
-  visible: boolean
-  parentCommentId: number | null
-  open(parentCommentId: number | null): void
-  close(): void
+type CommentInputStore = {
+  state: {
+    visible: boolean
+    parentCommentId: number | null
+  }
+  action: {
+    open(parentCommentId: number | null): void
+    close(): void
+  }
 }

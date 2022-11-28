@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
+import useCommentInputStore from '~/common/hooks/store/useCommentInputStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import { flexStyles, fontStyles } from '~/common/style/styled'
@@ -10,7 +10,7 @@ type CommentInputParams = {}
 function CommentInput({}: CommentInputParams) {
   const authUser = useAuthUser()
   const openDialog = useOpenDialog({ gotoLogin: true })
-  const { open: openCommentInput } = useCommentInputStore()
+  const openCommentInput = useCommentInputStore((store) => store.action.open)
 
   const onClick = () => {
     if (authUser == null) {
