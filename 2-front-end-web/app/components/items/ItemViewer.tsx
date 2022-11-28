@@ -12,7 +12,7 @@ import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/components/generate/svg/Earth'
 import Shortcut from '~/components/generate/svg/Shortcut'
 import { Link } from '@remix-run/react'
-import { displayFlex, fontStyles } from '~/common/style/styled'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type ItemViewerProps = {
   item: Item
@@ -112,7 +112,7 @@ export default ItemViewer
 // Inner Components
 
 const Block = styled.div`
-  ${displayFlex({ direction: 'column' })}
+  ${flexStyles({ direction: 'column' })}
 `
 
 const Thumbnail = styled.img`
@@ -129,7 +129,7 @@ const Content = styled.div`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${displayFlex({ alignItems: 'center' })}
+  ${flexStyles({ alignItems: 'center' })}
   ${fontStyles({
     size: '12px',
     weight: 400,
@@ -167,7 +167,7 @@ const Title = styled.h2`
 `
 
 const OriginLink = styled(Link)`
-  ${displayFlex({
+  ${flexStyles({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
   })}
@@ -203,7 +203,7 @@ const Body = styled.p`
 `
 
 const UserInfo = styled.div`
-  ${displayFlex({ justifyContent: 'end' })}
+  ${flexStyles({ justifyContent: 'end' })}
   ${fontStyles({
     size: '14px',
     weight: 400,
@@ -218,7 +218,7 @@ const UserInfo = styled.div`
 `
 
 const LikeBlock = styled.div`
-  ${displayFlex({ direction: 'column', alignItems: 'center' })}
+  ${flexStyles({ direction: 'column', alignItems: 'center' })}
   gap: 4px;
   & svg {
     color: ${colors.grey2};
@@ -231,7 +231,7 @@ const StyledLikeButton = styled(LikeButton)`
 `
 
 const LikesCount = styled(motion.div)`
-  ${displayFlex()};
+  ${flexStyles()};
   font-size: 12px;
   font-weight: 600;
   color: ${colors.grey4};
@@ -239,5 +239,5 @@ const LikesCount = styled(motion.div)`
 `
 
 const Footer = styled.div`
-  ${displayFlex({ direction: 'column' })}
+  ${flexStyles({ direction: 'column' })}
 `

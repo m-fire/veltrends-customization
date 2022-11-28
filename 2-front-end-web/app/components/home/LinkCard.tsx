@@ -11,7 +11,7 @@ import { useLikeItemAction } from '~/common/hooks/useActionOfItem'
 import { useOverrideItemById } from '~/common/hooks/store/useOverrideItemStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
-import { displayFlex, fontStyles } from '~/common/style/styled'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type LinkCardProps = {
   item: Item
@@ -102,12 +102,12 @@ export default LinkCard
 
 // Inner Components
 const ListItem = styled.li`
-  ${displayFlex({ direction: 'column' })};
+  ${flexStyles({ direction: 'column' })};
 `
 
 // <a></a>
 const StyledLink = styled(Link)`
-  ${displayFlex({ direction: 'column' })};
+  ${flexStyles({ direction: 'column' })};
   text-decoration: none;
   h3,
   p,
@@ -138,7 +138,7 @@ const Thumbnail = styled.img`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${displayFlex()};
+  ${flexStyles()};
   ${fontStyles({
     size: '12px',
     weight: 400,
@@ -165,7 +165,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
 `
 
 const ItemFooter = styled.div`
-  ${displayFlex({ alignItems: 'center', justifyContent: 'space-between' })};
+  ${flexStyles({ alignItems: 'center', justifyContent: 'space-between' })};
   ${fontStyles({
     size: '12px',
     weight: 400,
@@ -174,7 +174,7 @@ const ItemFooter = styled.div`
   })};
   // HeartVote, UserInfo 공통스타일
   & div {
-    ${displayFlex({ alignItems: 'center' })};
+    ${flexStyles({ alignItems: 'center' })};
     gap: 4px;
   }
   & svg {

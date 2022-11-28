@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 import { HeartFill, HeartOutline } from '~/components/generate/svg'
 import { colors } from '~/common/style/colors'
 import { AnimatePresence, motion } from 'framer-motion'
+import { flexStyles } from '~/common/style/styled'
 
 type LikeButtonProps = {
   isLiked?: boolean
@@ -42,11 +43,7 @@ export default LikeButton
 // Inner Components
 
 const StyledButton = styled.button<{ size: Size }>`
-  display: inline-flex;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: none;
+  ${flexStyles({ display: 'inline-flex' })}
   position: relative;
   ${({ size }) => {
     let fontSize = 14

@@ -14,7 +14,7 @@ import { Comment } from '~/common/api/types'
 import produce from 'immer'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import useFocus from '~/common/hooks/useFocus'
-import { displayFlex } from '~/common/style/styled'
+import { flexStyles } from '~/common/style/styled'
 
 type CommentInputOverlayParams = {}
 
@@ -139,7 +139,7 @@ export default CommentInputOverlay
 // Inner components
 
 const Footer = styled(motion.div)`
-  ${displayFlex({ alignItems: 'center' })};
+  ${flexStyles({ alignItems: 'center' })};
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -161,11 +161,8 @@ const StyledInput = styled.input`
 `
 
 const TransparentButton = styled.button`
-  ${displayFlex({ alignItems: 'center', justifyContent: 'center' })};
+  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })};
   height: 100%;
-  background: none;
-  border: none;
-  outline: none;
   padding: 0 8px;
   position: relative;
 `

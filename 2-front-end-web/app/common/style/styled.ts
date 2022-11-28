@@ -39,13 +39,14 @@ type FontStylesParams = {
   letterSpacing?: CSSProperties['letterSpacing'] | null
 }
 
-export function displayFlex<OptKey extends keyof CSSProperties>({
+export function flexStyles<OptKey extends keyof CSSProperties>({
+  display = 'flex',
   direction,
   alignItems,
   justifyContent,
 }: FlexStylesParams = {}) {
   return css`
-    display: flex;
+    display: ${display};
 
     ${direction &&
     css`
@@ -63,6 +64,7 @@ export function displayFlex<OptKey extends keyof CSSProperties>({
 }
 
 type FlexStylesParams = {
+  display?: CSSProperties['display'] | null
   direction?: CSSProperties['flexDirection'] | null
   alignItems?: CSSProperties['alignItems'] | null
   justifyContent?: CSSProperties['justifyContent'] | null

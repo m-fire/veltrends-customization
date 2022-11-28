@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { motion } from 'framer-motion'
 import SpeechBubble from '~/components/generate/svg/SpeechBubble'
+import { flexStyles } from '~/common/style/styled'
 
 type ReplyButtonProps = {
   size?: Size
@@ -22,13 +23,8 @@ export default ReplyButton
 // Inner Components
 
 const StyledButton = styled.button<{ size: Size }>`
-  display: inline-flex;
-  justify-content: flex-start;
+  ${flexStyles({ display: 'inline-flex', justifyContent: 'flex-start' })}
   gap: 4px;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: none;
   position: relative;
   ${({ size }) => {
     let fontSize = 14

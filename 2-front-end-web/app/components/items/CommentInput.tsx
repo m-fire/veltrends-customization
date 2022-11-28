@@ -3,7 +3,7 @@ import { colors } from '~/common/style/colors'
 import { useCommentInputStore } from '~/common/hooks/store/useCommentInputStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hooks/useOpenDialog'
-import { displayFlex, fontStyles } from '~/common/style/styled'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type CommentInputParams = {}
 
@@ -24,7 +24,7 @@ function CommentInput({}: CommentInputParams) {
 }
 
 const PseudoInput = styled.div`
-  ${displayFlex({ alignItems: 'center' })};
+  ${flexStyles({ alignItems: 'center' })};
   ${fontStyles({ size: '14px', color: colors.grey1 })};
   width: 100%;
   height: 40px;

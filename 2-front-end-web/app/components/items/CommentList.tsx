@@ -3,7 +3,7 @@ import { Comment } from '~/common/api/types'
 import CommentInput from '~/components/items/CommentInput'
 import { colors } from '~/common/style/colors'
 import CommentElement from '~/components/items/CommentElement'
-import { displayFlex, fontStyles } from '~/common/style/styled'
+import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type CommentListProps = {
   commentList: Comment[]
@@ -43,7 +43,7 @@ const CommentTitle = styled.h3`
 `
 
 const List = styled.div`
-  ${displayFlex({ direction: 'column' })}
+  ${flexStyles({ direction: 'column' })}
   width: 100%;
   margin-top: 32px;
   gap: 40px;

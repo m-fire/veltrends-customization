@@ -25,6 +25,12 @@ const GlobalStyle = createGlobalStyle`
 	button, input {
 		font-family: inherit;
 	}
+	button {
+		padding: 0;
+		background: none;
+		border: none;
+		outline: none;
+	}
 
 	/* 컨탠츠 Full-height 설정 방법 2가지 */
 

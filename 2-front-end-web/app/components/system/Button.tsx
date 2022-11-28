@@ -1,6 +1,7 @@
 import React, { ButtonHTMLAttributes, ReactNode, SVGProps } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
+import { flexStyles } from '~/common/style/styled'
 
 type ButtonProps = {
   layoutMode?: 'inline' | 'fullWidth'
@@ -20,10 +21,7 @@ export default Button
 // Inner Components
 
 const StyledButton = styled.button<ButtonProps>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
+  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })}
   height: 48px;
   font-size: 16px;
   padding-left: 20px;

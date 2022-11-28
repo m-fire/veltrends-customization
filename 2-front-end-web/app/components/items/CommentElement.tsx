@@ -13,7 +13,7 @@ import { useOpenDialog } from '~/common/hooks/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/common/hooks/useItemIdParams'
 import AppError from '~/common/error/AppError'
-import { displayFlex } from '~/common/style/styled'
+import { flexStyles } from '~/common/style/styled'
 
 export interface CommentElementProps {
   type: CommentType
@@ -128,7 +128,7 @@ export default CommentElement
 // Inner Components
 
 const Block = styled.div`
-  ${displayFlex({ direction: 'column' })};
+  ${flexStyles({ direction: 'column' })};
   font-size: 14px;
   font-weight: 600;
   color: ${colors.grey2};
@@ -138,7 +138,7 @@ const Block = styled.div`
 // Header
 
 const CommentHead = styled.div`
-  ${displayFlex({ alignItems: 'center' })};
+  ${flexStyles({ alignItems: 'center', justifyContent: 'space-between' })};
   font-weight: 500;
   gap: 4px;
 `
@@ -187,7 +187,7 @@ const CommentFooter = styled.div`
 `
 
 const LikeBlock = styled.div`
-  ${displayFlex({ alignItems: 'center' })};
+  ${flexStyles({ alignItems: 'center' })};
   color: ${colors.grey4};
   font-weight: 700;
   gap: 4px;
@@ -201,7 +201,7 @@ const LikeCount = styled.span`
 `
 
 const ReplyBlock = styled.div`
-  ${displayFlex({ alignItems: 'center' })};
+  ${flexStyles({ alignItems: 'center' })};
   gap: 2px;
   & svg {
     color: ${colors.grey2};
