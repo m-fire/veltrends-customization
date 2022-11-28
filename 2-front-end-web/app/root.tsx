@@ -64,13 +64,12 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 */
   // if (!cookie) return redirectIfNeeded()
   if (!cookie) return null
+
   Clients.setCookie(cookie)
   try {
     const userAndTokens = await Authenticator.getAccount()
-    console.log(`Root.loader() getAccount() try!`)
     return userAndTokens
   } catch (e) {
-    console.log(`Root.loader() getAccount() catched!`)
     const error = AppError.extract(e)
     if (error.name === 'Unauthorized') {
       // console.log(error.payload)
