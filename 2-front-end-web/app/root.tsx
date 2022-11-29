@@ -16,7 +16,7 @@ import { UserContext } from '~/common/context/UserContext'
 import { SimpleUser } from '~/core/api/types'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import GlobalBottomMenuModal from '~/common/component/system/GlobalBottomMenuModal'
+import GlobalBottomSheetModal from '~/common/component/system/GlobalBottomSheetModal'
 
 const queryClient = new QueryClient()
 
@@ -39,7 +39,7 @@ export default function App() {
               <Outlet />
             </UserContext.Provider>
           </DialogContextProvider>
-          <GlobalBottomMenuModal />
+          <GlobalBottomSheetModal />
         </QueryClientProvider>
 
         <ScrollRestoration />

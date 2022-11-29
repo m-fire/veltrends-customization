@@ -1,6 +1,6 @@
 import create from 'zustand'
 
-const useBottomMenuModalStore = create<BottomMenuModalStore>((set) => ({
+const useBottomSheetModalStore = create<BottomSheetModalStore>((set) => ({
   state: {
     visible: false,
     items: [],
@@ -27,22 +27,22 @@ const useBottomMenuModalStore = create<BottomMenuModalStore>((set) => ({
     },
   },
 }))
-export default useBottomMenuModalStore
+export default useBottomSheetModalStore
 
 // types
 
-export interface BottomMenuModalStore {
+export interface BottomSheetModalStore {
   state: {
     visible: boolean
-    items: BottomMenuModalItem[]
+    items: BottomSheetModalItem[]
   }
   action: {
-    open(items: BottomMenuModalItem[]): void
-    close(): void
+    open: (items: BottomSheetModalItem[]) => void
+    close: () => void
   }
 }
 
-interface BottomMenuModalItem {
+interface BottomSheetModalItem {
   name: string
   onClick(): void
 }

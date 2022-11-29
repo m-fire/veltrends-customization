@@ -4,17 +4,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { colors } from '~/common/style/colors'
 import Overlay from '~/common/component/system/Overlay'
 import { flexStyles, fontStyles } from '~/common/style/styled'
-import { BottomMenuModalStore } from '~/common/hook/store/useBottomMenuModalStore'
+import { BottomSheetModalStore } from '~/common/hook/store/useBottomSheetModalStore'
 
-/* BottomMenuModal */
-
-type BottomMenuModalProps = {
-  items: BottomMenuModalStore['state']['items']
-  visible: BottomMenuModalStore['state']['visible']
+type BottomSheetModalProps = {
+  items: BottomSheetModalStore['state']['items']
+  visible: BottomSheetModalStore['state']['visible']
   onClose(): void
 }
 
-function BottomMenuModal({ visible, items, onClose }: BottomMenuModalProps) {
+function BottomSheetModal({ visible, items, onClose }: BottomSheetModalProps) {
   return (
     <>
       <Overlay visible={visible} onClick={onClose} />
@@ -41,9 +39,7 @@ function BottomMenuModal({ visible, items, onClose }: BottomMenuModalProps) {
     </>
   )
 }
-export default BottomMenuModal
-
-/* BottomMenuModalBase */
+export default BottomSheetModal
 
 // Inner Components
 

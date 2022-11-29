@@ -15,7 +15,7 @@ import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import AppError from '~/common/error/AppError'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 import { MoreVert } from '~/core/component/generate/svg'
-import useBottomMenuModalStore from '~/common/hook/store/useBottomMenuModalStore'
+import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useDeleteComment } from '~/core/hook/useDeleteComment'
 
 export interface CommentElementProps {
@@ -70,7 +70,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
     writeComment(commentId)
   }
 
-  const openCommentModifiedModal = useBottomMenuModalStore(
+  const openCommentModifiedModal = useBottomSheetModalStore(
     (store) => store.action.open,
   )
   const deleteComment = useDeleteComment()
