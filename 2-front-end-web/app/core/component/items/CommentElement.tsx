@@ -39,7 +39,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
   //좋아요: 인증사용자인 경우 좋아요 허용, 없다면 로그인유도
   const likeCount = commentStoreState?.likeCount ?? comment.likeCount
   const { likeComment, unlikeComment } = useLikeCommentAction()
-  const openDialog = useOpenDialog({ gotoLogin: true })
+  const openDialog = useOpenDialog()
   const authUser = useAuthUser()
   const isLiked = commentStoreState?.isLiked ?? comment.isLiked
   const itemId = useItemIdParams()
@@ -47,7 +47,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
     if (itemId == null) throw new AppError('BadRequest')
 
     if (authUser == null) {
-      openDialog('LIKE_COMMENT>>LOGIN')
+      openDialog('LIKE_COMMENT', { gotoLogin: true })
       return
     }
     if (isLiked) {
@@ -65,7 +65,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
     if (itemId == null) throw new AppError('BadRequest')
 
     if (authUser == null) {
-      openDialog('COMMENT_INPUT>>LOGIN')
+      openDialog('WRITE_COMMENT')
       return
     }
     inputStoreAction.write(commentId)

@@ -9,12 +9,12 @@ type CommentInputParams = {}
 
 function CommentInput({}: CommentInputParams) {
   const authUser = useAuthUser()
-  const openDialog = useOpenDialog({ gotoLogin: true })
+  const openDialog = useOpenDialog()
   const writeComment = useCommentInputStore((store) => store.action.write)
 
   const onClick = () => {
     if (authUser == null) {
-      openDialog('COMMENT_INPUT>>LOGIN')
+      openDialog('WRITE_COMMENT', { gotoLogin: true })
       return
     }
     writeComment()

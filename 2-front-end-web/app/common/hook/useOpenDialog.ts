@@ -3,15 +3,15 @@ import { useCallback } from 'react'
 import { DialogConfig, getDialogContext } from '~/common/context/DialogContext'
 
 const descriptionMap = {
-  'LIKE_ITEM>>LOGIN': {
+  LIKE_ITEM: {
+    title: '로그인 후 이용해주세요.',
+    description: '이 글이 마음에 드세요? 로그인 이후 좋아요를 눌러주세요.',
+  },
+  LIKE_COMMENT: {
     title: '로그인 후 이용해주세요.',
     description: '이 댓글이 마음에 드세요? 로그인 이후 좋아요를 눌러주세요.',
   },
-  'LIKE_COMMENT>>LOGIN': {
-    title: '로그인 후 이용해주세요.',
-    description: '이 댓글이 마음에 드세요? 로그인 이후 좋아요를 눌러주세요.',
-  },
-  'COMMENT_INPUT>>LOGIN': {
+  WRITE_COMMENT: {
     title: '로그인 후 이용해주세요.',
     description: '댓글을 작성하기 위해서 로그인을 해주세요.',
   },
@@ -31,21 +31,28 @@ const descriptionMap = {
 
 type DescriptionType = keyof typeof descriptionMap
 
-export function useOpenDialog({ gotoLogin = false }: UseOpenDialogParams = {}) {
+export function useOpenDialog() {
   const location = useLocation()
   const navigate = useNavigate()
+
   const gotoLoginPage = () => navigate(`/auth/login?next=${location.pathname}`)
 
   const { open } = getDialogContext()
   const openDialog = useCallback(
-    (type: DescriptionType, options: OpenFnParams = {}) => {
-      const { mode = 'YESNO', onConfirm = () => {} } = options
+    (
+      type: DescriptionType,
+      {
+        mode = 'YESNO',
+        onConfirm = () => {},
+        gotoLogin = false,
+      }: OpenDialogParams = {},
+    ) => {
       const description = descriptionMap[type]
 
       open({
         description,
         onConfirm: gotoLogin ? gotoLoginPage : onConfirm,
-        mode: mode ?? 'YESNO',
+        mode,
       })
     },
     [location, navigate, open],
@@ -53,11 +60,8 @@ export function useOpenDialog({ gotoLogin = false }: UseOpenDialogParams = {}) {
   return openDialog
 }
 
-type UseOpenDialogParams = {
-  gotoLogin?: boolean
-}
-
-type OpenFnParams = {
+type OpenDialogParams = {
   mode?: DialogConfig['mode']
   onConfirm?: () => void
+  gotoLogin?: boolean
 }

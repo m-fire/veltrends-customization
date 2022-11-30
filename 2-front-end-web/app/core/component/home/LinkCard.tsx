@@ -34,12 +34,12 @@ function LinkCard({ item }: LinkCardProps) {
 
   // Dialog settings
   const itemStatus = itemStoreState?.itemStatus ?? item.itemStatus
-  const openDialog = useOpenDialog({ gotoLogin: true })
+  const openDialog = useOpenDialog()
   const { likeItem, unlikeItem } = useLikeItemAction()
   const authUser = useAuthUser()
   const toggleLike = async () => {
     if (authUser == null) {
-      openDialog('LIKE_ITEM>>LOGIN')
+      openDialog('LIKE_ITEM', { gotoLogin: true })
       return
     }
     if (isLiked) {

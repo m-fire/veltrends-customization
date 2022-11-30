@@ -36,11 +36,11 @@ function ItemViewer({ item }: ItemViewerProps) {
   // Dialog settings
   const itemStatus = itemStoreState?.itemStatus ?? item.itemStatus
   const { likeItem, unlikeItem } = useLikeItemAction()
-  const openDialog = useOpenDialog({ gotoLogin: true })
+  const openDialog = useOpenDialog()
   const authUser = useAuthUser()
   const toggleLike = async () => {
     if (authUser == null) {
-      openDialog('LIKE_ITEM>>LOGIN')
+      openDialog('LIKE_ITEM', { gotoLogin: true })
       return
     }
     if (isLiked) {
