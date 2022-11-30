@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useCallback } from 'react'
 import { DialogConfig, getDialogContext } from '~/common/context/DialogContext'
-import { DialogProps } from '~/common/component/system/Dialog'
 
 const descriptionMap = {
   'LIKE_ITEM>>LOGIN': {

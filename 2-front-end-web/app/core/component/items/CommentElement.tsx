@@ -68,12 +68,13 @@ function CommentElement({ comment, type }: CommentElementProps) {
       openDialog('COMMENT_INPUT>>LOGIN')
       return
     }
-    writeComment(commentId)
+    inputStoreAction.write(commentId)
   }
 
   const deleteComment = useDeleteComment()
+  const openBottomModal = useBottomSheetModalStore((store) => store.action.open)
   const onClickMore = () => {
-    openCommentModifiedModal([
+    openBottomModal([
       {
         name: '수정',
         onClick: () => inputStoreAction.edit(commentId, text),

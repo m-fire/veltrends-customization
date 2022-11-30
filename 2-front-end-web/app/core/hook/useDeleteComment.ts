@@ -10,7 +10,7 @@ export function useDeleteComment() {
 
   const deleteCommentFn = useCallback(
     async (commentId: number) => {
-      if (!itemId) return
+      if (itemId == null) return
 
       await deleteComment({
         commentId,
