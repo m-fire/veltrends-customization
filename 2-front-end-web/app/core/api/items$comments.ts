@@ -27,6 +27,18 @@ export async function getCommentList(itemId: number) {
   return response.data
 }
 
+export async function editComment({
+  itemId,
+  text,
+  commentId,
+}: EditCommentParams) {
+  const response = await client.patch<Comment>(
+    `${URL_ITEMS}/${itemId}${URL_COMMENTS}/${commentId}`,
+    { itemId, text },
+  )
+  return response.data
+}
+
 export async function deleteComment({
   itemId,
   commentId,
@@ -66,6 +78,12 @@ type CreateCommentParams = {
   itemId: number
   parentCommentId?: number
   text: string
+}
+
+type EditCommentParams = {
+  itemId: number
+  text: string
+  commentId?: number
 }
 
 type DeleteCommentParams = { itemId: number; commentId: number }

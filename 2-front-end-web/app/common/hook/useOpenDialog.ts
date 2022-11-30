@@ -24,6 +24,10 @@ const descriptionMap = {
     title: '오류',
     description: '댓글 작성 실패.',
   },
+  COMMENT_EDIT_ERROR: {
+    title: '오류',
+    description: '댓글 수정 실패',
+  },
 } as const
 
 type DescriptionType = keyof typeof descriptionMap

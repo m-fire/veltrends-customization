@@ -59,7 +59,8 @@ function CommentElement({ comment, type }: CommentElementProps) {
 
   //댓글달기: 인증사용자인 경우 댓글달기 UI 제공, 없다면 로그인유도
 
-  const writeComment = useCommentInputStore((store) => store.action.write)
+  const inputStoreAction = useCommentInputStore((store) => store.action)
+
   const onReply = () => {
     if (itemId == null) throw new AppError('BadRequest')
 
@@ -70,17 +71,12 @@ function CommentElement({ comment, type }: CommentElementProps) {
     writeComment(commentId)
   }
 
-  const openCommentModifiedModal = useBottomSheetModalStore(
-    (store) => store.action.open,
-  )
   const deleteComment = useDeleteComment()
   const onClickMore = () => {
     openCommentModifiedModal([
       {
         name: '수정',
-        onClick: () => {
-          alert(`댓글(${commentId}) 수정 시작`)
-        },
+        onClick: () => inputStoreAction.edit(commentId, text),
       },
       {
         name: '삭제',
