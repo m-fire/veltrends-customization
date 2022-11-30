@@ -115,7 +115,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
     })
   }
 
-  const { visible, inputValue: inputModalText } = inputStoreState
+  const { visible, commentId, inputValue: inputModalText } = inputStoreState
   useEffect(() => {
     if (visible) setText('')
   }, [visible])
@@ -125,7 +125,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
   }, [inputModalText])
 
   const isCommentSending = createMutation.isLoading || editMutaiton.isLoading
-  const isEditing = inputStoreState.commentId != null
+  const isCreateComment = commentId == null
 
   return (
     <>
@@ -150,10 +150,10 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
             <TransparentButton onClick={onReply} disabled={isCommentSending}>
               {isCommentSending ? (
                 <StyledSpinner />
-              ) : isEditing ? (
-                <StyledWrite />
-              ) : (
+              ) : isCreateComment ? (
                 <StyledSpeechBubble />
+              ) : (
+                <StyledWrite />
               )}
             </TransparentButton>
           </Footer>
