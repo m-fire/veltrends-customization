@@ -6,7 +6,7 @@ import { Item, Comment } from '~/core/api/types'
 import BasicLayout from '~/common/component/layout/BasicLayout'
 import ItemViewer from '~/core/component/items/ItemViewer'
 import CommentList from '~/core/component/items/CommentList'
-import { useCommentListQuery } from '~/core/hook/query/useCommentListQuery'
+import { useCommentListQuery } from '~/core/hook/query/useCommentsQuery'
 import CommentInputOverlay from '~/core/component/items/CommentInputOverlay'
 
 type ItemProps = {}

@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { deleteComment } from '~/core/api/items$comments'
 import { useItemIdParams } from './useItemIdParams'
-import { getCommentListQueryKey } from '~/core/hook/query/useCommentListQuery'
+import { commentsKey } from '~/core/hook/query/useCommentsQuery'
 
 export function useDeleteComment() {
   const queryClient = useQueryClient()
@@ -17,7 +17,7 @@ export function useDeleteComment() {
         itemId,
       })
 
-      await queryClient.invalidateQueries(getCommentListQueryKey(itemId))
+      await queryClient.invalidateQueries(commentsKey(itemId))
     },
     [itemId, queryClient],
   )

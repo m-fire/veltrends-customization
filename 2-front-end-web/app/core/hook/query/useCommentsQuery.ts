@@ -5,17 +5,12 @@ export function useCommentListQuery(
   itemId: number,
   options: UseQueryOptionsOf<typeof getCommentList> = {},
 ) {
-  return useQuery(
-    getCommentListQueryKey(itemId),
-    () => getCommentList(itemId),
-    options,
-  )
+  return useQuery(commentsKey(itemId), () => getCommentList(itemId), options)
 }
 
-export const getCommentListQueryKey = (itemId: number) => [
-  'commentList',
-  itemId,
-]
+export function commentsKey(itemId: number) {
+  return ['comments', itemId]
+}
 
 // types
 
