@@ -26,6 +26,7 @@ const REQ_ITEM_PATH_PARAMS_SCHEMA = Type.Object({
 })
 
 const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
+  link: Type.String({ default: 'test_url_link' }),
   title: Type.String({ default: 'test_title' }),
   body: Type.String({ default: 'test_body' }),
   tags: Type.Array(Type.String()),

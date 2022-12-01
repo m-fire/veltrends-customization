@@ -131,11 +131,18 @@ class ItemService {
     return ItemService.mergeItemLike(item, itemLikeByIdsOrNull?.[itemId])
   }
 
-  async updateItem({ itemId, userId, title, body, tags }: UpdateItemParams) {
+  async updateItem({
+    itemId,
+    userId,
+    link,
+    title,
+    body,
+    tags,
+  }: UpdateItemParams) {
     await ItemService.findItemOrThrow(itemId, userId)
     const updatedItem = await db.item.update({
       where: { id: itemId },
-      data: { title, body },
+      data: { link, title, body },
       include: {
         user: { select: { id: true, username: true } },
         publisher: true,
