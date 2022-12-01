@@ -51,6 +51,7 @@ function Item({}: ItemProps) {
               cancelText: '취소',
             },
             onConfirm: async () => {
+              // todo: show fullscreen spinner on loading
               await deleteItem(item.id)
               navigate('/')
             },
