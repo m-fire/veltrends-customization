@@ -19,7 +19,7 @@ interface WriteProviderProps {
 export function WriteContextProvider({ children }: WriteProviderProps) {
   const [state, setState] = useState<WriteContextState>(initialState)
 
-  const actions: WriteContextActions = useMemo(
+  const action: WriteContextActions = useMemo(
     () => ({
       reset: () => {
         setState(initialState)
@@ -42,7 +42,7 @@ export function WriteContextProvider({ children }: WriteProviderProps) {
     }),
     [],
   )
-  const value = useMemo(() => ({ state, actions }), [state, actions])
+  const value = useMemo(() => ({ state, action }), [state, action])
 
   return <WriteContext.Provider value={value}>{children}</WriteContext.Provider>
 }
@@ -57,7 +57,7 @@ export function useWriteContext() {
 
 type WriteContextMap = {
   state: WriteContextState
-  actions: WriteContextActions
+  action: WriteContextActions
 }
 
 export type WriteContextState = {

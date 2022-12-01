@@ -14,7 +14,7 @@ function WriteLink() {
       form: { link },
       error,
     },
-    actions,
+    action: { change: changeFormData },
   } = useWriteContext()
 
   return (
@@ -33,7 +33,7 @@ function WriteLink() {
           name="url"
           value={link}
           onChange={(e) => {
-            actions.change('link', e.target.value)
+            changeFormData('link', e.target.value)
           }}
           errorMessage={
             error?.statusCode === ERROR_CODE_INVALID_URL

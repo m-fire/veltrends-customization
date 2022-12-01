@@ -19,7 +19,7 @@ type IntroProps = {}
 function Intro({}: IntroProps) {
   const {
     state: { form },
-    actions,
+    action: { change: changeFormData },
   } = useWriteContext()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -30,9 +30,9 @@ function Intro({}: IntroProps) {
   const onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (
     e,
   ) => {
-    const key = e.target.name as keyof Omit<typeof form, 'link'>
-    const { value } = e.target
-    actions.change(key, value)
+    const formKey = e.target.name as keyof Omit<typeof form, 'link'>
+    const text = e.target.value
+    changeFormData(formKey, text)
   }
 
   return (
@@ -56,7 +56,7 @@ function Intro({}: IntroProps) {
             onChange={onChange}
             value={form.title}
           />
-          <IntroLabelTextArea
+          <StyledLabelTextArea
             label="내용"
             name="body"
             onChange={onChange}
@@ -78,11 +78,12 @@ export const action: ActionFunction = async ({ request }) => {
 
   const form = await request.formData()
 
-  const link = form.get('link') as string
-  const title = form.get('title') as string
-  const body = form.get('body') as string
   try {
-    await createItem({ link, title, body })
+    await createItem({
+      link: form.get('link') as string,
+      title: form.get('title') as string,
+      body: form.get('body') as string,
+    })
 
     return redirect('/')
   } catch (e) {
@@ -93,14 +94,14 @@ export const action: ActionFunction = async ({ request }) => {
 
 export function CatchBoundary() {
   const caught = useAppErrorCatch()
-  const { actions } = useWriteContext()
+  const { action } = useWriteContext()
   const navigate = useNavigate()
   useEffect(() => {
     if (caught.status === APP_ERRORS_INFO.InvalidUrl.statusCode) {
       navigate(-1)
-      actions.setError(caught.data)
+      action.setError(caught.data)
     }
-  }, [caught, navigate, actions])
+  }, [caught, navigate, action])
 
   return <Intro />
 }
@@ -113,7 +114,7 @@ const Group = styled.div`
   padding-bottom: 16px;
 `
 
-const IntroLabelTextArea = styled(LabelTextArea)`
+const StyledLabelTextArea = styled(LabelTextArea)`
   flex: 1;
   textarea {
     flex: 1;
