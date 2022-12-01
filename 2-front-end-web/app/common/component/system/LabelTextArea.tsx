@@ -77,14 +77,14 @@ const Label = styled.label<{ focused?: boolean }>`
 
 const StyledTextArea = styled.textarea`
   ${fontStyles({ size: '16px', color: colors.grey5, lineHeight: 1.5 })};
-  border: 1px solid ${colors.grey2};
+  border: 2px solid ${colors.grey2};
   border-radius: 4px;
   outline: none;
   padding: 16px;
   transition: all 0.25s ease-in-out;
 
   &:focus {
-    border: 1px solid ${colors.primary1};
+    border: 2px solid ${colors.primary1};
   }
 
   &::placeholder {
