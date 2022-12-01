@@ -7,7 +7,7 @@ import {
 } from 'react'
 import Dialog, { DialogProps } from '~/common/component/system/Dialog'
 
-const DialogContext = createContext<DialogActions | null>(null)
+const DialogContext = createContext<DialogActionContext | null>(null)
 
 interface DialogContextProviderProps {
   children: ReactNode
@@ -24,31 +24,31 @@ export function DialogContextProvider({
     setConfig(config)
   }, [])
 
-  const close = useCallback(() => {
-    config?.onClose?.()
-    setVisible(false)
-  }, [config])
-
   const confirm = useCallback(() => {
     config?.onConfirm?.()
     setVisible(false)
   }, [config])
 
-  const description = config?.description
-  const value = { open }
+  const cancel = useCallback(() => {
+    config?.onCancel?.()
+    setVisible(false)
+  }, [config])
+
+  const providerValue = { open }
+  const dialogTexts = config?.textMap
   return (
-    <DialogContext.Provider value={value}>
+    <DialogContext.Provider value={providerValue}>
       {children}
       {/* 다이얼로그 창을 모든 하위컨탠츠 위에 랜더링 */}
       <Dialog
-        description={{
-          title: description?.title ?? '',
-          description: description?.description ?? '',
-          // confirmText: description?.confirmText ?? '',
-          // cancelText: description?.cancelText ?? '',
+        textMap={{
+          title: dialogTexts?.title ?? '',
+          description: dialogTexts?.description ?? '',
+          confirmText: dialogTexts?.confirmText ?? '확인',
+          cancelText: dialogTexts?.cancelText ?? '닫기',
         }}
-        onClose={close}
         onConfirm={confirm}
+        onCancel={cancel}
         visible={visible}
         mode={config?.mode ?? 'OK'}
       />
@@ -66,11 +66,11 @@ export function getDialogContext() {
 
 //types
 
-type DialogActions = {
+type DialogActionContext = {
   open(config: DialogConfig): void
 }
 
-export type DialogConfig = Omit<DialogProps, 'onClose' | 'visible'> &
-  Partial<Pick<DialogProps, 'onConfirm' | 'onClose'>> & {
-    mode?: 'OK' | 'YESNO'
+export type DialogConfig = Omit<DialogProps, 'visible'> &
+  Partial<Pick<DialogProps, 'onConfirm' | 'onCancel'>> & {
+    mode?: DialogProps['mode']
   }

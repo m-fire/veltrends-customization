@@ -6,29 +6,24 @@ import Button from '~/common/component/system/Button'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 
 export type DialogProps = {
-  description: {
+  mode?: 'OK' | 'YESNO'
+  textMap: {
     title: string
     description: string
     confirmText?: string
     cancelText?: string
   }
   onConfirm: () => void
-  onClose: () => void
+  onCancel: () => void
   visible: boolean
-  mode?: 'OK' | 'YESNO'
 }
 
 function Dialog({
-  description: {
-    title,
-    description,
-    confirmText = '확인',
-    cancelText = '닫기',
-  },
-  onConfirm,
-  onClose,
-  visible,
   mode = 'OK',
+  textMap: { title, description, confirmText = '확인', cancelText = '닫기' },
+  onConfirm,
+  onCancel,
+  visible,
 }: DialogProps) {
   return (
     <StyledModal visible={visible}>
@@ -41,7 +36,7 @@ function Dialog({
           </StyledButton>
         ) : (
           <>
-            <StyledButton variant="nobg" onClick={onClose}>
+            <StyledButton variant="nobg" onClick={onCancel}>
               {cancelText}
             </StyledButton>
             <StyledButton variant="primary" onClick={onConfirm}>
