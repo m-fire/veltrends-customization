@@ -2,7 +2,7 @@ import qs from 'qs'
 import { client } from '~/common/api/client'
 import { Item, ItemListPagination, ItemStatus } from './types'
 
-export const URL_ITEMS = '/api/items'
+export const URL_ITEMS = '/api/items' as const
 
 export async function createItem(params: CreateItemParams) {
   const response = await client.post<Item>(URL_ITEMS, params)
@@ -23,6 +23,16 @@ export async function getItemList(cursor?: number) {
 
 export async function getItem(itemId: number) {
   const response = await client.get<Item>(`${URL_ITEMS}/${itemId}`)
+  return response.data
+}
+
+export async function updateItem({ itemId, link, title, body }: UpdateItem) {
+  const response = await client.patch<Item>(`${URL_ITEMS}/${itemId}`, {
+    link,
+    title,
+    body,
+    tags: [], // TODO: tags
+  })
   return response.data
 }
 
@@ -50,6 +60,13 @@ export async function unlikeItem(itemId: number, controller?: AbortController) {
 // Types
 
 type CreateItemParams = {
+  link: string
+  title: string
+  body: string
+}
+
+type UpdateItem = {
+  itemId: number
   link: string
   title: string
   body: string
