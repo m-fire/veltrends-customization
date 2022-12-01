@@ -79,10 +79,6 @@ function ItemViewer({ item }: ItemViewerProps) {
         <Body>{body}</Body>
 
         <Footer>
-          <UserInfo>
-            by <b>{user.username}</b> · <span>{pastDistance}</span>
-          </UserInfo>
-
           <LikeBlock>
             <StyledLikeButton
               size="large"
@@ -102,6 +98,10 @@ function ItemViewer({ item }: ItemViewerProps) {
               )}
             </AnimatePresence>
           </LikeBlock>
+
+          <UserInfo>
+            by <b>{user.username}</b> · <span>{pastDistance}</span>
+          </UserInfo>
         </Footer>
       </Content>
     </Block>
@@ -202,6 +202,15 @@ const Body = styled.p`
   word-break: keep-all;
 `
 
+const LikeBlock = styled.div`
+  ${flexStyles({ direction: 'column', alignItems: 'center' })};
+  gap: 4px;
+  margin-bottom: 56px;
+  & svg {
+    color: ${colors.grey2};
+  }
+`
+
 const UserInfo = styled.div`
   ${flexStyles({ justifyContent: 'end' })};
   ${fontStyles({
@@ -211,17 +220,8 @@ const UserInfo = styled.div`
     lineHeight: 1.33,
   })};
   gap: 4px;
-  margin-bottom: 40px;
   & b {
     font-weight: 700;
-  }
-`
-
-const LikeBlock = styled.div`
-  ${flexStyles({ direction: 'column', alignItems: 'center' })};
-  gap: 4px;
-  & svg {
-    color: ${colors.grey2};
   }
 `
 
