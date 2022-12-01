@@ -1,5 +1,5 @@
 import qs from 'qs'
-import { client } from '../../common/api/client'
+import { client } from '~/common/api/client'
 import { Item, ItemListPagination, ItemStatus } from './types'
 
 export const URL_ITEMS = '/api/items'
@@ -24,6 +24,10 @@ export async function getItemList(cursor?: number) {
 export async function getItem(itemId: number) {
   const response = await client.get<Item>(`${URL_ITEMS}/${itemId}`)
   return response.data
+}
+
+export async function deleteItem(itemId: number) {
+  return client.delete(`${URL_ITEMS}/${itemId}`)
 }
 
 export async function likeItem(itemId: number, controller?: AbortController) {
