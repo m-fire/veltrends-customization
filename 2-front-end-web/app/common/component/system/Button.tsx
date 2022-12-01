@@ -1,11 +1,11 @@
-import React, { ButtonHTMLAttributes, ReactNode, SVGProps } from 'react'
+import React, { ButtonHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type ButtonProps = {
   layoutMode?: 'inline' | 'fullWidth'
-  variant?: 'primary' | 'secondary' | 'nobg'
+  variant?: VariantType
   [key: string]: any
 }
 
@@ -30,9 +30,9 @@ const StyledButton = styled.button<ButtonProps>`
   //background: ${colors.primary1};
   //color: white;
   ${({ variant }) => variantStyles[variant!]}
+  // todo: descructive
   transition: filter 0.25s ease-in-out;
   white-space: nowrap;
-  font-family: Pretendard;
 
   & span {
     padding-right: 6px;
@@ -47,7 +47,7 @@ const StyledButton = styled.button<ButtonProps>`
     `}
 `
 
-const variantStyles = {
+const variantStyles: Record<VariantType, ReturnType<typeof css>> = {
   primary: css`
     background: ${colors.primary1};
     color: white;
@@ -60,4 +60,8 @@ const variantStyles = {
     ${fontStyles({ weight: 800, color: colors.grey5 })};
     background: none;
   `,
-}
+} as const
+
+// types
+
+type VariantType = 'primary' | 'secondary' | 'nobg'
