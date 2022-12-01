@@ -129,7 +129,8 @@ const StyledLink = styled(Link)`
 const Thumbnail = styled.img`
   display: block; // 이미지는 inline 이므로, 불필요한 line-height 제거
   width: 100%;
-  aspect-ratio: 280/100; // w x h 값으로
+  //aspect-ratio: 280/100; // 비율 고정값
+  max-height: 40vh; // 이미지 height 가 최대값 아래로 유동적 변경
   object-fit: cover;
   border-radius: 6px;
   box-shadow: 0 0 3px rgba(0 0 0 / 15%);
