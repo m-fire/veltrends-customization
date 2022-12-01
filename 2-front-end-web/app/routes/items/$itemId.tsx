@@ -8,11 +8,16 @@ import ItemViewer from '~/core/component/items/ItemViewer'
 import CommentList from '~/core/component/items/CommentList'
 import { useCommentListQuery } from '~/core/hook/query/useCommentsQuery'
 import CommentInputOverlay from '~/core/component/items/CommentInputOverlay'
+import MoreVertButton from '~/common/component/system/MoreVertButton'
+import { useAuthUser } from '~/common/context/UserContext'
+import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 
 type ItemProps = {}
 
 function Item({}: ItemProps) {
   const loaderData = useLoaderData<ItemLoaderData>()
+  const authUser = useAuthUser()
+  const isMyItem = authUser?.id === loaderData.item.user.id
 
   /* react-query 적용 동기: velopert */
   // comments 에서 처리할 action 종류가 4가지가 되는데 (like, commenting, commentLike, subcommentLike)
@@ -24,9 +29,21 @@ function Item({}: ItemProps) {
     initialData: loaderData.commentList,
   })
 
+  const onMoreVert = () => {
+    alert(`$itemId.tsx> Item.onMoreVert()`)
+  }
+
   //Todo: Header tool menu 구성
   return (
-    <BasicLayout hasBackButton title={null}>
+    <BasicLayout
+      title={null}
+      headerRight={
+        isMyItem ? (
+          <MoreVertButton position="header" onClick={onMoreVert} />
+        ) : null
+      }
+      hasBackButton
+    >
       <ItemViewer item={loaderData.item} />
       <CommentList commentList={commentList!} />
       <CommentInputOverlay />

@@ -10,6 +10,7 @@ type BasicLayoutProps = {
   title?: ReactNode
   hasBackButton?: boolean
   onGoBack?: () => void
+  headerRight?: ReactNode
   children?: ReactNode
 }
 
@@ -22,6 +23,7 @@ function BasicLayout({
   title,
   hasBackButton,
   onGoBack,
+  headerRight,
   children,
 }: BasicLayoutProps) {
   const goBack = useGoBack()
@@ -35,6 +37,7 @@ function BasicLayout({
             <HeaderBackButton onClick={onGoBack ?? goBack} />
           ) : null
         }
+        headerRight={headerRight}
       />
       <Content>{children}</Content>
     </FullHeightPage>
