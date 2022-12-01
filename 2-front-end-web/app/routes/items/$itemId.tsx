@@ -40,7 +40,9 @@ function Item({}: ItemProps) {
     openBottomModal([
       {
         name: '수정',
-        onClick: () => alert(`뉴스 글 수정! 시작`),
+        onClick: () => {
+          navigate(`/write/edit?itemId=${loaderData.item.id}`)
+        },
       },
       {
         name: '삭제',
