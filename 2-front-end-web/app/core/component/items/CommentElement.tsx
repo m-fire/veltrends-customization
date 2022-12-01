@@ -81,9 +81,14 @@ function CommentElement({ comment, type }: CommentElementProps) {
       },
       {
         name: '삭제',
-        onClick: async () => {
-          await deleteComment(commentId)
-        },
+        onClick: () =>
+          openDialog('DELETE_ITEM', {
+            buttonTexts: {
+              confirmText: '삭제',
+              cancelText: '취소',
+            },
+            onConfirm: async () => await deleteComment(commentId),
+          }),
       },
     ])
   }
