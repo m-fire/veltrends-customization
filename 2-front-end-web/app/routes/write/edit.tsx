@@ -6,9 +6,16 @@ import BasicLayout from '~/common/component/layout/BasicLayout'
 import WriteFormTemplate from '~/core/component/write/WriteFormTemplate'
 import LabelInput from '~/common/component/system/LabelInput'
 import LabelTextArea from '~/common/component/system/LabelTextArea'
+import { useLoaderData, useNavigate } from '@remix-run/react'
+import { Item } from '~/core/api/types'
 
 function Edit() {
-  const [form, setForm] = useState({})
+  const item = useLoaderData<Item>()
+  const [form, setForm] = useState({
+    link: item.link,
+    title: item.title,
+    body: item.body,
+  })
 
   const onChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = (
     e,
@@ -28,11 +35,26 @@ function Edit() {
     <BasicLayout title="수정" hasBackButton>
       <WriteFormTemplate buttonText="수정하기" onSubmit={onSubmit}>
         <Group>
-          <LinkLabelTextArea label="URL" name="link" onChange={onChange} />
+          <LinkLabelTextArea
+            label="URL"
+            name="link"
+            value={form.link}
+            onChange={onChange}
+          />
 
-          <LabelInput label="제목" name="title" onChange={onChange} />
+          <LabelInput
+            label="제목"
+            name="title"
+            value={form.title}
+            onChange={onChange}
+          />
 
-          <BodyLabelTextArea label="내용" name="body" onChange={onChange} />
+          <BodyLabelTextArea
+            label="내용"
+            name="body"
+            value={form.body}
+            onChange={onChange}
+          />
 
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
