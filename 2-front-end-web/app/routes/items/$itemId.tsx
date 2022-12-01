@@ -11,6 +11,7 @@ import CommentInputOverlay from '~/core/component/items/CommentInputOverlay'
 import MoreVertButton from '~/common/component/system/MoreVertButton'
 import { useAuthUser } from '~/common/context/UserContext'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
+import { useOpenDialog } from '~/common/hook/useOpenDialog'
 
 type ItemProps = {}
 
@@ -28,9 +29,25 @@ function Item({}: ItemProps) {
   const { data: commentList } = useCommentListQuery(loaderData.item.id, {
     initialData: loaderData.commentList,
   })
+  const { open: openBottomModal } = useBottomSheetModalStore(
+    (store) => store.action,
+  )
+  const openDialog = useOpenDialog()
 
   const onMoreVert = () => {
-    alert(`$itemId.tsx> Item.onMoreVert()`)
+    openBottomModal([
+      {
+        name: '수정',
+        onClick: () => alert(`뉴스 글 수정! 시작`),
+      },
+      {
+        name: '삭제',
+        onClick: () =>
+          openDialog('DELETE_ITEM', {
+            onConfirm: () => alert(`todo...`),
+          }),
+      },
+    ])
   }
 
   //Todo: Header tool menu 구성
