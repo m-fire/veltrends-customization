@@ -5,7 +5,7 @@ import { colors } from '~/common/style/colors'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type WriteFormTemplateProps = {
-  description: string
+  description?: string
   buttonText: string
   onSubmit: FormEventHandler<HTMLFormElement>
   children: ReactNode
@@ -19,7 +19,7 @@ function WriteFormTemplate({
 }: WriteFormTemplateProps) {
   return (
     <StyledForm onSubmit={onSubmit}>
-      <h3>{description}</h3>
+      {description ? <h3>{description}</h3> : null}
       <Content>{children}</Content>
       <Button>{buttonText}</Button>
     </StyledForm>
