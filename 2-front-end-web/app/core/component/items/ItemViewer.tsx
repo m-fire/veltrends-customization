@@ -130,6 +130,7 @@ const Thumbnail = styled.img`
   height: auto;
   max-height: 80vh;
   object-fit: contain;
+  box-shadow: 0 0 16px rgba(0 0 0 / 15%);
 `
 
 const Content = styled.div`
@@ -175,8 +176,8 @@ const Title = styled.h2`
     color: colors.grey5,
     letterSpacing: '-0.5px',
   })};
-  margin: 0;
   line-height: 1.5;
+  margin: 0 0 56px;
 `
 
 // const OriginLink = styled.a`
@@ -210,7 +211,7 @@ const Body = styled.p`
   })};
   line-height: 1.5;
   margin-top: 0;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
   white-space: pre-wrap;
   word-break: keep-all;
 `
@@ -218,7 +219,7 @@ const Body = styled.p`
 const LikeBlock = styled.div`
   ${flexStyles({ direction: 'column', alignItems: 'center' })};
   gap: 4px;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
   & svg {
     color: ${colors.grey2};
   }
