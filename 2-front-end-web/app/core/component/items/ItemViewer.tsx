@@ -56,27 +56,33 @@ function ItemViewer({ item }: ItemViewerProps) {
 
   return (
     <Block>
-      {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
+      {thumbnail ? (
+        <a href={link}>
+          <Thumbnail src={thumbnail} alt={title} />
+        </a>
+      ) : null}
 
       <Content>
-        <Publisher hasThumbnail={thumbnail != null}>
-          {favicon ? <img src={favicon} alt="favicon" /> : <Earth />}
+        <a href={link}>
+          <Publisher hasThumbnail={thumbnail != null}>
+            {favicon ? <img src={favicon} alt="favicon" /> : <Earth />}
 
-          {author ? (
-            <>
-              <strong>{author}</strong> {`· ${domain}`}
-            </>
-          ) : (
-            <strong>{domain}</strong>
-          )}
-        </Publisher>
-        <Title>{title}</Title>
-        <OriginLink to={link}>
-          이동
-          <Shortcut />
-        </OriginLink>
+            {author ? (
+              <>
+                <strong>{author}</strong> {`· ${domain}`}
+              </>
+            ) : (
+              <strong>{domain}</strong>
+            )}
+          </Publisher>
+          <Title>{title}</Title>
+          {/*<OriginLink href={link}>*/}
+          {/*  이동*/}
+          {/*  <Shortcut />*/}
+          {/*</OriginLink>*/}
 
-        <Body>{body}</Body>
+          <Body>{body}</Body>
+        </a>
 
         <Footer>
           <LikeBlock>
@@ -113,6 +119,9 @@ export default ItemViewer
 
 const Block = styled.div`
   ${flexStyles({ direction: 'column' })};
+  & > a {
+    display: block;
+  }
 `
 
 const Thumbnail = styled.img`
@@ -126,6 +135,10 @@ const Thumbnail = styled.img`
 const Content = styled.div`
   padding: 30px;
   border-bottom: 4px solid ${colors.grey1};
+  & > a {
+    display: block;
+    text-decoration: none;
+  }
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
@@ -166,26 +179,26 @@ const Title = styled.h2`
   line-height: 1.5;
 `
 
-const OriginLink = styled(Link)`
-  ${flexStyles({
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-  })};
-  ${fontStyles({
-    size: '18px',
-    weight: 600,
-    color: colors.primary1,
-    lineHeight: 1,
-  })};
-  text-decoration: none;
-  margin: 0 0 30px;
-  gap: 6px;
-  & > svg {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-  }
-`
+// const OriginLink = styled.a`
+//   ${flexStyles({
+//     alignItems: 'flex-end',
+//     justifyContent: 'flex-end',
+//   })};
+//   ${fontStyles({
+//     size: '18px',
+//     weight: 600,
+//     color: colors.primary1,
+//     lineHeight: 1,
+//   })};
+//   text-decoration: none;
+//   margin: 0 0 30px;
+//   gap: 6px;
+//   & > svg {
+//     display: inline-block;
+//     width: 20px;
+//     height: 20px;
+//   }
+// `
 
 const Body = styled.p`
   ${fontStyles({
