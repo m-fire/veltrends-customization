@@ -1,0 +1,43 @@
+GET http://{{host}}:{{port}}/api/search?q=AI
+Accept: application/json
+
+> {%
+var status = 200;
+client.test("/api/search - alglia 문자/단어 검색 조회", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### 문자열 'AI' 검색결과 조회
+
+GET http://{{host}}:{{port}}/api/search?q=AI&offset=40
+Accept: application/json
+
+> {%
+var status = 200;
+client.test("/api/search - alglia 문자/단어 검색 조회", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### 문자열 'AI' 검색 및 40개 까지의 결과 조회
