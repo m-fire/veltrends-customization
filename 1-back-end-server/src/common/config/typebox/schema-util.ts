@@ -1,6 +1,7 @@
 import { FastifySchema } from 'fastify'
 import { TSchema, Type } from '@sinclair/typebox'
 import AppError from '../../error/AppError.js'
+import { Nullable } from './type-util.js'
 
 export function createFastifySchemaMap<T extends Record<string, FastifySchema>>(
   params: T,
@@ -37,8 +38,9 @@ export const createPaginationSchema = <T extends TSchema>(
     totalCount: Type.Integer({ default: 30 }),
     pageInfo: Type.Object(
       {
-        hasNextPage: Type.Boolean(),
-        lastCursor: Type.Integer({ default: 10 }),
+        hasNextPage: Type.Optional(Nullable(Type.Boolean({ default: true }))),
+        lastCursor: Type.Optional(Nullable(Type.Integer({ default: 10 }))),
+        nextOffset: Type.Optional(Nullable(Type.Integer({ default: 3 }))),
       },
       //todo: 커스텀 예제가 이상하게 동작한다. 알아볼것
       // example

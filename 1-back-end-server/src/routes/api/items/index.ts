@@ -20,6 +20,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
         mode: 'recent',
         cursor: cursor ? parseInt(cursor, 10) : null,
         userId: user?.id,
+        limit: 1000,
       })
       return itemList
     },
