@@ -3,8 +3,7 @@ import { createAuthRoute } from '../../../../common/config/fastify/plugin/auth-p
 import { CommentsRequestMap } from './types.js'
 import COMMENTS_SCHEMA from './schema.js'
 import CommentService from '../../../../service/CommentService.js'
-import AppError from '../../../../common/error/AppError.js'
-import { AuthUserInfo } from '../../auth/types.js'
+import { Validator } from '../../../../common/util/validates.js'
 
 export const commentsRoute: FastifyPluginAsync = async (fastify) => {
   const commentService = CommentService.getInstance()
@@ -55,7 +54,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/',
     { schema: COMMENTS_SCHEMA.CREATE_COMMENT },
     async (request, reply) => {
-      const { id: userId } = getValidUser(request.user)
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
 
       const newComment = await commentService.createComment({
         itemId: request.params.id,
@@ -73,7 +72,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId',
     { schema: COMMENTS_SCHEMA.UPDATE_COMMENT },
     async (request, reply) => {
-      const { id: userId } = getValidUser(request.user)
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
 
       const updatedComment = await commentService.updateComment({
         commentId: request.params.commentId,
@@ -90,7 +89,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId',
     { schema: COMMENTS_SCHEMA.DELETE_COMMENT },
     async (request, reply) => {
-      const { id: userId } = getValidUser(request.user)
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
 
       reply.status(204)
       await commentService.deleteComment({
@@ -104,7 +103,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId/likes',
     { schema: COMMENTS_SCHEMA.LIKE_COMMENT },
     async (request, reply) => {
-      const { id: userId } = getValidUser(request.user)
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { commentId } = request.params
 
       const likeCount = await commentService.likeComment({ commentId, userId })
@@ -117,7 +116,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     '/:commentId/likes',
     { schema: COMMENTS_SCHEMA.UNLIKE_COMMENT },
     async (request, reply) => {
-      const { id: userId } = getValidUser(request.user)
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { commentId } = request.params
 
       const likeCount = await commentService.unlikeComment({
@@ -129,8 +128,3 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     },
   )
 })
-
-function getValidUser(user: AuthUserInfo | null): AuthUserInfo {
-  if (user == null || user?.id == null) throw new AppError('Forbidden')
-  return user
-}

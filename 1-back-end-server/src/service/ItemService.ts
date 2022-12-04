@@ -81,7 +81,12 @@ class ItemService {
     )
   }
 
-  async getItemList({ mode, limit, cursor, userId }: ItemListPagingOptions) {
+  async getItemList({
+    mode,
+    limit,
+    cursor,
+    userId,
+  }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus> | []> {
     if (mode !== 'recent') return []
 
     const [totalCount, itemList] = await Promise.all([
@@ -102,7 +107,7 @@ class ItemService {
     const lastCursor = itemList.at(-1)?.id ?? null
     const hasNextPage = await ItemService.hasNextPageByCursor(lastCursor)
 
-    return <Pagination<ItemOrItemWithStatus>>{
+    return {
       list: itemWithLikeList,
       totalCount,
       pageInfo: { hasNextPage, lastCursor },

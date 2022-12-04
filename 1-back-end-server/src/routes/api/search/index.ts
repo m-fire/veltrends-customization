@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { SEARCH_SCHEMA } from './schema.js'
 import { SearchRequestMap } from './types.js'
-import algolia from '../../../core/api/items/search.js'
+import algolia from '../../../core/api/items/algolia.js'
 
 const searchRoute: FastifyPluginAsync = async (fastify) => {
   fastify.get<SearchRequestMap['SEARCH']>(

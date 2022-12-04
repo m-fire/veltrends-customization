@@ -4,6 +4,7 @@ import ItemService from '../../../service/ItemService.js'
 import { ItemsRequestMap } from './types.js'
 import ITEMS_SCHEMA from './schema.js'
 import { commentsRoute } from './comments/index.js'
+import { Validator } from '../../../common/util/validates.js'
 
 const itemsRoute: FastifyPluginAsync = async (fastify) => {
   const itemService = ItemService.getInstance()
@@ -57,10 +58,10 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
     '/',
     { schema: ITEMS_SCHEMA.CREATE_ITEM },
     async (request, reply) => {
-      const { body, user } = request
-      // 인증 승인이 된 요청이고, user 가 반드시 존재하기 때문에, `!`처리됨.
-      const userId = user!.id
-      const newItem = await itemService.createItem(userId, body)
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
+      const createItemBody = request.body
+
+      const newItem = await itemService.createItem(userId, createItemBody)
       reply.statusCode = 201
       return newItem
     },
@@ -70,15 +71,16 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
     '/:id',
     { schema: ITEMS_SCHEMA.UPDATE_ITEM },
     async (request, reply) => {
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
       const {
         params: { id: itemId },
         body,
-        user,
       } = request
+
       const updatedItem = await itemService.updateItem({
-        itemId,
-        userId: user!.id,
         ...body,
+        itemId,
+        userId,
       })
       reply.statusCode = 202
       return updatedItem
@@ -89,14 +91,10 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
     '/:id',
     { schema: ITEMS_SCHEMA.DELETE_ITEM },
     async (request, reply) => {
-      const {
-        params: { id: itemId },
-        user,
-      } = request
-      await itemService.deleteItem({
-        itemId,
-        userId: user!.id,
-      })
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
+      const itemId = request.params.id
+
+      await itemService.deleteItem({ itemId, userId })
       reply.statusCode = 204
     },
   )
@@ -106,11 +104,9 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
     '/:id/likes',
     { schema: ITEMS_SCHEMA.LIKE_ITEM },
     async (request, reply) => {
-      const {
-        params: { id: itemId },
-        user,
-      } = request
-      const userId = user!.id
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
+      const itemId = request.params.id
+
       const itemStatus = await itemService.likeItem({ itemId, userId })
       reply.statusCode = 202
       return { id: itemId, itemStatus, isLiked: true }
@@ -122,8 +118,9 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
     '/:id/likes',
     { schema: ITEMS_SCHEMA.UNLIKE_ITEM },
     async (request, reply) => {
+      const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { id: itemId } = request.params
-      const userId = request.user!.id
+
       const itemStatus = await itemService.unlikeItem({ itemId, userId })
       reply.statusCode = 202
       return { id: itemId, itemStatus, isLiked: false }
