@@ -53,6 +53,7 @@ const RES_EMPTY_OBJECT_SCHEMA = Type.Object({})
 
 const COMMENTS_SCHEMA = createFastifySchemaMap({
   CREATE_COMMENT: {
+    tags: ['items'],
     params: ITEMS_SCHEMA.GET_ITEM.params,
     body: REQ_COMMENT_CREATE_BODY_SCHEMA,
     response: {
@@ -60,24 +61,28 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
     },
   },
   GET_COMMENT: {
+    tags: ['items'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_SCHEMA,
     },
   },
   GET_COMMENT_LIST: {
+    tags: ['items'],
     params: ITEMS_SCHEMA.GET_ITEM.params,
     response: {
       200: RES_COMMENT_LIST_SCHEMA,
     },
   },
   GET_SUBCOMMENT_LIST: {
+    tags: ['items'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_LIST_SCHEMA,
     },
   },
   UPDATE_COMMENT: {
+    tags: ['items'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     body: REQ_COMMENT_UPDATE_BODY_SCHEMA,
     response: {
@@ -85,23 +90,26 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
     },
   },
   DELETE_COMMENT: {
+    tags: ['items'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       204: RES_EMPTY_OBJECT_SCHEMA,
     },
   },
   LIKE_COMMENT: {
+    tags: ['items'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_LIKE_SCHEMA,
     },
   },
   UNLIKE_COMMENT: {
+    tags: ['items'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_LIKE_SCHEMA,
     },
   },
-} as const)
+})
 
 export default COMMENTS_SCHEMA

@@ -79,7 +79,7 @@ export const RES_ITEM_LIKE_SCHEMA = Type.Object({
 
 const ITEMS_SCHEMA = createFastifySchemaMap({
   CREATE_ITEM: {
-    tags: ['item'],
+    tags: ['items'],
     body: REQ_ITEM_CREATE_BODY_SCHEMA,
     response: {
       201: RES_ITEM_SCHEMA,
@@ -87,7 +87,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     },
   },
   GET_ITEM_LIST: {
-    tags: ['item'],
+    tags: ['items'],
     querystring: REQ_ITEM_LIST_QUERYSTRING_SCHEMA,
     response: {
       200: createPaginationSchema(RES_ITEM_SCHEMA),
@@ -95,7 +95,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     },
   },
   GET_ITEM: {
-    tags: ['item'],
+    tags: ['items'],
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_ITEM_SCHEMA,
@@ -103,7 +103,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     },
   },
   UPDATE_ITEM: {
-    tags: ['item'],
+    tags: ['items'],
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     body: REQ_ITEM_UPDATE_BODY_SCHEMA,
     response: {
@@ -113,7 +113,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     },
   },
   DELETE_ITEM: {
-    tags: ['item'],
+    tags: ['items'],
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     response: {
       204: Type.Null(),

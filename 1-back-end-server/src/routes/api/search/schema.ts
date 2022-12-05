@@ -33,6 +33,7 @@ const RES_SEARCHED_ITEM_SCHEMA = Type.Object({
 
 export const SEARCH_SCHEMA = createFastifySchemaMap({
   SEARCH: {
+    tags: ['search'],
     querystring: REQ_SEARCH_ITEM_QUERYSTRING_SCHEMA,
     response: {
       200: createPaginationSchema(RES_SEARCHED_ITEM_SCHEMA),
