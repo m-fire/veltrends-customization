@@ -75,6 +75,8 @@ class ItemService {
         })
       : null
 
+    ItemService.Algolia.syncItem(newItem)
+
     return ItemService.mergeItemLike(
       newItemWithStatus,
       itemLikeByIdsMap?.[newItem.id],
@@ -154,12 +156,16 @@ class ItemService {
         itemStatus: true,
       },
     })
+
+    ItemService.Algolia.syncItem(updatedItem)
+
     return updatedItem
   }
 
   async deleteItem({ itemId, userId }: DeleteItemParams) {
     await ItemService.findItemOrThrow(itemId, userId)
     await db.item.delete({ where: { id: itemId } })
+    ItemService.Algolia.deleteItem(itemId)
   }
 
   /* Item Action methods */
@@ -217,6 +223,85 @@ class ItemService {
     if (item?.userId !== userId) throw new AppError('Forbidden')
     return item
   }
+
+  /**
+   * Item Algolia Service
+   */
+  public static Algolia = class ItemsAlgoliaService {
+    static syncItem(item: ItemWithPatialUser) {
+      algolia
+        .syncItemIndex({
+          id: item.id,
+          title: item.title,
+          author: item.author,
+          body: item.body,
+          link: item.link,
+          thumbnail: item.thumbnail,
+          username: item.user.username,
+          publisher: item.publisher,
+        })
+        .then((resposne) =>
+          console.log(`ItemAlgoliaService. async syncItem() > then`, {
+            resposne,
+          }),
+        )
+        .catch(console.error)
+    }
+
+    static deleteItem(itemId: number) {
+      algolia.deleteItemIndex(itemId).catch(console.error)
+    }
+
+    static getHitsItemPage = algolia.searchItem
+
+    static async getSearchedItemList(
+      hitsPage: Awaited<ReturnType<typeof algolia.searchItem>>,
+    ) {
+      const itemIds = hitsPage.list.map((item) => item.id)
+      const itemMap = await ItemService.Algolia.getItemByIdMap(itemIds)
+
+      const serializeList = hitsPage.list
+        .map((hit) => {
+          const item = itemMap[hit.id]
+          if (!item) return null
+
+          const searchedItem = {
+            id: item.id,
+            link: item.link,
+            title: item.title,
+            body: item.body,
+            publisher: item.publisher,
+            likeCount: item.itemStatus?.likeCount,
+            highlight: {
+              title: hit._highlightResult?.title?.value ?? null,
+              body: hit._highlightResult?.body?.value ?? null,
+            },
+          }
+          return searchedItem
+        })
+        .filter((item) => item !== null)
+
+      return serializeList
+    }
+
+    static async getItemByIdMap(itemIds: number[]) {
+      const result = await db.item.findMany({
+        where: { id: { in: itemIds } },
+        include: {
+          user: true,
+          publisher: true,
+          itemStatus: true,
+        },
+      })
+
+      const itemByIdMap = result.reduce((acc, item) => {
+        acc[item.id] = item
+        return acc
+      }, {} as Record<number, ItemForAlgoliaService>)
+
+      return itemByIdMap
+    }
+  }
 }
 export default ItemService
 
@@ -254,4 +339,13 @@ type DeleteItemParams = {
 type ItemActionParams = {
   itemId: number
   userId: number
+}
+
+type ItemWithPatialUser = Item & {
+  user: Pick<User, 'id' | 'username'>
+  publisher: Publisher
+}
+
+type ItemForAlgoliaService = ItemWithPatialUser & {
+  itemStatus?: ItemStatus | null
 }
