@@ -8,19 +8,21 @@ type HeaderProps = {
   title?: ReactNode
   headerLeft?: ReactNode
   headerRight?: ReactNode
+  className?: string
 }
 
 function Header({
-  title = <LogoVeltrend />,
+  title = <LogoVeltrend />, // 기본 해더 타이틀: 메인로고
   headerLeft,
   headerRight,
+  className,
 }: HeaderProps) {
   return (
-    <Block>
+    <Block className={className}>
       {headerLeft ? (
         <HeaderSide position={'left'}>{headerLeft}</HeaderSide>
       ) : null}
-      <Title>{title}</Title>
+      <Title className="title">{title}</Title>
       {headerRight ? (
         <HeaderSide position={'right'}>{headerRight}</HeaderSide>
       ) : null}
@@ -32,14 +34,6 @@ export default Header
 
 // Sub Comps
 
-const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
-  ${flexStyles({ alignItems: 'center' })};
-  position: absolute;
-  ${(props) => props.position}: 16px;
-  top: 0;
-  height: 100%;
-`
-
 const Block = styled.header`
   ${flexStyles({ alignItems: 'center', justifyContent: 'center' })};
   position: relative;
@@ -47,6 +41,14 @@ const Block = styled.header`
   border-bottom: 1px solid ${colors.grey1};
   padding-left: 16px;
   padding-right: 16px;
+`
+
+const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
+  ${flexStyles({ alignItems: 'center' })};
+  position: absolute;
+  ${(props) => props.position}: 16px;
+  top: 0;
+  height: 100%;
 `
 
 const Title = styled.div`
