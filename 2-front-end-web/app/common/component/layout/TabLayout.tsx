@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { flexStyles } from '~/common/style/styled'
 
 type TabLayoutProps = {
+  header?: ReactNode
   children?: ReactNode
   className?: string
 }
@@ -13,10 +14,10 @@ type TabLayoutProps = {
 /**
  * Shows content with a header adn a tab bar.
  */
-function TabLayout({ children, className }: TabLayoutProps) {
+function TabLayout({ header, children, className }: TabLayoutProps) {
   return (
     <FullHeightPage>
-      <Header />
+      {header ? header : <Header />}
       <Content className={className}>{children}</Content>
       <Footer />
     </FullHeightPage>
@@ -26,7 +27,7 @@ export default TabLayout
 
 // Inner Components
 
-const Content = styled.main`
+const Content = styled.section`
   ${flexStyles({ direction: 'column', flex: 1 })};
   overflow: scroll;
   padding-left: 20px;
