@@ -265,7 +265,7 @@ class ItemService {
       hitsPage: Awaited<ReturnType<typeof algolia.searchItem>>,
     ) {
       const itemIds = hitsPage.list.map((item) => item.id)
-      const itemMap = await ItemService.Algolia.getItemByIdMap(itemIds)
+      const itemMap = await ItemService.Algolia.getSearchedItemByIdMap(itemIds)
 
       const serializeList = hitsPage.list
         .map((hit) => {
@@ -277,6 +277,7 @@ class ItemService {
             link: item.link,
             title: item.title,
             body: item.body,
+            author: item.author === '' ? null : item.author,
             publisher: item.publisher,
             likeCount: item.itemStatus?.likeCount,
             highlight: {
@@ -291,20 +292,28 @@ class ItemService {
       return serializeList
     }
 
-    static async getItemByIdMap(itemIds: number[]) {
-      const result = await db.item.findMany({
+    private static async getSearchedItemByIdMap(itemIds: number[]) {
+      const itemList = await db.item.findMany({
         where: { id: { in: itemIds } },
-        include: {
-          user: true,
-          publisher: true,
-          itemStatus: true,
+        select: {
+          id: true,
+          title: true,
+          body: true,
+          author: true,
+          link: true,
+          itemStatus: {
+            select: { likeCount: true },
+          },
+          publisher: {
+            select: { name: true, favicon: true, domain: true },
+          },
         },
       })
 
-      const itemByIdMap = result.reduce((acc, item) => {
+      const itemByIdMap = itemList.reduce((acc, item) => {
         acc[item.id] = item
         return acc
-      }, {} as Record<number, ItemForAlgoliaService>)
+      }, {} as Record<number, typeof itemList[0]>)
 
       return itemByIdMap
     }
@@ -351,8 +360,4 @@ type ItemActionParams = {
 type ItemWithPatialUser = Item & {
   user: Pick<User, 'id' | 'username'>
   publisher: Publisher
-}
-
-type ItemForAlgoliaService = ItemWithPatialUser & {
-  itemStatus?: ItemStatus | null
 }
