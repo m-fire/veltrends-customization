@@ -10,8 +10,13 @@ const searchRoute: FastifyPluginAsync = async (fastify) => {
     async (request) => {
       const { q, limit, offset } = request.query
 
-      const hits = await algolia.searchItem(q, { length: limit, offset })
-      return hits
+      const hitsPage = await ItemService.Algolia.getHitsItemPage(q, {
+        length: limit,
+        offset,
+      })
+      const list = await ItemService.Algolia.getSearchedItemList(hitsPage)
+
+      return { ...hitsPage, list }
     },
   )
 }
