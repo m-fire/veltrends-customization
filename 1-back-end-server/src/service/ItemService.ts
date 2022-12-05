@@ -1,4 +1,4 @@
-import { Item, ItemLike, ItemStatus } from '@prisma/client'
+import { Item, ItemLike, ItemStatus, Publisher, User } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import { ItemsRequestMap } from '../routes/api/items/types.js'
 import {
@@ -10,6 +10,13 @@ import PublisherService from './PublisherService.js'
 import ItemStatusService from './ItemStatusService.js'
 import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
+import algolia from '../core/api/items/algolia.js'
+
+// prisma include conditions
+const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
+const INCLUDE_SIMPLE_ITEM_STATUS = {
+  select: { id: true, likeCount: true },
+} as const
 
 const LIMIT_PER_FIND = 20 as const
 
@@ -43,7 +50,7 @@ class ItemService {
       favicon,
     })
 
-    const newItem = await db.item.create({
+    const newItem: ItemWithPatialUser = await db.item.create({
       data: {
         title,
         body,
@@ -54,7 +61,7 @@ class ItemService {
         publisherId: newPublisher.id,
       },
       include: {
-        user: { select: { id: true, username: true } },
+        user: INCLUDE_SIMPLE_USER,
         publisher: true,
       },
     })
@@ -120,7 +127,7 @@ class ItemService {
     const item = await db.item.findUnique({
       where: { id: itemId },
       include: {
-        user: { select: { id: true, username: true } },
+        user: INCLUDE_SIMPLE_USER,
         publisher: true,
         itemStatus: true,
       },
@@ -147,11 +154,11 @@ class ItemService {
     tags,
   }: UpdateItemParams) {
     await ItemService.findItemOrThrow(itemId, userId)
-    const updatedItem = await db.item.update({
+    const updatedItem: ItemWithPatialUser = await db.item.update({
       where: { id: itemId },
       data: { link, title, body },
       include: {
-        user: { select: { id: true, username: true } },
+        user: INCLUDE_SIMPLE_USER,
         publisher: true,
         itemStatus: true,
       },
@@ -206,9 +213,9 @@ class ItemService {
     return db.item.findMany({
       where: { id: cursor ? { lt: cursor } : undefined },
       include: {
-        user: { select: { id: true, username: true } },
+        user: INCLUDE_SIMPLE_USER,
         publisher: true,
-        itemStatus: { select: { id: true, likeCount: true } },
+        itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
       },
       take: limit ?? LIMIT_PER_FIND,
       orderBy: { createdAt: 'desc' },

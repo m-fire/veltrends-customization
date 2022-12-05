@@ -1,16 +1,18 @@
 import { Type } from '@sinclair/typebox'
 import { createFastifySchemaMap } from '../../../common/config/typebox/schema-util.js'
 
-const REQ_SEARCH_QUERYSTRING_SCHEMA = Type.Object({
+const REQ_SEARCH_ITEM_QUERYSTRING_SCHEMA = Type.Object({
   q: Type.String({ default: '검색어' }),
   offset: Type.Optional(Type.Integer({ default: 3 })),
   limit: Type.Optional(Type.Integer({ default: 20 })),
 })
 
+const RES_SEARCH_QUERYSTRING_SCHEMA = Type.Object({})
+
 /* Fastify Schema */
 
 export const SEARCH_SCHEMA = createFastifySchemaMap({
   SEARCH: {
-    querystring: REQ_SEARCH_QUERYSTRING_SCHEMA,
+    querystring: REQ_SEARCH_ITEM_QUERYSTRING_SCHEMA,
   },
 })
