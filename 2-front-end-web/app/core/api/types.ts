@@ -1,18 +1,4 @@
-export interface SimpleUser {
-  id: number
-  username: string
-}
-
-export type GenericListPagination<T> = {
-  list: T[]
-  totalCount: number
-  pageInfo: PageInfo
-}
-
-export interface PageInfo {
-  lastCursor: number | null
-  hasNextPage: boolean
-}
+import { GenericListPagination, SimpleUser } from '~/common/api/types'
 
 export interface Item {
   id: number
