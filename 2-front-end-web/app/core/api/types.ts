@@ -1,4 +1,4 @@
-import { GenericListPagination, SimpleUser } from '~/common/api/types'
+import { GenericPagination, SimpleUser } from '~/common/api/types'
 
 export interface Item {
   id: number
@@ -28,7 +28,7 @@ export interface ItemStatus {
   commentCount: number
 }
 
-export type ItemListPagination = GenericListPagination<Item>
+export type ItemListPagination = GenericPagination<Item>
 
 export interface Comment {
   id: number
