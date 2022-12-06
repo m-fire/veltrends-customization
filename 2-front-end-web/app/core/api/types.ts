@@ -16,7 +16,7 @@ export interface Item {
 }
 
 export interface Publisher {
-  id: number
+  id?: number
   name: string
   domain: string
   favicon: string | null
@@ -44,3 +44,21 @@ export interface Comment {
   isDeleted: boolean
   isLiked: boolean
 }
+
+export interface SearchedItem {
+  id: number
+  link: string
+  title: string
+  body: string
+  author: null
+  likeCount: number
+  publisher: Pick<Publisher, 'name' | 'favicon' | 'domain'>
+  highlight: Highlight
+}
+
+export interface Highlight {
+  title: string
+  body: string
+}
+
+export type SearchedItemPagination = GenericPagination<SearchedItem>

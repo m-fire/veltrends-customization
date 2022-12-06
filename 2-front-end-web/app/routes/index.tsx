@@ -42,6 +42,7 @@ function Index() {
   return (
     <TabLayout>
       <LinkCardList items={items} />
+      <div ref={intersectionRef} />
     </TabLayout>
   )
 }

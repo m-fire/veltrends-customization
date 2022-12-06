@@ -3,13 +3,14 @@ export interface SimpleUser {
   username: string
 }
 
-export type GenericListPagination<T> = {
+export type GenericPagination<T> = {
   list: T[]
   totalCount: number
   pageInfo: PageInfo
 }
 
 export interface PageInfo {
-  lastCursor: number | null
+  nextOffset?: number | null
+  lastCursor?: number | null
   hasNextPage: boolean
 }

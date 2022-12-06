@@ -13,7 +13,7 @@ export function useInfiniteScroll(ref: RefObject<any>, fetchNext: () => void) {
       },
       {
         root: ref.current.parentElement,
-        rootMargin: '64px',
+        rootMargin: '300px',
         threshold: 1,
       },
     )
