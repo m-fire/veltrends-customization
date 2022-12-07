@@ -1,4 +1,5 @@
 import pLimit from 'p-limit'
+import cron from 'node-cron'
 import { RankCalculator } from '../core/util/calculates.js'
 import ItemStatusService from '../service/ItemStatusService.js'
 
@@ -34,3 +35,9 @@ const itemsWorker = {
     )
   },
 }
+
+await itemsWorker.updateAllRankingScores()
+// 5 분 반복
+cron.schedule('*/5 * * * *', itemsWorker.updateAllRankingScores)
+// 10초 반복
+// cron.schedule('*/10 * * * * *', itemsWorker.updateAllRankingScore)
