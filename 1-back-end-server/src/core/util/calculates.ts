@@ -5,7 +5,7 @@ import { DateCalculator } from '../../common/util/calculates.js'
  */
 const gravity = 1.4 // 1.8
 
-export class ItemsCalculator {
+export class RankCalculator {
   /**
    * <h3>좋아요 갯수와 지난시간을 토대로 계산된 score 반환</h3>
    * <ul>

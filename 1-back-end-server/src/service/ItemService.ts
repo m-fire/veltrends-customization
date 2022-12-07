@@ -11,7 +11,7 @@ import ItemStatusService from './ItemStatusService.js'
 import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 import algolia from '../core/api/items/algolia.js'
-import { ItemsCalculator } from '../core/util/calculates.js'
+import { RankCalculator } from '../core/util/calculates.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
@@ -249,7 +249,7 @@ class ItemService {
 
     try {
       const likes = likeCount ?? (await this.itemLikeService.countLike(itemId))
-      const score = ItemsCalculator.rankingScore(likes, item.createdAt)
+      const score = RankCalculator.rankingScore(likes, item.createdAt)
 
       const scoredStatus = await this.itemStatusService.updateScore({
         itemId,
