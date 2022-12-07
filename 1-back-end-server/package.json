@@ -7,7 +7,8 @@
     "dev": "NODE_ENV=development nodemon --watch ./src --exec \"pnpm start\" -e ts",
     "start": "ts-node-esm --transpileOnly ./src/main.ts | pino-pretty",
     "orm:migrate": "prisma migrate dev --name reset",
-    "orm:generate": "prisma generate"
+    "orm:generate": "prisma generate",
+    "worker:item-ranker": "ts-node-esm --transpileOnly ./src/worker/items-worker.ts"
   },
   "keywords": [],
   "author": "",
