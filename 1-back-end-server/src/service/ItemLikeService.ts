@@ -27,7 +27,7 @@ class ItemLikeService {
         // like 했다면(이미 존재), like 생성오류 무시
       } catch (e) {}
     }
-    return this.getItemStatus(itemId)
+    return this.syncLikeCount(itemId)
   }
 
   async unlike({ itemId, userId }: UnlikeItemParams) {
@@ -36,7 +36,7 @@ class ItemLikeService {
         where: { itemId_userId: { itemId, userId } },
       })
     } catch (e) {}
-    return this.getItemStatus(itemId)
+    return this.syncLikeCount(itemId)
   }
 
   async countLike(itemId: number) {
@@ -44,13 +44,13 @@ class ItemLikeService {
     return likeCount
   }
 
-  private async getItemStatus(itemId: number) {
-    const likeCount = await db.itemLike.count({ where: { itemId } })
-    const status = await this.itemStatusService.updateLikeCount({
+  private async syncLikeCount(itemId: number) {
+    const likeCount = await this.countLike(itemId)
+    const syncedItemStatus = await this.itemStatusService.updateLikeCount({
       itemId,
       likeCount,
     })
-    return status
+    return syncedItemStatus
   }
 
   async itemLikeByIdsMap({ itemIds, userId }: ItemLikeByIdsMapParams) {

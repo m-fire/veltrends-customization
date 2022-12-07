@@ -20,18 +20,19 @@ class ItemStatusService {
   }
 
   async updateLikeCount({ itemId, likeCount }: UpdateLikeCountParams) {
-    return db.itemStatus.update({
+    const likeCountedStatus = db.itemStatus.update({
       data: { likeCount },
       where: { itemId },
     })
+    return likeCountedStatus
   }
 
   async updateCommentCount({ itemId, commentCount }: UpdateCommentCountParams) {
-    const updatedItemStatus = await db.itemStatus.update({
+    const commentCountedStatus = await db.itemStatus.update({
       where: { itemId },
       data: { commentCount },
     })
-    return updatedItemStatus
+    return commentCountedStatus
   }
 
   async updateScore({ itemId, score }: UpdateScoreParams) {
@@ -54,4 +55,9 @@ interface UpdateLikeCountParams {
 interface UpdateCommentCountParams {
   itemId: number
   commentCount: number
+}
+
+interface UpdateScoreParams {
+  itemId: number
+  score: number
 }
