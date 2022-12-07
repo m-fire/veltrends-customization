@@ -6,7 +6,9 @@ import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
 import TabLayout from '~/common/component/layout/TabLayout'
 import Header from '~/common/component/base/Header'
-import SearchInput from '~/core/component/search/SearchInput'
+import SearchInput, {
+  SearchInputProps,
+} from '~/core/component/search/SearchInput'
 import { useDebounce } from 'use-debounce'
 import { Requests } from '~/common/util/https'
 import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
@@ -19,11 +21,15 @@ import { colors } from '~/common/style/colors'
 import { AnimatePresence } from 'framer-motion'
 
 function Search() {
-  const [searchParams] = useSearchParams()
-  const initialText = searchParams.get('q') ?? '' // input text state 유지(텍스트 리셋 방지)
-  const [searchText, setSearchText] = useState(initialText)
-  // searchText 변경시 값 변동이 없는 상태에서 딜레이 이후 debouncedSearchText 값 변경
-  const [debouncedSearchText] = useDebounce(searchText, 600)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const queryText = searchParams.get('q') ?? ''
+  // input text state 유지(텍스트 리셋 방지)
+  const [textState, setTextState] = useState({
+    searched: queryText,
+    current: queryText,
+  })
+  // textState 변경시 값 변동이 없는 상태에서 딜레이 이후 debouncedSearchText 값 변경
+  const [debouncedSearchText] = useDebounce(textState.current, 600)
 
   const data = useLoaderData<SearchedItemPagination>()
   const {
@@ -33,10 +39,17 @@ function Search() {
     fetchNextPage, // 다음 페이지 가져오기 요청함수
   } = useInfiniteQuery(
     ['searchResults', debouncedSearchText],
-    ({ pageParam: offset }) =>
-      searchItemList({ q: debouncedSearchText, offset }),
+    async ({ pageParam: offset }) => {
+      const trimedText = debouncedSearchText.trim()
+      setSearchParams({ ...searchParams, q: trimedText })
+      setTextState({ current: trimedText, searched: trimedText })
+      const items = await searchItemList({ q: trimedText, offset })
+      return items
+    },
     {
-      enabled: debouncedSearchText !== '',
+      enabled:
+        debouncedSearchText !== textState.searched &&
+        debouncedSearchText !== '',
       getNextPageParam: (lastPage, pages) => {
         if (!lastPage.pageInfo.hasNextPage) return null
         return lastPage.pageInfo.nextOffset
@@ -63,12 +76,18 @@ function Search() {
   const itemList = infiniteData?.pages.flatMap((page) => page.list)
   const isSearched = itemList != null && itemList.length > 0
 
+  const onChangeText: SearchInputProps['onChangeText'] = (text) => {
+    setTextState({ ...textState, current: text })
+  }
   return (
     <TabLayout
       header={
         <StyledHeader
           title={
-            <SearchInput value={searchText} onChangeText={setSearchText} />
+            <SearchInput
+              value={textState.current}
+              onChangeText={onChangeText}
+            />
           }
         />
       }

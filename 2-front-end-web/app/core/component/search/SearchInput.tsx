@@ -4,7 +4,7 @@ import { colors } from '~/common/style/colors'
 import { Search } from '~/core/component/generate/svg'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 
-type SearchInputProps = {
+export type SearchInputProps = {
   value: string
   onChangeText: (text: string) => void
 }
