@@ -42,6 +42,21 @@ class ItemStatusService {
     })
     return scoredStatus
   }
+
+  async getRankTargetStatusList(limitScoreFloat?: number) {
+    const targetStatusList = await db.itemStatus.findMany({
+      where:
+        limitScoreFloat != null
+          ? { score: { lte: limitScoreFloat } }
+          : undefined,
+      select: {
+        itemId: true,
+        likeCount: true,
+        item: { select: { createdAt: true } },
+      },
+    })
+    return targetStatusList
+  }
 }
 export default ItemStatusService
 
