@@ -11,6 +11,7 @@ import ItemStatusService from './ItemStatusService.js'
 import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 import algolia from '../core/api/items/algolia.js'
+import { ItemsCalculator } from '../core/util/calculates.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
@@ -229,6 +230,31 @@ class ItemService {
     })
     if (item?.userId !== userId) throw new AppError('Forbidden')
     return item
+  }
+
+  private async getScoredStatusOrNull(itemId: number, likeCount?: number) {
+    const item = await db.item.findUnique({
+      select: { createdAt: true },
+      where: { id: itemId },
+    })
+    if (!item) return null
+
+    try {
+      const likes = likeCount ?? (await this.itemLikeService.countLike(itemId))
+      const score = ItemsCalculator.rankingScore(likes, item.createdAt)
+
+      const scoredStatus = await this.itemStatusService.updateScore({
+        itemId,
+        score,
+      })
+      return scoredStatus
+    } catch (e) {
+      console.error(`ItemService.ts> getScoredStatusOrNull()`, {
+        e,
+      })
+    }
+
+    return null
   }
 
   /**

@@ -33,6 +33,14 @@ class ItemStatusService {
     })
     return updatedItemStatus
   }
+
+  async updateScore({ itemId, score }: UpdateScoreParams) {
+    const scoredStatus = db.itemStatus.update({
+      where: { itemId },
+      data: { score },
+    })
+    return scoredStatus
+  }
 }
 export default ItemStatusService
 

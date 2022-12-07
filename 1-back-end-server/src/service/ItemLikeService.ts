@@ -39,6 +39,11 @@ class ItemLikeService {
     return this.getItemStatus(itemId)
   }
 
+  async countLike(itemId: number) {
+    const likeCount = db.itemLike.count({ where: { itemId } })
+    return likeCount
+  }
+
   private async getItemStatus(itemId: number) {
     const likeCount = await db.itemLike.count({ where: { itemId } })
     const status = await this.itemStatusService.updateLikeCount({
