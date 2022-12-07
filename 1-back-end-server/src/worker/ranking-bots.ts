@@ -1,4 +1,4 @@
-import PQueue from 'p-queue'
+import pLimit from 'p-limit'
 import { RankCalculator } from '../core/util/calculates.js'
 import ItemStatusService from '../service/ItemStatusService.js'
 
@@ -7,7 +7,7 @@ const itemStatusService = ItemStatusService.getInstance()
 const itemsWorker = {
   async updateRankingScores() {
     // @todo: increase concurrency after migrating to postresql
-    const rankingWorkers = new PQueue({ concurrency: 1 })
+    const concurrentLimitWorker = pLimit(1)
 
     // const targetStatusList = await this.itemStatusService.getRankTargetList(0.001)
     const targetStatusList = await itemStatusService.getRankTargetStatusList()
@@ -15,18 +15,19 @@ const itemsWorker = {
       'target List size': targetStatusList.length,
     })
 
-    targetStatusList.forEach(({ itemId, likeCount, item: { createdAt } }) => {
-      const itemRankingWorker = async () => {
+    const rankingWorkerList = targetStatusList.map((targetStatus) => {
+      return concurrentLimitWorker(() => {
+        const {
+          itemId,
+          likeCount,
+          item: { createdAt },
+        } = targetStatus
         const score = RankCalculator.rankingScore(likeCount, createdAt)
-        await itemStatusService.updateScore({ itemId, score })
-      }
-
-      rankingWorkers.add(itemRankingWorker)
+        itemStatusService.updateScore({ itemId, score })
+      })
     })
 
-    await rankingWorkers.onIdle()
-    console.log(
-      `ranking-bots.ts> ItemRankingWorker.updateRankingScores successfully!`,
-    )
+    await Promise.allSettled(rankingWorkerList)
+    console.log(`ranking-bots.ts> RankingWorkers all successfully!`)
   },
 }
