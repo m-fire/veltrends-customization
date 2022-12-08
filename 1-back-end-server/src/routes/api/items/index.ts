@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
-import ItemService from '../../../service/ItemService.js'
+import ItemService, { ItemListingMode } from '../../../service/ItemService.js'
 import { ItemsRequestMap } from './types.js'
 import ITEMS_SCHEMA from './schema.js'
 import { commentsRoute } from './comments/index.js'
@@ -14,14 +14,13 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
     { schema: ITEMS_SCHEMA.GET_ITEM_LIST },
     async (request, reply) => {
       const {
-        query: { cursor },
+        query: { cursor, mode },
         user,
       } = request
       const itemList = await itemService.getItemList({
-        mode: 'recent',
-        cursor: cursor ? parseInt(cursor, 10) : null,
+        mode: (mode ?? 'recent') as ItemListingMode,
+        cursor: cursor != null ? parseInt(cursor, 10) : undefined,
         userId: user?.id,
-        limit: 20,
       })
       return itemList
     },

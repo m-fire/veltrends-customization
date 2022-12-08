@@ -57,6 +57,17 @@ class ItemStatusService {
     })
     return targetStatusList
   }
+
+  async countByFilteredScore(floatScore: number) {
+    const countByScore = await db.itemStatus.count({
+      where: {
+        score: {
+          gte: floatScore,
+        },
+      },
+    })
+    return countByScore
+  }
 }
 export default ItemStatusService
 

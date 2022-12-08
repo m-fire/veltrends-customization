@@ -38,7 +38,7 @@ export const createPaginationSchema = <T extends TSchema>(
     totalCount: Type.Integer({ default: 30 }),
     pageInfo: Type.Object(
       {
-        hasNextPage: Type.Optional(Nullable(Type.Boolean({ default: true }))),
+        hasNextPage: Type.Optional(Type.Boolean({ default: true })),
         lastCursor: Type.Optional(Nullable(Type.Integer({ default: 10 }))),
         nextOffset: Type.Optional(Nullable(Type.Integer({ default: 3 }))),
       },

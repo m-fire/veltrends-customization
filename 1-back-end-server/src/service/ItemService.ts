@@ -86,36 +86,59 @@ class ItemService {
     return itemWithLike
   }
 
-  async getItemList({
-    mode,
-    limit,
-    cursor,
-    userId,
-  }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus> | []> {
-    if (mode !== 'recent') return []
+  async getItemList(
+    options: ItemListPagingOptions,
+  ): Promise<Pagination<ItemOrItemWithStatus> | []> {
+    const { mode, cursor, userId } = options
+    const limit = options.limit ?? LIMIT_PER_FIND
 
-    const [totalCount, itemList] = await Promise.all([
-      db.item.count(),
-      ItemService.findItemListFromCursor(cursor, limit),
-    ])
+    let totalItemCount = 0
+    let hasNextPage = false
+    let lastCursor: number | undefined = undefined
+    let itemList: Awaited<
+      ReturnType<
+        | typeof ItemService.limitListFromCursor
+        | typeof ItemService.limitListWithScoreFiltered
+      >
+    > = []
 
-    const itemLikeByIdsMap = userId
-      ? await this.itemLikeService.itemLikeByIdsMap({
-          itemIds: itemList.map((item) => item.id),
-          userId: userId,
-        })
-      : null
+    if (mode === 'recent') {
+      itemList = await ItemService.limitListFromCursor({
+        limit,
+        ltCursor: cursor,
+      })
+      lastCursor = itemList.at(-1)?.id
+      hasNextPage = await ItemService.hasNextPageByCursor(lastCursor)
+      totalItemCount = await db.item.count()
+    } else if (mode === 'trending') {
+      itemList = await ItemService.limitListWithScoreFiltered({
+        limit,
+        gteScore: 0.001,
+      })
+      lastCursor = itemList.at(-1)?.id
+      hasNextPage = await ItemService.hasNextPageByScore({
+        cursor: lastCursor,
+        gteScore: 0.001,
+        lteScore: itemList.at(-1)?.id,
+      })
+      totalItemCount = await this.itemStatusService.countByFilteredScore(0.001)
+    }
+
+    const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
+      itemIds: itemList.map((item) => item.id),
+      userId: userId ?? undefined,
+    })
     const itemWithLikeList = itemList.map((item) =>
-      ItemService.mergeItemLike(item, itemLikeByIdsMap?.[item.id]),
+      ItemService.mergeItemLike(item, likeByIdsMap[item.id]),
     )
-
-    const lastCursor = itemList.at(-1)?.id ?? null
-    const hasNextPage = await ItemService.hasNextPageByCursor(lastCursor)
 
     return {
       list: itemWithLikeList,
-      totalCount,
-      pageInfo: { hasNextPage, lastCursor },
+      totalCount: totalItemCount,
+      pageInfo: {
+        hasNextPage,
+        lastCursor: lastCursor ?? null,
+      },
     }
   }
 
@@ -200,7 +223,50 @@ class ItemService {
     }
   }
 
-  private static async hasNextPageByCursor(cursor: number | null) {
+  private static async limitListWithScoreFiltered({
+    limit = LIMIT_PER_FIND,
+    gteScore,
+  }: {
+    limit?: number
+    gteScore?: number
+  }) {
+    return db.item.findMany({
+      where: {
+        itemStatus: { score: { gte: gteScore ?? undefined } },
+      },
+      orderBy: [
+        { itemStatus: { score: 'desc' } },
+        { itemStatus: { itemId: 'desc' } },
+      ],
+      take: limit,
+      include: {
+        user: INCLUDE_SIMPLE_USER,
+        itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
+        publisher: true,
+      },
+    })
+  }
+
+  private static async limitListFromCursor({
+    limit,
+    ltCursor,
+  }: {
+    limit?: number
+    ltCursor: ItemListPagingOptions['cursor']
+  }) {
+    return db.item.findMany({
+      where: { id: { lt: ltCursor ?? undefined } },
+      orderBy: { id: 'desc' },
+      take: limit,
+      include: {
+        user: INCLUDE_SIMPLE_USER,
+        itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
+        publisher: true,
+      },
+    })
+  }
+
+  private static async hasNextPageByCursor(cursor?: number) {
     if (!cursor) return false
     const totalPage = await db.item.count({
       where: { id: { lt: cursor } },
@@ -209,20 +275,33 @@ class ItemService {
     return totalPage > 0
   }
 
-  private static async findItemListFromCursor(
-    cursor: number | null | undefined,
-    limit?: number | null,
-  ) {
-    return db.item.findMany({
-      where: { id: cursor ? { lt: cursor } : undefined },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        publisher: true,
-        itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
+  private static async hasNextPageByScore({
+    cursor,
+    gteScore,
+    lteScore,
+  }: {
+    cursor?: number
+    gteScore?: number
+    lteScore?: number
+  }) {
+    if (cursor == null) return false
+
+    const total = await db.item.count({
+      where: {
+        itemStatus: {
+          itemId: { not: cursor },
+          score: {
+            gte: gteScore,
+            lte: lteScore,
+          },
+        },
       },
-      take: limit ?? LIMIT_PER_FIND,
-      orderBy: { createdAt: 'desc' },
+      orderBy: [
+        { itemStatus: { score: 'desc' } },
+        { itemStatus: { itemId: 'desc' } },
+      ],
     })
+    return total > 0
   }
 
   private static async findItemOrThrow(itemId: number, userId: number) {
@@ -353,14 +432,9 @@ export default ItemService
 
 type CreateItemParams = ItemsRequestMap['CREATE_ITEM']['Body']
 
-type ItemListPagingOptions = PaginationOptions &
-  (
-    | { mode: 'trending' | 'recent' }
-    | {
-        mode: 'past'
-        date: string
-      }
-  )
+type ItemListPagingOptions = PaginationOptions & { mode: ItemListingMode }
+
+export type ItemListingMode = 'recent' | 'trending'
 
 type GetItemParams = {
   itemId: number
