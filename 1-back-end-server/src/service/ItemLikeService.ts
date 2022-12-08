@@ -53,7 +53,13 @@ class ItemLikeService {
     return syncedItemStatus
   }
 
-  async itemLikeByIdsMap({ itemIds, userId }: ItemLikeByIdsMapParams) {
+  async itemLikeByIdsMap({
+    itemIds,
+    userId,
+  }: {
+    itemIds: number[]
+    userId?: number
+  }) {
     const itemLikeList = await db.itemLike.findMany({
       where: {
         itemId: { in: itemIds },
@@ -61,13 +67,12 @@ class ItemLikeService {
       },
     })
 
-    return itemLikeList.reduce<Record<number, ItemLike>>(
-      (itemLikeByIdMap, itemLike) => {
-        itemLikeByIdMap[itemLike.itemId] = itemLike
-        return itemLikeByIdMap
-      },
-      {},
-    )
+    const likeByIdsMap = itemLikeList.reduce((map, itemLike) => {
+      map[itemLike.itemId] = itemLike
+      return map
+    }, {} as Record<number, ItemLike>)
+
+    return likeByIdsMap
   }
 }
 export default ItemLikeService
@@ -81,10 +86,5 @@ type LikeItemParams = {
 
 type UnlikeItemParams = {
   itemId: number
-  userId: number
-}
-
-interface ItemLikeByIdsMapParams {
-  itemIds: number[]
   userId: number
 }

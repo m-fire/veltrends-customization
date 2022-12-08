@@ -70,25 +70,20 @@ class ItemService {
     const newItemStatus = await this.itemStatusService.createItemStatus(
       newItem.id,
     )
-
-    const newItemWithStatus = {
-      ...newItem,
-      itemStatus: newItemStatus,
-    }
-
-    const itemLikeByIdsMap = userId
-      ? await this.itemLikeService.itemLikeByIdsMap({
-          itemIds: [newItem.id],
-          userId,
-        })
-      : null
+    const newItemWithStatus = { ...newItem, itemStatus: newItemStatus }
+    const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
+      itemIds: [newItem.id],
+      userId,
+    })
 
     ItemService.Algolia.syncItem(newItem)
 
-    return ItemService.mergeItemLike(
+    const itemWithLike = ItemService.mergeItemLike(
       newItemWithStatus,
-      itemLikeByIdsMap?.[newItem.id],
+      likeByIdsMap[newItem.id],
     )
+
+    return itemWithLike
   }
 
   async getItemList({
@@ -136,14 +131,13 @@ class ItemService {
 
     if (!item) throw new AppError('NotFound')
 
-    const itemLikeByIdsOrNull = userId
-      ? await this.itemLikeService.itemLikeByIdsMap({
-          itemIds: [itemId],
-          userId,
-        })
-      : null
+    const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
+      itemIds: [itemId],
+      userId,
+    })
+    const itemWithLike = ItemService.mergeItemLike(item, likeByIdsMap[itemId])
 
-    return ItemService.mergeItemLike(item, itemLikeByIdsOrNull?.[itemId])
+    return itemWithLike
   }
 
   async updateItem({
