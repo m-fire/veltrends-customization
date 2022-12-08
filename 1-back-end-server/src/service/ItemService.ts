@@ -21,6 +21,7 @@ const INCLUDE_SIMPLE_ITEM_STATUS = {
 } as const
 
 const LIMIT_PER_FIND = 20 as const
+const THRESHOLD_FLOAT_SCORE = 0.001
 const WEEK_MILLIS = 6 * 24 * 60 * 60 * 1000
 
 class ItemService {
@@ -341,7 +342,7 @@ class ItemService {
 
     const hasNextPage = await ItemService.hasNextPageByCursorAndScore({
       ltCursor: lastCursor,
-      gteScore: 0.001,
+      gteScore: THRESHOLD_FLOAT_SCORE,
       lteScore: lastCursorItem?.itemStatus?.score,
     })
 
