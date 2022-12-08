@@ -21,6 +21,7 @@ const INCLUDE_SIMPLE_ITEM_STATUS = {
 } as const
 
 const LIMIT_PER_FIND = 20 as const
+const WEEK_MILLIS = 6 * 24 * 60 * 60 * 1000
 
 class ItemService {
   private static instance: ItemService
@@ -391,6 +392,17 @@ class ItemService {
         message: 'startDate or endDate is not yyyy-mm-dd format',
       })
     }
+
+    const dateDistanceMillis =
+      new Date(endDate).getTime() - new Date(startDate).getTime()
+    if (dateDistanceMillis > WEEK_MILLIS) {
+      throw new AppError('BadRequest', {
+        message: 'Date range bigger than 7 days',
+      })
+    }
+
+    const startWeekDate = new Date(`${startDate} 00:00:00`)
+    const endWeekDate = new Date(`${endDate} 23:59:59`)
 
     return { itemList, totalCount, lastCursor, hasNextPage }
   }
