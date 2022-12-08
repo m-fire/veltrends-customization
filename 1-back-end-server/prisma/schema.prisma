@@ -121,6 +121,9 @@ model ItemStatus {
   itemId       Int      @unique
 
   item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([score(sort: Desc), itemId(sort: Desc)])
+  @@index([likeCount(sort: Desc), itemId(sort: Desc)])
 }
 
 model Comment {
