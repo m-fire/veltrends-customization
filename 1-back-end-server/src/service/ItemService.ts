@@ -274,19 +274,20 @@ class ItemService {
     limit: number
     ltCursor?: number | null
   }) {
-    const totalCount = await db.item.count()
+    const [totalCount, itemList] = await Promise.all([
+      db.item.count(),
+      db.item.findMany({
+        where: { id: { lt: ltCursor || undefined } },
+        orderBy: { id: 'desc' },
+        include: {
+          user: INCLUDE_SIMPLE_USER,
+          itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
+          publisher: true,
+        },
+        take: limit,
+      }),
+    ])
     if (totalCount === 0) return null
-
-    const itemList = await db.item.findMany({
-      where: { id: { lt: ltCursor || undefined } },
-      orderBy: { id: 'desc' },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
-        publisher: true,
-      },
-      take: limit ?? LIMIT_PER_FIND,
-    })
     if (itemList.length === 0) return null
 
     const lastCursor = itemList.at(-1)?.id
@@ -310,22 +311,29 @@ class ItemService {
     limit: number
     ltCursor?: number | null
   }) {
-    const totalCount = await this.itemStatusService.countByFilteredScore(0.001)
+    const [totalCount, itemList] = await Promise.all([
+      this.itemStatusService.countByFilteredScore(THRESHOLD_FLOAT_SCORE),
+      db.item.findMany({
+        where: { id: { lt: ltCursor || undefined } },
+        orderBy: [
+          { itemStatus: { score: 'desc' } },
+          { itemStatus: { itemId: 'desc' } },
+        ],
+        include: {
+          user: INCLUDE_SIMPLE_USER,
+          itemStatus: {
+            select: {
+              id: true,
+              likeCount: true,
+              score: true,
+            },
+          },
+          publisher: true,
+        },
+        take: limit,
+      }),
+    ])
     if (totalCount === 0) return null
-
-    const itemList = await db.item.findMany({
-      where: { id: { lt: ltCursor || undefined } },
-      orderBy: [
-        { itemStatus: { score: 'desc' } },
-        { itemStatus: { itemId: 'desc' } },
-      ],
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        itemStatus: { select: { id: true, likeCount: true, score: true } },
-        publisher: true,
-      },
-      take: limit,
-    })
     if (itemList.length === 0) return null
 
     const lastCursorItem = itemList.at(-1) ?? null
