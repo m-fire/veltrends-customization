@@ -12,6 +12,7 @@ import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 import algolia from '../core/api/items/algolia.js'
 import { RankCalculator } from '../core/util/calculates.js'
+import { Validator } from '../common/util/validates.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
@@ -376,6 +377,21 @@ class ItemService {
     endDate?: string
     limit: number
   }) {
+    if (!startDate || !endDate) {
+      throw new AppError('BadRequest', {
+        message: 'startDate or endDate is missing',
+      })
+    }
+
+    const isInvalidDateFormat = [startDate, endDate].some((date) =>
+      Validator.DateFormat.yyyymmdd(date),
+    )
+    if (isInvalidDateFormat) {
+      throw new AppError('BadRequest', {
+        message: 'startDate or endDate is not yyyy-mm-dd format',
+      })
+    }
+
     return { itemList, totalCount, lastCursor, hasNextPage }
   }
 
