@@ -50,12 +50,12 @@ client.test("/api/items 아이탬목록 최대 20(limit)개 조회", function() 
 
 ### item 아이탬목록 최대 20(limit)개 조회
 
-GET http://{{host}}:{{port}}/api/items?cursor=11
+GET http://{{host}}:{{port}}/api/items?cursor=77
 Accept: application/json
 
 > {%
 var status = 200;
-client.test("/api/items 11번 아이탬부터 최대 20(limit)개 조회", function() {
+client.test("/api/items - mode(recent) item 아이탬목록 최대 20(limit)개 조회", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -70,7 +70,29 @@ client.test("/api/items 11번 아이탬부터 최대 20(limit)개 조회", funct
 })
 %}
 
-### item 아이탬목록 최대 20(limit)개 조회
+### mode(recent) item 아이탬목록 최대 20(limit)개 조회
+
+GET http://{{host}}:{{port}}/api/items?cursor=77&mode=trending
+Accept: application/json
+
+> {%
+var status = 200;
+client.test("/api/items - mode(trending) item 아이탬목록 최대 20(limit)개 조회", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### mode(trending) item 아이탬목록 최대 20(limit)개 조회
 
 GET http://{{host}}:{{port}}/api/items/1
 Accept: application/json
