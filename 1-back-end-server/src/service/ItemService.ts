@@ -93,6 +93,8 @@ class ItemService {
     cursor: ltCursor,
     userId,
     limit: limitCount,
+    startDate,
+    endDate,
   }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus> | []> {
     const pageByModeOrNull = await (() => {
       const limit = limitCount ?? LIMIT_PER_FIND
@@ -100,7 +102,12 @@ class ItemService {
         return this.trendingPageOrNull({ ltCursor, limit })
       }
       if (mode === 'past') {
-        return null // todo: this.getPastPageOrNull({ limit, ltCursor: cursor })
+        return this.getPastPageOrNull({
+          ltCursor,
+          startDate,
+          endDate,
+          limit,
+        })
       }
       return this.recentPageOrNull({ ltCursor, limit })
     })()
@@ -356,6 +363,20 @@ class ItemService {
       ],
     })
     return totalCount > 0
+  }
+
+  private async getPastPageOrNull({
+    ltCursor,
+    startDate,
+    endDate,
+    limit,
+  }: {
+    ltCursor?: number | null
+    startDate?: string
+    endDate?: string
+    limit: number
+  }) {
+    return { itemList, totalCount, lastCursor, hasNextPage }
   }
 
   /**
