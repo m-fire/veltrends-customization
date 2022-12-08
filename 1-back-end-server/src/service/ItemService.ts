@@ -268,11 +268,11 @@ class ItemService {
   }
 
   private async recentPageOrNull({
-    limit,
     ltCursor,
+    limit,
   }: {
-    limit: number
     ltCursor?: number | null
+    limit: number
   }) {
     const [totalCount, itemList] = await Promise.all([
       db.item.count(),
@@ -290,13 +290,13 @@ class ItemService {
     if (totalCount === 0) return null
     if (itemList.length === 0) return null
 
-    const lastCursor = itemList.at(-1)?.id
+    const lastCursor = itemList.at(-1)?.id ?? null
     const hasNextPage = await ItemService.hasNextPageByCursor(lastCursor)
 
     return { itemList, totalCount, lastCursor, hasNextPage }
   }
 
-  private static async hasNextPageByCursor(ltCursor?: number) {
+  private static async hasNextPageByCursor(ltCursor?: number | null) {
     const totalPage = await db.item.count({
       where: { id: { lt: ltCursor || undefined } },
       orderBy: { createdAt: 'desc' },
@@ -305,11 +305,11 @@ class ItemService {
   }
 
   private async trendingPageOrNull({
-    limit,
     ltCursor,
+    limit,
   }: {
-    limit: number
     ltCursor?: number | null
+    limit: number
   }) {
     const [totalCount, itemList] = await Promise.all([
       this.itemStatusService.countByFilteredScore(THRESHOLD_FLOAT_SCORE),
@@ -336,8 +336,8 @@ class ItemService {
     if (totalCount === 0) return null
     if (itemList.length === 0) return null
 
-    const lastCursorItem = itemList.at(-1) ?? null
-    const lastCursor = lastCursorItem?.id
+    const lastCursorItem = itemList.at(-1)
+    const lastCursor = lastCursorItem?.id ?? null
 
     const hasNextPage = await ItemService.hasNextPageByCursorAndScore({
       ltCursor: lastCursor,
@@ -353,7 +353,7 @@ class ItemService {
     gteScore,
     lteScore,
   }: {
-    ltCursor?: number
+    ltCursor?: number | null
     gteScore?: number
     lteScore?: number
   }) {
