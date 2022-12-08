@@ -431,7 +431,38 @@ class ItemService {
       }),
     ])
 
+    const lastCursor = itemList.at(-1)?.id ?? null
+    const hasNextPage = await ItemService.hasNextPageByCursorAndDateDistance({
+      ltCursor: lastCursor,
+      gteDate: startWeekDate,
+      lteDate: endWeekDate,
+    })
+
     return { itemList, totalCount, lastCursor, hasNextPage }
+  }
+
+  private static async hasNextPageByCursorAndDateDistance({
+    ltCursor,
+    gteDate,
+    lteDate,
+  }: {
+    ltCursor?: number | null
+    gteDate?: Date
+    lteDate?: Date
+  }) {
+    const totalCount = await db.item.count({
+      where: {
+        id: { lt: ltCursor || undefined },
+        createdAt: { gte: gteDate, lte: lteDate },
+      },
+      orderBy: [
+        {
+          itemStatus: { likeCount: 'desc' },
+        },
+        { id: 'desc' },
+      ],
+    })
+    return totalCount > 0
   }
 
   /**
