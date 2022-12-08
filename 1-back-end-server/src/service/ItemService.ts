@@ -404,6 +404,33 @@ class ItemService {
     const startWeekDate = new Date(`${startDate} 00:00:00`)
     const endWeekDate = new Date(`${endDate} 23:59:59`)
 
+    const [totalCount, itemList] = await Promise.all([
+      db.item.count({
+        where: {
+          createdAt: {
+            gte: startWeekDate,
+            lte: endWeekDate,
+          },
+        },
+      }),
+      db.item.findMany({
+        orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
+        where: {
+          id: { lt: ltCursor || undefined },
+          createdAt: {
+            gte: startWeekDate,
+            lte: endWeekDate,
+          },
+        },
+        include: {
+          user: INCLUDE_SIMPLE_USER,
+          itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
+          publisher: true,
+        },
+        take: limit,
+      }),
+    ])
+
     return { itemList, totalCount, lastCursor, hasNextPage }
   }
 
