@@ -89,20 +89,20 @@ class ItemService {
   }
 
   async getItemList({
-    mode,
-    cursor,
+    mode = 'recent',
+    cursor: ltCursor,
     userId,
     limit: limitCount,
   }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus> | []> {
     const pageByModeOrNull = await (() => {
       const limit = limitCount ?? LIMIT_PER_FIND
       if (mode === 'trending') {
-        return this.trendingPageOrNull({ limit, ltCursor: cursor })
+        return this.trendingPageOrNull({ ltCursor, limit })
       }
       if (mode === 'past') {
-        // todo: return this.getPastPageOrNull({ limit, ltCursor: cursor })
+        return null // todo: this.getPastPageOrNull({ limit, ltCursor: cursor })
       }
-      return this.recentPageOrNull({ limit, ltCursor: cursor })
+      return this.recentPageOrNull({ ltCursor, limit })
     })()
 
     if (pageByModeOrNull == null) {
@@ -269,7 +269,7 @@ class ItemService {
     if (totalCount === 0) return null
 
     const itemList = await db.item.findMany({
-      where: ltCursor != null ? { id: { lt: ltCursor } } : undefined,
+      where: { id: { lt: ltCursor || undefined } },
       orderBy: { id: 'desc' },
       include: {
         user: INCLUDE_SIMPLE_USER,
@@ -288,7 +288,7 @@ class ItemService {
 
   private static async hasNextPageByCursor(ltCursor?: number) {
     const totalPage = await db.item.count({
-      where: { id: { lt: ltCursor } },
+      where: { id: { lt: ltCursor || undefined } },
       orderBy: { createdAt: 'desc' },
     })
     return totalPage > 0
@@ -305,10 +305,7 @@ class ItemService {
     if (totalCount === 0) return null
 
     const itemList = await db.item.findMany({
-      where: {
-        ...(ltCursor != null ? { id: { lt: ltCursor } } : undefined),
-        itemStatus: { score: { gte: 0.001 } },
-      },
+      where: { id: { lt: ltCursor || undefined } },
       orderBy: [
         { itemStatus: { score: 'desc' } },
         { itemStatus: { itemId: 'desc' } },
@@ -346,10 +343,10 @@ class ItemService {
     const totalCount = await db.item.count({
       where: {
         itemStatus: {
-          itemId: { lt: ltCursor },
+          itemId: { lt: ltCursor || undefined },
           score: {
-            gte: gteScore,
-            lte: lteScore,
+            gte: gteScore || undefined,
+            lte: lteScore || undefined,
           },
         },
       },

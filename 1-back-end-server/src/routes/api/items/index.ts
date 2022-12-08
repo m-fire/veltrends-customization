@@ -17,9 +17,14 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
         query: { cursor, mode },
         user,
       } = request
+      /* 파싱 후에도 cursor 가 0 인경우, undefined 처리 */
+      const cursorOrUndefined = cursor
+        ? parseInt(cursor, 10) || undefined
+        : undefined
+
       const itemList = await itemService.getItemList({
-        mode: (mode ?? 'recent') as ItemListingMode,
-        cursor: cursor != null ? parseInt(cursor, 10) : undefined,
+        mode: mode as ItemListingMode,
+        cursor: cursorOrUndefined,
         userId: user?.id,
       })
       return itemList

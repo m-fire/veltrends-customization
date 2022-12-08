@@ -18,7 +18,7 @@ const REQ_ITEM_CREATE_BODY_SCHEMA = Type.Object({
 })
 
 const REQ_ITEM_LIST_QUERYSTRING_SCHEMA = Type.Object({
-  cursor: Type.Optional(Type.Integer()),
+  cursor: Type.Optional(Type.String()),
   mode: Type.Optional(Type.String()),
   // 갯수는 통상 클라이언트에서 정하지 않음
 })
