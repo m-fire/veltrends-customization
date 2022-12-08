@@ -14,10 +14,10 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
     { schema: ITEMS_SCHEMA.GET_ITEM_LIST },
     async (request, reply) => {
       const {
-        query: { cursor, mode },
+        query: { cursor, mode, startDate, endDate },
         user,
       } = request
-      /* 파싱 후에도 cursor 가 0 인경우, undefined 처리 */
+      /* 파싱 후에도 cursor 가 0 인 경우, undefined 처리 */
       const cursorOrUndefined = cursor
         ? parseInt(cursor, 10) || undefined
         : undefined
@@ -26,6 +26,8 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
         mode: mode as ItemListingMode,
         cursor: cursorOrUndefined,
         userId: user?.id,
+        startDate,
+        endDate,
       })
       return itemList
     },
