@@ -151,7 +151,6 @@ class ItemService {
         itemStatus: true,
       },
     })
-
     if (!item) throw new AppError('NotFound')
 
     const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
@@ -193,8 +192,6 @@ class ItemService {
     ItemService.Algolia.deleteItem(itemId)
   }
 
-  /* Item Action methods */
-
   async likeItem({ itemId, userId }: ItemActionParams) {
     const itemStatus = await this.itemLikeService.like({ itemId, userId })
     const scoredStatusOrNull = await this.getScoredStatusOrNull(
@@ -213,6 +210,8 @@ class ItemService {
     return scoredStatusOrNull ?? itemStatus
   }
 
+  /* utils */
+
   private static mergeItemLike(
     item: ItemOrItemWithStatus,
     itemLike?: ItemLike,
@@ -221,6 +220,31 @@ class ItemService {
       ...item,
       isLiked: !!itemLike ?? false,
     }
+  }
+
+  private async getScoredStatusOrNull(itemId: number, likeCount?: number) {
+    const item = await db.item.findUnique({
+      select: { createdAt: true },
+      where: { id: itemId },
+    })
+    if (!item) return null
+
+    try {
+      const likes = likeCount ?? (await this.itemLikeService.countLike(itemId))
+      const score = RankCalculator.rankingScore(likes, item.createdAt)
+
+      const scoredStatus = await this.itemStatusService.updateScore({
+        itemId,
+        score,
+      })
+      return scoredStatus
+    } catch (e) {
+      console.error(`ItemService.ts> getScoredStatusOrNull()`, {
+        e,
+      })
+    }
+
+    return null
   }
 
   private static async limitListWithScoreFiltered({
@@ -311,31 +335,6 @@ class ItemService {
     })
     if (item?.userId !== userId) throw new AppError('Forbidden')
     return item
-  }
-
-  private async getScoredStatusOrNull(itemId: number, likeCount?: number) {
-    const item = await db.item.findUnique({
-      select: { createdAt: true },
-      where: { id: itemId },
-    })
-    if (!item) return null
-
-    try {
-      const likes = likeCount ?? (await this.itemLikeService.countLike(itemId))
-      const score = RankCalculator.rankingScore(likes, item.createdAt)
-
-      const scoredStatus = await this.itemStatusService.updateScore({
-        itemId,
-        score,
-      })
-      return scoredStatus
-    } catch (e) {
-      console.error(`ItemService.ts> getScoredStatusOrNull()`, {
-        e,
-      })
-    }
-
-    return null
   }
 
   /**
