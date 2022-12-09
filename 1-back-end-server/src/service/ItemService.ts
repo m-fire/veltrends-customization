@@ -12,18 +12,12 @@ import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 import algolia from '../core/api/items/algolia.js'
 import { RankCalculator } from '../core/util/calculates.js'
-import { Validator } from '../common/util/validates.js'
 import itemsModePagination from './paging/items/items-paginations.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
-const INCLUDE_SIMPLE_ITEM_STATUS = {
-  select: { id: true, likeCount: true, commentCount: true },
-} as const
 
 const LIMIT_PER_FIND = 20 as const
-const THRESHOLD_FLOAT_SCORE = 0.001
-const WEEK_MILLIS = 6 * 24 * 60 * 60 * 1000
 
 class ItemService {
   private static instance: ItemService
@@ -251,6 +245,10 @@ class ItemService {
     }
   }
 
+  private static emptyPagination() {
+    return ItemService.createPagination([], 0, false, null)
+  }
+
   private static mergeItemLike(
     item: ItemOrItemWithStatus,
     itemLike?: ItemLike,
@@ -259,212 +257,6 @@ class ItemService {
       ...item,
       isLiked: !!itemLike ?? false,
     }
-  }
-
-  private async recentPageOrNull({
-    ltCursor,
-    limit,
-  }: {
-    ltCursor?: number | null
-    limit: number
-  }) {
-    const [totalCount, itemList] = await Promise.all([
-      db.item.count(),
-      db.item.findMany({
-        where: { id: { lt: ltCursor || undefined } },
-        orderBy: { id: 'desc' },
-        include: {
-          user: INCLUDE_SIMPLE_USER,
-          itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
-          publisher: true,
-        },
-        take: limit,
-      }),
-    ])
-    if (totalCount === 0) return null
-    if (itemList.length === 0) return null
-
-    const lastCursor = itemList.at(-1)?.id ?? null
-    const hasNextPage = await ItemService.hasNextPageByCursor(lastCursor)
-
-    return { itemList, totalCount, lastCursor, hasNextPage }
-  }
-
-  private static async hasNextPageByCursor(ltCursor?: number | null) {
-    const totalPage = await db.item.count({
-      where: { id: { lt: ltCursor || undefined } },
-      orderBy: { createdAt: 'desc' },
-    })
-    return totalPage > 0
-  }
-
-  private async trendingPageOrNull({
-    ltCursor,
-    limit,
-  }: {
-    ltCursor?: number | null
-    limit: number
-  }) {
-    const [totalCount, itemList] = await Promise.all([
-      this.itemStatusService.countByFilteredScore(THRESHOLD_FLOAT_SCORE),
-      db.item.findMany({
-        where: { id: { lt: ltCursor || undefined } },
-        orderBy: [
-          { itemStatus: { score: 'desc' } },
-          { itemStatus: { itemId: 'desc' } },
-        ],
-        include: {
-          user: INCLUDE_SIMPLE_USER,
-          itemStatus: {
-            select: {
-              id: true,
-              likeCount: true,
-              score: true,
-            },
-          },
-          publisher: true,
-        },
-        take: limit,
-      }),
-    ])
-    if (totalCount === 0) return null
-    if (itemList.length === 0) return null
-
-    const lastCursorItem = itemList.at(-1)
-    const lastCursor = lastCursorItem?.id ?? null
-
-    const hasNextPage = await ItemService.hasNextPageByCursorAndScore({
-      ltCursor: lastCursor,
-      gteScore: THRESHOLD_FLOAT_SCORE,
-      lteScore: lastCursorItem?.itemStatus?.score,
-    })
-
-    return { itemList, totalCount, lastCursor, hasNextPage }
-  }
-
-  private static async hasNextPageByCursorAndScore({
-    ltCursor,
-    gteScore,
-    lteScore,
-  }: {
-    ltCursor?: number | null
-    gteScore?: number
-    lteScore?: number
-  }) {
-    const totalCount = await db.item.count({
-      where: {
-        itemStatus: {
-          itemId: { lt: ltCursor || undefined },
-          score: {
-            gte: gteScore || undefined,
-            lte: lteScore || undefined,
-          },
-        },
-      },
-      orderBy: [
-        { itemStatus: { score: 'desc' } },
-        { itemStatus: { itemId: 'desc' } },
-      ],
-    })
-    return totalCount > 0
-  }
-
-  private async getPastPageOrNull({
-    ltCursor,
-    startDate,
-    endDate,
-    limit,
-  }: {
-    ltCursor?: number | null
-    startDate?: string
-    endDate?: string
-    limit: number
-  }) {
-    if (!startDate || !endDate) {
-      throw new AppError('BadRequest', {
-        message: 'startDate or endDate is missing',
-      })
-    }
-
-    const isInvalidDateFormat = [startDate, endDate].some((date) =>
-      Validator.DateFormat.yyyymmdd(date),
-    )
-    if (isInvalidDateFormat) {
-      throw new AppError('BadRequest', {
-        message: 'startDate or endDate is not yyyy-mm-dd format',
-      })
-    }
-
-    const dateDistanceMillis =
-      new Date(endDate).getTime() - new Date(startDate).getTime()
-    if (dateDistanceMillis > WEEK_MILLIS) {
-      throw new AppError('BadRequest', {
-        message: 'Date range bigger than 7 days',
-      })
-    }
-
-    const startWeekDate = new Date(`${startDate} 00:00:00`)
-    const endWeekDate = new Date(`${endDate} 23:59:59`)
-
-    const [totalCount, itemList] = await Promise.all([
-      db.item.count({
-        where: {
-          createdAt: {
-            gte: startWeekDate,
-            lte: endWeekDate,
-          },
-        },
-      }),
-      db.item.findMany({
-        orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
-        where: {
-          id: { lt: ltCursor || undefined },
-          createdAt: {
-            gte: startWeekDate,
-            lte: endWeekDate,
-          },
-        },
-        include: {
-          user: INCLUDE_SIMPLE_USER,
-          itemStatus: INCLUDE_SIMPLE_ITEM_STATUS,
-          publisher: true,
-        },
-        take: limit,
-      }),
-    ])
-
-    const lastCursor = itemList.at(-1)?.id ?? null
-    const hasNextPage = await ItemService.hasNextPageByCursorAndDateDistance({
-      ltCursor: lastCursor,
-      gteDate: startWeekDate,
-      lteDate: endWeekDate,
-    })
-
-    return { itemList, totalCount, lastCursor, hasNextPage }
-  }
-
-  private static async hasNextPageByCursorAndDateDistance({
-    ltCursor,
-    gteDate,
-    lteDate,
-  }: {
-    ltCursor?: number | null
-    gteDate?: Date
-    lteDate?: Date
-  }) {
-    const totalCount = await db.item.count({
-      where: {
-        id: { lt: ltCursor || undefined },
-        createdAt: { gte: gteDate, lte: lteDate },
-      },
-      orderBy: [
-        {
-          itemStatus: { likeCount: 'desc' },
-        },
-        { id: 'desc' },
-      ],
-    })
-    return totalCount > 0
   }
 
   /**
@@ -575,6 +367,7 @@ type GetItemParams = {
 }
 
 type ItemOrItemWithStatus = Item | ItemWithStatus
+
 type ItemWithStatus = Item & { itemStatus: ItemStatus | null }
 
 type UpdateItemParams = ItemsRequestMap['UPDATE_ITEM']['Body'] & {
