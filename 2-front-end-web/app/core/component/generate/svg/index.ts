@@ -1,5 +1,7 @@
 export { default as ArrowLeft } from './ArrowLeft'
 export { default as Bookmarks } from './Bookmarks'
+export { default as Calendar } from './Calendar'
+export { default as Clock } from './Clock'
 export { default as Earth } from './Earth'
 export { default as Fire } from './Fire'
 export { default as HeartFill } from './HeartFill'
