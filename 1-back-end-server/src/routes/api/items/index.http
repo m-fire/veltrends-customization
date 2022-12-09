@@ -94,6 +94,28 @@ client.test("/api/items - mode(trending) item 아이탬목록 최대 20(limit)�
 
 ### mode(trending) item 아이탬목록 최대 20(limit)개 조회
 
+GET http://{{host}}:{{port}}/api/items?cursor=77&mode=past&startDate=2022-12-03&endDate=2022-12-09
+Accept: application/json
+
+> {%
+var status = 200;
+client.test("/api/items - mode(past) item 아이탬목록 최대 20(limit)개 조회", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### mode(past) item 아이탬목록 최대 20(limit)개 조회
+
 GET http://{{host}}:{{port}}/api/items/1
 Accept: application/json
 
