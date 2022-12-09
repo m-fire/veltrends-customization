@@ -13,6 +13,7 @@ import { getOriginItemInfo } from '../common/api/external-items.js'
 import algolia from '../core/api/items/algolia.js'
 import { RankCalculator } from '../core/util/calculates.js'
 import { Validator } from '../common/util/validates.js'
+import itemsModePagination from './paging/items/items-paginations.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
@@ -95,32 +96,24 @@ class ItemService {
     mode = 'recent',
     cursor: ltCursor,
     userId,
-    limit: limitCount,
+    limit,
     startDate,
     endDate,
   }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus> | []> {
-    const pageByModeOrNull = await (() => {
-      const limit = limitCount ?? LIMIT_PER_FIND
-      if (mode === 'trending') {
-        return this.trendingPageOrNull({ ltCursor, limit })
-      }
-      if (mode === 'past') {
-        return this.getPastPageOrNull({
-          ltCursor,
-          startDate,
-          endDate,
-          limit,
-        })
-      }
-      return this.recentPageOrNull({ ltCursor, limit })
-    })()
+    //
+    const modePagination = itemsModePagination.getPagination(mode)
+    const pagingResult = await modePagination.paging({
+      ltCursor,
+      limit: limit ?? LIMIT_PER_FIND,
+      startDate,
+      endDate,
+    })
 
-    if (pageByModeOrNull == null) {
-      const emptyPage = ItemService.createPagination([], 0, false, null)
-      return emptyPage
+    if (pagingResult == null) {
+      return ItemService.emptyPagination()
     }
 
-    const { itemList, totalCount, hasNextPage, lastCursor } = pageByModeOrNull
+    const { itemList, totalCount, hasNextPage, lastCursor } = pagingResult
     const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
       itemIds: itemList.map((item) => item.id),
       userId: userId ?? undefined,
