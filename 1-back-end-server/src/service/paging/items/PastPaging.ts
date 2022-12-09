@@ -67,7 +67,7 @@ class PastPaging extends BaseItemsPaging<'past', PastItem> {
   protected async hasNextPage(
     options: PagingParamsOf<'past'>, // lastItem?: PastItem,
   ) {
-    console.log(`PastPaging.ts> PastPaging.hasNextPage()`, { options })
+    //
     const { ltCursor, startDate, endDate } = options
     const fullStartDate = startDate
       ? Converts.Date.newYyyymmddHhmmss(startDate)
