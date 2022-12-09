@@ -568,9 +568,13 @@ export default ItemService
 
 type CreateItemParams = ItemsRequestMap['CREATE_ITEM']['Body']
 
-type ItemListPagingOptions = PaginationOptions & { mode: ItemListingMode }
+type ItemListPagingOptions = PaginationOptions & {
+  mode: ItemsPagingMode
+  startDate?: string
+  endDate?: string
+}
 
-export type ItemListingMode = 'recent' | 'trending' | 'past'
+export type ItemsPagingMode = 'recent' | 'trending' | 'past'
 
 type GetItemParams = {
   itemId: number
