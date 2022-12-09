@@ -6,26 +6,26 @@ import {
 } from '../../../common/config/typebox/schema-util.js'
 
 const REQ_SEARCH_ITEM_QUERYSTRING_SCHEMA = Type.Object({
-  q: Type.String({ default: '검색어' }),
-  offset: Type.Optional(Type.Integer({ default: 3 })),
-  limit: Type.Optional(Type.Integer({ default: 20 })),
+  q: Type.String(),
+  offset: Type.Optional(Type.Integer()),
+  limit: Type.Optional(Type.Integer()),
 })
 
 const RES_SEARCHED_ITEM_SCHEMA = Type.Object({
-  id: Type.Number({ default: 20 }),
-  title: Type.String({ default: 'test_title' }),
-  body: Type.String({ default: 'test_body' }),
-  author: Nullable(Type.String({ default: 'test_author' })),
-  link: Type.String({ default: 'https://www.example-link.com/' }),
-  likeCount: Type.Number({ default: 7 }),
+  id: Type.Number(),
+  title: Type.String(),
+  body: Type.String(),
+  author: Nullable(Type.String()),
+  link: Type.String(),
+  likeCount: Type.Number(),
   publisher: Type.Object({
-    name: Type.String({ default: 'publisher_name' }),
-    favicon: Type.String({ default: 'https://favicon.png' }),
-    domain: Type.String({ default: 'www.example.com' }),
+    name: Type.String(),
+    favicon: Type.String(),
+    domain: Type.String(),
   }),
   highlight: Type.Object({
-    title: Type.String({ default: 'test <em>검색어</em> title' }),
-    body: Type.String({ default: 'test <em>검색어</em> body' }),
+    title: Type.String(),
+    body: Type.String(),
   }),
 })
 

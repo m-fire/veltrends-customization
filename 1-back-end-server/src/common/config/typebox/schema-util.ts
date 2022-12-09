@@ -35,12 +35,12 @@ export const createPaginationSchema = <T extends TSchema>(
 ) =>
   Type.Object({
     list: Type.Array(schema),
-    totalCount: Type.Integer({ default: 30 }),
+    totalCount: Type.Integer(),
     pageInfo: Type.Object(
       {
-        hasNextPage: Type.Optional(Type.Boolean({ default: true })),
-        lastCursor: Type.Optional(Nullable(Type.Integer({ default: 10 }))),
-        nextOffset: Type.Optional(Nullable(Type.Integer({ default: 3 }))),
+        hasNextPage: Type.Optional(Type.Boolean()),
+        lastCursor: Type.Optional(Nullable(Type.Integer())),
+        nextOffset: Type.Optional(Nullable(Type.Integer())),
       },
       //todo: 커스텀 예제가 이상하게 동작한다. 알아볼것
       // example

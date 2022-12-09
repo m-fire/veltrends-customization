@@ -8,31 +8,31 @@ import { RES_AUTH_USER_INFO_SCHEMA } from '../../auth/schema.js'
 
 const REQ_COMMENT_CREATE_BODY_SCHEMA = Type.Object({
   text: Type.String(),
-  parentCommentId: Type.Optional(Nullable(Type.Integer({ default: 32 }))),
+  parentCommentId: Type.Optional(Nullable(Type.Integer())),
 })
 
 const REQ_COMMENT_PATH_PARAMS_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 13 }),
-  commentId: Type.Integer({ default: 32 }),
+  id: Type.Integer(),
+  commentId: Type.Integer(),
 })
 
 const REQ_COMMENT_UPDATE_BODY_SCHEMA = Type.Object({
-  text: Type.String({ default: 'updated_comment_text' }),
+  text: Type.String(),
 })
 
 // Response
 
 const COMMENT_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 11 }),
-  text: Type.String({ default: 'example_comment_text' }),
-  likeCount: Type.Number({ default: 3 }),
-  subcommentCount: Type.Number({ default: 7 }),
-  createdAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
-  updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
+  id: Type.Integer(),
+  text: Type.String(),
+  likeCount: Type.Number(),
+  subcommentCount: Type.Number(),
+  createdAt: Type.String(),
+  updatedAt: Type.String(),
   user: RES_AUTH_USER_INFO_SCHEMA,
   mentionUser: Type.Optional(Nullable(RES_AUTH_USER_INFO_SCHEMA)),
-  isDeleted: Type.Boolean({ default: false }),
-  isLiked: Type.Boolean({ default: false }),
+  isDeleted: Type.Boolean(),
+  isLiked: Type.Boolean(),
 })
 
 const RES_COMMENT_SCHEMA = Type.Object({

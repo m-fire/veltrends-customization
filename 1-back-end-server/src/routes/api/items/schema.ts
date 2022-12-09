@@ -11,70 +11,66 @@ import { RES_AUTH_USER_INFO_SCHEMA } from '../auth/schema.js'
 // Reqeust Schema
 
 const REQ_ITEM_CREATE_BODY_SCHEMA = Type.Object({
-  title: Type.String({ default: 'test_title' }),
-  body: Type.String({ default: 'test_body' }),
-  link: Type.String({ default: 'https://test.com/test' }),
+  title: Type.String(),
+  body: Type.String(),
+  link: Type.String(),
   tags: Type.Optional(Type.Array(Type.String())),
 })
 
 const REQ_ITEM_LIST_QUERYSTRING_SCHEMA = Type.Object({
-  cursor: Type.Optional(Type.String({ default: '12' })),
-  mode: Type.Optional(Type.String({ default: 'recent' })),
+  cursor: Type.Optional(Type.Integer()),
+  mode: Type.Optional(Type.String()),
   // 갯수는 통상 클라이언트에서 정하지 않음
 })
 
 const REQ_ITEM_PATH_PARAMS_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 30 }),
+  id: Type.Integer(),
 })
 
 const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
-  link: Type.String({ default: 'test_url_link' }),
-  title: Type.String({ default: 'test_title' }),
-  body: Type.String({ default: 'test_body' }),
+  link: Type.String(),
+  title: Type.String(),
+  body: Type.String(),
   tags: Type.Array(Type.String()),
 })
 
 // Response Schema
 
 const RES_ITEM_STATUS_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 1 }),
-  likeCount: Type.Integer({ default: 11 }),
-  commentCount: Type.Integer({ default: 4 }),
+  id: Type.Integer(),
+  likeCount: Type.Integer(),
+  commentCount: Type.Integer(),
 })
 
 export const RES_ITEM_LIKE_UPDATE_BODY_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 6 }),
+  id: Type.Integer(),
   itemStatus: RES_ITEM_STATUS_SCHEMA,
 })
 
 export const RES_ITEM_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 30 }),
-  title: Type.String({ default: 'test_title' }),
-  body: Type.String({ default: 'test_body' }),
-  link: Type.String({ default: 'https://test.com/test' }),
-  thumbnail: Nullable(
-    Type.String({ default: 'https://image.com/thumbnail.png' }),
-  ),
-  createdAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
-  updatedAt: Type.String({ default: '2022-10-15T23:16:21.901Z' }),
+  id: Type.Integer(),
+  title: Type.String(),
+  body: Type.String(),
+  link: Type.String(),
+  thumbnail: Nullable(Type.String()),
+  createdAt: Type.String(),
+  updatedAt: Type.String(),
   author: Type.String(),
   user: RES_AUTH_USER_INFO_SCHEMA,
   publisher: Type.Object({
-    id: Type.Integer({ default: 15 }),
-    name: Type.String({ default: 'test_publisher' }),
-    domain: Type.String({ default: 'https://test-domain.com/test_api' }),
-    favicon: Nullable(
-      Type.String({ default: 'https://image.com/favicon.png' }),
-    ),
+    id: Type.Integer(),
+    name: Type.String(),
+    domain: Type.String(),
+    favicon: Nullable(Type.String()),
   }),
   itemStatus: RES_ITEM_STATUS_SCHEMA,
-  isLiked: Type.Boolean({ default: false }),
+  isLiked: Type.Boolean(),
 })
 
 export const RES_ITEM_LIKE_SCHEMA = Type.Object({
-  id: Type.Integer({ default: 22 }),
+  id: Type.Integer(),
   itemStatus: RES_ITEM_STATUS_SCHEMA,
-  isLiked: Type.Boolean({ default: false }),
+  isLiked: Type.Boolean(),
 })
 
 // FastifySchema
