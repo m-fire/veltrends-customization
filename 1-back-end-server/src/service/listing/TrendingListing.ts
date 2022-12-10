@@ -1,35 +1,36 @@
-import db from '../../../common/config/prisma/db-client.js'
-import BaseItemsPaging, { PagingParamsOf } from './BaseItemsPaging.js'
+import db from '../../common/config/prisma/db-client.js'
+import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
+import { ListingParamsOf } from '../../core/pagination/types.js'
 
 const THRESHOLD_SCORE = 0.001 as const
 
-type TredingItem = Awaited<ReturnType<typeof findTredingItemList>>[0]
+type TredingItem = Awaited<ReturnType<typeof findTredingList>>[0]
 
-class TrendingPaging extends BaseItemsPaging<'trending', TredingItem> {
-  private static instance: TrendingPaging
+class TrendingListing extends AbstractModeListing<'trending', TredingItem> {
+  private static instance: TrendingListing
 
   static getInstance() {
-    if (TrendingPaging.instance == null) {
-      TrendingPaging.instance = new TrendingPaging()
+    if (TrendingListing.instance == null) {
+      TrendingListing.instance = new TrendingListing()
     }
-    return TrendingPaging.instance
+    return TrendingListing.instance
   }
 
-  protected async totalCount(options: PagingParamsOf<'trending'>) {
+  protected async getTotalCount(options: ListingParamsOf<'trending'>) {
     return db.itemStatus.count({
       where: { score: { gte: THRESHOLD_SCORE } },
     })
   }
 
-  protected async pagingList(options: PagingParamsOf<'trending'>) {
-    return findTredingItemList(options)
+  protected async findList(options: ListingParamsOf<'trending'>) {
+    return findTredingList(options)
   }
 
   protected async hasNextPage(
-    { ltCursor }: PagingParamsOf<'trending'>,
-    lastItem?: TredingItem,
+    { ltCursor }: ListingParamsOf<'trending'>,
+    lastElement?: TredingItem,
   ) {
-    const lastItemScore = lastItem?.itemStatus?.score
+    const lastElementScore = lastElement?.itemStatus?.score
 
     const totalPage = await db.item.count({
       where: {
@@ -37,7 +38,7 @@ class TrendingPaging extends BaseItemsPaging<'trending', TredingItem> {
           itemId: { lt: ltCursor || undefined },
           score: {
             gte: THRESHOLD_SCORE,
-            lte: lastItemScore,
+            lte: lastElementScore,
           },
         },
       },
@@ -49,15 +50,15 @@ class TrendingPaging extends BaseItemsPaging<'trending', TredingItem> {
     return totalPage > 0
   }
 
-  protected getLastCursorOrNull(lastItem: TredingItem): number | null {
-    return lastItem?.id ?? null
+  protected getLastCursorOrNull(lastElement: TredingItem): number | null {
+    return lastElement?.id ?? null
   }
 }
-export default TrendingPaging
+export default TrendingListing
 
 // db query func
 
-export function findTredingItemList({
+export function findTredingList({
   ltCursor,
   limit,
 }: {

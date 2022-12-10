@@ -1,6 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
-import ItemService, { ItemsPagingMode } from '../../../service/ItemService.js'
+import ItemService from '../../../service/ItemService.js'
+import { ListMode } from '../../../core/pagination/types.js'
 import { ItemsRequestMap } from './types.js'
 import ITEMS_SCHEMA from './schema.js'
 import { commentsRoute } from './comments/index.js'
@@ -23,7 +24,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
         : undefined
 
       const itemList = await itemService.getItemList({
-        mode: mode as ItemsPagingMode,
+        mode: mode as ListMode,
         cursor: cursorOrUndefined,
         userId: user?.id,
         startDate,

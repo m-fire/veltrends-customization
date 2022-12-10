@@ -12,7 +12,8 @@ import ItemLikeService from './ItemLikeService.js'
 import { getOriginItemInfo } from '../common/api/external-items.js'
 import algolia from '../core/api/items/algolia.js'
 import { RankCalculator } from '../core/util/calculates.js'
-import itemsModePagination from './paging/items/items-paginations.js'
+import { ListMode } from '../core/pagination/types.js'
+import ItemsListingStrategy from './listing/ItemsListingStrategy.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
@@ -95,24 +96,21 @@ class ItemService {
     endDate,
   }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus> | []> {
     //
-    const modePagination = itemsModePagination.getPagination(mode)
-    const pagingResult = await modePagination.paging({
+    const listingStrategy = ItemsListingStrategy.getStrategy(mode)
+    const listingResult = await listingStrategy.listing({
       ltCursor,
       limit: limit ?? LIMIT_PER_FIND,
       startDate,
       endDate,
     })
+    if (listingResult == null) return ItemService.emptyPagination()
 
-    if (pagingResult == null) {
-      return ItemService.emptyPagination()
-    }
-
-    const { itemList, totalCount, hasNextPage, lastCursor } = pagingResult
+    const { list, totalCount, hasNextPage, lastCursor } = listingResult
     const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
-      itemIds: itemList.map((item) => item.id),
+      itemIds: list.map((item) => item.id),
       userId: userId ?? undefined,
     })
-    const itemWithLikeList = itemList.map((item) =>
+    const itemWithLikeList = list.map((item) =>
       ItemService.mergeItemLike(item, likeByIdsMap[item.id]),
     )
 
@@ -354,12 +352,10 @@ export default ItemService
 type CreateItemParams = ItemsRequestMap['CREATE_ITEM']['Body']
 
 type ItemListPagingOptions = PaginationOptions & {
-  mode: ItemsPagingMode
+  mode: ListMode
   startDate?: string
   endDate?: string
 }
-
-export type ItemsPagingMode = 'recent' | 'trending' | 'past'
 
 type GetItemParams = {
   itemId: number

@@ -1,24 +1,28 @@
-import db from '../../../common/config/prisma/db-client.js'
-import BaseItemsPaging, { PagingParamsOf } from './BaseItemsPaging.js'
-import AppError from '../../../common/error/AppError.js'
-import { Validator } from '../../../common/util/validates.js'
-import { Converts } from '../../../common/util/converts.js'
+import db from '../../common/config/prisma/db-client.js'
+import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
+import AppError from '../../common/error/AppError.js'
+import { Validator } from '../../common/util/validates.js'
+import { Converts } from '../../common/util/converts.js'
+import { ListingParamsOf } from '../../core/pagination/types.js'
 
 const WEEK_MILLISECOND = 6 * 24 * 60 * 60 * 1000
 
-type PastItem = Awaited<ReturnType<typeof findPastItemList>>[0]
+type PastItem = Awaited<ReturnType<typeof findPastList>>[0]
 
-class PastPaging extends BaseItemsPaging<'past', PastItem> {
-  private static instance: PastPaging
+class PastListing extends AbstractModeListing<'past', PastItem> {
+  private static instance: PastListing
 
   static getInstance() {
-    if (PastPaging.instance == null) {
-      PastPaging.instance = new PastPaging()
+    if (PastListing.instance == null) {
+      PastListing.instance = new PastListing()
     }
-    return PastPaging.instance
+    return PastListing.instance
   }
 
-  protected async totalCount({ startDate, endDate }: PagingParamsOf<'past'>) {
+  protected async getTotalCount({
+    startDate,
+    endDate,
+  }: ListingParamsOf<'past'>) {
     //
     if (!startDate || !endDate) {
       throw new AppError('BadRequest', {
@@ -60,12 +64,12 @@ class PastPaging extends BaseItemsPaging<'past', PastItem> {
     })
   }
 
-  protected async pagingList(options: PagingParamsOf<'past'>) {
-    return findPastItemList(options)
+  protected async findList(options: ListingParamsOf<'past'>) {
+    return findPastList(options)
   }
 
   protected async hasNextPage(
-    options: PagingParamsOf<'past'>, // lastItem?: PastItem,
+    options: ListingParamsOf<'past'>, // lastElement?: PastItem,
   ) {
     //
     const { ltCursor, startDate, endDate } = options
@@ -94,15 +98,15 @@ class PastPaging extends BaseItemsPaging<'past', PastItem> {
     return totalPage > 0
   }
 
-  protected getLastCursorOrNull(lastItem: PastItem): number | null {
-    return lastItem?.id ?? null
+  protected getLastCursorOrNull(lastElement: PastItem): number | null {
+    return lastElement?.id ?? null
   }
 }
-export default PastPaging
+export default PastListing
 
 // db query func
 
-export function findPastItemList({
+export function findPastList({
   ltCursor,
   limit,
   startDate,
