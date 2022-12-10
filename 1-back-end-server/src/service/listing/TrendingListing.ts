@@ -77,6 +77,7 @@ export function findTredingList({
         select: {
           id: true,
           likeCount: true,
+          commentCount: true,
           score: true,
         },
       },
