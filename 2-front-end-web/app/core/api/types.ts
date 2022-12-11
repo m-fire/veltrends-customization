@@ -62,3 +62,5 @@ export interface Highlight {
 }
 
 export type SearchedItemPagination = GenericPagination<SearchedItem>
+
+export type ListMode = 'recent' | 'trending' | 'past'
