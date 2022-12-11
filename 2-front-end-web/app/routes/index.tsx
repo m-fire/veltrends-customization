@@ -10,11 +10,13 @@ import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
 import ListModeSelector from '~/core/component/home/ListModeSelector'
 
 function Index() {
+  // API 서버로부터 데이터로딩
   const data = useLoaderData<ItemListPagination>()
   useEffect(() => {
     console.log(`index.tsx> API 서버에서 받아온 페이지데이터`, { data })
   }, [data])
 
+  // 페이지 state 생성 및, 새목록 덧붙이기
   const [pages, setPages] = useState([data])
   const fetcher = useFetcher<ItemListPagination>()
   useEffect(() => {
@@ -24,6 +26,7 @@ function Index() {
     setPages(pages.concat(page))
   }, [fetcher.data, pages])
 
+  // 모드가 변경될 때마다, 모드별 요청 파라미터 변경 후 이동
   const [mode, setMode] = useState<ListMode>('trending')
   const navigate = useNavigate()
   useEffect(() => {
