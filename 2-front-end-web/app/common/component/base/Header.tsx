@@ -39,8 +39,13 @@ const Block = styled.header`
   position: relative;
   height: 56px;
   border-bottom: 1px solid ${colors.grey1};
-  padding-left: 16px;
-  padding-right: 16px;
+  z-index: 1;
+
+  // todo: backdrop-filter 적용안됨 수정
+  //padding-left: 16px;
+  //padding-right: 16px;
+  //backdrop-filter: grayscale(80%) blur(8px);
+  //-webkit-backdrop-filter: grayscale(80%) blur(8px);
 `
 
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
