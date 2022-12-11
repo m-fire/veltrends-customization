@@ -7,6 +7,7 @@ import { ItemListPagination, ListMode } from '~/core/api/types'
 import LinkCardList from '~/core/component/home/LinkCardList'
 import { Requests } from '~/common/util/https'
 import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
+import ListModeSelector from '~/core/component/home/ListModeSelector'
 
 function Index() {
   const data = useLoaderData<ItemListPagination>()
@@ -51,6 +52,7 @@ function Index() {
   const items = pages.flatMap((p) => p.list)
   return (
     <TabLayout>
+      <ListModeSelector mode={mode} onSelectMode={setMode} />
       <LinkCardList items={items} />
       <div ref={intersectionRef} />
     </TabLayout>
