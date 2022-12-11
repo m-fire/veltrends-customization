@@ -71,9 +71,9 @@ function ListModeSelector({ mode, onSelectMode }: ListModeSelectorProps) {
 
   return (
     <Block>
-      <ModeNavigator>
+      <SelectorList>
         {modeStateList.map((state, index) => (
-          <NavigatorItem
+          <SelectorItem
             index={index}
             key={state.name}
             currentMode={mode}
@@ -91,7 +91,7 @@ function ListModeSelector({ mode, onSelectMode }: ListModeSelectorProps) {
             }}
           />
         )}
-      </ModeNavigator>
+      </SelectorList>
     </Block>
   )
 }
@@ -113,7 +113,7 @@ const Block = styled.div`
   z-index: 1;
 `
 
-const ModeNavigator = styled.nav`
+const SelectorList = styled.nav`
   ${flexStyles()};
   position: relative;
   gap: 24px;
@@ -150,7 +150,7 @@ type SelectorItemState = {
 /**
  * Inner function component
  */
-function NavigatorItem({
+function SelectorItem({
   index,
   currentMode,
   modeState: { mode, name, icon },
@@ -176,17 +176,17 @@ function NavigatorItem({
   }, [onUpdateState, index])
 
   return (
-    <ModeItem
+    <ModeBlock
       ref={modeItemRef}
       isActive={mode === currentMode}
       onClick={() => onSelectMode(mode)}
     >
       {icon} {name}
-    </ModeItem>
+    </ModeBlock>
   )
 }
 
-const ModeItem = styled.div<{ isActive?: boolean }>`
+const ModeBlock = styled.div<{ isActive?: boolean }>`
   ${flexStyles({ alignItems: 'flex-end' })};
   ${fontStyles({
     size: '14px',
