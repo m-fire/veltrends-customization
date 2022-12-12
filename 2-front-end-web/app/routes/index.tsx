@@ -2,32 +2,39 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import TabLayout from '~/common/component/layout/TabLayout'
 import { json, LoaderFunction } from '@remix-run/node'
 import { getItemList } from '~/core/api/items'
-import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 import { ItemListPagination, ListMode } from '~/core/api/types'
 import LinkCardList from '~/core/component/home/LinkCardList'
 import { Requests } from '~/common/util/https'
 import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
 import ListModeSelector from '~/core/component/home/ListModeSelector'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
 function Index() {
   // API 서버로부터 데이터로딩
-  const data = useLoaderData<ItemListPagination>()
-  useEffect(() => {
-    console.log(`index.tsx> API 서버에서 받아온 페이지데이터`, { data })
-  }, [data])
+  const initialData = useLoaderData<ItemListPagination>()
+  const [mode, setMode] = useState<ListMode>('trending')
 
-  // 페이지 state 생성 및, 새목록 덧붙이기
-  const [pages, setPages] = useState([data])
-  const fetcher = useFetcher<ItemListPagination>()
-  useEffect(() => {
-    const page = fetcher.data
-    // 새 페이지가 있으면, 기존목록에 새 페이지 추가
-    if (!page || pages.includes(page)) return
-    setPages(pages.concat(page))
-  }, [fetcher.data, pages])
+  // init react-query for Item(news) list data
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    ['items', mode],
+    ({ pageParam }) => getItemList({ mode, cursor: pageParam }),
+    {
+      initialData: {
+        pageParams: [undefined],
+        pages: [initialData],
+      },
+      getNextPageParam: (lastPage) => {
+        console.log(`index.tsx> Index useInfiniteQuery.getNextPageParam()`, {
+          lastPage,
+        })
+        if (!lastPage.pageInfo.hasNextPage) return null
+        return lastPage.pageInfo.lastCursor // pageParam 로 사용
+      },
+    },
+  )
 
   // 모드가 변경될 때마다, 모드별 요청 파라미터 변경 후 이동
-  const [mode, setMode] = useState<ListMode>('trending')
   const navigate = useNavigate()
   useEffect(() => {
     const nextUrl = mode === 'trending' ? '/' : `/?mode=${mode}`
@@ -52,11 +59,11 @@ function Index() {
   const intersectionRef = useRef<HTMLDivElement>(null)
   useInfiniteScroll(intersectionRef, fetchNext)
 
-  const items = pages.flatMap((p) => p.list)
+  const items = data?.pages.flatMap((page) => page.list)
   return (
     <TabLayout>
       <ListModeSelector mode={mode} onSelectMode={setMode} />
-      <LinkCardList items={items} />
+      {items ? <LinkCardList items={items} /> : null}
       <div ref={intersectionRef} />
     </TabLayout>
   )
