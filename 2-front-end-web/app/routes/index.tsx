@@ -41,21 +41,14 @@ function Index() {
     navigate(nextUrl, { replace: true })
   }, [mode, navigate])
 
-  // 다음 목록페이지 요청
-  const fetchNext = useCallback(() => {
-    const { hasNextPage, lastCursor } = pages.at(-1)?.pageInfo ?? {
-      lastCursor: null,
-      hasNextPage: false,
-    }
-    if (fetcher.state === 'loading') return
+  // 감지영역에 screen 이 도달한 경우, react-query 를 통해 다음목록 붙이기
+  const fetchNext = useCallback(async () => {
     if (!hasNextPage) return
-    fetcher.load(
-      /* Remix 특징: '&index' 를 붙여야 함 */
-      `/?cursor=${lastCursor}` + '&index',
-    )
-  }, [fetcher, pages])
-
-  // 감지영역에 screen 이 도달한 경우, 목록 끝에 다음페이지 붙이기
+    // Fixed: react-query 의 fetchNextPage() 를 그대로 무한스크롤로딩에 붙이면,
+    //   데이터 리로딩 시점에 초기화가 되지 않아, 기존 목록에 덧붙게 된다.
+    //   따라서 한번 로딩이 되었다면, 기존목록을 제외한 받은 데이터만 붙이도록 수정.
+    await fetchNextPage()
+  }, [fetchNextPage, hasNextPage])
   const intersectionRef = useRef<HTMLDivElement>(null)
   useInfiniteScroll(intersectionRef, fetchNext)
 
