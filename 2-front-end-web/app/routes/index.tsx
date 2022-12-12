@@ -27,9 +27,6 @@ function Index() {
         pages: [initialData],
       },
       getNextPageParam: (lastPage) => {
-        console.log(`index.tsx> Index useInfiniteQuery.getNextPageParam()`, {
-          lastPage,
-        })
         if (!lastPage.pageInfo.hasNextPage) return null
         return lastPage.pageInfo.lastCursor // pageParam 로 사용
       },
@@ -47,8 +44,8 @@ function Index() {
   const fetchNext = useCallback(async () => {
     if (!hasNextPage) return
     // Fixed: react-query 의 fetchNextPage() 를 그대로 무한스크롤로딩에 붙이면,
-    //   데이터 리로딩 시점에 초기화가 되지 않아, 기존 목록에 덧붙게 된다.
-    //   따라서 한번 로딩이 되었다면, 기존목록을 제외한 받은 데이터만 붙이도록 수정.
+    // 기존 목록에 새로 불러온 데이터를 덧붙게 된다. 이를 막기위해
+    // 한번 로딩이 되었다면, 기존 데이터 외에 받은 데이터만 붙이도록 수정.
     await fetchNextPage()
   }, [fetchNextPage, hasNextPage])
   const intersectionRef = useRef<HTMLDivElement>(null)
@@ -83,7 +80,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     startDate: '2022-12-12',
     endDate: '2022-12-06',
   })
-  return json(itemList)
+  return json(itemList) // to useLoaderData() hook
 }
 
 // Inner Components
