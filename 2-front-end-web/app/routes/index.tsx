@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import TabLayout from '~/common/component/layout/TabLayout'
 import { json, LoaderFunction } from '@remix-run/node'
 import { getItemList } from '~/core/api/items'
-import { useLoaderData, useNavigate } from '@remix-run/react'
+import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react'
 import { ItemListPagination, ListMode } from '~/core/api/types'
 import LinkCardList from '~/core/component/home/LinkCardList'
 import { Requests } from '~/common/util/https'
@@ -11,11 +11,13 @@ import ListModeSelector from '~/core/component/home/ListModeSelector'
 import { useInfiniteQuery } from '@tanstack/react-query'
 
 function Index() {
-  // API 서버로부터 데이터로딩
-  const initialData = useLoaderData<ItemListPagination>()
-  const [mode, setMode] = useState<ListMode>('trending')
+  // URL Parameter 에서 초기값 가져와서 state 바인딩
+  const [searchParams] = useSearchParams()
+  const modeParam = (searchParams.get('mode') as any) ?? 'trending'
 
-  // init react-query for Item(news) list data
+  // API 서버로부터 데이터로딩 with 1-remix-fetch & 2-react-query
+  const initialData = useLoaderData<ItemListPagination>()
+  const [mode, setMode] = useState<ListMode>(modeParam)
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
     ['items', mode],
     ({ pageParam }) => getItemList({ mode, cursor: pageParam }),
@@ -66,15 +68,9 @@ export default Index
 // Remix handler
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { cursor, mode, startDate, endDate } = Requests.parseUrlParams<{
-    mode?: string
-    cursor?: string
-    startDate?: string
-    endDate?: string
-  }>(request.url)
+  const { mode } = Requests.parseUrlParams<{ mode?: string }>(request.url)
 
   const fallbackedMode = mode ?? 'trending'
-  const parsedCursor = cursor != null ? parseInt(cursor, 10) : undefined
 
   console.log(fallbackedMode)
   // @todo: throw error if invalid error
