@@ -94,7 +94,7 @@ client.test("/api/items - mode(trending) item 아이탬목록 최대 20(limit)�
 
 ### mode(trending) item 아이탬목록 최대 20(limit)개 조회
 
-GET http://{{host}}:{{port}}/api/items?cursor=77&mode=past&startDate=2022-12-03&endDate=2022-12-09
+GET http://{{host}}:{{port}}/api/items?mode=past&mode=past&startDate=2022-12-03&endDate=2022-12-09
 Accept: application/json
 
 > {%

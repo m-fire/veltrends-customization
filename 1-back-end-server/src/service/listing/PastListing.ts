@@ -125,14 +125,14 @@ export function findPastList({
     : undefined
 
   return db.item.findMany({
-    orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
     where: {
-      id: { lt: ltCursor || undefined },
+      id: ltCursor ? { lt: ltCursor } : undefined,
       createdAt: {
         gte: fullStartDate,
         lte: fullEndDate,
       },
     },
+    orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
     include: {
       user: { select: { id: true, username: true } },
       itemStatus: {
