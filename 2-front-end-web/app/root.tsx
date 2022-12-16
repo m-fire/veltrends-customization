@@ -1,3 +1,4 @@
+import React, { useEffect, useState, Suspense } from 'react'
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import {
   Links,
@@ -16,6 +17,7 @@ import { UserContext } from '~/common/context/UserContext'
 import { SimpleUser } from '~/common/api/types'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import GlobalBottomSheetModal from '~/common/component/system/GlobalBottomSheetModal'
 
 const queryClient = new QueryClient({
@@ -29,7 +31,21 @@ const queryClient = new QueryClient({
   },
 })
 
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    }),
+  ),
+)
+
 export default function App() {
+  const [showDevtools, setShowDevtools] = useState(false)
+  useEffect(() => {
+    // @ts-ignore
+    window.toggleDevtools = () => setShowDevtools((old) => !old)
+  }, [])
+
   const data = useLoaderData<SimpleUser | null>()
 
   return (
@@ -49,6 +65,13 @@ export default function App() {
             </UserContext.Provider>
           </DialogContextProvider>
           <GlobalBottomSheetModal />
+
+          <ReactQueryDevtools initialIsOpen />
+          {showDevtools && (
+            <Suspense fallback={null}>
+              <ReactQueryDevtoolsProduction />
+            </Suspense>
+          )}
         </QueryClientProvider>
 
         <ScrollRestoration />
