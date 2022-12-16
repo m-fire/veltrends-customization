@@ -18,7 +18,16 @@ import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import GlobalBottomSheetModal from '~/common/component/system/GlobalBottomSheetModal'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // staleTime: 쿼리가 새로 고침에서 오래된 것으로 전환될 때까지의 기간입니다.
+      // 쿼리가 새로 작성된 경우 데이터는 항상 캐시에서만 읽힙니다. 네트워크 요청은 발생하지 않습니다!
+      // ref: https://stackoverflow.com/questions/72828361/what-are-staletime-and-cachetime-in-react-query
+      staleTime: 1000 * 6,
+    },
+  },
+})
 
 export default function App() {
   const data = useLoaderData<SimpleUser | null>()
