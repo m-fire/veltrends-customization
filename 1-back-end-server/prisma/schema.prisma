@@ -22,8 +22,8 @@ model User {
   Token             Token[]
   comments          Comment[]     @relation("user")
   mentionedComments Comment[]     @relation("mentionUser")
-  CommentLike       CommentLike[]
-  Bookmark          Bookmark[]
+  commentLike       CommentLike[]
+  bookmarks         Bookmark[]
 }
 
 model Token {
@@ -53,7 +53,7 @@ model Item {
   itemsTags  ItemsTags[]
   comments   Comment[]
   itemLikes  ItemLike[]
-  Bookmark   Bookmark[]
+  bookmarks  Bookmark[]
 
   publisher Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
