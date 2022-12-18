@@ -51,6 +51,7 @@ model Item {
   itemsTags  ItemsTags[]
   comments   Comment[]
   itemLikes  ItemLike[]
+  Bookmark   Bookmark[]
 
   publisher Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -161,4 +162,18 @@ model CommentLike {
 
   @@unique([commentId, userId])
   @@index(commentId)
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userId    Int
+  itemId    Int
+
+  user User @relation(fields: [userId], references: [id])
+  item Item @relation(fields: [itemId], references: [id])
+
+  @@unique([userId, itemId])
+  @@index(createdAt)
+  @@index(userId)
 }
