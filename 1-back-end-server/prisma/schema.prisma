@@ -20,8 +20,10 @@ model User {
 
   Item              Item[]
   Token             Token[]
-  comments          Comment[] @relation("user")
-  mentionedComments Comment[] @relation("mentionUser")
+  comments          Comment[]     @relation("user")
+  mentionedComments Comment[]     @relation("mentionUser")
+  CommentLike       CommentLike[]
+  Bookmark          Bookmark[]
 }
 
 model Token {
