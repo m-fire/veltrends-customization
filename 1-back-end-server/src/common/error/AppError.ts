@@ -7,6 +7,7 @@ export type AppErrorType =
   | 'Forbidden'
   | 'NotFound'
   | 'InvalidUrl'
+  | 'AlreadyExists'
   | 'Unknown'
 
 export type ErrorPayloadOpt<K extends AppErrorType> = K extends 'Unauthorized'
@@ -62,6 +63,10 @@ const ERROR_INFO_MAP: Record<AppErrorType, ErrorInfo> = {
     message: 'Invalid URL',
     statusCode: 422,
   },
+  AlreadyExists: {
+    message: 'The data already exists',
+    statusCode: 409,
+  },
   Unknown: {
     message: 'Unknown error',
     statusCode: 500,
@@ -81,6 +86,7 @@ export default class AppError<
     this.statusCode = info.statusCode
   }
 
+  // Todo: chagne api name equals -> is
   static equals(error: any): error is AppError {
     return (
       error?.name !== undefined &&
