@@ -4,7 +4,7 @@ import { findPastList } from '../../service/listing/PastListing'
 
 export type ListMode = 'recent' | 'trending' | 'past'
 
-export type ListingInfoMap<E> = {
+export type ListingInfo<E> = {
   totalCount: number
   list: E[]
   hasNextPage: boolean
@@ -20,5 +20,5 @@ export type ListingParamsOf<Mode extends ListMode> = Mode extends 'recent'
   : undefined
 
 export interface Listing<Mode extends ListMode, E> {
-  listing(options: ListingParamsOf<Mode>): Promise<ListingInfoMap<E> | null>
+  listing(options: ListingParamsOf<Mode>): Promise<ListingInfo<E>>
 }

@@ -14,6 +14,7 @@ import algolia from '../core/api/items/algolia.js'
 import { RankCalculator } from '../core/util/calculates.js'
 import { ListMode } from '../core/pagination/types.js'
 import ItemsListingStrategy from './listing/ItemsListingStrategy.js'
+import { createEmptyPage, createPage } from '../core/util/paginations.js'
 
 // prisma include conditions
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
@@ -27,10 +28,10 @@ class ItemService {
   private itemLikeService = ItemLikeService.getInstance()
 
   static getInstance() {
-    if (!ItemService.instance) {
-      ItemService.instance = new ItemService()
+    if (!IS.instance) {
+      IS.instance = new ItemService()
     }
-    return ItemService.instance
+    return IS.instance
   }
 
   private constructor() {}
@@ -68,23 +69,26 @@ class ItemService {
       },
     })
 
+    /* 아이탬 생성시, 알고리아 DB에 추가 */
+    IS.Algolia.syncItem(newItem)
+
     const newItemStatus = await this.itemStatusService.createItemStatus(
       newItem.id,
     )
+
     const newItemWithStatus = { ...newItem, itemStatus: newItemStatus }
-    const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
-      itemIds: [newItem.id],
-      userId,
-    })
 
-    ItemService.Algolia.syncItem(newItem)
+    const itemLikeByitemIdMap =
+      await this.itemLikeService.getItemLikeByItemIdMap({
+        itemIds: [newItem.id],
+        userId,
+      })
 
-    const itemWithLike = ItemService.mergeItemLike(
+    const newItemWithLike = IS.mergeItemLike(
       newItemWithStatus,
-      likeByIdsMap[newItem.id],
+      itemLikeByitemIdMap[newItem.id],
     )
-
-    return itemWithLike
+    return newItemWithLike
   }
 
   async getItemList({
@@ -94,52 +98,52 @@ class ItemService {
     limit,
     startDate,
     endDate,
-  }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus> | []> {
+  }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus>> {
     //
-    const listingStrategy = ItemsListingStrategy.getStrategy(mode)
-    const listingResult = await listingStrategy.listing({
+    const strategy = ItemsListingStrategy.getStrategy(mode)
+    const listingInfo = await strategy.listing({
       ltCursor,
       limit: limit ?? LIMIT_PER_FIND,
       startDate,
       endDate,
     })
-    if (listingResult == null) return ItemService.emptyPagination()
+    if (listingInfo.totalCount === 0) return createEmptyPage()
 
-    const { list, totalCount, hasNextPage, lastCursor } = listingResult
-    const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
-      itemIds: list.map((item) => item.id),
-      userId: userId ?? undefined,
-    })
-    const itemWithLikeList = list.map((item) =>
-      ItemService.mergeItemLike(item, likeByIdsMap[item.id]),
+    const { list, totalCount, hasNextPage, lastCursor } = listingInfo
+
+    const itemLikeByItemIdMap =
+      await this.itemLikeService.getItemLikeByItemIdMap({
+        itemIds: list.map((item) => item.id),
+        userId: userId ?? undefined,
+      })
+
+    const itemListWithLike = list.map((item) =>
+      IS.mergeItemLike(item, itemLikeByItemIdMap[item.id]),
     )
 
-    const itemListPage = ItemService.createPagination(
-      itemWithLikeList,
+    const itemListPage = createPage({
+      list: itemListWithLike,
       totalCount,
       hasNextPage,
       lastCursor,
-    )
+    })
     return itemListPage
   }
 
   async getItem({ itemId, userId }: GetItemParams) {
-    const item = await db.item.findUnique({
-      where: { id: itemId },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        publisher: true,
-        itemStatus: true,
-      },
+    const item = await IS.findItemOrThrow(itemId, userId, {
+      user: INCLUDE_SIMPLE_USER,
+      itemStatus: true,
+      publisher: true,
     })
-    if (!item) throw new AppError('NotFound')
 
-    const likeByIdsMap = await this.itemLikeService.itemLikeByIdsMap({
-      itemIds: [itemId],
-      userId,
-    })
-    const itemWithLike = ItemService.mergeItemLike(item, likeByIdsMap[itemId])
+    const itemLikeByItemIdMap =
+      await this.itemLikeService.getItemLikeByItemIdMap({
+        itemIds: [itemId],
+        userId,
+      })
 
+    const itemWithLike = IS.mergeItemLike(item, itemLikeByItemIdMap[itemId])
     return itemWithLike
   }
 
@@ -151,7 +155,8 @@ class ItemService {
     body,
     tags,
   }: UpdateItemParams) {
-    await ItemService.findItemOrThrow(itemId, userId)
+    await IS.findItemOrThrow(itemId, userId)
+
     const updatedItem: ItemWithPatialUser = await db.item.update({
       where: { id: itemId },
       data: { link, title, body },
@@ -162,15 +167,15 @@ class ItemService {
       },
     })
 
-    ItemService.Algolia.syncItem(updatedItem)
+    IS.Algolia.syncItem(updatedItem)
 
     return updatedItem
   }
 
   async deleteItem({ itemId, userId }: DeleteItemParams) {
-    await ItemService.findItemOrThrow(itemId, userId)
+    await IS.findItemOrThrow(itemId, userId)
     await db.item.delete({ where: { id: itemId } })
-    ItemService.Algolia.deleteItem(itemId)
+    IS.Algolia.deleteItem(itemId)
   }
 
   async likeItem({ itemId, userId }: ItemActionParams) {
@@ -218,33 +223,25 @@ class ItemService {
     return null
   }
 
-  private static async findItemOrThrow(itemId: number, userId: number) {
+  private static async findItemOrThrow(
+    itemId: number,
+    userId?: number | null,
+    include?: Partial<
+      Record<'user' | 'publisher' | 'itemStatus', boolean | Record<string, any>>
+    >,
+  ) {
     const item = await db.item.findUnique({
       where: { id: itemId },
-      include: { user: { select: { id: true } } },
+      include: { ...include },
     })
-    if (item?.userId !== userId) throw new AppError('Forbidden')
+
+    // userId 를 비교해야 한다면, 반드시 item.userId 와 동일해야 한다.
+    if (userId != null && item?.userId !== userId)
+      throw new AppError('Forbidden')
+
+    if (item == null) throw new AppError('NotFound')
+
     return item
-  }
-
-  private static createPagination<T>(
-    list: T[],
-    totalCount: number,
-    hasNextPage: boolean = false,
-    lastCursor: number | null | undefined,
-  ) {
-    return {
-      list,
-      totalCount: totalCount,
-      pageInfo: {
-        hasNextPage,
-        lastCursor: lastCursor ?? null,
-      },
-    }
-  }
-
-  private static emptyPagination() {
-    return ItemService.createPagination([], 0, false, null)
   }
 
   private static mergeItemLike(
@@ -253,7 +250,7 @@ class ItemService {
   ) {
     return {
       ...item,
-      isLiked: !!itemLike ?? false,
+      isLiked: itemLike != null,
     }
   }
 
@@ -291,7 +288,7 @@ class ItemService {
       hitsPage: Awaited<ReturnType<typeof algolia.searchItem>>,
     ) {
       const itemIds = hitsPage.list.map((item) => item.id)
-      const itemMap = await ItemService.Algolia.getSearchedItemByIdMap(itemIds)
+      const itemMap = await IS.getItemListByIdMap(itemIds)
 
       const serializeList = hitsPage.list
         .map((hit) => {
@@ -317,34 +314,35 @@ class ItemService {
 
       return serializeList
     }
+  }
 
-    private static async getSearchedItemByIdMap(itemIds: number[]) {
-      const itemList = await db.item.findMany({
-        where: { id: { in: itemIds } },
-        select: {
-          id: true,
-          title: true,
-          body: true,
-          author: true,
-          link: true,
-          itemStatus: {
-            select: { likeCount: true },
-          },
-          publisher: {
-            select: { name: true, favicon: true, domain: true },
-          },
+  static async getItemListByIdMap(itemIds: number[]) {
+    const itemList = await db.item.findMany({
+      where: { id: { in: itemIds } },
+      select: {
+        id: true,
+        title: true,
+        body: true,
+        author: true,
+        link: true,
+        itemStatus: {
+          select: { likeCount: true },
         },
-      })
+        publisher: {
+          select: { name: true, favicon: true, domain: true },
+        },
+      },
+    })
 
-      const itemByIdMap = itemList.reduce((acc, item) => {
-        acc[item.id] = item
-        return acc
-      }, {} as Record<number, typeof itemList[0]>)
+    const itemByIdMap = itemList.reduce((acc, item) => {
+      acc[item.id] = item
+      return acc
+    }, {} as Record<number, typeof itemList[0]>)
 
-      return itemByIdMap
-    }
+    return itemByIdMap
   }
 }
+const IS = ItemService
 export default ItemService
 
 // types

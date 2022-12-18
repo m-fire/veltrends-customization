@@ -1,19 +1,18 @@
-import { Listing, ListingInfoMap, ListingParamsOf, ListMode } from './types.js'
+import { Listing, ListingInfo, ListingParamsOf, ListMode } from './types.js'
 
 abstract class AbstractModeListing<Mode extends ListMode, E>
   implements Listing<Mode, E>
 {
-  async listing(
-    options: ListingParamsOf<Mode>,
-  ): Promise<ListingInfoMap<E> | null> {
+  async listing(options: ListingParamsOf<Mode>): Promise<ListingInfo<E>> {
     //
     const [totalCount, list] = await Promise.all([
       this.getTotalCount(options),
       this.findList(options),
     ])
-    if (totalCount === 0) return null
-    if (list.length === 0) return null
 
+    if (totalCount === 0) {
+      return { totalCount: 0, list, hasNextPage: false, lastCursor: null }
+    }
     const lastElement = list?.at(-1)
     const hasNextPage = await this.hasNextPage(options, lastElement)
     const lastCursor = this.getLastCursorOrNull(lastElement)
