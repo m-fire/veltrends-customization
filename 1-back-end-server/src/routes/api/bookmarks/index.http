@@ -1,0 +1,71 @@
+POST http://{{host}}:{{port}}/api/bookmarks
+Content-Type: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"itemId": 76
+}
+
+> {%
+var status = 201;
+client.test("/api/bookmarks Item 등록 - 로그인필수", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### bookmark mark 처리(생성)
+
+GET http://{{host}}:{{port}}/api/bookmarks?cursor={{$randomInt}}
+Accept: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 200;
+client.test("/api/bookmarks 목록 최대 5(limit)개 조회", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### bookmark 아이탬목록 최대 5(limit)개 조회
+
+DELETE http://{{host}}:{{port}}/api/bookmarks/5
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 204;
+client.test("/api/bookmarks - 랜덤아이디 삭제시도(성공/실패)", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+
+### 1번 bookmark unmark(삭제) 처리
