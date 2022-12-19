@@ -1,4 +1,11 @@
-import { Item, ItemLike, ItemStatus, Publisher, User } from '@prisma/client'
+import {
+  Bookmark,
+  Item,
+  ItemLike,
+  ItemStatus,
+  Publisher,
+  User,
+} from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import { ItemsRequestMap } from '../routes/api/items/types.js'
 import {
@@ -51,7 +58,7 @@ class ItemService {
       favicon,
     })
 
-    const newItem: ItemWithPatialUser = await db.item.create({
+    const newItem = await db.item.create({
       data: {
         title,
         body,
@@ -67,11 +74,9 @@ class ItemService {
     /* 아이탬 생성시, 알고리아 DB에 추가 */
     IS.Algolia.syncItem(newItem)
 
-    const newItemStatus = await this.itemStatusService.createItemStatus(
-      newItem.id,
-    )
+    const newStatus = await this.itemStatusService.createItemStatus(newItem.id)
 
-    const newItemWithStatus = { ...newItem, itemStatus: newItemStatus }
+    const newItemWithStatus = { ...newItem, itemStatus: newStatus }
 
     const serializedItem = IS.serialize(newItemWithStatus)
     return serializedItem
@@ -130,7 +135,7 @@ class ItemService {
   }: UpdateItemParams) {
     await IS.findItemOrThrow(itemId, userId)
 
-    const updatedItem: ItemWithPatialUser = await db.item.update({
+    const updatedItem = await db.item.update({
       where: { id: itemId },
       data: { link, title, body },
       include: ItemService.queryIncludeRelations(userId),
@@ -143,7 +148,7 @@ class ItemService {
   }
 
   async deleteItem({ itemId, userId }: DeleteItemParams) {
-    await IS.findItemOrThrow(itemId, userId)
+    await IS.findItemOrThrow({ itemId, userId })
     await db.item.delete({ where: { id: itemId } })
     IS.Algolia.deleteItem(itemId)
   }
@@ -193,21 +198,21 @@ class ItemService {
       })
       return scoredStatus
     } catch (e) {
-      console.error(`ItemService.ts> getScoredStatusOrNull()`, {
-        e,
-      })
+      console.error(`ItemService.ts> getScoredStatusOrNull()`, { e })
     }
 
     return null
   }
 
-  private static async findItemOrThrow(
-    itemId: number,
-    userId?: number | null,
-    include?: Partial<
-      Record<'user' | 'publisher' | 'itemStatus', boolean | Record<string, any>>
-    >,
-  ) {
+  private static async findItemOrThrow({
+    itemId,
+    userId,
+    include,
+  }: {
+    itemId: number
+    userId?: number | null
+    include?: Partial<Parameters<typeof db.item.findUnique>[0]['include']>
+  }) {
     const item = await db.item.findUnique({
       where: { id: itemId },
       include: { ...include },
@@ -277,7 +282,7 @@ class ItemService {
       const itemIds = hitsPage.list.map((item) => item.id)
       const itemMap = await IS.getItemListByIdMap(itemIds)
 
-      const serializeList = hitsPage.list
+      const serializedList = hitsPage.list
         .map((hit) => {
           const item = itemMap[hit.id]
           if (!item) return null
@@ -299,7 +304,7 @@ class ItemService {
         })
         .filter((item) => item !== null)
 
-      return serializeList
+      return serializedList
     }
   }
 
