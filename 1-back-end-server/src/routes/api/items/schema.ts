@@ -104,7 +104,7 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
       404: createAppErrorSchema('NotFound'),
     },
   },
-  UPDATE_ITEM: {
+  EDIT_ITEM: {
     tags: ['items'],
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     body: REQ_ITEM_UPDATE_BODY_SCHEMA,

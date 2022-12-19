@@ -50,7 +50,7 @@ client.test("/api/items 아이탬목록 최대 20(limit)개 조회", function() 
 
 ### item 아이탬목록 최대 20(limit)개 조회
 
-GET http://{{host}}:{{port}}/api/items?cursor=77
+GET http://{{host}}:{{port}}/api/items?cursor=77&mode=recent
 Accept: application/json
 
 > {%
@@ -94,7 +94,7 @@ client.test("/api/items - mode(trending) item 아이탬목록 최대 20(limit)�
 
 ### mode(trending) item 아이탬목록 최대 20(limit)개 조회
 
-GET http://{{host}}:{{port}}/api/items?mode=past&mode=past&startDate=2022-12-03&endDate=2022-12-09
+GET http://{{host}}:{{port}}/api/items?mode=past&startDate=2022-12-03&endDate=2022-12-09
 Accept: application/json
 
 > {%
@@ -116,12 +116,12 @@ client.test("/api/items - mode(past) item 아이탬목록 최대 20(limit)개 �
 
 ### mode(past) item 아이탬목록 최대 20(limit)개 조회
 
-GET http://{{host}}:{{port}}/api/items/1
+GET http://{{host}}:{{port}}/api/items/57
 Accept: application/json
 
 > {%
 var status = 200;
-client.test("/api/items/1 - 개별 아이탬 조회", function() {
+client.test("/api/items/57 - 개별 아이탬 조회", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -160,7 +160,7 @@ client.test("/api/items/9999 - 아이탬 조회실패", function() {
 
 ### 특정 item 조회실패
 
-PATCH http://{{host}}:{{port}}/api/items/1
+PATCH http://{{host}}:{{port}}/api/items/57
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
@@ -192,7 +192,7 @@ client.test("/api/items - 업데이트", function() {
 
 ### item 업데이트 성공
 
-PATCH http://{{host}}:{{port}}/api/items/2
+PATCH http://{{host}}:{{port}}/api/items/57
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
@@ -274,12 +274,12 @@ client.test("/api/items - 랜덤아이디 삭제시도(성공/실패)", function
 
 ### item 랜덤아이디 삭제시도(성공/실패)
 
-POST http://{{host}}:{{port}}/api/items/1/likes
+POST http://{{host}}:{{port}}/api/items/57/likes
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 202;
-client.test("/api/items/1/likes 1번 item like(맘에듬) 처리 - 로그인필수", function() {
+client.test("/api/items/57/likes 1번 item like(맘에듬) 처리 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -296,12 +296,12 @@ client.test("/api/items/1/likes 1번 item like(맘에듬) 처리 - 로그인필�
 
 ### 1번 item like 처리
 
-DELETE http://{{host}}:{{port}}/api/items/1/likes
+DELETE http://{{host}}:{{port}}/api/items/57/likes
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 202;
-client.test("/api/items/1/likes 1번 item unlike(맘에안듬) 처리 - 로그인필수", function() {
+client.test("/api/items/57/likes 1번 item unlike(맘에안듬) 처리 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");

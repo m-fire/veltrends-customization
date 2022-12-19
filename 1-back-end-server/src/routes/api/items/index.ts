@@ -74,9 +74,9 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
     },
   )
 
-  fastify.patch<ItemsRequestMap['UPDATE_ITEM']>(
+  fastify.patch<ItemsRequestMap['EDIT_ITEM']>(
     '/:id',
-    { schema: ITEMS_SCHEMA.UPDATE_ITEM },
+    { schema: ITEMS_SCHEMA.EDIT_ITEM },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const {
@@ -84,7 +84,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
         body,
       } = request
 
-      const updatedItem = await itemService.updateItem({
+      const updatedItem = await itemService.editItem({
         ...body,
         itemId,
         userId,

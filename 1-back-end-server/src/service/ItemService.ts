@@ -125,15 +125,8 @@ class ItemService {
     return serializedItem
   }
 
-  async updateItem({
-    itemId,
-    userId,
-    link,
-    title,
-    body,
-    tags,
-  }: UpdateItemParams) {
-    await IS.findItemOrThrow(itemId, userId)
+  async editItem({ itemId, userId, link, title, body, tags }: EditItemParams) {
+    await IS.findItemOrThrow({ itemId, userId })
 
     const updatedItem = await db.item.update({
       where: { id: itemId },
@@ -356,7 +349,7 @@ type ItemOrItemWithStatus = Item | ItemWithStatus
 
 type ItemWithStatus = Item & { itemStatus: ItemStatus | null }
 
-type UpdateItemParams = ItemsRequestMap['UPDATE_ITEM']['Body'] & {
+type EditItemParams = ItemsRequestMap['EDIT_ITEM']['Body'] & {
   itemId: number
   userId: number
 }
