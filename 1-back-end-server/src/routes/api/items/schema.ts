@@ -66,7 +66,9 @@ export const RES_ITEM_SCHEMA = Type.Object({
     favicon: Nullable(Type.String()),
   }),
   itemStatus: RES_ITEM_STATUS_SCHEMA,
+  /* serialized props */
   isLiked: Type.Boolean(),
+  isBookmarked: Type.Boolean(),
 })
 
 export const RES_ITEM_LIKE_SCHEMA = Type.Object({
