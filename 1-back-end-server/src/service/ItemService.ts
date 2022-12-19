@@ -17,9 +17,7 @@ import ItemsListingStrategy from './listing/ItemsListingStrategy.js'
 import { createEmptyPage, createPage } from '../core/util/paginations.js'
 
 // prisma include conditions
-const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
-
-const LIMIT_PER_FIND = 20 as const
+const LIMIT_ITEMS = 20 as const
 
 class ItemService {
   private static instance: ItemService
@@ -63,10 +61,7 @@ class ItemService {
         author: author ?? undefined,
         publisherId: newPublisher.id,
       },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        publisher: true,
-      },
+      include: ItemService.queryIncludeRelations(userId),
     })
 
     /* 아이탬 생성시, 알고리아 DB에 추가 */
@@ -103,7 +98,8 @@ class ItemService {
     const strategy = ItemsListingStrategy.getStrategy(mode)
     const listingInfo = await strategy.listing({
       ltCursor,
-      limit: limit ?? LIMIT_PER_FIND,
+      userId,
+      limit: limit ?? LIMIT_ITEMS,
       startDate,
       endDate,
     })
@@ -131,17 +127,11 @@ class ItemService {
   }
 
   async getItem({ itemId, userId }: GetItemParams) {
-    const item = await IS.findItemOrThrow(itemId, userId, {
-      user: INCLUDE_SIMPLE_USER,
-      itemStatus: true,
-      publisher: true,
+    const item = await IS.findItemOrThrow({
+      itemId,
+      userId,
+      include: IS.queryIncludeRelations(userId),
     })
-
-    const itemLikeByItemIdMap =
-      await this.itemLikeService.getItemLikeByItemIdMap({
-        itemIds: [itemId],
-        userId,
-      })
 
     const itemWithLike = IS.mergeItemLike(item, itemLikeByItemIdMap[itemId])
     return itemWithLike
@@ -160,11 +150,7 @@ class ItemService {
     const updatedItem: ItemWithPatialUser = await db.item.update({
       where: { id: itemId },
       data: { link, title, body },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        publisher: true,
-        itemStatus: true,
-      },
+      include: ItemService.queryIncludeRelations(userId),
     })
 
     IS.Algolia.syncItem(updatedItem)
@@ -244,13 +230,22 @@ class ItemService {
     return item
   }
 
-  private static mergeItemLike(
-    item: ItemOrItemWithStatus,
-    itemLike?: ItemLike,
-  ) {
+  static queryIncludeRelations(userId: number | null | undefined) {
     return {
-      ...item,
-      isLiked: itemLike != null,
+      user: {
+        select: { id: true, username: true },
+      },
+      itemStatus: {
+        select: {
+          id: true,
+          likeCount: true,
+          commentCount: true,
+          score: true,
+        },
+      },
+      publisher: true,
+      itemLikes: userId ? { where: { userId } } : false,
+      bookmarks: userId ? { where: { userId } } : false,
     }
   }
 
@@ -382,4 +377,9 @@ type ItemActionParams = {
 type ItemWithPatialUser = Item & {
   user: Pick<User, 'id' | 'username'>
   publisher: Publisher
+}
+
+type Relations = {
+  itemLikes?: ItemLike[]
+  bookmarks?: Bookmark[]
 }

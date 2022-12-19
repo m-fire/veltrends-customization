@@ -52,25 +52,6 @@ class ItemLikeService {
     })
     return syncedItemStatus
   }
-
-  async getItemLikeByItemIdMap({
-    itemIds,
-    userId,
-  }: {
-    itemIds: number[]
-    userId?: number
-  }) {
-    const itemLikeList = await db.itemLike.findMany({
-      where: { itemId: { in: itemIds }, userId },
-    })
-
-    const itemLikeByItemIdMap = itemLikeList.reduce((map, itemLike) => {
-      map[itemLike.itemId] = itemLike
-      return map
-    }, {} as Record<number, ItemLike>)
-
-    return itemLikeByItemIdMap
-  }
 }
 export default ItemLikeService
 

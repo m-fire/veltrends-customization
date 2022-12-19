@@ -1,6 +1,7 @@
 import db from '../../common/config/prisma/db-client.js'
 import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
 import { ListingParamsOf } from '../../core/pagination/types.js'
+import ItemService from '../ItemService.js'
 
 const THRESHOLD_SCORE = 0.001 as const
 
@@ -60,9 +61,11 @@ export default TrendingListing
 
 export function findTredingList({
   ltCursor,
+  userId,
   limit,
 }: {
   ltCursor?: number | null
+  userId?: number | null
   limit: number
 }) {
   return db.item.findMany({
@@ -71,18 +74,7 @@ export function findTredingList({
       { itemStatus: { score: 'desc' } },
       { itemStatus: { itemId: 'desc' } },
     ],
-    include: {
-      user: { select: { id: true, username: true } },
-      itemStatus: {
-        select: {
-          id: true,
-          likeCount: true,
-          commentCount: true,
-          score: true,
-        },
-      },
-      publisher: true,
-    },
+    include: ItemService.queryIncludeRelations(userId),
     take: limit,
   })
 }

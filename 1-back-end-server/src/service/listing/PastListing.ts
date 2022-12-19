@@ -4,6 +4,7 @@ import AppError from '../../common/error/AppError.js'
 import { Validator } from '../../common/util/validates.js'
 import { Converts } from '../../common/util/converts.js'
 import { ListingParamsOf } from '../../core/pagination/types.js'
+import ItemService from '../ItemService.js'
 
 const WEEK_MILLISECOND = 6 * 24 * 60 * 60 * 1000
 
@@ -108,11 +109,13 @@ export default PastListing
 
 export function findPastList({
   ltCursor,
+  userId,
   limit,
   startDate,
   endDate,
 }: {
   ltCursor?: number | null
+  userId?: number | null
   limit: number
   startDate?: string
   endDate?: string
@@ -133,17 +136,7 @@ export function findPastList({
       },
     },
     orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
-    include: {
-      user: { select: { id: true, username: true } },
-      itemStatus: {
-        select: {
-          id: true,
-          likeCount: true,
-          commentCount: true,
-        },
-      },
-      publisher: true,
-    },
+    include: ItemService.queryIncludeRelations(userId),
     take: limit,
   })
 }

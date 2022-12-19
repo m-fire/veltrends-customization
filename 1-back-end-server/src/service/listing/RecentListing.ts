@@ -1,6 +1,7 @@
 import db from '../../common/config/prisma/db-client.js'
 import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
 import { ListingParamsOf } from '../../core/pagination/types.js'
+import ItemService from '../ItemService.js'
 
 type RecentItem = Awaited<ReturnType<typeof findRecentList>>[0]
 
@@ -42,25 +43,17 @@ export default RecentListing
 
 export function findRecentList({
   ltCursor,
+  userId,
   limit,
 }: {
   ltCursor?: number | null
+  userId?: number | null
   limit: number
 }) {
   return db.item.findMany({
     where: { id: { lt: ltCursor || undefined } },
     orderBy: { id: 'desc' },
-    include: {
-      user: { select: { id: true, username: true } },
-      itemStatus: {
-        select: {
-          id: true,
-          likeCount: true,
-          commentCount: true,
-        },
-      },
-      publisher: true,
-    },
+    include: ItemService.queryIncludeRelations(userId),
     take: limit,
   })
 }
