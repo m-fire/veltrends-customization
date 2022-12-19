@@ -73,17 +73,8 @@ class ItemService {
 
     const newItemWithStatus = { ...newItem, itemStatus: newItemStatus }
 
-    const itemLikeByitemIdMap =
-      await this.itemLikeService.getItemLikeByItemIdMap({
-        itemIds: [newItem.id],
-        userId,
-      })
-
-    const newItemWithLike = IS.mergeItemLike(
-      newItemWithStatus,
-      itemLikeByitemIdMap[newItem.id],
-    )
-    return newItemWithLike
+    const serializedItem = IS.serialize(newItemWithStatus)
+    return serializedItem
   }
 
   async getItemList({
@@ -107,18 +98,10 @@ class ItemService {
 
     const { list, totalCount, hasNextPage, lastCursor } = listingInfo
 
-    const itemLikeByItemIdMap =
-      await this.itemLikeService.getItemLikeByItemIdMap({
-        itemIds: list.map((item) => item.id),
-        userId: userId ?? undefined,
-      })
-
-    const itemListWithLike = list.map((item) =>
-      IS.mergeItemLike(item, itemLikeByItemIdMap[item.id]),
-    )
+    const serializedItemList = list.map((item) => IS.serialize(item))
 
     const itemListPage = createPage({
-      list: itemListWithLike,
+      list: serializedItemList,
       totalCount,
       hasNextPage,
       lastCursor,
@@ -133,8 +116,8 @@ class ItemService {
       include: IS.queryIncludeRelations(userId),
     })
 
-    const itemWithLike = IS.mergeItemLike(item, itemLikeByItemIdMap[itemId])
-    return itemWithLike
+    const serializedItem = IS.serialize(item)
+    return serializedItem
   }
 
   async updateItem({
@@ -155,7 +138,8 @@ class ItemService {
 
     IS.Algolia.syncItem(updatedItem)
 
-    return updatedItem
+    const serializedItem = IS.serialize(updatedItem)
+    return serializedItem
   }
 
   async deleteItem({ itemId, userId }: DeleteItemParams) {
@@ -183,6 +167,14 @@ class ItemService {
   }
 
   /* utils */
+
+  static serialize(item: Item & Relations) {
+    return {
+      ...item,
+      isLiked: !!item.itemLikes?.length,
+      isBookmarked: !!item.bookmarks?.length,
+    }
+  }
 
   private async getScoredStatusOrNull(itemId: number, likeCount?: number) {
     const item = await db.item.findUnique({

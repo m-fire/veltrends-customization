@@ -28,17 +28,8 @@ class BookmarkService {
         },
       })
 
-      const itemLikeByItemIdMap =
-        await this.itemLikeService.getItemLikeByItemIdMap({
-          itemIds: [newBookmark.itemId],
-          userId,
-        })
-
-      const newBookmarkWithItemLike = BS.mergeItemLike(
-        newBookmark,
-        itemLikeByItemIdMap[newBookmark.item.id],
-      )
-      return newBookmarkWithItemLike
+      const serializedBookmark = IS.serialize(newBookmark.item)
+      return serializedBookmark
     } catch (e) {
       /* 연관 릴레이션 키 매칭실패 애러인 경우, AppError 로 re-throw */
       if ((e as any)?.message?.includes(['Unique constraint failed'])) {
@@ -76,20 +67,17 @@ class BookmarkService {
     ])
     if (totalCount === 0) return createEmptyPage()
 
-    const likeByIdsMap = await this.itemLikeService.getItemLikeByItemIdMap({
-      itemIds: bookmarkWithItemList.map((b) => b.itemId),
-      userId,
-    })
-    const bookmarkWithLikedList = bookmarkWithItemList.map((b) =>
-      BS.mergeItemLike(b, likeByIdsMap[b.item.id]),
-    )
+    const serializedBookmarkList = bookmarkWithItemList.map((bookmark) => ({
+      ...bookmark,
+      item: IS.serialize(bookmark.item),
+    }))
 
-    const lastBookmark = bookmarkWithLikedList.at(-1)
-    const hasNextPage = await BS.hasMoreThanCreateDate(lastBookmark)
+    const lastBookmark = serializedBookmarkList.at(-1)
+    const hasLessThanCreatedDate = await BS.hasLessThanCreateAt(lastBookmark)
     const lastCursor = lastBookmark?.id ?? null
 
     const bookmarkListPage = createPage({
-      list: bookmarkWithLikedList,
+      list: serializedBookmarkList,
       totalCount,
       hasNextPage,
       lastCursor,
@@ -172,9 +160,3 @@ type GetBookmarkListParams = {
   cursor?: number | null
   limit: number
 }
-
-type GetBookmarkOrNull = {
-  bookmarkId: number
-}
-
-type BookmarkWithItem = Bookmark & { item: Item }
