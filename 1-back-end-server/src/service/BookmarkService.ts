@@ -3,6 +3,7 @@ import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
 import { createEmptyPage, createPage } from '../core/util/paginations.js'
 import ItemService from './ItemService.js'
+import ItemRepository from '../repository/ItemRepository.js'
 
 class BookmarkService {
   private static instance: BookmarkService
@@ -22,7 +23,7 @@ class BookmarkService {
         data: { userId, itemId },
         include: {
           item: {
-            include: IS.queryIncludeRelations(userId),
+            include: IR.Query.includeFullRelations(userId),
           },
         },
       })
@@ -56,7 +57,7 @@ class BookmarkService {
         },
         include: {
           item: {
-            include: IS.queryIncludeRelations(userId),
+            include: IR.Query.includeFullRelations(userId),
           },
         },
         orderBy: { createdAt: 'desc' },
@@ -129,10 +130,10 @@ class BookmarkService {
     return await db.bookmark.count({ where: { userId } })
   }
 }
-
-const IS = ItemService
-const BS = BookmarkService
 export default BookmarkService
+
+const IR = ItemRepository
+const BS = BookmarkService
 
 // types
 

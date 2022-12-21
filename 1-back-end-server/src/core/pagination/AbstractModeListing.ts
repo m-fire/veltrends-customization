@@ -1,9 +1,7 @@
-import { Listing, ListingInfo, ListingParamsOf, ListMode } from './types.js'
+import { Listing, ListingInfo, ListingParams, ListMode } from './types.js'
 
-abstract class AbstractModeListing<Mode extends ListMode, E>
-  implements Listing<Mode, E>
-{
-  async listing(options: ListingParamsOf<Mode>): Promise<ListingInfo<E>> {
+abstract class AbstractModeListing<E> implements Listing<E> {
+  async listing(options: ListingParams): Promise<ListingInfo<E>> {
     //
     const [totalCount, list] = await Promise.all([
       this.getTotalCount(options),
@@ -20,14 +18,12 @@ abstract class AbstractModeListing<Mode extends ListMode, E>
     return { totalCount, list, hasNextPage, lastCursor }
   }
 
-  protected abstract getTotalCount(
-    options: ListingParamsOf<Mode>,
-  ): Promise<number>
+  protected abstract getTotalCount(options: ListingParams): Promise<number>
 
-  protected abstract findList(options: ListingParamsOf<Mode>): Promise<E[]>
+  protected abstract findList(options: ListingParams): Promise<E[]>
 
   protected abstract hasNextPage(
-    options: ListingParamsOf<Mode>,
+    options: ListingParams,
     lastElement?: E,
   ): Promise<boolean>
 

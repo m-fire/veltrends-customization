@@ -1,13 +1,15 @@
-import db from '../../common/config/prisma/db-client.js'
 import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
-import { ListingParamsOf } from '../../core/pagination/types.js'
-import ItemService from '../ItemService.js'
+import { ListingParams } from '../../core/pagination/types.js'
+import ItemRepository from '../../repository/ItemRepository.js'
+import ItemStatusService from '../ItemStatusService.js'
 
 const THRESHOLD_SCORE = 0.001 as const
 
-type TredingItem = Awaited<ReturnType<typeof findTredingList>>[0]
+type TredingItem = Awaited<
+  ReturnType<typeof ItemRepository.findListByCursor>
+>[0]
 
-class TrendingListing extends AbstractModeListing<'trending', TredingItem> {
+class TrendingListing extends AbstractModeListing<TredingItem> {
   private static instance: TrendingListing
 
   static getInstance() {
@@ -17,38 +19,34 @@ class TrendingListing extends AbstractModeListing<'trending', TredingItem> {
     return TrendingListing.instance
   }
 
-  protected async getTotalCount(options: ListingParamsOf<'trending'>) {
-    return db.itemStatus.count({
-      where: { score: { gte: THRESHOLD_SCORE } },
+  protected async getTotalCount(options: ListingParams) {
+    return ItemStatusService.countScoreRange({
+      maxScore: THRESHOLD_SCORE,
     })
   }
 
-  protected async findList(options: ListingParamsOf<'trending'>) {
-    return findTredingList(options)
+  protected async findList(options: ListingParams) {
+    return ItemRepository.findListByCursor(options, [
+      { itemStatus: { score: 'desc' } },
+      { itemStatus: { itemId: 'desc' } },
+    ])
   }
 
   protected async hasNextPage(
-    { ltCursor }: ListingParamsOf<'trending'>,
+    { cursor }: ListingParams,
     lastElement?: TredingItem,
   ) {
     const lastElementScore = lastElement?.itemStatus?.score
 
-    const totalPage = await db.item.count({
-      where: {
-        itemStatus: {
-          itemId: { lt: ltCursor || undefined },
-          score: {
-            gte: THRESHOLD_SCORE,
-            lte: lastElementScore,
-          },
-        },
+    const scoredCount = await ItemRepository.countScoreRange(
+      {
+        cursor,
+        maxScore: THRESHOLD_SCORE,
+        minScore: lastElementScore,
       },
-      orderBy: [
-        { itemStatus: { score: 'desc' } },
-        { itemStatus: { itemId: 'desc' } },
-      ],
-    })
-    return totalPage > 0
+      [{ itemStatus: { score: 'desc' } }, { itemStatus: { itemId: 'desc' } }],
+    )
+    return scoredCount > 0
   }
 
   protected getLastCursorOrNull(lastElement: TredingItem): number | null {
@@ -56,25 +54,3 @@ class TrendingListing extends AbstractModeListing<'trending', TredingItem> {
   }
 }
 export default TrendingListing
-
-// db query func
-
-export function findTredingList({
-  ltCursor,
-  userId,
-  limit,
-}: {
-  ltCursor?: number | null
-  userId?: number | null
-  limit: number
-}) {
-  return db.item.findMany({
-    where: { id: { lt: ltCursor || undefined } },
-    orderBy: [
-      { itemStatus: { score: 'desc' } },
-      { itemStatus: { itemId: 'desc' } },
-    ],
-    include: ItemService.queryIncludeRelations(userId),
-    take: limit,
-  })
-}

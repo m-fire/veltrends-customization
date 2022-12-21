@@ -1,11 +1,11 @@
 import db from '../../common/config/prisma/db-client.js'
 import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
-import { ListingParamsOf } from '../../core/pagination/types.js'
-import ItemService from '../ItemService.js'
+import { ListingParams } from '../../core/pagination/types.js'
+import ItemRepository from '../../repository/ItemRepository.js'
 
-type RecentItem = Awaited<ReturnType<typeof findRecentList>>[0]
+type RecentItem = Awaited<ReturnType<typeof ItemRepository.findListByCursor>>[0]
 
-class RecentListing extends AbstractModeListing<'recent', RecentItem> {
+class RecentListing extends AbstractModeListing<RecentItem> {
   private static instance: RecentListing
 
   static getInstance() {
@@ -15,21 +15,21 @@ class RecentListing extends AbstractModeListing<'recent', RecentItem> {
     return RecentListing.instance
   }
 
-  protected async getTotalCount(options: ListingParamsOf<'recent'>) {
-    return db.item.count()
+  protected async getTotalCount(options: ListingParams) {
+    return ItemRepository.countAllItems()
   }
 
-  protected async findList(options: ListingParamsOf<'recent'>) {
-    return findRecentList(options)
+  protected async findList(options: ListingParams) {
+    return ItemRepository.findListByCursor(options, { id: 'desc' })
   }
 
   protected async hasNextPage(
-    { ltCursor }: ListingParamsOf<'trending'>, // lastElement?: RecentItem,
+    { cursor }: ListingParams, // lastElement?: RecentItem,
   ) {
-    const totalPage = await db.item.count({
-      where: { id: { lt: ltCursor || undefined } },
-      orderBy: { createdAt: 'desc' },
-    })
+    const totalPage = await ItemRepository.countFromCursor(
+      { cursor },
+      { createdAt: 'desc' },
+    )
     return totalPage > 0
   }
 
@@ -38,22 +38,3 @@ class RecentListing extends AbstractModeListing<'recent', RecentItem> {
   }
 }
 export default RecentListing
-
-// db query func
-
-export function findRecentList({
-  ltCursor,
-  userId,
-  limit,
-}: {
-  ltCursor?: number | null
-  userId?: number | null
-  limit: number
-}) {
-  return db.item.findMany({
-    where: { id: { lt: ltCursor || undefined } },
-    orderBy: { id: 'desc' },
-    include: ItemService.queryIncludeRelations(userId),
-    take: limit,
-  })
-}

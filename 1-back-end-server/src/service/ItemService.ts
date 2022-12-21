@@ -58,17 +58,15 @@ class ItemService {
       favicon,
     })
 
-    const newItem = await db.item.create({
-      data: {
-        title,
-        body,
-        link: originLink,
-        userId,
-        thumbnail: thumbnail,
-        author: author ?? undefined,
-        publisherId: newPublisher.id,
-      },
-      include: ItemService.queryIncludeRelations(userId),
+    const newItem = await IR.createItem({
+      title,
+      body,
+      link: originLink,
+      // tags: [],
+      userId,
+      thumbnail: thumbnail,
+      author: author ?? undefined,
+      publisher: newPublisher,
     })
 
     /* 아이탬 생성시, 알고리아 DB에 추가 */
@@ -84,7 +82,7 @@ class ItemService {
 
   async getItemList({
     mode = 'recent',
-    cursor: ltCursor,
+    cursor,
     userId,
     limit,
     startDate,
@@ -93,9 +91,9 @@ class ItemService {
     //
     const strategy = ItemsListingStrategy.getStrategy(mode)
     const listingInfo = await strategy.listing({
-      ltCursor,
+      cursor,
       userId,
-      limit: limit ?? LIMIT_ITEMS,
+      limit: limit || LIMIT_ITEMS,
       startDate,
       endDate,
     })
@@ -114,24 +112,33 @@ class ItemService {
     return itemListPage
   }
 
-  async getItem({ itemId, userId }: GetItemParams) {
-    const item = await IS.findItemOrThrow({
+  static async getItem({ itemId, userId }: GetItemParams) {
+    const item = await IR.findItemOrThrow({
       itemId,
       userId,
-      include: IS.queryIncludeRelations(userId),
     })
 
     const serializedItem = IS.serialize(item)
     return serializedItem
   }
 
-  async editItem({ itemId, userId, link, title, body, tags }: EditItemParams) {
-    await IS.findItemOrThrow({ itemId, userId })
+  static async editItem({
+    itemId,
+    userId,
+    link,
+    title,
+    body,
+    tags,
+  }: EditItemParams) {
+    await IR.findItemOrThrow({ itemId, userId })
 
-    const updatedItem = await db.item.update({
-      where: { id: itemId },
-      data: { link, title, body },
-      include: ItemService.queryIncludeRelations(userId),
+    const updatedItem = await IR.updateItem({
+      itemId,
+      userId,
+      title,
+      body,
+      link,
+      // tags: [],
     })
 
     IS.Algolia.syncItem(updatedItem)
@@ -140,10 +147,10 @@ class ItemService {
     return serializedItem
   }
 
-  async deleteItem({ itemId, userId }: DeleteItemParams) {
-    await IS.findItemOrThrow({ itemId, userId })
-    await db.item.delete({ where: { id: itemId } })
-    IS.Algolia.deleteItem(itemId)
+  static async deleteItem(params: DeleteItemParams) {
+    await IR.findItemOrThrow(params)
+    await IR.deleteItem(params)
+    IS.Algolia.deleteItem(params.itemId)
   }
 
   async likeItem({ itemId, userId }: ItemActionParams) {
@@ -174,10 +181,12 @@ class ItemService {
     }
   }
 
-  private async getScoredStatusOrNull(itemId: number, likeCount?: number) {
-    const item = await db.item.findUnique({
-      select: { createdAt: true },
-      where: { id: itemId },
+  private static async getScoredStatusOrNull(
+    itemId: number,
+    likeCount?: number,
+  ) {
+    const parialItem = await IR.findPartialItem(itemId, {
+      createdAt: true,
     })
     if (!item) return null
 
@@ -195,48 +204,6 @@ class ItemService {
     }
 
     return null
-  }
-
-  private static async findItemOrThrow({
-    itemId,
-    userId,
-    include,
-  }: {
-    itemId: number
-    userId?: number | null
-    include?: Partial<Parameters<typeof db.item.findUnique>[0]['include']>
-  }) {
-    const item = await db.item.findUnique({
-      where: { id: itemId },
-      include: { ...include },
-    })
-
-    // userId 를 비교해야 한다면, 반드시 item.userId 와 동일해야 한다.
-    if (userId != null && item?.userId !== userId)
-      throw new AppError('Forbidden')
-
-    if (item == null) throw new AppError('NotFound')
-
-    return item
-  }
-
-  static queryIncludeRelations(userId: number | null | undefined) {
-    return {
-      user: {
-        select: { id: true, username: true },
-      },
-      itemStatus: {
-        select: {
-          id: true,
-          likeCount: true,
-          commentCount: true,
-          score: true,
-        },
-      },
-      publisher: true,
-      itemLikes: userId ? { where: { userId } } : false,
-      bookmarks: userId ? { where: { userId } } : false,
-    }
   }
 
   /**
@@ -273,7 +240,19 @@ class ItemService {
       hitsPage: Awaited<ReturnType<typeof algolia.searchItem>>,
     ) {
       const itemIds = hitsPage.list.map((item) => item.id)
-      const itemMap = await IS.getItemListByIdMap(itemIds)
+      const itemMap = await IR.findItemMapByIds(itemIds, {
+        id: true,
+        title: true,
+        body: true,
+        author: true,
+        link: true,
+        itemStatus: {
+          select: { likeCount: true },
+        },
+        publisher: {
+          select: { name: true, favicon: true, domain: true },
+        },
+      })
 
       const serializedList = hitsPage.list
         .map((hit) => {
@@ -300,35 +279,11 @@ class ItemService {
       return serializedList
     }
   }
-
-  static async getItemListByIdMap(itemIds: number[]) {
-    const itemList = await db.item.findMany({
-      where: { id: { in: itemIds } },
-      select: {
-        id: true,
-        title: true,
-        body: true,
-        author: true,
-        link: true,
-        itemStatus: {
-          select: { likeCount: true },
-        },
-        publisher: {
-          select: { name: true, favicon: true, domain: true },
-        },
-      },
-    })
-
-    const itemByIdMap = itemList.reduce((acc, item) => {
-      acc[item.id] = item
-      return acc
-    }, {} as Record<number, typeof itemList[0]>)
-
-    return itemByIdMap
-  }
 }
-const IS = ItemService
 export default ItemService
+
+const IS = ItemService
+const IR = ItemRepository
 
 // types
 

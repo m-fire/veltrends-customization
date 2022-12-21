@@ -1,6 +1,4 @@
-import { findRecentList } from '../../service/listing/RecentListing'
-import { findTredingList } from '../../service/listing/TrendingListing'
-import { findPastList } from '../../service/listing/PastListing'
+import ItemRepository from '../../repository/ItemRepository.js'
 
 export type ListMode = 'recent' | 'trending' | 'past'
 
@@ -11,14 +9,14 @@ export type ListingInfo<E> = {
   lastCursor: number | null
 }
 
-export type ListingParamsOf<Mode extends ListMode> = Mode extends 'recent'
-  ? Parameters<typeof findRecentList>[0]
-  : Mode extends 'trending'
-  ? Parameters<typeof findTredingList>[0]
-  : Mode extends 'past'
-  ? Parameters<typeof findPastList>[0]
-  : undefined
+export type ListingParams = ByCursorParams &
+  Partial<Omit<ByCursorAndDateRangeParams, keyof ByCursorParams>>
 
-export interface Listing<Mode extends ListMode, E> {
-  listing(options: ListingParamsOf<Mode>): Promise<ListingInfo<E>>
+type ByCursorParams = Parameters<typeof ItemRepository.findListByCursor>[0]
+type ByCursorAndDateRangeParams = Parameters<
+  typeof ItemRepository.findListByCursorAndDateRange
+>[0]
+
+export interface Listing<E> {
+  listing(options: ListingParams): Promise<ListingInfo<E>>
 }

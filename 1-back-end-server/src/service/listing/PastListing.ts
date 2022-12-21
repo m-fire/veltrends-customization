@@ -3,14 +3,20 @@ import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
 import AppError from '../../common/error/AppError.js'
 import { Validator } from '../../common/util/validates.js'
 import { Converts } from '../../common/util/converts.js'
-import { ListingParamsOf } from '../../core/pagination/types.js'
-import ItemService from '../ItemService.js'
+import { ListingParams } from '../../core/pagination/types.js'
+import ItemRepository from '../../repository/ItemRepository.js'
 
+/**
+ * 1주(7일 0시간 0분 0초 0000밀리초) 기간을 1/1000 초단위로 환산 <br />
+ * 6(일) * 24(시간) * 60(분) * 60(초) * 1000(1/1000 초)
+ */
 const WEEK_MILLISECOND = 6 * 24 * 60 * 60 * 1000
 
-type PastItem = Awaited<ReturnType<typeof findPastList>>[0]
+type PastItem = Awaited<
+  ReturnType<typeof ItemRepository.findListByCursorAndDateRange>
+>[0]
 
-class PastListing extends AbstractModeListing<'past', PastItem> {
+class PastListing extends AbstractModeListing<PastItem> {
   private static instance: PastListing
 
   static getInstance() {
@@ -20,17 +26,13 @@ class PastListing extends AbstractModeListing<'past', PastItem> {
     return PastListing.instance
   }
 
-  protected async getTotalCount({
-    startDate,
-    endDate,
-  }: ListingParamsOf<'past'>) {
+  protected async getTotalCount({ startDate, endDate }: ListingParams) {
     //
     if (!startDate || !endDate) {
       throw new AppError('BadRequest', {
         message: 'startDate or endDate is missing',
       })
     }
-
     const isInvalidDateFormat = [startDate, endDate].some((date) =>
       Validator.DateFormat.yyyymmdd(date),
     )
@@ -49,31 +51,25 @@ class PastListing extends AbstractModeListing<'past', PastItem> {
       })
     }
 
-    const fullStartDate = startDate
-      ? Converts.Date.newYyyymmddHhmmss(startDate)
-      : undefined
-    const fullEndDate = endDate
-      ? Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59')
-      : undefined
-    return db.item.count({
-      where: {
-        createdAt: {
-          gte: fullStartDate,
-          lte: fullEndDate,
-        },
-      },
+    const rangeCount = await ItemRepository.countCreatedDateRange({
+      startDate: Converts.Date.newYyyymmddHhmmss(startDate),
+      endDate: Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59'),
     })
+    return rangeCount
   }
 
-  protected async findList(options: ListingParamsOf<'past'>) {
-    return findPastList(options)
+  protected async findList(options: ListingParams) {
+    return ItemRepository.findListByCursorAndDateRange(options, [
+      { itemStatus: { likeCount: 'desc' } },
+      { id: 'desc' },
+    ])
   }
 
   protected async hasNextPage(
-    options: ListingParamsOf<'past'>, // lastElement?: PastItem,
+    options: ListingParams, // lastElement?: PastItem,
   ) {
     //
-    const { ltCursor, startDate, endDate } = options
+    const { cursor, startDate, endDate } = options
     const fullStartDate = startDate
       ? Converts.Date.newYyyymmddHhmmss(startDate)
       : undefined
@@ -81,21 +77,14 @@ class PastListing extends AbstractModeListing<'past', PastItem> {
       ? Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59')
       : undefined
 
-    const totalPage = await db.item.count({
-      where: {
-        id: { lt: ltCursor || undefined },
-        createdAt: {
-          gte: fullStartDate,
-          lte: fullEndDate,
-        },
+    const totalPage = await ItemRepository.countCreatedDateRange(
+      {
+        cursor,
+        startDate: fullStartDate,
+        endDate: fullEndDate,
       },
-      orderBy: [
-        {
-          itemStatus: { likeCount: 'desc' },
-        },
-        { id: 'desc' },
-      ],
-    })
+      [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
+    )
     return totalPage > 0
   }
 
@@ -104,39 +93,3 @@ class PastListing extends AbstractModeListing<'past', PastItem> {
   }
 }
 export default PastListing
-
-// db query func
-
-export function findPastList({
-  ltCursor,
-  userId,
-  limit,
-  startDate,
-  endDate,
-}: {
-  ltCursor?: number | null
-  userId?: number | null
-  limit: number
-  startDate?: string
-  endDate?: string
-}) {
-  const fullStartDate = startDate
-    ? Converts.Date.newYyyymmddHhmmss(startDate)
-    : undefined
-  const fullEndDate = endDate
-    ? Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59')
-    : undefined
-
-  return db.item.findMany({
-    where: {
-      id: ltCursor ? { lt: ltCursor } : undefined,
-      createdAt: {
-        gte: fullStartDate,
-        lte: fullEndDate,
-      },
-    },
-    orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
-    include: ItemService.queryIncludeRelations(userId),
-    take: limit,
-  })
-}

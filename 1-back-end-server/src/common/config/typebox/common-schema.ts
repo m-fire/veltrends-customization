@@ -2,9 +2,9 @@ import { Type } from '@sinclair/typebox'
 import { Nullable } from './type-util.js'
 
 export const PAGINATION_OPTION_SCHEMA = Type.Object({
-  cursor: Type.Optional(Nullable(Type.Integer())),
-  userId: Type.Optional(Nullable(Type.Integer())),
-  limit: Type.Optional(Nullable(Type.Integer())),
+  cursor: Type.Optional(Type.Integer()),
+  userId: Type.Optional(Type.Integer()),
+  limit: Type.Optional(Type.Integer()),
 })
 export const RES_EMPTY_LIST_SCHEMA = Type.Array(Type.Void())
 export const RES_EMPTY_OBJECT_SCHEMA = Type.Undefined()
