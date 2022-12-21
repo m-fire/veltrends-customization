@@ -31,32 +31,33 @@ model Token {
   rotationCounter Int      @default(1)
   blocked         Boolean  @default(false)
   createdAt       DateTime @default(now())
-  userId          Int
 
-  user User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 }
 
 model Item {
-  id          Int      @id @default(autoincrement())
-  title       String
-  body        String
-  author      String   @default("")
-  link        String?
-  thumbnail   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      Int
-  publisherId Int
+  id        Int      @id @default(autoincrement())
+  title     String
+  body      String
+  author    String   @default("")
+  link      String?
+  thumbnail String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   itemStatus ItemStatus?
-  tags       Tag[]
-  itemsTags  ItemsTags[]
-  comments   Comment[]
-  itemLikes  ItemLike[]
-  bookmarks  Bookmark[]
 
-  publisher Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
+  publisherId Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+
+  tags      Tag[]
+  itemsTags ItemsTags[]
+  comments  Comment[]
+  itemLikes ItemLike[]
+  bookmarks Bookmark[]
 
   @@index([createdAt(sort: Desc)])
 }
@@ -71,21 +72,20 @@ model Publisher {
 }
 
 model Tag {
-  id     Int    @id @default(autoincrement())
-  name   String @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  item   Item? @relation(fields: [itemId], references: [id])
   itemId Int?
 
   itemsTags ItemsTags[]
-
-  Item Item? @relation(fields: [itemId], references: [id])
 }
 
 model ItemsTags {
+  item   Item @relation(fields: [itemId], references: [id])
   itemId Int
+  tag    Tag  @relation(fields: [tagId], references: [id])
   tagId  Int
-
-  item Item @relation(fields: [itemId], references: [id])
-  tag  Tag  @relation(fields: [tagId], references: [id])
 
   @@id([itemId, tagId])
   @@index(tagId)
@@ -103,12 +103,13 @@ model TagRelation {
 
 model ItemLike {
   id        Int      @id @default(autoincrement())
-  itemId    Int
-  userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  userId Int
+
+  item   Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId Int
 
   @@unique([itemId, userId])
   @@index(itemId)
@@ -121,9 +122,9 @@ model ItemStatus {
   clickCount   Int      @default(0)
   score        Float    @default(0)
   updatedAt    DateTime @default(now()) @updatedAt
-  itemId       Int      @unique
 
-  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  item   Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId Int  @unique
 
   @@index([score(sort: Desc), itemId(sort: Desc)])
   @@index([likeCount(sort: Desc), itemId(sort: Desc)])
@@ -137,16 +138,16 @@ model Comment {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @default(now()) @updatedAt
   deletedAt       DateTime?
-  itemId          Int
   parentCommentId Int?
-  userId          Int
-  mentionUserId   Int?
+
+  item          Item  @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId        Int
+  user          User  @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  mentionUser   User? @relation("mentionUser", fields: [mentionUserId], references: [id])
+  mentionUserId Int?
 
   commentLikes CommentLike[]
-
-  item        Item  @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  user        User  @relation("user", fields: [userId], references: [id], onDelete: Cascade)
-  mentionUser User? @relation("mentionUser", fields: [mentionUserId], references: [id])
 
   @@index(deletedAt)
   @@index(createdAt)
@@ -157,11 +158,11 @@ model CommentLike {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  userId    Int
-  commentId Int
 
-  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId Int
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
 
   @@unique([commentId, userId])
   @@index(commentId)
@@ -170,11 +171,11 @@ model CommentLike {
 model Bookmark {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  userId    Int
-  itemId    Int
 
-  user User @relation(fields: [userId], references: [id])
-  item Item @relation(fields: [itemId], references: [id])
+  item   Item @relation(fields: [itemId], references: [id])
+  itemId Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 
   @@unique([userId, itemId])
   @@index(createdAt)
