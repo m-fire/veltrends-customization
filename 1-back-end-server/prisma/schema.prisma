@@ -18,11 +18,11 @@ model User {
   passwordHash String
   createdAt    DateTime @default(now())
 
-  Item              Item[]
-  Token             Token[]
+  items             Item[]
+  tokens            Token[]
   comments          Comment[]     @relation("user")
   mentionedComments Comment[]     @relation("mentionUser")
-  commentLike       CommentLike[]
+  commentLikes      CommentLike[]
   bookmarks         Bookmark[]
 }
 
