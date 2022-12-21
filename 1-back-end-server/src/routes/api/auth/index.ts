@@ -8,13 +8,11 @@ import AUTH_SCHEMA from './schema.js'
 // Route Definition
 
 const authRoute: FastifyPluginAsync = async (fastify) => {
-  const userService = UserService.getInstance()
-
   fastify.post<AuthRequestMap['LOGIN']>(
     '/login',
     { schema: AUTH_SCHEMA.LOGIN },
     async ({ body: authBody }, reply) => {
-      const tokensAndUser = await userService.login(authBody)
+      const tokensAndUser = await UserService.login(authBody)
       setTokenCookies(reply, tokensAndUser.tokens)
       return tokensAndUser
     },
@@ -24,7 +22,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     '/register',
     { schema: AUTH_SCHEMA.REGISTER },
     async ({ body: userInfo }, reply) => {
-      const tokensAndUser = await userService.register(userInfo)
+      const tokensAndUser = await UserService.register(userInfo)
       setTokenCookies(reply, tokensAndUser.tokens)
       reply.statusCode = 201
       return tokensAndUser
@@ -40,7 +38,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
         (request.cookies as CookieTokens)?.refresh_token
       if (!oldToken) throw new AppError('BadRequest')
 
-      const tokens = await userService.refreshToken(oldToken)
+      const tokens = await UserService.refreshToken(oldToken)
       setTokenCookies(reply, tokens)
       reply.statusCode = 200
       return tokens

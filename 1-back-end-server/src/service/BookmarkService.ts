@@ -6,18 +6,7 @@ import ItemService from './ItemService.js'
 import ItemRepository from '../repository/ItemRepository.js'
 
 class BookmarkService {
-  private static instance: BookmarkService
-
-  static getInstance() {
-    if (!BS.instance) {
-      BS.instance = new BookmarkService()
-    }
-    return BS.instance
-  }
-
-  private constructor() {}
-
-  async mark({ itemId, userId }: MarkParams) {
+  static async mark({ itemId, userId }: MarkParams) {
     try {
       const newBookmark = await db.bookmark.create({
         data: { userId, itemId },
@@ -28,7 +17,7 @@ class BookmarkService {
         },
       })
 
-      const serializedBookmark = IS.serialize(newBookmark.item)
+      const serializedBookmark = ItemService.serialize(newBookmark.item)
       return serializedBookmark
     } catch (e) {
       /* 연관 릴레이션 키 매칭실패 애러인 경우, AppError 로 re-throw */
@@ -39,12 +28,16 @@ class BookmarkService {
     }
   }
 
-  async unmark({ bookmarkId, userId }: UnmarkParams) {
+  static async unmark({ bookmarkId, userId }: UnmarkParams) {
     await BS.findBookmarkOrThrow({ bookmarkId, userId })
     await db.bookmark.delete({ where: { id: bookmarkId } })
   }
 
-  async getBookmarkList({ userId, cursor, limit }: GetBookmarkListParams) {
+  static async getBookmarkList({
+    userId,
+    cursor,
+    limit,
+  }: GetBookmarkListParams) {
     const cursorCreatedAt = await BS.getCreatedAtById(cursor)
 
     const [totalCount, bookmarkWithItemList] = await Promise.all([
@@ -68,7 +61,7 @@ class BookmarkService {
 
     const serializedBookmarkList = bookmarkWithItemList.map((bookmark) => ({
       ...bookmark,
-      item: IS.serialize(bookmark.item),
+      item: ItemService.serialize(bookmark.item),
     }))
 
     const lastBookmark = serializedBookmarkList.at(-1)

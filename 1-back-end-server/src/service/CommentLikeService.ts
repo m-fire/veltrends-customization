@@ -2,18 +2,7 @@ import db from '../common/config/prisma/db-client.js'
 import { DeleteCommentParams } from './CommentService.js'
 
 class CommentLikeService {
-  private static instance: CommentLikeService
-
-  static getInstance() {
-    if (!CommentLikeService.instance) {
-      CommentLikeService.instance = new CommentLikeService()
-    }
-    return CommentLikeService.instance
-  }
-
-  private constructor() {}
-
-  async like({ commentId, userId }: LikeParams) {
+  static async like({ commentId, userId }: LikeParams) {
     try {
       await db.commentLike.create({
         data: { commentId, userId },
@@ -24,7 +13,7 @@ class CommentLikeService {
     return CommentLikeService.countCommentLike(commentId)
   }
 
-  async unlike({ commentId, userId }: UnlikeParams) {
+  static async unlike({ commentId, userId }: UnlikeParams) {
     try {
       await db.commentLike.delete({
         where: { commentId_userId: { commentId, userId } },
@@ -33,7 +22,10 @@ class CommentLikeService {
     return CommentLikeService.countCommentLike(commentId)
   }
 
-  async getCommentLikeList({ userId, commentIds }: GetCommentLikeListParams) {
+  static async getCommentLikeList({
+    userId,
+    commentIds,
+  }: GetCommentLikeListParams) {
     return await db.commentLike.findMany({
       where: {
         userId,
@@ -43,7 +35,10 @@ class CommentLikeService {
     })
   }
 
-  async getCommentLikeOrNull({ commentId, userId }: GetCommentLikeOrNull) {
+  static async getCommentLikeOrNull({
+    commentId,
+    userId,
+  }: GetCommentLikeOrNull) {
     if (userId == null) return null
 
     return await db.commentLike.findUnique({

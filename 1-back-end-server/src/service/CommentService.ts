@@ -8,20 +8,7 @@ import ItemStatusService from './ItemStatusService.js'
 const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
 
 class CommentService {
-  private static instance: CommentService
-  private commentLikeService = CommentLikeService.getInstance()
-  private itemStatusSerivce = ItemStatusService.getInstance()
-
-  static getInstance() {
-    if (!CommentService.instance) {
-      CommentService.instance = new CommentService()
-    }
-    return CommentService.instance
-  }
-
-  private constructor() {}
-
-  async createComment({
+  static async createComment({
     itemId,
     userId,
     text,
@@ -29,7 +16,7 @@ class CommentService {
   }: CreateCommentParams) {
     CommentService.validateTextLength(text)
 
-    const parentComment = await this.getCommentOrNull({
+    const parentComment = await CommentService.getCommentOrNull({
       commentId: parentCommentId,
       userId,
     })
@@ -64,7 +51,7 @@ class CommentService {
       })
     }
 
-    await this.syncCommentCount(itemId)
+    await CommentService.syncCommentCount(itemId)
     return {
       ...newComment,
       subcommentList: [],
@@ -73,7 +60,7 @@ class CommentService {
     }
   }
 
-  async getCommentList({ itemId, userId }: GetCommentListParams) {
+  static async getCommentList({ itemId, userId }: GetCommentListParams) {
     const commentList = await db.comment.findMany({
       where: { itemId },
       orderBy: { id: 'asc' },
@@ -85,7 +72,7 @@ class CommentService {
 
     // 댓글들의 ID 목록으로, commentId 당 commentLike 맵을 만들어,
     const commentIds = commentList.map((c) => c.id)
-    const commentLikedMap = await this.getCommentLikeMapOrEmpty({
+    const commentLikedMap = await CommentService.getCommentLikeMapOrEmpty({
       commentIds,
       userId,
     })
@@ -95,15 +82,15 @@ class CommentService {
       isLiked: !!commentLikedMap[c.id],
     }))
     // deleted comment 노멀라이징
-    const normalizedList = this.normalizeDeletedCommentInList(
+    const normalizedList = CommentService.normalizeDeletedCommentInList(
       commentListWithIsLiked,
     )
 
     // 최종적으로 가공된 댓글목록 내보내기
-    return await this.composeSubcommentList(normalizedList)
+    return await CommentService.composeSubcommentList(normalizedList)
   }
 
-  private normalizeDeletedCommentInList(comments: Comment[]): Comment[] {
+  private static normalizeDeletedCommentInList(comments: Comment[]): Comment[] {
     return comments.map((c) => {
       if (!c.deletedAt)
         return {
@@ -130,7 +117,7 @@ class CommentService {
     })
   }
 
-  private async composeSubcommentList(comments: Comment[]) {
+  private static async composeSubcommentList(comments: Comment[]) {
     const rootComments = comments.filter((c) => c.parentCommentId == null)
     const commentsByParentIdMap = new Map<number, Comment[]>()
 
@@ -152,7 +139,7 @@ class CommentService {
       })
   }
 
-  async getCommentOrNull({
+  static async getCommentOrNull({
     commentId,
     withSubcomments = false,
     userId,
@@ -172,11 +159,11 @@ class CommentService {
     // 하위댓글목록이 필요없다면 없다면 단일댓글 반환
     if (!withSubcomments) return comment
 
-    const subcommentList = await this.getSubcommentList({
+    const subcommentList = await CommentService.getSubcommentList({
       parentCommentId: commentId,
       userId,
     })
-    const commentLike = await this.commentLikeService.getCommentLikeOrNull({
+    const commentLike = await CommentLikeService.getCommentLikeOrNull({
       commentId,
       userId,
     })
@@ -189,7 +176,7 @@ class CommentService {
     }
   }
 
-  async getSubcommentList({
+  static async getSubcommentList({
     parentCommentId,
     userId,
   }: GetSubcommentListParams) {
@@ -205,10 +192,11 @@ class CommentService {
       },
     })
 
-    const commentLikedMapOrEmpty = await this.getCommentLikeMapOrEmpty({
-      userId,
-      commentIds: subcommentList.map((sc) => sc.id),
-    })
+    const commentLikedMapOrEmpty =
+      await CommentService.getCommentLikeMapOrEmpty({
+        userId,
+        commentIds: subcommentList.map((sc) => sc.id),
+      })
 
     return subcommentList.map((subcomment) => ({
       ...subcomment,
@@ -217,7 +205,7 @@ class CommentService {
     }))
   }
 
-  async updateComment({ commentId, userId, text }: UpdateCommentParams) {
+  static async updateComment({ commentId, userId, text }: UpdateCommentParams) {
     const comment = await db.comment.findFirst({ where: { id: commentId } })
     if (comment != null && comment.userId !== userId) new AppError('Forbidden')
 
@@ -226,29 +214,29 @@ class CommentService {
       data: { text },
       include: { user: INCLUDE_SIMPLE_USER },
     })
-    return this.getCommentOrNull({
+    return CommentService.getCommentOrNull({
       commentId,
       withSubcomments: true,
       userId: null,
     })
   }
 
-  async deleteComment({ commentId, userId }: DeleteCommentParams) {
+  static async deleteComment({ commentId, userId }: DeleteCommentParams) {
     const comment = await db.comment.findFirst({ where: { id: commentId } })
     if (comment?.userId !== userId) new AppError('Forbidden')
 
     await db.comment.delete({ where: { id: commentId } })
-    await this.syncCommentCount(comment!.itemId)
+    await CommentService.syncCommentCount(comment!.itemId)
   }
 
-  async likeComment({ commentId, userId }: LikeCommentParams) {
-    const likeCount = await this.commentLikeService.like({ commentId, userId })
+  static async likeComment({ commentId, userId }: LikeCommentParams) {
+    const likeCount = await CommentLikeService.like({ commentId, userId })
     await CommentService.syncLikeCount({ commentId, likeCount })
     return likeCount
   }
 
-  async unlikeComment({ commentId, userId }: UnlikeCommentParams) {
-    const likeCount = await this.commentLikeService.unlike({
+  static async unlikeComment({ commentId, userId }: UnlikeCommentParams) {
+    const likeCount = await CommentLikeService.unlike({
       commentId,
       userId,
     })
@@ -266,11 +254,11 @@ class CommentService {
     })
   }
 
-  private async syncCommentCount(itemId: number) {
+  private static async syncCommentCount(itemId: number) {
     const commentCount = await db.comment.count({
       where: { itemId },
     })
-    await this.itemStatusSerivce.updateCommentCount({
+    await ItemStatusService.updateCommentCount({
       itemId,
       commentCount,
     })
@@ -283,13 +271,13 @@ class CommentService {
     }
   }
 
-  private async getCommentLikeMapOrEmpty({
+  private static async getCommentLikeMapOrEmpty({
     commentIds,
     userId,
   }: GetCommentLikeMapParams) {
     if (userId == null) return {}
 
-    const commentLikeList = await this.commentLikeService.getCommentLikeList({
+    const commentLikeList = await CommentLikeService.getCommentLikeList({
       userId,
       commentIds,
     })

@@ -1,25 +1,30 @@
 import db from '../common/config/prisma/db-client.js'
+import { Prisma } from '@prisma/client'
 
 class ItemStatusService {
-  private static instance: ItemStatusService
-
-  static getInstance() {
-    if (!ItemStatusService.instance) {
-      ItemStatusService.instance = new ItemStatusService()
-    }
-    return ItemStatusService.instance
+  static async countScoreRange(
+    { maxScore, minScore }: CountStatusByScoreParams,
+    orderBy?: PrismaItemStatusOrderBy | PrismaItemStatusOrderBy[],
+  ) {
+    return db.itemStatus.count({
+      where: {
+        score: {
+          gte: maxScore,
+          lte: minScore,
+        },
+      },
+      orderBy,
+    })
   }
 
-  private constructor() {}
-
-  async createItemStatus(itemId: number) {
+  static async createItemStatus(itemId: number) {
     const newItemStatus = db.itemStatus.create({
       data: { itemId },
     })
     return newItemStatus
   }
 
-  async updateLikeCount({ itemId, likeCount }: UpdateLikeCountParams) {
+  static async updateLikeCount({ itemId, likeCount }: UpdateLikeCountParams) {
     const likeCountedStatus = db.itemStatus.update({
       data: { likeCount },
       where: { itemId },
@@ -27,7 +32,10 @@ class ItemStatusService {
     return likeCountedStatus
   }
 
-  async updateCommentCount({ itemId, commentCount }: UpdateCommentCountParams) {
+  static async updateCommentCount({
+    itemId,
+    commentCount,
+  }: UpdateCommentCountParams) {
     const commentCountedStatus = await db.itemStatus.update({
       where: { itemId },
       data: { commentCount },
@@ -35,7 +43,7 @@ class ItemStatusService {
     return commentCountedStatus
   }
 
-  async updateScore({ itemId, score }: UpdateScoreParams) {
+  static async updateScore({ itemId, score }: UpdateScoreParams) {
     const scoredStatus = db.itemStatus.update({
       where: { itemId },
       data: { score },
@@ -43,7 +51,7 @@ class ItemStatusService {
     return scoredStatus
   }
 
-  async getRankTargetStatusList(limitScoreFloat?: number) {
+  static async getRankTargetStatusList(limitScoreFloat?: number) {
     const targetStatusList = await db.itemStatus.findMany({
       where:
         limitScoreFloat != null
@@ -59,6 +67,8 @@ class ItemStatusService {
   }
 }
 export default ItemStatusService
+
+const ISS = ItemStatusService
 
 // types
 
@@ -76,3 +86,9 @@ interface UpdateScoreParams {
   itemId: number
   score: number
 }
+
+type CountStatusByScoreParams = { maxScore?: number; minScore?: number }
+
+type PrismaItemStatusOrderBy =
+  | Prisma.ItemStatusOrderByWithRelationInput
+  | Prisma.ItemStatusOrderByWithAggregationInput

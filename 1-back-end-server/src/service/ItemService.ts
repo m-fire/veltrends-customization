@@ -6,13 +6,11 @@ import {
   Publisher,
   User,
 } from '@prisma/client'
-import db from '../common/config/prisma/db-client.js'
 import { ItemsRequestMap } from '../routes/api/items/types.js'
 import {
   Pagination,
   PaginationOptions,
 } from '../common/config/fastify/types.js'
-import AppError from '../common/error/AppError.js'
 import PublisherService from './PublisherService.js'
 import ItemStatusService from './ItemStatusService.js'
 import ItemLikeService from './ItemLikeService.js'
@@ -22,28 +20,13 @@ import { RankCalculator } from '../core/util/calculates.js'
 import { ListMode } from '../core/pagination/types.js'
 import ItemsListingStrategy from './listing/ItemsListingStrategy.js'
 import { createEmptyPage, createPage } from '../core/util/paginations.js'
+import ItemRepository from '../repository/ItemRepository.js'
 
 // prisma include conditions
 const LIMIT_ITEMS = 20 as const
 
 class ItemService {
-  private static instance: ItemService
-  private publisherService = PublisherService.getInstance()
-  private itemStatusService = ItemStatusService.getInstance()
-  private itemLikeService = ItemLikeService.getInstance()
-
-  static getInstance() {
-    if (!IS.instance) {
-      IS.instance = new ItemService()
-    }
-    return IS.instance
-  }
-
-  private constructor() {}
-
-  /* Public APIs */
-
-  async createItem(
+  static async createItem(
     userId: number,
     { title, body, link, tags }: CreateItemParams,
   ) {
@@ -52,7 +35,7 @@ class ItemService {
       url: originLink,
       og: { publisher: name, favicon, thumbnail, author },
     } = await getOriginItemInfo(link)
-    const newPublisher = await this.publisherService.createPublisher({
+    const newPublisher = await PublisherService.createPublisher({
       domain,
       name,
       favicon,
@@ -72,7 +55,7 @@ class ItemService {
     /* 아이탬 생성시, 알고리아 DB에 추가 */
     IS.Algolia.syncItem(newItem)
 
-    const newStatus = await this.itemStatusService.createItemStatus(newItem.id)
+    const newStatus = await ItemStatusService.createItemStatus(newItem.id)
 
     const newItemWithStatus = { ...newItem, itemStatus: newStatus }
 
@@ -80,7 +63,7 @@ class ItemService {
     return serializedItem
   }
 
-  async getItemList({
+  static async getItemList({
     mode = 'recent',
     cursor,
     userId,
@@ -153,18 +136,18 @@ class ItemService {
     IS.Algolia.deleteItem(params.itemId)
   }
 
-  async likeItem({ itemId, userId }: ItemActionParams) {
-    const itemStatus = await this.itemLikeService.like({ itemId, userId })
-    const scoredStatusOrNull = await this.getScoredStatusOrNull(
+  static async likeItem({ itemId, userId }: ItemActionParams) {
+    const itemStatus = await ItemLikeService.like({ itemId, userId })
+    const scoredStatusOrNull = await IS.getScoredStatusOrNull(
       itemId,
       itemStatus.likeCount,
     )
     return scoredStatusOrNull ?? itemStatus
   }
 
-  async unlikeItem({ itemId, userId }: ItemActionParams) {
-    const itemStatus = await this.itemLikeService.unlike({ itemId, userId })
-    const scoredStatusOrNull = await this.getScoredStatusOrNull(
+  static async unlikeItem({ itemId, userId }: ItemActionParams) {
+    const itemStatus = await ItemLikeService.unlike({ itemId, userId })
+    const scoredStatusOrNull = await IS.getScoredStatusOrNull(
       itemId,
       itemStatus.likeCount,
     )
@@ -188,13 +171,13 @@ class ItemService {
     const parialItem = await IR.findPartialItem(itemId, {
       createdAt: true,
     })
-    if (!item) return null
+    if (parialItem == null) return null
 
     try {
-      const likes = likeCount ?? (await this.itemLikeService.countLike(itemId))
-      const score = RankCalculator.rankingScore(likes, item.createdAt)
+      const likes = likeCount ?? (await ItemLikeService.countLike(itemId))
+      const score = RankCalculator.rankingScore(likes, parialItem.createdAt)
 
-      const scoredStatus = await this.itemStatusService.updateScore({
+      const scoredStatus = await ItemStatusService.updateScore({
         itemId,
         score,
       })

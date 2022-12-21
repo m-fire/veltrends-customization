@@ -8,8 +8,6 @@ import { commentsRoute } from './comments/index.js'
 import { Validator } from '../../../common/util/validates.js'
 
 const itemsRoute: FastifyPluginAsync = async (fastify) => {
-  const itemService = ItemService.getInstance()
-
   fastify.get<ItemsRequestMap['GET_ITEM_LIST']>(
     '/',
     { schema: ITEMS_SCHEMA.GET_ITEM_LIST },
@@ -23,7 +21,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
         ? parseInt(cursor, 10) || undefined
         : undefined
 
-      const itemList = await itemService.getItemList({
+      const itemList = await ItemService.getItemList({
         mode: mode as ListMode,
         cursor: cursorOrUndefined,
         userId: user?.id,
@@ -42,7 +40,7 @@ const itemsRoute: FastifyPluginAsync = async (fastify) => {
         params: { id },
         user,
       } = request
-      const item = await itemService.getItem({ itemId: id, userId: user?.id })
+      const item = await ItemService.getItem({ itemId: id, userId: user?.id })
       if (!item) reply.statusCode = 404
       return item
     },
@@ -59,8 +57,6 @@ export default itemsRoute
 
 /* 이곳에 작성된 엔드포인트 핸들러는 인증접속을 요구함 */
 const itemsAuthRoute = createAuthRoute(async (fastify) => {
-  const itemService = ItemService.getInstance()
-
   fastify.post<ItemsRequestMap['CREATE_ITEM']>(
     '/',
     { schema: ITEMS_SCHEMA.CREATE_ITEM },
@@ -68,7 +64,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const createItemBody = request.body
 
-      const newItem = await itemService.createItem(userId, createItemBody)
+      const newItem = await ItemService.createItem(userId, createItemBody)
       reply.statusCode = 201
       return newItem
     },
@@ -84,7 +80,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
         body,
       } = request
 
-      const updatedItem = await itemService.editItem({
+      const updatedItem = await ItemService.editItem({
         ...body,
         itemId,
         userId,
@@ -101,7 +97,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const itemId = request.params.id
 
-      await itemService.deleteItem({ itemId, userId })
+      await ItemService.deleteItem({ itemId, userId })
       reply.statusCode = 204
     },
   )
@@ -114,7 +110,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const itemId = request.params.id
 
-      const itemStatus = await itemService.likeItem({ itemId, userId })
+      const itemStatus = await ItemService.likeItem({ itemId, userId })
       reply.statusCode = 202
       return { id: itemId, itemStatus, isLiked: true }
     },
@@ -128,7 +124,7 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { id: itemId } = request.params
 
-      const itemStatus = await itemService.unlikeItem({ itemId, userId })
+      const itemStatus = await ItemService.unlikeItem({ itemId, userId })
       reply.statusCode = 202
       return { id: itemId, itemStatus, isLiked: false }
     },

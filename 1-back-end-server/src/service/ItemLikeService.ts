@@ -1,21 +1,8 @@
-import { ItemLike } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import ItemStatusService from './ItemStatusService.js'
 
 class ItemLikeService {
-  private static instance: ItemLikeService
-  private itemStatusService = ItemStatusService.getInstance()
-
-  static getInstance() {
-    if (!ItemLikeService.instance) {
-      ItemLikeService.instance = new ItemLikeService()
-    }
-    return ItemLikeService.instance
-  }
-
-  private constructor() {}
-
-  async like({ itemId, userId }: LikeItemParams) {
+  static async like({ itemId, userId }: LikeItemParams) {
     const alreadyLiked = await db.itemLike.findUnique({
       where: { itemId_userId: { itemId, userId } },
     })
@@ -30,7 +17,7 @@ class ItemLikeService {
     return this.syncLikeCount(itemId)
   }
 
-  async unlike({ itemId, userId }: UnlikeItemParams) {
+  static async unlike({ itemId, userId }: UnlikeItemParams) {
     try {
       await db.itemLike.delete({
         where: { itemId_userId: { itemId, userId } },
@@ -39,14 +26,14 @@ class ItemLikeService {
     return this.syncLikeCount(itemId)
   }
 
-  async countLike(itemId: number) {
+  static async countLike(itemId: number) {
     const likeCount = db.itemLike.count({ where: { itemId } })
     return likeCount
   }
 
-  private async syncLikeCount(itemId: number) {
+  private static async syncLikeCount(itemId: number) {
     const likeCount = await this.countLike(itemId)
-    const syncedItemStatus = await this.itemStatusService.updateLikeCount({
+    const syncedItemStatus = await ItemStatusService.updateLikeCount({
       itemId,
       likeCount,
     })

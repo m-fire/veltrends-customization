@@ -18,8 +18,6 @@ export default bookmarksRoute
 /* Authentication Route */
 
 const bookmarksAuthRoute = createAuthRoute(async (fastify) => {
-  const bookmarkService = BookmarkService.getInstance()
-
   fastify.post<BookmarksRequestMap['MARK']>(
     '/',
     { schema: BOOKMARKS_SCHEMA.MARK },
@@ -27,7 +25,7 @@ const bookmarksAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { itemId } = request.body
 
-      const newBookmark = await bookmarkService.mark({ userId, itemId })
+      const newBookmark = await BookmarkService.mark({ userId, itemId })
       reply.statusCode = 201
       return newBookmark
     },
@@ -40,7 +38,7 @@ const bookmarksAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { bookmarkId } = request.params
 
-      await bookmarkService.unmark({ bookmarkId, userId })
+      await BookmarkService.unmark({ bookmarkId, userId })
       reply.statusCode = 204
     },
   )
@@ -53,7 +51,7 @@ const bookmarksAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { cursor } = request.query
 
-      const bookmarksPage = await bookmarkService.getBookmarkList({
+      const bookmarksPage = await BookmarkService.getBookmarkList({
         userId,
         cursor,
         limit: LIMIT_BOOKMARKS,

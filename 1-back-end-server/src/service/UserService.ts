@@ -8,20 +8,10 @@ import { AuthBody, AuthUserInfo } from '../routes/api/auth/types.js'
 const SOLT_ROUNDS = 10
 
 class UserService {
-  private tokenService = TokenService.getInstance()
-
-  private constructor() {}
-
-  private static instance: UserService
-
-  static getInstance() {
-    if (!UserService.instance) {
-      UserService.instance = new UserService()
-    }
-    return UserService.instance
-  }
-
-  async register({ username, password }: AuthBody): Promise<TokensAndUser> {
+  static async register({
+    username,
+    password,
+  }: AuthBody): Promise<TokensAndUser> {
     const exists = await db.user.findUnique({ where: { username } })
     if (exists) throw new AppError('UserExists')
 
@@ -30,7 +20,7 @@ class UserService {
       // Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
       const passwordHash = await bcrypt.hash(password, SOLT_ROUNDS)
       const newUser = await db.user.create({ data: { username, passwordHash } })
-      const tokens = await this.tokenService.generateTokens(newUser)
+      const tokens = await TokenService.generateTokens(newUser)
 
       // console.log(`UserService.register() newUser, tokens:`, newUser, tokens)
       return { tokens, user: newUser }
@@ -42,7 +32,7 @@ class UserService {
   /**
    * 사용자를 못찾거나 PW가 틀릴경우, 보안상 모두 동일한 `AuthenticationError` 발생시킨다.
    */
-  async login({ username, password }: AuthBody): Promise<TokensAndUser> {
+  static async login({ username, password }: AuthBody): Promise<TokensAndUser> {
     const existsUser = await db.user.findUnique({ where: { username } })
     // Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
     try {
@@ -53,7 +43,7 @@ class UserService {
       )
         throw new AppError('Authentication')
 
-      const tokens = await this.tokenService.generateTokens(existsUser)
+      const tokens = await TokenService.generateTokens(existsUser)
       // console.log(`UserService.login() existsUser, tokens:`, existsUser, tokens)
       return { tokens, user: existsUser }
     } catch (e) {
@@ -64,9 +54,9 @@ class UserService {
     }
   }
 
-  async refreshToken(oldToken: string): Promise<TokenStringMap> {
+  static async refreshToken(oldToken: string): Promise<TokenStringMap> {
     try {
-      const ts = this.tokenService
+      const ts = TokenService
       const { tokenId: id, rotationCounter: outCount } =
         await ts.validateRefreshToken(oldToken)
       const tokenWithUser = await ts.getTokenWithUser(id)

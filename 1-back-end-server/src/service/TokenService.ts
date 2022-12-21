@@ -8,18 +8,7 @@ import {
 import { AuthUserInfo } from '../routes/api/auth/types.js'
 
 export default class TokenService {
-  private static instance: TokenService
-
-  private constructor() {}
-
-  static getInstance() {
-    if (!TokenService.instance) {
-      TokenService.instance = new TokenService()
-    }
-    return TokenService.instance
-  }
-
-  async generateTokens(
+  static async generateTokens(
     { id: userId, username }: AuthUserInfo,
     token?: Token,
   ): Promise<TokenStringMap> {
@@ -42,14 +31,14 @@ export default class TokenService {
     return { accessToken, refreshToken }
   }
 
-  async getTokenWithUser(tokenId: number) {
+  static async getTokenWithUser(tokenId: number) {
     return db.token.findUnique({
       where: { id: tokenId },
       include: { user: { select: { id: true, username: true } } },
     })
   }
 
-  async validateRefreshToken(tokenStr: string) {
+  static async validateRefreshToken(tokenStr: string) {
     return validateToken<RefreshTokenPayload>(tokenStr)
   }
 }
