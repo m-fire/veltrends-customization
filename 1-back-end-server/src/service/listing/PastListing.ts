@@ -13,7 +13,7 @@ import ItemRepository from '../../repository/ItemRepository.js'
 const WEEK_MILLISECOND = 6 * 24 * 60 * 60 * 1000
 
 type PastItem = Awaited<
-  ReturnType<typeof ItemRepository.findListByCursorAndDateRange>
+  ReturnType<typeof ItemRepository.findItemListByCursorAndDateRange>
 >[0]
 
 class PastListing extends AbstractModeListing<PastItem> {
@@ -59,7 +59,7 @@ class PastListing extends AbstractModeListing<PastItem> {
   }
 
   protected async findList(options: ListingParams) {
-    return ItemRepository.findListByCursorAndDateRange(options, [
+    return ItemRepository.findItemListByCursorAndDateRange(options, [
       { itemStatus: { likeCount: 'desc' } },
       { id: 'desc' },
     ])

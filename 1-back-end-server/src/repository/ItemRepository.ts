@@ -8,19 +8,6 @@ import { CursorOrUndefined } from './types.js'
 // prisma include conditions
 
 class ItemRepository {
-  private static instance: ItemRepository
-
-  static getInstance() {
-    if (!ItemRepository.instance) {
-      ItemRepository.instance = new ItemRepository()
-    }
-    return ItemRepository.instance
-  }
-
-  private constructor() {}
-
-  /* Public APIs */
-
   // Count
 
   static async countAllItems() {
@@ -33,7 +20,7 @@ class ItemRepository {
   ) {
     return await db.item.count({
       where: {
-        id: ItemRepository.Query.lessThanIdOrUndefined(cursor),
+        id: IR.Query.lessThanIdOrUndefined(cursor),
       },
       orderBy,
     })
@@ -46,7 +33,7 @@ class ItemRepository {
     return await db.item.count({
       where: {
         itemStatus: {
-          itemId: ItemRepository.Query.lessThanIdOrUndefined(cursor),
+          itemId: IR.Query.lessThanIdOrUndefined(cursor),
           score: {
             gte: maxScore,
             lte: minScore,
@@ -63,7 +50,7 @@ class ItemRepository {
   ) {
     return db.item.count({
       where: {
-        id: ItemRepository.Query.lessThanIdOrUndefined(cursor),
+        id: IR.Query.lessThanIdOrUndefined(cursor),
         createdAt: {
           gte: startDate,
           lte: endDate,
@@ -96,27 +83,27 @@ class ItemRepository {
         thumbnail,
         author,
       },
-      include: ItemRepository.Query.includeFullRelations(userId),
+      include: IR.Query.includeFullRelations(userId),
     })
   }
 
   // Read list
 
-  static async findListByCursor(
+  static async findItemListByCursor(
     { cursor, userId, limit }: FindListByCursorParams,
     orderBy: PrismaItemOrderBy | PrismaItemOrderBy[] = { id: 'desc' },
   ) {
     return db.item.findMany({
       where: {
-        id: ItemRepository.Query.lessThanIdOrUndefined(cursor),
+        id: IR.Query.lessThanIdOrUndefined(cursor),
       },
       orderBy,
-      include: ItemRepository.Query.includeFullRelations(userId),
+      include: IR.Query.includeFullRelations(userId),
       take: limit,
     })
   }
 
-  static async findListByCursorAndDateRange(
+  static async findItemListByCursorAndDateRange(
     {
       cursor,
       userId,
@@ -130,14 +117,14 @@ class ItemRepository {
 
     return db.item.findMany({
       where: {
-        id: ItemRepository.Query.lessThanIdOrUndefined(cursor),
+        id: IR.Query.lessThanIdOrUndefined(cursor),
         createdAt: {
           gte: Converts.Date.newYyyymmddHhmmss(startDate),
           lte: Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59'),
         },
       },
       orderBy,
-      include: ItemRepository.Query.includeFullRelations(userId),
+      include: IR.Query.includeFullRelations(userId),
       take: limit,
     })
   }
@@ -193,7 +180,7 @@ class ItemRepository {
     return item
   }
 
-  static async findPartialItem<QS extends Prisma.ItemSelect>(
+  static async findItemOrPartial<QS extends Prisma.ItemSelect>(
     itemId: number,
     select?: QS,
   ) {
@@ -208,27 +195,24 @@ class ItemRepository {
 
   // Update
 
-  static async updateItem({
-    itemId,
-    userId,
-    link,
-    title,
-    body,
-    tags,
-  }: UpdateItemParams) {
-    await this.findItemOrThrow({ itemId, userId })
-
+  static async updateItem(
+    itemId: number,
+    { userId, link, title, body, tags }: UpdateItemParams,
+  ) {
+    await IR.findItemOrThrow({ itemId, userId })
     return db.item.update({
       where: { id: itemId },
       data: { link, title, body },
-      include: ItemRepository.Query.includeFullRelations(userId),
+      include: IR.Query.includeFullRelations(userId),
     })
   }
 
   // Delete
 
   static async deleteItem({ itemId, userId }: DeleteItemParams) {
-    await this.findItemOrThrow({ itemId, userId })
+    await IR.findItemOrThrow({ itemId, userId })
+    // Todo: 해당 row삭제가 아닌 deletedAt 값을 Date.now() update 형태로 삭제구현
+    // 실제로 row 삭제
     return db.item.delete({ where: { id: itemId } })
   }
 
@@ -261,6 +245,8 @@ class ItemRepository {
   }
 }
 export default ItemRepository
+
+const IR = ItemRepository
 
 // types
 
@@ -310,8 +296,10 @@ type FindItemOrThrowParams = {
   userId?: number
 }
 
-type UpdateItemParams = Partial<ItemsRequestMap['EDIT_ITEM']['Body']> & {
-  itemId: number
+type UpdateItemParams = Pick<
+  Prisma.ItemUpdateInput,
+  'link' | 'title' | 'body' | 'tags'
+> & {
   userId: number
 }
 

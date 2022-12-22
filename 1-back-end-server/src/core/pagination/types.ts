@@ -12,9 +12,9 @@ export type ListingInfo<E> = {
 export type ListingParams = ByCursorParams &
   Partial<Omit<ByCursorAndDateRangeParams, keyof ByCursorParams>>
 
-type ByCursorParams = Parameters<typeof ItemRepository.findListByCursor>[0]
+type ByCursorParams = Parameters<typeof ItemRepository.findItemListByCursor>[0]
 type ByCursorAndDateRangeParams = Parameters<
-  typeof ItemRepository.findListByCursorAndDateRange
+  typeof ItemRepository.findItemListByCursorAndDateRange
 >[0]
 
 export interface Listing<E> {

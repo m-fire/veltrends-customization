@@ -1,4 +1,3 @@
-import { Static } from '@sinclair/typebox'
 import {
   RouteRequestMap,
   RouteResponseCodeMap,
@@ -7,4 +6,6 @@ import COMMENTS_SCHEMA from './schema.js'
 
 export type CommentsRequestMap = RouteRequestMap<typeof COMMENTS_SCHEMA>
 
-export type CommentsResponseMap = RouteResponseCodeMap<typeof COMMENTS_SCHEMA>
+export type CommentsResponseCodeMap = RouteResponseCodeMap<
+  typeof COMMENTS_SCHEMA
+>

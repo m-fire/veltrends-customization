@@ -1,4 +1,4 @@
-import { Listing, ListingInfo, ListingParams, ListMode } from './types.js'
+import { Listing, ListingInfo, ListingParams } from './types.js'
 
 abstract class AbstractModeListing<E> implements Listing<E> {
   async listing(options: ListingParams): Promise<ListingInfo<E>> {

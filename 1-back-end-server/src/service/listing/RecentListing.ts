@@ -3,7 +3,9 @@ import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
 import { ListingParams } from '../../core/pagination/types.js'
 import ItemRepository from '../../repository/ItemRepository.js'
 
-type RecentItem = Awaited<ReturnType<typeof ItemRepository.findListByCursor>>[0]
+type RecentItem = Awaited<
+  ReturnType<typeof ItemRepository.findItemListByCursor>
+>[0]
 
 class RecentListing extends AbstractModeListing<RecentItem> {
   private static instance: RecentListing
@@ -20,7 +22,7 @@ class RecentListing extends AbstractModeListing<RecentItem> {
   }
 
   protected async findList(options: ListingParams) {
-    return ItemRepository.findListByCursor(options, { id: 'desc' })
+    return ItemRepository.findItemListByCursor(options, { id: 'desc' })
   }
 
   protected async hasNextPage(

@@ -6,7 +6,7 @@ import ItemStatusService from '../ItemStatusService.js'
 const THRESHOLD_SCORE = 0.001 as const
 
 type TredingItem = Awaited<
-  ReturnType<typeof ItemRepository.findListByCursor>
+  ReturnType<typeof ItemRepository.findItemListByCursor>
 >[0]
 
 class TrendingListing extends AbstractModeListing<TredingItem> {
@@ -26,7 +26,7 @@ class TrendingListing extends AbstractModeListing<TredingItem> {
   }
 
   protected async findList(options: ListingParams) {
-    return ItemRepository.findListByCursor(options, [
+    return ItemRepository.findItemListByCursor(options, [
       { itemStatus: { score: 'desc' } },
       { itemStatus: { itemId: 'desc' } },
     ])

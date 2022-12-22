@@ -82,17 +82,13 @@ class ItemService {
     })
     if (listingInfo.totalCount === 0) return createEmptyPage()
 
-    const { list, totalCount, hasNextPage, lastCursor } = listingInfo
-
-    const serializedItemList = list.map((item) => IS.serialize(item))
-
-    const itemListPage = createPage({
+    const serializedItemList = listingInfo.list.map((item) =>
+      IS.serialize(item),
+    )
+    return createPage({
+      ...listingInfo,
       list: serializedItemList,
-      totalCount,
-      hasNextPage,
-      lastCursor,
     })
-    return itemListPage
   }
 
   static async getItem({ itemId, userId }: GetItemParams) {
@@ -113,10 +109,7 @@ class ItemService {
     body,
     tags,
   }: EditItemParams) {
-    await IR.findItemOrThrow({ itemId, userId })
-
-    const updatedItem = await IR.updateItem({
-      itemId,
+    const updatedItem = await IR.updateItem(itemId, {
       userId,
       title,
       body,
@@ -131,7 +124,6 @@ class ItemService {
   }
 
   static async deleteItem(params: DeleteItemParams) {
-    await IR.findItemOrThrow(params)
     await IR.deleteItem(params)
     IS.Algolia.deleteItem(params.itemId)
   }
@@ -168,7 +160,7 @@ class ItemService {
     itemId: number,
     likeCount?: number,
   ) {
-    const parialItem = await IR.findPartialItem(itemId, {
+    const parialItem = await IR.findItemOrPartial(itemId, {
       createdAt: true,
     })
     if (parialItem == null) return null
