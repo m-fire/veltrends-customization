@@ -48,7 +48,7 @@ class UserService {
       return { tokens, user: existsUser }
     } catch (e) {
       // AppError 일 경우, 그대로 re-throw
-      if (AppError.equals(e)) throw e
+      if (AppError.is(e)) throw e
       // 알수없는 애러
       throw new AppError('Unknown')
     }

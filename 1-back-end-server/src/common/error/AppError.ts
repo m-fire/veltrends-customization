@@ -86,8 +86,7 @@ export default class AppError<
     this.statusCode = info.statusCode
   }
 
-  // Todo: chagne api name equals -> is
-  static equals(error: any): error is AppError {
+  static is(error: any): error is AppError {
     return (
       error?.name !== undefined &&
       error?.message !== undefined &&

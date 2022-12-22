@@ -1,178 +1,120 @@
-import db from '../common/config/prisma/db-client.js'
 import { Comment } from '@prisma/client'
 import AppError from '../common/error/AppError.js'
 import CommentLikeService from './CommentLikeService.js'
 import ItemStatusService from './ItemStatusService.js'
-
-// prisma include conditions
-const INCLUDE_SIMPLE_USER = { select: { id: true, username: true } } as const
+import CommentRepository from '../repository/CommentRepository.js'
 
 class CommentService {
   static async createComment({
     itemId,
     userId,
     text,
-    parentCommentId = null,
+    parentCommentId,
   }: CreateCommentParams) {
-    CommentService.validateTextLength(text)
+    CS.validateTextLength(text)
 
-    const parentComment = await CommentService.getCommentOrNull({
+    const parentOrNull = await CS.getCommentIncludeSubList({
       commentId: parentCommentId,
       userId,
     })
-    const rootId = parentComment?.parentCommentId
-    const parentId = rootId ?? parentCommentId
-    const isSubcomment = parentComment != null && parentId != null
-    const mentionUserId = parentComment?.userId
+    const parentId = parentOrNull?.parentCommentId ?? parentCommentId
+    const isSubcomment = parentOrNull != null && parentId != null
+    const mentionUserId = parentOrNull?.userId
 
-    // 최상위 댓글이 아니고, 부모 ID를 갖으며, 남에게 댓글단 경우: 사용자언급 허용!
-    const shouldMention =
-      isSubcomment && rootId != null && mentionUserId !== userId
+    // 하위댓글 이며, 부모 ID를 갖으며, 언급대상자가 현사용자가 아닌 경우:
+    // -> 특정 사용자를 언급한 상태
+    const shouldMentionUser =
+      isSubcomment && parentId != null && mentionUserId !== userId
 
-    const newComment = await db.comment.create({
-      data: {
-        itemId,
-        text,
-        userId,
-        parentCommentId: isSubcomment ? parentId : null,
-        mentionUserId: shouldMention ? mentionUserId : null,
-      },
-      include: { user: INCLUDE_SIMPLE_USER },
+    const newComment = await CR.createComment({
+      itemId,
+      text,
+      userId,
+      parentCommentId: isSubcomment ? parentId : undefined,
+      mentionUserId: shouldMentionUser ? mentionUserId : undefined,
     })
 
     // 하위댓글 인 경우, subcommentCount 증가 후, 댓글 수 동기화
     if (isSubcomment) {
-      const subcommentCount = await db.comment.count({
-        where: { parentCommentId: parentId },
+      const subcommentCount = await CR.countCommentBy({
+        parentCommentId: parentId,
       })
-      await db.comment.update({
-        where: { id: parentId },
-        data: { subcommentCount },
-      })
+      await CR.updateComment(parentId, { subcommentCount })
     }
 
-    await CommentService.syncCommentCount(itemId)
-    return {
-      ...newComment,
-      subcommentList: [],
-      isDeleted: false,
+    await CS.syncCommentCount(itemId)
+
+    return CS.serializeComment({
+      comment: newComment,
       isLiked: false,
-    }
+      isDeleted: false,
+      subcommentList: isSubcomment ? undefined : [],
+    })
   }
 
-  static async getCommentList({ itemId, userId }: GetCommentListParams) {
-    const commentList = await db.comment.findMany({
-      where: { itemId },
-      orderBy: { id: 'asc' },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        mentionUser: INCLUDE_SIMPLE_USER,
+  static async getAllCommentList({ itemId, userId }: GetCommentListParams) {
+    const commentList = await CR.findCommentListBy(
+      {
+        itemId,
+        // limit,
       },
-    })
-
-    // 댓글들의 ID 목록으로, commentId 당 commentLike 맵을 만들어,
-    const commentIds = commentList.map((c) => c.id)
-    const commentLikedMap = await CommentService.getCommentLikeMapOrEmpty({
-      commentIds,
-      userId,
-    })
-    // commentLike 된 댓글들 마다 isLiked 설정
-    const commentListWithIsLiked = commentList.map((c) => ({
-      ...c,
-      isLiked: !!commentLikedMap[c.id],
-    }))
-    // deleted comment 노멀라이징
-    const normalizedList = CommentService.normalizeDeletedCommentInList(
-      commentListWithIsLiked,
+      { id: 'asc' },
     )
 
-    // 최종적으로 가공된 댓글목록 내보내기
-    return await CommentService.composeSubcommentList(normalizedList)
-  }
+    // 유효댓글 ID목록으로 {K: commentId, V:commentLikeList} 맵 가져오기
+    const likesByIdMap = await CLS.getCommentLikeMapByCommentIds({
+      commentIds: commentList.map((c) => c.id),
+      userId,
+    })
 
-  private static normalizeDeletedCommentInList(comments: Comment[]): Comment[] {
-    return comments.map((c) => {
-      if (!c.deletedAt)
+    const serializedList = commentList.map((c) => {
+      const isDeleted = c.deletedAt != null
+      const comment = isDeleted
+        ? // 삭제된 댓글 비활성화 처리
+          CS.desableCommentProps(c, {
+            user: { id: 0, username: '' },
+            mentionUser: null,
+          })
+        : c
+      return CS.serializeComment({
+        comment,
+        isLiked: likesByIdMap[comment.id] != null,
+        isDeleted,
+      })
+    })
+
+    const subcommentsMap = CS.generateSubcommentsMap(serializedList)
+
+    const filteredAllComments = serializedList
+      .map((c) => {
+        const isSubComment = c.parentCommentId != null
+        if (isSubComment) return null
+
+        const sublist = subcommentsMap[c.id]
         return {
           ...c,
-          isDeleted: false,
+          subcommentList: sublist != null ? sublist : [],
         }
-
-      const someDate = new Date(0)
-      return {
-        ...c,
-        text: '',
-        likeCount: 0,
-        subcommentCount: 0,
-        createdAt: someDate,
-        updatedAt: someDate,
-        user: {
-          id: -1,
-          username: 'deleted',
-        },
-        mentionUser: null,
-        subcommentList: [],
-        isDeleted: true,
-      }
-    })
-  }
-
-  private static async composeSubcommentList(comments: Comment[]) {
-    const rootComments = comments.filter((c) => c.parentCommentId == null)
-    const commentsByParentIdMap = new Map<number, Comment[]>()
-
-    comments.forEach((c) => {
-      if (!c.parentCommentId) return
-      if (c.deletedAt != null) return
-      const subComments = commentsByParentIdMap.get(c.parentCommentId) ?? []
-      subComments.push(c)
-      commentsByParentIdMap.set(c.parentCommentId, subComments)
-    })
-
-    return rootComments
-      .map((c) => ({
-        ...c,
-        subcommentList: commentsByParentIdMap.get(c.id) ?? [],
-      }))
-      .filter((c) => {
-        return c.deletedAt == null || c.subcommentList.length > 0
       })
+      .filter((c) => c != null)
+
+    return filteredAllComments
   }
 
-  static async getCommentOrNull({
-    commentId,
-    withSubcomments = false,
-    userId,
-  }: GetCommentParams) {
-    if (commentId == null) return null
-
-    const comment = await db.comment.findUnique({
-      where: { id: commentId },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        mentionUser: INCLUDE_SIMPLE_USER,
-      },
-    })
-
-    // 댓글이 없거나, 지워진 댓글이면 찾을수없음
-    if (!comment || comment.deletedAt) throw new AppError('NotFound')
-    // 하위댓글목록이 필요없다면 없다면 단일댓글 반환
-    if (!withSubcomments) return comment
-
-    const subcommentList = await CommentService.getSubcommentList({
-      parentCommentId: commentId,
-      userId,
-    })
-    const commentLike = await CommentLikeService.getCommentLikeOrNull({
-      commentId,
-      userId,
-    })
-
+  private static desableCommentProps<C extends Comment>(
+    comment: C,
+    includedProps?: Omit<C, keyof Comment>,
+  ): C {
     return {
       ...comment,
-      isLiked: commentLike != null,
-      isDeleted: false,
-      subcommentList,
+      text: '',
+      likeCount: 0,
+      subcommentCount: 0,
+      createdAt: new Date(0),
+      updatedAt: new Date(0),
+      user: {},
+      mentionUser: null,
+      ...includedProps,
     }
   }
 
@@ -180,84 +122,112 @@ class CommentService {
     parentCommentId,
     userId,
   }: GetSubcommentListParams) {
-    const subcommentList = await db.comment.findMany({
-      where: {
-        parentCommentId,
-        deletedAt: null,
-      },
-      orderBy: { id: 'asc' },
-      include: {
-        user: INCLUDE_SIMPLE_USER,
-        mentionUser: INCLUDE_SIMPLE_USER,
-      },
+    const subcommentList = await CR.findSubcommentListBy({
+      parentCommentId,
+      // limit: LIMIT_COMMENTS // Todo: 댓글 페이징이 필요할때에 제한
     })
 
-    const commentLikedMapOrEmpty =
-      await CommentService.getCommentLikeMapOrEmpty({
-        userId,
-        commentIds: subcommentList.map((sc) => sc.id),
-      })
+    const commentLikeMap = await CLS.getCommentLikeMapByCommentIds({
+      commentIds: subcommentList.map((sc) => sc.id),
+      userId,
+    })
 
-    return subcommentList.map((subcomment) => ({
-      ...subcomment,
-      isLiked: commentLikedMapOrEmpty[subcomment.id] != null,
-      isDeleted: false,
-    }))
+    const serializedList = subcommentList.map((subcomment) =>
+      CS.serializeComment({
+        comment: subcomment,
+        isLiked: commentLikeMap[subcomment.id] != null,
+        isDeleted: subcomment.deletedAt != null,
+      }),
+    )
+    return serializedList
+  }
+
+  static async getCommentIncludeSubList({
+    commentId,
+    userId,
+    withSubcomments = false,
+  }: GetCommentOrNullParams) {
+    if (commentId == null) return null
+
+    const comment = await CR.findCommentOrThrow({ commentId, userId })
+    if (withSubcomments === false) return comment
+
+    const commentLikeOrNull =
+      userId == null
+        ? null
+        : await CLS.getCommentLikeOrNull({ commentId, userId })
+
+    const subcommentList = await CS.getSubcommentList({
+      parentCommentId: commentId,
+      userId,
+    })
+
+    return CS.serializeComment({
+      comment,
+      isLiked: commentLikeOrNull != null,
+      isDeleted: comment!.deletedAt != null,
+      subcommentList,
+    })
   }
 
   static async updateComment({ commentId, userId, text }: UpdateCommentParams) {
-    const comment = await db.comment.findFirst({ where: { id: commentId } })
-    if (comment != null && comment.userId !== userId) new AppError('Forbidden')
-
-    await db.comment.update({
-      where: { id: commentId },
-      data: { text },
-      include: { user: INCLUDE_SIMPLE_USER },
-    })
-    return CommentService.getCommentOrNull({
-      commentId,
+    await CR.findCommentOrThrow({ commentId, userId })
+    await CR.updateComment(commentId, { text })
+    return CS.getCommentIncludeSubList({
+      commentId: commentId,
       withSubcomments: true,
-      userId: null,
+      userId: undefined,
     })
   }
 
   static async deleteComment({ commentId, userId }: DeleteCommentParams) {
-    const comment = await db.comment.findFirst({ where: { id: commentId } })
-    if (comment?.userId !== userId) new AppError('Forbidden')
-
-    await db.comment.delete({ where: { id: commentId } })
-    await CommentService.syncCommentCount(comment!.itemId)
+    const comment = await CR.findCommentOrThrow({ commentId, userId })
+    if (comment) {
+      await CR.deleteComment(commentId)
+      await CS.syncCommentCount(comment.itemId)
+    }
   }
 
   static async likeComment({ commentId, userId }: LikeCommentParams) {
-    const likeCount = await CommentLikeService.like({ commentId, userId })
-    await CommentService.syncLikeCount({ commentId, likeCount })
+    const likeCount = await CLS.like({ commentId, userId })
+    await CS.syncLikeCount({ commentId, likeCount })
     return likeCount
   }
 
   static async unlikeComment({ commentId, userId }: UnlikeCommentParams) {
-    const likeCount = await CommentLikeService.unlike({
+    const likeCount = await CLS.unlike({
       commentId,
       userId,
     })
-    await CommentService.syncLikeCount({ commentId, likeCount })
+    await CS.syncLikeCount({ commentId, likeCount })
     return likeCount
+  }
+
+  // utils
+
+  private static serializeComment<C, SC>({
+    comment,
+    isLiked,
+    isDeleted,
+    subcommentList,
+  }: SerializeCommentParams<C, SC>) {
+    return {
+      ...comment,
+      isLiked,
+      isDeleted,
+      subcommentList,
+    }
   }
 
   private static async syncLikeCount({
     commentId,
     likeCount,
   }: UpdateLikeCountParams) {
-    await db.comment.update({
-      data: { likeCount },
-      where: { id: commentId },
-    })
+    await CR.updateComment(commentId, { likeCount })
   }
 
   private static async syncCommentCount(itemId: number) {
-    const commentCount = await db.comment.count({
-      where: { itemId },
-    })
+    const commentCount = await CR.countCommentBy({ itemId })
     await ItemStatusService.updateCommentCount({
       itemId,
       commentCount,
@@ -267,31 +237,32 @@ class CommentService {
   private static validateTextLength(text: string) {
     const textLength = text.length
     if (textLength === 0 || textLength > 300) {
-      throw new AppError('BadRequest', { message: 'text is invalid' })
+      throw new AppError('BadRequest', { message: 'text length is invalid' })
     }
   }
 
-  private static async getCommentLikeMapOrEmpty({
-    commentIds,
-    userId,
-  }: GetCommentLikeMapParams) {
-    if (userId == null) return {}
+  private static generateSubcommentsMap<
+    C extends { id: number; parentCommentId: number | null },
+  >(comments: C[]) {
+    const sublistByIdMap = {} as { [k: number]: C[] }
 
-    const commentLikeList = await CommentLikeService.getCommentLikeList({
-      userId,
-      commentIds,
+    comments.forEach((c) => {
+      const { parentCommentId: parentId } = c
+      if (parentId == null) return
+
+      const sublist = sublistByIdMap[parentId] ?? []
+      sublist.push(c)
+      sublistByIdMap[parentId] = sublist
     })
 
-    type CommentLikeElement = typeof commentLikeList[0]
-    const commentLikeByIdMap = commentLikeList.reduce((acc, commentLike) => {
-      acc[commentLike.commentId] = commentLike
-      return acc
-    }, {} as Record<number, CommentLikeElement>)
-
-    return commentLikeByIdMap
+    return sublistByIdMap
   }
 }
 export default CommentService
+
+const CS = CommentService
+const CR = CommentRepository
+const CLS = CommentLikeService
 
 // types
 
@@ -299,7 +270,7 @@ type CreateCommentParams = {
   itemId: number
   userId: number
   text: string
-  parentCommentId: number | null
+  parentCommentId?: number
 }
 
 type GetCommentListParams = {
@@ -307,15 +278,15 @@ type GetCommentListParams = {
   userId: number | null
 }
 
-type GetCommentParams = {
-  commentId: number | null
+type GetCommentOrNullParams = {
+  commentId?: number
+  userId?: number
   withSubcomments?: boolean
-  userId: number | null
 }
 
 type GetSubcommentListParams = {
   parentCommentId: number
-  userId: number | null
+  userId?: number
 }
 
 export type DeleteCommentParams = {
@@ -336,7 +307,9 @@ export type LikeCommentParams = {
 
 export type UnlikeCommentParams = LikeCommentParams
 
-type GetCommentLikeMapParams = {
-  userId: number | null
-  commentIds: number[]
+type SerializeCommentParams<C, SC> = {
+  comment: C
+  isLiked: boolean
+  isDeleted: boolean
+  subcommentList?: SC
 }

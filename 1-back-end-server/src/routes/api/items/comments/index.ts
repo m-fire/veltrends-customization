@@ -5,15 +5,17 @@ import COMMENTS_SCHEMA from './schema.js'
 import CommentService from '../../../../service/CommentService.js'
 import { Validator } from '../../../../common/util/validates.js'
 
+const CS = CommentService
+
 export const commentsRoute: FastifyPluginAsync = async (fastify) => {
   fastify.get<CommentsRequestMap['GET_COMMENT']>(
     '/:commentId',
     { schema: COMMENTS_SCHEMA.GET_COMMENT },
     async (request, reply) => {
-      return CommentService.getCommentOrNull({
+      return CS.getCommentIncludeSubList({
         commentId: request.params.commentId,
         withSubcomments: true,
-        userId: request.user?.id ?? null,
+        userId: request.user?.id ?? undefined,
       })
     },
   )
@@ -22,7 +24,7 @@ export const commentsRoute: FastifyPluginAsync = async (fastify) => {
     '/',
     { schema: COMMENTS_SCHEMA.GET_COMMENT_LIST },
     async (request, reply) => {
-      return CommentService.getCommentList({
+      return CS.getAllCommentList({
         itemId: request.params.id,
         userId: request.user?.id ?? null,
       })
@@ -33,9 +35,9 @@ export const commentsRoute: FastifyPluginAsync = async (fastify) => {
     '/:commentId/subcomments',
     { schema: COMMENTS_SCHEMA.GET_SUBCOMMENT_LIST },
     async (request, reply) => {
-      return CommentService.getSubcommentList({
+      return CS.getSubcommentList({
         parentCommentId: request.params.commentId,
-        userId: request.user?.id ?? null,
+        userId: request.user?.id ?? undefined,
       })
     },
   )
@@ -51,12 +53,13 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     { schema: COMMENTS_SCHEMA.CREATE_COMMENT },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
+      const { text, parentCommentId } = request.body
 
-      const newComment = await CommentService.createComment({
+      const newComment = await CS.createComment({
         itemId: request.params.id,
         userId,
-        text: request.body.text,
-        parentCommentId: request.body.parentCommentId ?? null,
+        text,
+        parentCommentId: parentCommentId ?? undefined,
       })
 
       reply.status(201)
@@ -64,13 +67,13 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     },
   )
 
-  fastify.patch<CommentsRequestMap['UPDATE_COMMENT']>(
+  fastify.patch<CommentsRequestMap['EDIT_COMMENT']>(
     '/:commentId',
-    { schema: COMMENTS_SCHEMA.UPDATE_COMMENT },
+    { schema: COMMENTS_SCHEMA.EDIT_COMMENT },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
 
-      const updatedComment = await CommentService.updateComment({
+      const updatedComment = await CS.updateComment({
         commentId: request.params.commentId,
         userId,
         text: request.body.text,
@@ -88,7 +91,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
 
       reply.status(204)
-      await CommentService.deleteComment({
+      await CS.deleteComment({
         commentId: request.params.commentId,
         userId,
       })
@@ -102,7 +105,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { commentId } = request.params
 
-      const likeCount = await CommentService.likeComment({ commentId, userId })
+      const likeCount = await CS.likeComment({ commentId, userId })
       reply.status(202)
       return { id: commentId, likeCount }
     },
@@ -115,7 +118,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { commentId } = request.params
 
-      const likeCount = await CommentService.unlikeComment({
+      const likeCount = await CS.unlikeComment({
         commentId,
         userId,
       })

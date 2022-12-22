@@ -1,4 +1,4 @@
-POST http://{{host}}:{{port}}/api/items/30/comments
+POST http://{{host}}:{{port}}/api/items/76/comments
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
@@ -8,7 +8,7 @@ Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 201;
-client.test("/api/items/30/comments Item(1) Comment 등록 - 로그인필수", function() {
+client.test("/api/items/76/comments Item(1) Comment 등록 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -23,9 +23,9 @@ client.test("/api/items/30/comments Item(1) Comment 등록 - 로그인필수", f
 })
 %}
 
-### 아이탬(30)에 comment 생성(Lv1 댓글달기)
+### 아이탬에 comment 생성(Lv1 댓글달기)
 
-POST http://{{host}}:{{port}}/api/items/30/comments
+POST http://{{host}}:{{port}}/api/items/76/comments
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
@@ -36,7 +36,7 @@ Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 201;
-client.test("/api/items/30/comments Item(1) Comment 등록 - 로그인필수", function() {
+client.test("/api/items/76/comments Item(1) Comment 등록 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -51,14 +51,14 @@ client.test("/api/items/30/comments Item(1) Comment 등록 - 로그인필수", f
 })
 %}
 
-### 아이탬(30)의 댓글의 하위 comment 생성(Lv2 댓글달기)
+### 아이탬의 댓글의 하위 comment 생성(Lv2 댓글달기)
 
-GET http://{{host}}:{{port}}/api/items/30/comments
+GET http://{{host}}:{{port}}/api/items/76/comments
 Accept: application/json
 
 > {%
 var status = 200;
-client.test("/api/items/30/comments Comment 목록 조회", function() {
+client.test("/api/items/76/comments Comment 목록 조회", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -73,14 +73,14 @@ client.test("/api/items/30/comments Comment 목록 조회", function() {
 })
 %}
 
-### Item(30) 의 모든 Comment 목록조회
+### 아이탬 의 모든 Comment 목록조회
 
-GET http://{{host}}:{{port}}/api/items/30/comments/1
+GET http://{{host}}:{{port}}/api/items/76/comments/1
 Accept: application/json
 
 > {%
 var status = 200;
-client.test("/api/items/30/comments/1 - 개별 Comment 조회", function() {
+client.test("/api/items/76/comments/1 - 개별 Comment 조회", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -95,9 +95,9 @@ client.test("/api/items/30/comments/1 - 개별 Comment 조회", function() {
 })
 %}
 
-### Item(30) 의 id:1 댓글 조회
+### 아이탬 의 id:1 댓글 조회
 
-PATCH http://{{host}}:{{port}}/api/items/30/comments/1
+PATCH http://{{host}}:{{port}}/api/items/76/comments/1
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
@@ -108,7 +108,7 @@ Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 202;
-client.test("/api/items/30/comments - 업데이트", function() {
+client.test("/api/items/76/comments - 업데이트", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -125,12 +125,12 @@ client.test("/api/items/30/comments - 업데이트", function() {
 
 ### comment 업데이트 성공
 
-DELETE http://{{host}}:{{port}}/api/items/30/comments/{{$randomInt}}
+DELETE http://{{host}}:{{port}}/api/items/76/comments/{{$randomInt}}
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 204;
-client.test("/api/items/30/comments - 랜덤아이디 삭제시도(성공/실패)", function() {
+client.test("/api/items/76/comments - 랜덤아이디 삭제시도(성공/실패)", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -147,12 +147,12 @@ client.test("/api/items/30/comments - 랜덤아이디 삭제시도(성공/실패
 
 ### comment 랜덤아이디 삭제시도(성공/실패)
 
-POST http://{{host}}:{{port}}/api/items/30/comments/1/likes
+POST http://{{host}}:{{port}}/api/items/76/comments/1/likes
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 202;
-client.test("/api/items/30/comments/1/likes 1번 comment like(맘에듬) 처리 - 로그인필수", function() {
+client.test("/api/items/76/comments/1/likes 1번 comment like(맘에듬) 처리 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -169,12 +169,12 @@ client.test("/api/items/30/comments/1/likes 1번 comment like(맘에듬) 처리 
 
 ### 1번 comment like 처리
 
-DELETE http://{{host}}:{{port}}/api/items/30/comments/1/likes
+DELETE http://{{host}}:{{port}}/api/items/76/comments/1/likes
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 202;
-client.test("/api/items/30/comments/1/likes 1번 comment unlike(맘에안듬) 처리 - 로그인필수", function() {
+client.test("/api/items/76/comments/1/likes 1번 comment unlike(맘에안듬) 처리 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
