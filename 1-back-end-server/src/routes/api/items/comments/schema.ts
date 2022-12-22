@@ -16,7 +16,7 @@ const REQ_COMMENT_PATH_PARAMS_SCHEMA = Type.Object({
   commentId: Type.Integer(),
 })
 
-const REQ_COMMENT_UPDATE_BODY_SCHEMA = Type.Object({
+const REQ_COMMENT_EDIT_BODY_SCHEMA = Type.Object({
   text: Type.String(),
 })
 
@@ -45,15 +45,13 @@ const RES_COMMENT_LIKE_SCHEMA = Type.Object({
   likeCount: Type.Number(),
 })
 
-const RES_COMMENT_LIST_SCHEMA = Type.Array(RES_COMMENT_SCHEMA)
-
 const RES_EMPTY_OBJECT_SCHEMA = Type.Object({})
 
 // FastifySchema
 
 const COMMENTS_SCHEMA = createFastifySchemaMap({
   CREATE_COMMENT: {
-    tags: ['items'],
+    tags: ['items/:id/comments'],
     params: ITEMS_SCHEMA.GET_ITEM.params,
     body: REQ_COMMENT_CREATE_BODY_SCHEMA,
     response: {
@@ -61,50 +59,50 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
     },
   },
   GET_COMMENT: {
-    tags: ['items'],
+    tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_SCHEMA,
     },
   },
   GET_COMMENT_LIST: {
-    tags: ['items'],
+    tags: ['items/:id/comments'],
     params: ITEMS_SCHEMA.GET_ITEM.params,
     response: {
-      200: RES_COMMENT_LIST_SCHEMA,
+      200: Type.Array(RES_COMMENT_SCHEMA),
     },
   },
   GET_SUBCOMMENT_LIST: {
-    tags: ['items'],
+    tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
-      200: RES_COMMENT_LIST_SCHEMA,
+      200: Type.Array(RES_COMMENT_SCHEMA),
     },
   },
-  UPDATE_COMMENT: {
-    tags: ['items'],
+  EDIT_COMMENT: {
+    tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
-    body: REQ_COMMENT_UPDATE_BODY_SCHEMA,
+    body: REQ_COMMENT_EDIT_BODY_SCHEMA,
     response: {
       202: RES_COMMENT_SCHEMA,
     },
   },
   DELETE_COMMENT: {
-    tags: ['items'],
+    tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       204: RES_EMPTY_OBJECT_SCHEMA,
     },
   },
   LIKE_COMMENT: {
-    tags: ['items'],
+    tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_LIKE_SCHEMA,
     },
   },
   UNLIKE_COMMENT: {
-    tags: ['items'],
+    tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_LIKE_SCHEMA,
