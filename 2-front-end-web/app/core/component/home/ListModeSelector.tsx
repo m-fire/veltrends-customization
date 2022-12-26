@@ -214,13 +214,17 @@ export function ModeItem({
   const modeLinkRef = useRef<HTMLAnchorElement>(null)
 
   return (
-    <StyledLink to={linkTo} ref={modeLinkRef} active={itemMode === currentMode}>
+    <StyledLink
+      to={linkTo}
+      ref={modeLinkRef}
+      active={String(itemMode === currentMode) as 'true' | 'false'}
+    >
       {icon} {name}
     </StyledLink>
   )
 }
 
-const StyledLink = styled(Link)<{ active?: boolean }>`
+const StyledLink = styled(Link)<{ active?: 'true' | 'false' }>`
   ${flexStyles({ alignItems: 'flex-end' })};
   ${fontStyles({
     size: '14px',
@@ -236,14 +240,14 @@ const StyledLink = styled(Link)<{ active?: boolean }>`
     drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white);
 
   ${({ active }) =>
-    active
+    active === 'true'
       ? css`
           color: ${colors.primary1};
           pointer-events: none;
         `
       : css``}
   svg {
-    //width: 20px;
+    width: 18px;
     height: 18px;
     margin-right: 4px;
   }
