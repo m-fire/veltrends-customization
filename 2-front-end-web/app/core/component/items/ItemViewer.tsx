@@ -86,9 +86,10 @@ function ItemViewer({ item }: ItemViewerProps) {
 
         <Footer>
           <LikeBlock>
-            <StyledLikeButton
+            <LikeButton
               size="large"
               isLiked={isLiked}
+              disabled={authUser == null}
               onClick={toggleLike}
             />
             <AnimatePresence initial={false}>

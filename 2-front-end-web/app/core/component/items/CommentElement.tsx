@@ -131,14 +131,15 @@ function CommentElement({ comment, type }: CommentElementProps) {
                 size={'small'}
                 isLiked={isLiked}
                 onClick={toggleLike}
+                disabled={authUser == null}
               />
               {likeCount !== 0 ? (
                 <LikeCount>{likeCount.toLocaleString()}</LikeCount>
               ) : null}
             </LikeBlock>
 
-            <ReplyBlock onClick={onReply}>
-              <ReplyButton size={'small'} />
+            <ReplyBlock>
+              <ReplyButton size={'small'} onClick={onReply} />
               답글
             </ReplyBlock>
           </CommentFooter>

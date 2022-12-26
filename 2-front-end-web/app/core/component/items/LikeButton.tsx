@@ -1,41 +1,28 @@
 import React, { MouseEventHandler } from 'react'
 import styled, { css } from 'styled-components'
 import { HeartFill, HeartOutline } from '~/core/component/generate/svg'
-import { colors } from '~/common/style/colors'
-import { AnimatePresence, motion } from 'framer-motion'
-import { flexStyles } from '~/common/style/styled'
+import SequenceElementsToggler, {
+  SequenceElementsTogglerProps,
+} from '~/common/component/system/SequenceElementsToggler'
 
 type LikeButtonProps = {
   isLiked?: boolean
-  size?: Size
-  onClick?: MouseEventHandler<HTMLButtonElement>
-}
+} & Pick<SequenceElementsTogglerProps, 'size' | 'onClick' | 'disabled'>
 
-function LikeButton({ isLiked, size = 'medium', onClick }: LikeButtonProps) {
+function LikeButton({
+  size = 'medium',
+  isLiked,
+  onClick,
+  disabled = false,
+}: LikeButtonProps) {
   return (
-    <StyledButton size={size} onClick={onClick}>
-      <AnimatePresence initial={false}>
-        {isLiked ? (
-          <MotionWrapper
-            key="fill"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0 }}
-          >
-            <StyledHeartFill key="fill" />
-          </MotionWrapper>
-        ) : (
-          <MotionWrapper
-            key="outline"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0 }}
-          >
-            <StyledHeartOutline key="outline" />
-          </MotionWrapper>
-        )}
-      </AnimatePresence>
-    </StyledButton>
+    <SequenceElementsToggler
+      elements={[<HeartOutline />, <HeartFill />]}
+      firstSequence={isLiked ? 1 : 0}
+      size={size}
+      disabled={disabled}
+      onClick={onClick}
+    />
   )
 }
 export default LikeButton

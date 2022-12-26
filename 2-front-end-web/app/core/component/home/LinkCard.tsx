@@ -90,7 +90,11 @@ function LinkCard({ item }: LinkCardProps) {
       </AnimatePresence>
 
       <ItemFooter>
-        <LikeButton onClick={toggleLike} isLiked={isLiked} />
+        <LikeButton
+          onClick={toggleLike}
+          isLiked={isLiked}
+          disabled={authUser == null}
+        />
         <UserInfo>
           by <b>{username}</b> · {pastDistance}
         </UserInfo>

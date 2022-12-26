@@ -1,21 +1,18 @@
-import React, { MouseEventHandler } from 'react'
-import styled, { css } from 'styled-components'
-import { colors } from '~/common/style/colors'
-import { motion } from 'framer-motion'
-import SpeechBubble from '~/core/component/generate/svg/SpeechBubble'
-import { flexStyles } from '~/common/style/styled'
+import React from 'react'
+import { SpeechBubble } from '~/core/component/generate/svg'
+import SequenceElementsToggler, {
+  SequenceElementsTogglerProps,
+} from '~/common/component/system/SequenceElementsToggler'
 
-type ReplyButtonProps = {
-  size?: Size
-  onClick?: MouseEventHandler<HTMLButtonElement>
-}
+type ReplyButtonProps = Pick<SequenceElementsTogglerProps, 'size' | 'onClick'>
 
 function ReplyButton({ size = 'medium', onClick }: ReplyButtonProps) {
-  /* Todo: LikeButton 의 코드에서 복사 후 약간의 수정하고 재사용 했으므로, 향후 중복제거 요망! */
   return (
-    <StyledButton onClick={onClick} size={size}>
-      <StyledSpeechBubble />
-    </StyledButton>
+    <SequenceElementsToggler
+      elements={[<SpeechBubble />]}
+      size={size}
+      onClick={onClick}
+    />
   )
 }
 export default ReplyButton
