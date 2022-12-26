@@ -263,10 +263,6 @@ const ReplyBlock = styled.div`
 
 type CommentType = 'root' | 'sub'
 
-type ToggleLikeParams = {
-  commentId: number
-}
-
 type GetSubcommentsOrNull = {
   isRootComment: boolean
   hasSubcomments: boolean

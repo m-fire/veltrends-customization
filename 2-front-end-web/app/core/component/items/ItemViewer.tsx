@@ -10,8 +10,6 @@ import { useOverrideItemById } from '~/core/hook/store/useOverrideItemStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/core/component/generate/svg/Earth'
-import Shortcut from '~/core/component/generate/svg/Shortcut'
-import { Link } from '@remix-run/react'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 
 type ItemViewerProps = {
@@ -238,11 +236,6 @@ const UserInfo = styled.div`
   & b {
     font-weight: 700;
   }
-`
-
-const StyledLikeButton = styled(LikeButton)`
-  width: 24px;
-  height: 24px;
 `
 
 const LikesCount = styled(motion.div)`
