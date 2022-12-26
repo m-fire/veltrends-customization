@@ -92,10 +92,13 @@ class ItemService {
   }
 
   static async getItem({ itemId, userId }: GetItemParams) {
-    const item = await IR.findItemOrThrow({
-      itemId,
-      userId,
-    })
+    const item = await IR.findItemOrThrow(
+      {
+        itemId,
+        userId,
+      },
+      IR.Query.includeFullRelations(userId),
+    )
 
     const serializedItem = IS.serialize(item)
     return serializedItem
