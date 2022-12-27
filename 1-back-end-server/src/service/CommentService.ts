@@ -171,7 +171,6 @@ class CommentService {
   }
 
   static async updateComment({ commentId, userId, text }: UpdateCommentParams) {
-    await CR.findCommentOrThrow(commentId)
     await CR.updateComment(commentId, { userId, text })
     return CS.getCommentIncludeSubList({
       commentId: commentId,
@@ -181,11 +180,8 @@ class CommentService {
   }
 
   static async deleteComment({ commentId, userId }: DeleteCommentParams) {
-    const comment = await CR.findCommentOrThrow(commentId)
-    if (comment) {
-      await CR.deleteComment({ commentId, userId })
-      await CS.syncCommentCount(comment.itemId)
-    }
+    const deletedComment = await CR.deleteComment({ commentId, userId })
+    await CS.syncCommentCount(deletedComment.itemId)
   }
 
   static async likeComment({ commentId, userId }: LikeCommentParams) {
