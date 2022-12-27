@@ -4,6 +4,7 @@ import { ItemsRequestMap } from '../routes/api/items/types.js'
 import AppError from '../common/error/AppError.js'
 import { Converts } from '../common/util/converts.js'
 import { CursorOrUndefined } from './types.js'
+import { validateMatchToUserAndOwner } from '../core/util/validates.js'
 
 // prisma include conditions
 

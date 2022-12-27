@@ -1,6 +1,10 @@
 import { Prisma } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
+import {
+  validateEntityDeleted,
+  validateMatchToUserAndOwner,
+} from '../core/util/validates.js'
 
 // prisma include conditions
 
@@ -112,13 +116,7 @@ class CommentRepository {
     try {
       const includeUser = CR.Query.includeUser()
 
-      const comment = (await db.comment.findUniqueOrThrow({
-        where: { id: commentId },
-        include: {
-          ...includeUser /* API Schema 필수규약 이므로 반드시 포함 */,
-          ...include,
-        },
-      })) as Prisma.CommentGetPayload<{ include: typeof includeUser & PI }>
+      validateEntityDeleted(commentOrNull, new AppError('NotFound'))
 
       // 지워진 댓글이면 찾을수 없다고 애러발생
       if (comment.deletedAt != null) throw new AppError('NotFound')
@@ -152,7 +150,8 @@ class CommentRepository {
 
   // Update
 
-  static async updateComment(commentId: number, data: UpdateCommentDataParams) {
+    validateEqualToUserAndOwner(userId, partialComment.userId)
+
     return db.comment.update({
       where: { id: commentId },
       data,
@@ -162,7 +161,8 @@ class CommentRepository {
 
   // Delete
 
-  static async deleteComment(commentId: number) {
+    validateMatchToUserAndOwner(userId, partialComment.userId)
+
     // Todo: 해당 row삭제가 아닌 deletedAt 값을 Date.now() update 형태로 삭제구현
     // 실제로 row 삭제
     return db.comment.delete({ where: { id: commentId } })
