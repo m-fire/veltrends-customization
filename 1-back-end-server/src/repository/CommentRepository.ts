@@ -11,13 +11,13 @@ import {
 class CommentRepository {
   /* Public APIs */
 
-  // Count
+  /* Count */
 
   static async countCommentBy(where: Prisma.CommentWhereInput) {
     return db.comment.count({ where })
   }
 
-  // Create
+  /* Create */
 
   static async createComment({
     itemId,
@@ -38,7 +38,7 @@ class CommentRepository {
     })
   }
 
-  // Read list
+  /* Read list */
 
   static async findCommentListBy(
     { itemId, limit }: FindListByItemIdParams,
@@ -88,7 +88,7 @@ class CommentRepository {
     return commentByIdMap
   }
 
-  // Read entity
+  /* Read entity */
 
   static async findCommentOrNull<PI extends Prisma.CommentInclude>(
     commentId: number,

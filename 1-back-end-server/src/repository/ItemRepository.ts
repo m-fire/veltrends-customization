@@ -9,7 +9,7 @@ import { validateMatchToUserAndOwner } from '../core/util/validates.js'
 // prisma include conditions
 
 class ItemRepository {
-  // Count
+  /* Count */
 
   static async countAllItems() {
     return db.item.count()
@@ -61,7 +61,7 @@ class ItemRepository {
     })
   }
 
-  // Create
+  /* Create */
 
   static async createItem({
     title,
@@ -88,7 +88,7 @@ class ItemRepository {
     })
   }
 
-  // Read list
+  /* Read list */
 
   static async findItemListByCursor(
     { cursor, userId, limit }: FindListByCursorParams,
@@ -147,7 +147,7 @@ class ItemRepository {
     return itemByIdMap
   }
 
-  // Read entity
+  /* Read entity */
 
   static async findItemOrNull<QI extends Prisma.ItemInclude>(
     itemId: number,
@@ -181,7 +181,7 @@ class ItemRepository {
     return item as Prisma.ItemGetPayload<{ select: QS }>
   }
 
-  // Update
+  /* Update */
 
   static async updateItem(
     itemId: number,
@@ -198,7 +198,7 @@ class ItemRepository {
     })
   }
 
-  // Delete
+  /* Delete */
 
   // Item 의경우 Comment 와 달리 기록을 보관하지 않으므로 실제 row 를 삭제한다.
   static async deleteItem({ itemId, userId }: DeleteItemParams) {

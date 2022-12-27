@@ -73,7 +73,7 @@ const commentsAuthRoute = createAuthRoute(async (fastify) => {
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
 
-      const updatedComment = await CS.updateComment({
+      const updatedComment = await CS.editComment({
         commentId: request.params.commentId,
         userId,
         text: request.body.text,

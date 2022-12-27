@@ -170,7 +170,7 @@ class CommentService {
     })
   }
 
-  static async updateComment({ commentId, userId, text }: UpdateCommentParams) {
+  static async editComment({ commentId, userId, text }: UpdateCommentParams) {
     await CR.updateComment(commentId, { userId, text })
     return CS.getCommentIncludeSubList({
       commentId: commentId,
