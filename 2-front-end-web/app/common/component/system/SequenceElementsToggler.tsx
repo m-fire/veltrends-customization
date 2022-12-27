@@ -56,15 +56,6 @@ function SequenceElementsToggler({
   }
   validateState(initialSequenceState)
 
-  /* elements 가 1개 뿐이라면 toggle 기능이 불필요하므로 제외하고 랜더링 */
-
-  if (elements.length === 1) {
-    return renderOptional(
-      createMotionSpan('single-element', elements[0]),
-      onClick,
-    )
-  }
-
   /* elements 가 2~N개 일 경우 ... */
 
   const [sequenceState, nextSequence] = useReducer(
@@ -76,26 +67,25 @@ function SequenceElementsToggler({
     if (!disabled) nextSequence({ type: seqType })
   }
 
+  /* Optional rendering */
+
+  // 입력된 요소가 1개일 경우..
+  if (elements.length === 1) {
+    return renderOptional(
+      createMotionChild(sequenceState.seq, elements[0]),
+      onClick,
+    )
+  }
+
+  // 입력된 요소가 2~N개일 경우..
   const wrappedElements = useMemo(
-    () => elements.map((child) => createMotionSpan(sequenceState.seq, child)),
+    () => elements.map((child) => createMotionChild(sequenceState.seq, child)),
     [elements, sequenceState.seq],
   )
   return renderOptional(wrappedElements[sequenceState.seq], toggleElement)
+  // end render
 
   // utils
-
-  function createMotionSpan(motionKey: any, child: ReactNode) {
-    return (
-      <StyledMotionSpan
-        key={motionKey}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0 }}
-      >
-        {child}
-      </StyledMotionSpan>
-    )
-  }
 
   function renderOptional(child: ReactNode, handleClick?: () => void) {
     return (
@@ -106,6 +96,19 @@ function SequenceElementsToggler({
           </MotionConfig>
         </AnimatePresence>
       </Block>
+    )
+  }
+
+  function createMotionChild(motionKey: any, child: ReactNode) {
+    return (
+      <StyledMotionSpan
+        key={motionKey}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0 }}
+      >
+        {child}
+      </StyledMotionSpan>
     )
   }
 }
