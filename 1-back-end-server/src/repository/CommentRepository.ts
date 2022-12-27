@@ -63,8 +63,7 @@ class CommentRepository {
     return db.comment.findMany({
       where: {
         parentCommentId,
-        /* 삭제되지 않은 댓글만 조회(삭제날짜를 갖지 않음) */
-        deletedAt: null,
+        deletedAt: null, //삭제되지 않은 댓글만 조회(정상 댓글은 삭제날짜 없음)
       },
       orderBy,
       include: CR.Query.includeUserAndMentionUser(),
@@ -91,41 +90,31 @@ class CommentRepository {
 
   // Read entity
 
-  static async findCommentWithRelation<PI extends Prisma.CommentInclude>(
+  static async findCommentOrNull<PI extends Prisma.CommentInclude>(
     commentId: number,
     include?: PI,
   ) {
     const includeUser = CR.Query.includeUser()
 
-    const comment = (await db.comment.findUnique({
+    return (await db.comment.findUnique({
       where: { id: commentId },
       include: {
-        ...includeUser /* API Schema 필수규약 이므로 반드시 포함 */,
         ...include,
+        ...includeUser /* API Schema 필수규약 이므로 반드시 포함 */,
       },
     })) as Prisma.CommentGetPayload<{ include: typeof includeUser & PI }> | null
-    if (!comment) return null
-
-    return comment
   }
 
   static async findCommentOrThrow<PI extends Prisma.CommentInclude>(
-    { commentId, userId }: FindCommentOrThrowParams,
+    commentId: number,
     include?: PI,
   ) {
     try {
-      const includeUser = CR.Query.includeUser()
+      const commentOrNull = await CR.findCommentOrNull(commentId, include)
 
       validateEntityDeleted(commentOrNull, new AppError('NotFound'))
 
-      // 지워진 댓글이면 찾을수 없다고 애러발생
-      if (comment.deletedAt != null) throw new AppError('NotFound')
-
-      // userId 가 없어도 조회가 되지만, 비교해야 한다면 반드시 comment.userId 와 동일해야 한다.
-      if (userId != null && comment.userId !== userId)
-        throw new AppError('Forbidden')
-
-      return comment
+      return commentOrNull
     } catch (e) {
       if (e instanceof Prisma.NotFoundError) throw new AppError('NotFound')
       if (AppError.is(e)) throw e
@@ -134,32 +123,60 @@ class CommentRepository {
 
   // 연관관계 조회가 불가능한 부분속성을 갖는 엔티티를 조회합니다.
   // 단일 엔티티 조회시 연관관계가 필요하다면 다른 메서드를 사용해야 합니다.
-  static async findCommentOrPartial<QS extends Prisma.CommentSelect>(
+  static async findPartialCommentOrNull<QS extends Prisma.CommentSelect>(
     commentId: number,
     select?: QS,
   ) {
-    const comment = (await db.comment.findUnique({
+    return (await db.comment.findUnique({
       where: { id: commentId },
       select,
     })) as Prisma.CommentGetPayload<{ select: QS }> | null
-
-    if (!comment) return null
-
-    return comment
   }
 
-  // Update
+  /* Update */
 
-    validateEqualToUserAndOwner(userId, partialComment.userId)
+  static async updateComment(
+    commentId: number,
+    {
+      userId,
+      text,
+      likeCount,
+      commentLikes,
+      subcommentCount,
+    }: UpdateCommentDataParams,
+  ) {
+    const partialComment = await CR.findPartialCommentOrNull(commentId, {
+      userId: true,
+    })
+    if (partialComment == null) throw new AppError('NotFound')
+
+    validateMatchToUserAndOwner(userId, partialComment.userId)
 
     return db.comment.update({
       where: { id: commentId },
-      data,
+      data: {
+        text,
+        likeCount,
+        commentLikes,
+        subcommentCount,
+      },
       include: CR.Query.includeUser(),
     })
   }
 
-  // Delete
+  /* Delete */
+
+  static async deleteComment({
+    commentId,
+    userId,
+  }: {
+    commentId: number
+    userId: number
+  }) {
+    const partialComment = await CR.findPartialCommentOrNull(commentId, {
+      userId: true,
+    })
+    if (partialComment == null) throw new AppError('NotFound')
 
     validateMatchToUserAndOwner(userId, partialComment.userId)
 
@@ -213,12 +230,7 @@ type PrismaCommentOrderBy =
   | Prisma.CommentOrderByWithRelationInput
   | Prisma.CommentOrderByWithAggregationInput
 
-type FindCommentOrThrowParams = {
-  commentId: number
-  userId?: number
-}
-
-type UpdateCommentDataParams = Pick<
+type UpdateCommentDataParams = { userId: number } & Pick<
   Prisma.CommentUpdateInput,
-  'text' | 'likeCount' | 'commentLikes' | 'subcommentCount' | 'deletedAt'
+  'text' | 'likeCount' | 'commentLikes' | 'subcommentCount'
 >

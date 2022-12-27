@@ -39,7 +39,7 @@ class CommentService {
       const subcommentCount = await CR.countCommentBy({
         parentCommentId: parentId,
       })
-      await CR.updateComment(parentId, { subcommentCount })
+      await CR.updateComment(parentId, { userId, subcommentCount })
     }
 
     await CS.syncCommentCount(itemId)
@@ -149,7 +149,7 @@ class CommentService {
   }: GetCommentOrNullParams) {
     if (commentId == null) return null
 
-    const comment = await CR.findCommentOrThrow({ commentId, userId })
+    const comment = await CR.findCommentOrThrow(commentId)
     if (withSubcomments === false) return comment
 
     const commentLikeOrNull =
@@ -171,8 +171,8 @@ class CommentService {
   }
 
   static async updateComment({ commentId, userId, text }: UpdateCommentParams) {
-    await CR.findCommentOrThrow({ commentId, userId })
-    await CR.updateComment(commentId, { text })
+    await CR.findCommentOrThrow(commentId)
+    await CR.updateComment(commentId, { userId, text })
     return CS.getCommentIncludeSubList({
       commentId: commentId,
       withSubcomments: true,
@@ -181,16 +181,16 @@ class CommentService {
   }
 
   static async deleteComment({ commentId, userId }: DeleteCommentParams) {
-    const comment = await CR.findCommentOrThrow({ commentId, userId })
+    const comment = await CR.findCommentOrThrow(commentId)
     if (comment) {
-      await CR.deleteComment(commentId)
+      await CR.deleteComment({ commentId, userId })
       await CS.syncCommentCount(comment.itemId)
     }
   }
 
   static async likeComment({ commentId, userId }: LikeCommentParams) {
     const likeCount = await CLS.like({ commentId, userId })
-    await CS.syncLikeCount({ commentId, likeCount })
+    await CS.syncLikeCount({ commentId, userId, likeCount })
     return likeCount
   }
 
@@ -199,7 +199,7 @@ class CommentService {
       commentId,
       userId,
     })
-    await CS.syncLikeCount({ commentId, likeCount })
+    await CS.syncLikeCount({ commentId, userId, likeCount })
     return likeCount
   }
 
@@ -221,9 +221,10 @@ class CommentService {
 
   private static async syncLikeCount({
     commentId,
+    userId,
     likeCount,
   }: UpdateLikeCountParams) {
-    await CR.updateComment(commentId, { likeCount })
+    await CR.updateComment(commentId, { userId, likeCount })
   }
 
   private static async syncCommentCount(itemId: number) {
@@ -298,7 +299,11 @@ type UpdateCommentParams = DeleteCommentParams & {
   text: string
 }
 
-type UpdateLikeCountParams = { commentId: number; likeCount: number }
+type UpdateLikeCountParams = {
+  commentId: number
+  userId: number
+  likeCount: number
+}
 
 export type LikeCommentParams = {
   commentId: number

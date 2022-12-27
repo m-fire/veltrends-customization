@@ -149,39 +149,26 @@ class ItemRepository {
 
   // Read entity
 
-  static async findItemWithRelation(
+  static async findItemOrNull<QI extends Prisma.ItemInclude>(
     itemId: number,
-    include?: Prisma.ItemInclude,
-  ) {
-    const item = await db.item.findUnique({
-      where: { id: itemId },
-      include,
-    })
-    if (!item) return null
-
-    return item
-  }
-
-  static async findItemOrThrow<QI extends Prisma.ItemInclude>(
-    { itemId, userId }: FindItemOrThrowParams,
     include?: QI,
   ) {
-    const item = (await db.item.findUnique({
+    return (await db.item.findUnique({
       where: { id: itemId },
       include,
     })) as Prisma.ItemGetPayload<{ include: QI }> | null
+  }
 
-    // userId 가 없어도 조회가 되지만,
-    // userId 를 비교해야 한다면 반드시 item.userId 와 동일해야 한다.
-    if (userId != null && item?.userId !== userId)
-      throw new AppError('Forbidden')
-
+  static async findItemOrThrow<QI extends Prisma.ItemInclude>(
+    itemId: number,
+    include?: QI,
+  ) {
+    const item = await IR.findItemOrNull(itemId, include)
     if (item == null) throw new AppError('NotFound')
-
     return item
   }
 
-  static async findItemOrPartial<QS extends Prisma.ItemSelect>(
+  static async findPartialItemOrNull<QS extends Prisma.ItemSelect>(
     itemId: number,
     select?: QS,
   ) {
@@ -200,7 +187,10 @@ class ItemRepository {
     itemId: number,
     { userId, link, title, body, tags }: UpdateItemParams,
   ) {
-    await IR.findItemOrThrow({ itemId, userId })
+    const item = await IR.findPartialItemOrNull(itemId, { userId: true })
+
+    validateMatchToUserAndOwner(userId, item?.userId)
+
     return db.item.update({
       where: { id: itemId },
       data: { link, title, body },
@@ -210,10 +200,12 @@ class ItemRepository {
 
   // Delete
 
+  // Item 의경우 Comment 와 달리 기록을 보관하지 않으므로 실제 row 를 삭제한다.
   static async deleteItem({ itemId, userId }: DeleteItemParams) {
-    await IR.findItemOrThrow({ itemId, userId })
-    // Todo: 해당 row삭제가 아닌 deletedAt 값을 Date.now() update 형태로 삭제구현
-    // 실제로 row 삭제
+    const item = await IR.findPartialItemOrNull(itemId, { userId: true })
+
+    validateMatchToUserAndOwner(userId, item?.userId)
+
     return db.item.delete({ where: { id: itemId } })
   }
 
@@ -291,11 +283,6 @@ type FindListByCursorParams = {
 type PrismaItemOrderBy =
   | Prisma.ItemOrderByWithRelationInput
   | Prisma.ItemOrderByWithAggregationInput
-
-type FindItemOrThrowParams = {
-  itemId: number
-  userId?: number
-}
 
 type UpdateItemParams = Pick<
   Prisma.ItemUpdateInput,

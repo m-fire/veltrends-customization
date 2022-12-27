@@ -93,10 +93,7 @@ class ItemService {
 
   static async getItem({ itemId, userId }: GetItemParams) {
     const item = await IR.findItemOrThrow(
-      {
-        itemId,
-        userId,
-      },
+      itemId,
       IR.Query.includeFullRelations(userId),
     )
 
@@ -163,7 +160,7 @@ class ItemService {
     itemId: number,
     likeCount?: number,
   ) {
-    const parialItem = await IR.findItemOrPartial(itemId, {
+    const parialItem = await IR.findPartialItemOrNull(itemId, {
       createdAt: true,
     })
     if (parialItem == null) return null
