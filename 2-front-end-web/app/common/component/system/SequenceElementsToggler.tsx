@@ -82,9 +82,9 @@ function SequenceElementsToggler({
 
   // 입력된 element 가 1개일 경우 랜더링
   if (elements.length === 1) {
-    const singleChild = createMotionChild(sequenceState.seq, elements[0])
+    const nonMotionElement = createMotionChild(sequenceState.seq, elements[0])
     return renderOptional({
-      child: singleChild,
+      child: nonMotionElement,
       size,
       canAnimate,
       onClick,
@@ -96,12 +96,12 @@ function SequenceElementsToggler({
     onClick?.()
     if (!disabled) nextSequence({ type: seqType })
   }
-  const wrappedElements = useMemo(
+  const motionElements = useMemo(
     () => elements.map((child) => createMotionChild(sequenceState.seq, child)),
-    [elements, sequenceState.seq],
+    [elements],
   )
   return renderOptional({
-    child: wrappedElements[sequenceState.seq],
+    child: motionElements[sequenceState.seq],
     size,
     canAnimate,
     onClick: toggleElement,
