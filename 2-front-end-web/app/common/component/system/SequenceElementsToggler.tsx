@@ -1,10 +1,4 @@
-import React, {
-  ReactNode,
-  Reducer,
-  useCallback,
-  useMemo,
-  useReducer,
-} from 'react'
+import React, { ReactNode, useCallback, useMemo, useReducer } from 'react'
 import styled, { css } from 'styled-components'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { flexStyles } from '~/common/style/styled'
@@ -16,105 +10,141 @@ import {
 
 export type SequenceElementsTogglerProps = {
   elements: ReactNode[]
-  // 초기 랜더링 요소 index
-  firstSequence?: number
   // 시퀀스 타입. default: increase
   seqType?: SequenceType
+  // 시퀀싱이 시작될 요소의 최초 index
+  startIndex?: number
   // 다음 시퀀스 스탭. default: 1
   seqStep?: number
   size?: Size
-  isAnimate?: boolean
+  canAnimate?: boolean
   disabled?: boolean
   onClick?: () => void
 }
 type Size = 'xxs' | 'xs' | 'small' | 'medium' | 'large' | 'xl' | 'xxl'
-type SequenceType = typeof sn.Type.INCREASE | typeof sn.Type.DECREASE | 'random'
+type SequenceType = 'forward' | 'backward' | 'random'
 
 function SequenceElementsToggler({
   elements,
-  seqType = 'increase',
-  firstSequence = 0,
+  seqType = 'forward',
+  startIndex = 0,
   seqStep = 1,
   size = 'medium',
-  isAnimate = true,
+  canAnimate = true,
   disabled = false,
   onClick,
 }: SequenceElementsTogglerProps) {
   //
-  const initialSequenceState = {
+  const initialSeqState = {
     seq:
-      firstSequence == null
-        ? seqType === 'decrease'
+      startIndex == null
+        ? seqType === 'backward'
           ? elements.length - 1
           : seqType === 'random'
           ? rn.randomInt({ bound: elements.length })
           : 0 // `increase` init value or No`startSequence`prop,
-        : firstSequence,
-    origin: 0,
+        : startIndex,
     bound: elements.length,
     step: seqStep,
   }
-  validateState(initialSequenceState)
+  validateState(initialSeqState)
 
-  /* elements 가 2~N개 일 경우 ... */
-
-  const [sequenceState, nextSequence] = useReducer(
-    useCallback(sequenceReducer, []),
-    initialSequenceState,
+  type SequenceReducerState = Pick<typeof initialSeqState, 'seq' | 'bound'>
+  const sequenceReducer = useCallback(
+    (state: SequenceReducerState, { type }: { type: SequenceType }) => {
+      switch (type) {
+        case 'forward':
+          return {
+            ...state,
+            seq: sn.increaseByStepInRange(state),
+          }
+        case 'backward':
+          return {
+            ...state,
+            seq: sn.decreaseByStepInRange(state),
+          }
+        case 'random':
+          return {
+            ...state,
+            seq: rn.randomInt(state),
+          }
+      }
+      return state
+    },
+    [],
   )
+  const [sequenceState, nextSequence] = useReducer(
+    sequenceReducer,
+    initialSeqState,
+  )
+
+  /* Optional rendering */
+
+  // 입력된 element 가 1개일 경우 랜더링
+  if (elements.length === 1) {
+    const singleChild = createMotionChild(sequenceState.seq, elements[0])
+    return renderOptional({
+      child: singleChild,
+      size,
+      canAnimate,
+      onClick,
+    })
+  }
+
+  // 입력된 element 가 2~N개일 경우 랜더링
   const toggleElement = () => {
     onClick?.()
     if (!disabled) nextSequence({ type: seqType })
   }
-
-  /* Optional rendering */
-
-  // 입력된 요소가 1개일 경우..
-  if (elements.length === 1) {
-    return renderOptional(
-      createMotionChild(sequenceState.seq, elements[0]),
-      onClick,
-    )
-  }
-
-  // 입력된 요소가 2~N개일 경우..
   const wrappedElements = useMemo(
     () => elements.map((child) => createMotionChild(sequenceState.seq, child)),
     [elements, sequenceState.seq],
   )
-  return renderOptional(wrappedElements[sequenceState.seq], toggleElement)
+  return renderOptional({
+    child: wrappedElements[sequenceState.seq],
+    size,
+    canAnimate,
+    onClick: toggleElement,
+  })
   // end render
-
-  // utils
-
-  function renderOptional(child: ReactNode, handleClick?: () => void) {
-    return (
-      <Block size={size} onClick={handleClick}>
-        <AnimatePresence initial={false}>
-          <MotionConfig reducedMotion={isAnimate ? 'user' : 'never'}>
-            {child}
-          </MotionConfig>
-        </AnimatePresence>
-      </Block>
-    )
-  }
-
-  function createMotionChild(motionKey: any, child: ReactNode) {
-    return (
-      <StyledMotionSpan
-        key={motionKey}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0 }}
-      >
-        {child}
-      </StyledMotionSpan>
-    )
-  }
 }
 export default SequenceElementsToggler
 
 // utils
+
+function renderOptional({
+  size,
+  child,
+  canAnimate,
+  onClick,
+}: RenderOptionalParams) {
+  return (
+    <Block size={size} onClick={onClick}>
+      <AnimatePresence initial={false}>
+        <MotionConfig reducedMotion={canAnimate ? 'user' : 'never'}>
+          {child}
+        </MotionConfig>
+      </AnimatePresence>
+    </Block>
+  )
+}
+type RenderOptionalParams = {
+  child: ReactNode
+} & Pick<Required<SequenceElementsTogglerProps>, 'size' | 'canAnimate'> &
+  Pick<SequenceElementsTogglerProps, 'onClick'>
+
+function createMotionChild(motionKey: any, child: ReactNode) {
+  return (
+    <StyledMotionSpan
+      key={motionKey}
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
+    >
+      {child}
+    </StyledMotionSpan>
+  )
+}
 
 function validateState({ seq, bound }: { seq: number; bound: number }) {
   if (seq < 0 || seq >= bound)
@@ -122,30 +152,6 @@ function validateState({ seq, bound }: { seq: number; bound: number }) {
       `sequence(${seq}) number must equal and greater than 0 or less than children length(${bound})`,
     )
   if (bound < 1) throw new Error(`bound(${bound}) must 1 or more`)
-}
-
-function sequenceReducer<
-  S extends { seq: number; bound: number },
-  A extends { type: SequenceType },
->(state: S, { type }: A) {
-  switch (type) {
-    case 'increase':
-      return {
-        ...state,
-        seq: sn.increaseByStepInRange(state),
-      }
-    case 'decrease':
-      return {
-        ...state,
-        seq: sn.decreaseByStepInRange(state),
-      }
-    case 'random':
-      return {
-        ...state,
-        seq: rn.randomInt(state),
-      }
-  }
-  return state
 }
 
 // Inner Components

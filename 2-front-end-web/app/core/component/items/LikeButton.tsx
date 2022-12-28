@@ -17,7 +17,7 @@ function LikeButton({
   return (
     <SequenceElementsToggler
       elements={[<HeartOutline />, <HeartFill />]}
-      firstSequence={isLiked ? 1 : 0}
+      startIndex={isLiked ? 1 : 0}
       size={size}
       disabled={disabled}
       onClick={onClick}
