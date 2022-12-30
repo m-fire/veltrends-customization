@@ -148,7 +148,7 @@ class ItemService {
 
   /* utils */
 
-  static serialize(item: Item & Relations) {
+  static serialize<T extends Item & Relations>(item: T) {
     return {
       ...item,
       isLiked: !!item.itemLikes?.length,

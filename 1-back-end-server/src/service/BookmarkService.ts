@@ -1,4 +1,4 @@
-import { Bookmark } from '@prisma/client'
+import { Bookmark, Item } from '@prisma/client'
 import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
 import { createEmptyPage, createPage } from '../core/util/paginations.js'
@@ -17,8 +17,8 @@ class BookmarkService {
         },
       })
 
-      const serializedBookmark = ItemService.serialize(newBookmark.item)
-      return serializedBookmark
+      const serialized = BS.serialize(newBookmark)
+      return serialized
     } catch (e) {
       /* 연관 릴레이션 키 매칭실패 애러인 경우, AppError 로 re-throw */
       if ((e as any)?.message?.includes(['Unique constraint failed'])) {
@@ -40,7 +40,7 @@ class BookmarkService {
   }: GetBookmarkListParams) {
     const cursorCreatedAt = await BS.getCreatedAtById(cursor)
 
-    const [totalCount, bookmarkWithItemList] = await Promise.all([
+    const [totalCount, bookmarkList] = await Promise.all([
       BS.countBookmark(userId),
       db.bookmark.findMany({
         where: {
@@ -59,22 +59,28 @@ class BookmarkService {
     ])
     if (totalCount === 0) return createEmptyPage()
 
-    const serializedBookmarkList = bookmarkWithItemList.map((bookmark) => ({
-      ...bookmark,
-      item: ItemService.serialize(bookmark.item),
-    }))
+    const serializedList = bookmarkList.map((bookmark) =>
+      BS.serialize(bookmark),
+    )
 
-    const lastBookmark = serializedBookmarkList.at(-1)
+    const lastBookmark = serializedList.at(-1)
     const hasLessThanCreatedAt = await BS.hasLessThanCreateAt(lastBookmark)
     const lastCursor = lastBookmark?.id ?? null
 
     const bookmarkListPage = createPage({
-      list: serializedBookmarkList,
+      list: serializedList,
       totalCount,
       hasNextPage: hasLessThanCreatedAt,
       lastCursor,
     })
     return bookmarkListPage
+  }
+
+  static serialize<T extends Bookmark & { item: Item }>(bookmark: T) {
+    return {
+      ...bookmark,
+      item: IS.serialize(bookmark.item),
+    }
   }
 
   private static async hasLessThanCreateAt<T extends Bookmark>(
@@ -125,8 +131,9 @@ class BookmarkService {
 }
 export default BookmarkService
 
-const IR = ItemRepository
 const BS = BookmarkService
+const IS = ItemService
+const IR = ItemRepository
 
 // types
 
