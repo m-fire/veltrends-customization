@@ -95,14 +95,14 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
     },
   },
   LIKE_COMMENT: {
-    tags: ['items/:id/comments'],
+    tags: ['items/:id/comments/:id/likes'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_LIKE_SCHEMA,
     },
   },
   UNLIKE_COMMENT: {
-    tags: ['items/:id/comments'],
+    tags: ['items/:id/comments/:id/likes'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
       200: RES_COMMENT_LIKE_SCHEMA,

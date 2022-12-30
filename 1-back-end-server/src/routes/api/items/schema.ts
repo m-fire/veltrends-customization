@@ -125,12 +125,14 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
     },
   },
   LIKE_ITEM: {
+    tags: ['items/:id/likes'],
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     response: {
       202: RES_ITEM_LIKE_UPDATE_BODY_SCHEMA,
     },
   },
   UNLIKE_ITEM: {
+    tags: ['items/:id/likes'],
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
     response: {
       202: RES_ITEM_LIKE_UPDATE_BODY_SCHEMA,
