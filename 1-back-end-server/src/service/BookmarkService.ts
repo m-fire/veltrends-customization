@@ -107,7 +107,7 @@ class BookmarkService {
   }) {
     const bookmark = await db.bookmark.findUnique({
       where: { id: bookmarkId },
-      include: { ...include },
+      include,
     })
 
     // userId 를 비교해야 한다면, 반드시 bookmark.userId 와 동일해야 한다.
