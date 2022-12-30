@@ -46,7 +46,7 @@ export async function deleteItem(itemId: number) {
 }
 
 export async function likeItem(itemId: number, controller?: AbortController) {
-  const response = await client.post<LikeItemResult>(
+  const response = await client.post<ItemActionsApiResult>(
     `${URL_ITEMS}/${itemId}/likes`,
     {},
     { signal: controller?.signal },
@@ -55,7 +55,7 @@ export async function likeItem(itemId: number, controller?: AbortController) {
 }
 
 export async function unlikeItem(itemId: number, controller?: AbortController) {
-  const response = await client.delete<UnlikeItemResult>(
+  const response = await client.delete<ItemActionsApiResult>(
     `${URL_ITEMS}/${itemId}/likes`,
     { signal: controller?.signal },
   )
@@ -84,9 +84,7 @@ type UpdateItem = {
   body: string
 }
 
-export type LikeItemResult = {
+export type ItemActionsApiResult = {
   id: number
   itemStatus: ItemStatus
 }
-
-export type UnlikeItemResult = LikeItemResult
