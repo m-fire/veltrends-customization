@@ -7,8 +7,6 @@ import React from 'react'
 import ReplyButton from '~/core/component/items/ReplyButton'
 import SubcommentList from '~/core/component/items/SubcommentList'
 import useCommentInputStore from '~/core/hook/store/useCommentInputStore'
-import { useOverrideCommendById } from '~/core/hook/store/useOverrideCommentStore'
-import { useLikeCommentAction } from '~/core/hook/useActionOfComment'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
@@ -17,6 +15,8 @@ import { flexStyles, fontStyles } from '~/common/style/styled'
 import { MoreVert } from '~/core/component/generate/svg'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useDeleteComment } from '~/core/hook/useDeleteComment'
+import { useCommentInteractionStateById } from '~/core/hook/store/useCommentInteractionStore'
+import { useCommentInteractions } from '~/core/hook/useCommentInteractions'
 
 export interface CommentElementProps {
   type: CommentType
@@ -34,15 +34,14 @@ function CommentElement({ comment, type }: CommentElementProps) {
     isDeleted,
   } = comment
 
-  const commentStoreState = useOverrideCommendById(commentId)
-
-  //좋아요: 인증사용자인 경우 좋아요 허용, 없다면 로그인유도
+  const { likeComment, unlikeComment } = useCommentInteractions()
+  const commentStoreState = useCommentInteractionStateById(commentId)
   const likeCount = commentStoreState?.likeCount ?? comment.likeCount
-  const { likeComment, unlikeComment } = useLikeCommentAction()
   const openDialog = useOpenDialog()
   const authUser = useAuthUser()
   const isLiked = commentStoreState?.isLiked ?? comment.isLiked
   const itemId = useItemIdParams()
+
   const toggleLike = async () => {
     if (itemId == null) throw new AppError('BadRequest')
 

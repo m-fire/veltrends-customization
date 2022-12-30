@@ -7,11 +7,11 @@ import { colors } from '~/common/style/colors'
 import { Earth } from '~/core/component/generate/svg'
 import LikeButton from '~/core/component/items/LikeButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
-import { useLikeItemAction } from '~/core/hook/useActionOfItem'
-import { useOverrideItemById } from '~/core/hook/store/useOverrideItemStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { flexStyles, fontStyles } from '~/common/style/styled'
+import { useItemInteractionStateById } from '~/core/hook/store/useItemInteractionStore'
+import { useItemInteractions } from '~/core/hook/useItemInteractions'
 
 type LinkCardProps = {
   item: Item
@@ -30,12 +30,12 @@ function LinkCard({ item }: LinkCardProps) {
     createdAt,
   } = item
 
-  const itemStoreState = useOverrideItemById(itemId)
+  const itemStoreState = useItemInteractionStateById(itemId)
 
   // Dialog settings
   const itemStatus = itemStoreState?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
-  const { likeItem, unlikeItem } = useLikeItemAction()
+  const { likeItem, unlikeItem } = useItemInteractions()
   const authUser = useAuthUser()
   const toggleLike = async () => {
     if (authUser == null) {
@@ -43,9 +43,9 @@ function LinkCard({ item }: LinkCardProps) {
       return
     }
     if (isLiked) {
-      await unlikeItem({ itemId, prevItemStatus: itemStatus })
+      await unlikeItem(itemId, itemStatus)
     } else {
-      await likeItem({ itemId, prevItemStatus: itemStatus })
+      await likeItem(itemId, itemStatus)
     }
   }
 

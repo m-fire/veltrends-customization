@@ -5,12 +5,12 @@ import { colors } from '~/common/style/colors'
 import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/core/component/items/LikeButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
-import { useLikeItemAction } from '~/core/hook/useActionOfItem'
-import { useOverrideItemById } from '~/core/hook/store/useOverrideItemStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/core/component/generate/svg/Earth'
 import { flexStyles, fontStyles } from '~/common/style/styled'
+import { useItemInteractionStateById } from '~/core/hook/store/useItemInteractionStore'
+import { useItemInteractions } from '~/core/hook/useItemInteractions'
 
 type ItemViewerProps = {
   item: Item
@@ -29,11 +29,11 @@ function ItemViewer({ item }: ItemViewerProps) {
     link,
   } = item
 
-  const itemStoreState = useOverrideItemById(itemId)
+  const itemInteractionState = useItemInteractionStateById(itemId)
+  const { likeItem, unlikeItem } = useItemInteractions()
 
   // Dialog settings
-  const itemStatus = itemStoreState?.itemStatus ?? item.itemStatus
-  const { likeItem, unlikeItem } = useLikeItemAction()
+  const itemStatus = itemInteractionState?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
   const authUser = useAuthUser()
   const toggleLike = async () => {
@@ -42,15 +42,16 @@ function ItemViewer({ item }: ItemViewerProps) {
       return
     }
     if (isLiked) {
-      await unlikeItem({ itemId, prevItemStatus: itemStatus })
+      await unlikeItem(itemId, itemStatus)
     } else {
-      await likeItem({ itemId, prevItemStatus: itemStatus })
+      await likeItem(itemId, itemStatus)
     }
   }
 
   const pastDistance = useDateDistance(createdAt)
-  const isLiked = itemStoreState?.isLiked ?? item.isLiked
-  const likeCount = itemStoreState?.itemStatus.likeCount ?? itemStatus.likeCount
+  const isLiked = itemInteractionState?.isLiked ?? item.isLiked
+  const likeCount =
+    itemInteractionState?.itemStatus.likeCount ?? itemStatus.likeCount
 
   return (
     <Block>
