@@ -3,6 +3,7 @@ import { client } from '~/common/api/client'
 import { Item, ItemListPagination, ItemStatus, ListMode } from './types'
 
 export const URL_ITEMS = '/api/items' as const
+export const URL_BOOKMARKS = '/api/bookmarks' as const
 
 export async function createItem(params: CreateItemParams) {
   const response = await client.post<Item>(URL_ITEMS, params)
@@ -57,6 +58,29 @@ export async function likeItem(itemId: number, controller?: AbortController) {
 export async function unlikeItem(itemId: number, controller?: AbortController) {
   const response = await client.delete<ItemActionsApiResult>(
     `${URL_ITEMS}/${itemId}/likes`,
+    { signal: controller?.signal },
+  )
+  return response.data
+}
+
+export async function bookmarkItem(
+  itemId: number,
+  controller?: AbortController,
+) {
+  const response = await client.post<ItemActionsApiResult>(
+    `${URL_BOOKMARKS}/${itemId}`,
+    {},
+    { signal: controller?.signal },
+  )
+  return response.data
+}
+
+export async function unbookmarkItem(
+  itemId: number,
+  controller?: AbortController,
+) {
+  const response = await client.delete<ItemActionsApiResult>(
+    `${URL_BOOKMARKS}/${itemId}`,
     { signal: controller?.signal },
   )
   return response.data
