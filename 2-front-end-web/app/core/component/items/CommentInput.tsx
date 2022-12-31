@@ -1,23 +1,23 @@
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
-import useCommentInputStore from '~/core/hook/store/useCommentInputStore'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { flexStyles, fontStyles } from '~/common/style/styled'
+import { useCommentInputAction } from '~/core/hook/useCommentAction'
 
 type CommentInputParams = {}
 
 function CommentInput({}: CommentInputParams) {
   const authUser = useAuthUser()
   const openDialog = useOpenDialog()
-  const writeComment = useCommentInputStore((store) => store.action.write)
+  const { writeComment } = useCommentInputAction()
 
   const onClick = () => {
     if (authUser == null) {
       openDialog('WRITE_COMMENT', { gotoLogin: true })
       return
     }
-    writeComment()
+    writeComment(null)
   }
 
   return <PseudoInput onClick={onClick}>댓글을 입력하세요</PseudoInput>

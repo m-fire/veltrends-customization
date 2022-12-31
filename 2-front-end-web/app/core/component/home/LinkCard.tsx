@@ -10,8 +10,8 @@ import { useDateDistance } from '~/common/hook/useDateDistance'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { flexStyles, fontStyles } from '~/common/style/styled'
-import { useItemInteractionStateById } from '~/core/hook/store/useItemInteractionStore'
-import { useItemInteractions } from '~/core/hook/useItemInteractions'
+import { useItemStateById } from '~/core/hook/store/useItemActionStore'
+import { useItemAction } from '~/core/hook/useItemAction'
 
 type LinkCardProps = {
   item: Item
@@ -30,12 +30,11 @@ function LinkCard({ item }: LinkCardProps) {
     createdAt,
   } = item
 
-  const itemStoreState = useItemInteractionStateById(itemId)
-
   // Dialog settings
-  const itemStatus = itemStoreState?.itemStatus ?? item.itemStatus
+  const { likeItem, unlikeItem } = useItemAction()
+  const itemState = useItemStateById(itemId)
+  const itemStatus = itemState?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
-  const { likeItem, unlikeItem } = useItemInteractions()
   const authUser = useAuthUser()
   const toggleLike = async () => {
     if (authUser == null) {
@@ -50,8 +49,8 @@ function LinkCard({ item }: LinkCardProps) {
   }
 
   const pastDistance = useDateDistance(createdAt)
-  const isLiked = itemStoreState?.isLiked ?? item.isLiked
-  const likeCount = itemStoreState?.itemStatus.likeCount ?? itemStatus.likeCount
+  const isLiked = itemState?.isLiked ?? item.isLiked
+  const likeCount = itemState?.itemStatus.likeCount ?? itemStatus.likeCount
   const link = `/items/${itemId}`
 
   return (

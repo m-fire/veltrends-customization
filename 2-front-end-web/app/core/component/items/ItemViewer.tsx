@@ -9,8 +9,8 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/core/component/generate/svg/Earth'
 import { flexStyles, fontStyles } from '~/common/style/styled'
-import { useItemInteractionStateById } from '~/core/hook/store/useItemInteractionStore'
-import { useItemInteractions } from '~/core/hook/useItemInteractions'
+import { useItemStateById } from '~/core/hook/store/useItemActionStore'
+import { useItemAction } from '~/core/hook/useItemAction'
 
 type ItemViewerProps = {
   item: Item
@@ -29,8 +29,8 @@ function ItemViewer({ item }: ItemViewerProps) {
     link,
   } = item
 
-  const itemInteractionState = useItemInteractionStateById(itemId)
-  const { likeItem, unlikeItem } = useItemInteractions()
+  const itemInteractionState = useItemStateById(itemId)
+  const { likeItem, unlikeItem } = useItemAction()
 
   // Dialog settings
   const itemStatus = itemInteractionState?.itemStatus ?? item.itemStatus

@@ -6,7 +6,6 @@ import LikeButton from '~/core/component/items/LikeButton'
 import React from 'react'
 import ReplyButton from '~/core/component/items/ReplyButton'
 import SubcommentList from '~/core/component/items/SubcommentList'
-import useCommentInputStore from '~/core/hook/store/useCommentInputStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
@@ -15,8 +14,11 @@ import { flexStyles, fontStyles } from '~/common/style/styled'
 import { MoreVert } from '~/core/component/generate/svg'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useDeleteComment } from '~/core/hook/useDeleteComment'
-import { useCommentInteractionStateById } from '~/core/hook/store/useCommentInteractionStore'
-import { useCommentInteractions } from '~/core/hook/useCommentInteractions'
+import {
+  useCommentInputAction,
+  useCommentAction,
+} from '~/core/hook/useCommentAction'
+import { useCommentActionStateById } from '~/core/hook/store/useCommentActionStore'
 
 export interface CommentElementProps {
   type: CommentType
@@ -34,12 +36,12 @@ function CommentElement({ comment, type }: CommentElementProps) {
     isDeleted,
   } = comment
 
-  const { likeComment, unlikeComment } = useCommentInteractions()
-  const commentStoreState = useCommentInteractionStateById(commentId)
-  const likeCount = commentStoreState?.likeCount ?? comment.likeCount
+  const { likeComment, unlikeComment } = useCommentAction()
+  const commentActionState = useCommentActionStateById(commentId)
+  const likeCount = commentActionState?.likeCount ?? comment.likeCount
   const openDialog = useOpenDialog()
   const authUser = useAuthUser()
-  const isLiked = commentStoreState?.isLiked ?? comment.isLiked
+  const isLiked = commentActionState?.isLiked ?? comment.isLiked
   const itemId = useItemIdParams()
 
   const toggleLike = async () => {
@@ -50,15 +52,15 @@ function CommentElement({ comment, type }: CommentElementProps) {
       return
     }
     if (isLiked) {
-      await unlikeComment({ itemId, commentId, prevLikeCount: likeCount })
+      await unlikeComment({ itemId, commentId, likeCount })
     } else {
-      await likeComment({ itemId, commentId, prevLikeCount: likeCount })
+      await likeComment({ itemId, commentId, likeCount })
     }
   }
 
   //댓글달기: 인증사용자인 경우 댓글달기 UI 제공, 없다면 로그인유도
 
-  const inputStoreAction = useCommentInputStore((store) => store.action)
+  const inputStateActions = useCommentInputAction()
 
   const onReply = () => {
     if (itemId == null) throw new AppError('BadRequest')
@@ -67,7 +69,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
       openDialog('WRITE_COMMENT')
       return
     }
-    inputStoreAction.write(commentId)
+    inputStateActions.writeComment(commentId)
   }
 
   const deleteComment = useDeleteComment()
@@ -76,7 +78,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
     openBottomModal([
       {
         name: '수정',
-        onClick: () => inputStoreAction.edit(commentId, text),
+        onClick: () => inputStateActions.editComment(commentId, text),
       },
       {
         name: '삭제',

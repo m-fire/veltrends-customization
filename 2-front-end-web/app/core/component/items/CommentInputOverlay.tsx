@@ -7,7 +7,6 @@ import Overlay from '../../../common/component/system/Overlay'
 import Spinner from '~/common/component/system/Spinner'
 import { colors } from '~/common/style/colors'
 import { SpeechBubble, Write } from '~/core/component/generate/svg'
-import useCommentInputStore from '~/core/hook/store/useCommentInputStore'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import { commentsKey } from '~/core/hook/query/useCommentsQuery'
@@ -18,14 +17,15 @@ import {
 } from '~/core/hook/mutation/useCommentsMutation'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import useFocus from '~/common/hook/useFocus'
+import { useCommentInputState } from '~/core/hook/store/useCommentActionStore'
+import { useCommentInputAction } from '~/core/hook/useCommentAction'
 
 type CommentInputOverlayParams = {}
 
 function CommentInputOverlay({}: CommentInputOverlayParams) {
   // react-query Store 설정
-  const { state: inputStoreState, action: inputStoreAction } =
-    useCommentInputStore()
-  const { close: closeInputModal } = inputStoreAction
+  const { closeInput: closeInputModal } = useCommentInputAction()
+  const inputState = useCommentInputState()
 
   const openDialog = useOpenDialog()
   const queryClient = useQueryClient()
@@ -34,7 +34,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
     onSuccess: async (commentData) => {
       if (itemId == null) return
 
-      const { parentCommentId } = inputStoreState
+      const { parentCommentId } = inputState
       const queryKey = commentsKey(itemId)
       queryClient.setQueryData(queryKey, (prevList: Comment[] | undefined) => {
         if (prevList == null) return undefined
@@ -50,6 +50,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
             )
           rootComment?.subcommentList?.push(commentData)
         })
+
         return editedList
       })
       await queryClient.invalidateQueries(queryKey)
@@ -95,7 +96,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
       return
     }
 
-    const { commentId } = inputStoreState
+    const { commentId } = inputState
     if (commentId != null) {
       const { mutate: editComment } = editMutaiton
       editComment({
@@ -106,7 +107,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
       return
     }
 
-    const { parentCommentId } = inputStoreState
+    const { parentCommentId } = inputState
     const { mutate: writeComment } = createMutation
     writeComment({
       itemId,
@@ -115,7 +116,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
     })
   }
 
-  const { visible, commentId, inputValue: inputModalText } = inputStoreState
+  const { visible, commentId, inputValue: inputModalText } = inputState
   useEffect(() => {
     if (visible) setText('')
   }, [visible])
