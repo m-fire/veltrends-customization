@@ -4,7 +4,7 @@ import AppError from '../common/error/AppError.js'
 import { createEmptyPage, createPage } from '../core/util/paginations.js'
 import ItemService from './ItemService.js'
 import ItemRepository from '../repository/ItemRepository.js'
-import { validateMatchToUserAndOwner } from '../core/util/validates'
+import { validateMatchToUserAndOwner } from '../core/util/validates.js'
 
 class BookmarkService {
   static async mark({ itemId, userId }: MarkedParams) {
@@ -13,7 +13,7 @@ class BookmarkService {
         data: { userId, itemId },
         include: {
           item: {
-            include: IR.Query.includeFullRelations(userId),
+            include: IR.Query.includeItemRelation(userId),
           },
         },
       })
@@ -31,7 +31,7 @@ class BookmarkService {
 
   static async unmark({ itemId, userId }: MarkedParams) {
     await BS.findBookmarkOrThrow({ itemId, userId })
-    await db.bookmark.delete({ where: { id: itemId } })
+    await db.bookmark.delete({ where: { userId_itemId: { itemId, userId } } })
   }
 
   static async getBookmarkList({
@@ -51,7 +51,7 @@ class BookmarkService {
         },
         include: {
           item: {
-            include: IR.Query.includeFullRelations(userId),
+            include: IR.Query.includeItemRelation(userId),
           },
         },
         orderBy: { createdAt: 'desc' },

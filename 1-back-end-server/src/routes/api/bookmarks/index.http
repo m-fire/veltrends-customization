@@ -48,7 +48,7 @@ client.test("/api/bookmarks 목록 최대 5(limit)개 조회", function() {
 
 ### bookmark 아이탬목록 최대 5(limit)개 조회
 
-DELETE http://{{host}}:{{port}}/api/bookmarks/5
+DELETE http://{{host}}:{{port}}/api/bookmarks?itemId=76
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%

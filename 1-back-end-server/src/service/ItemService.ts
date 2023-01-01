@@ -94,7 +94,7 @@ class ItemService {
   static async getItem({ itemId, userId }: GetItemParams) {
     const item = await IR.findItemOrThrow(
       itemId,
-      IR.Query.includeFullRelations(userId),
+      IR.Query.includeItemRelation(userId),
     )
 
     const serializedItem = IS.serialize(item)
@@ -300,6 +300,6 @@ type ItemWithPatialUser = Item & {
 }
 
 type Relations = {
-  itemLikes?: ItemLike[]
-  bookmarks?: Bookmark[]
+  itemLikes?: Pick<ItemLike, 'id'>[]
+  bookmarks?: Pick<Bookmark, 'id'>[]
 }

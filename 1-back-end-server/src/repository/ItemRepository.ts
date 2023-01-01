@@ -84,7 +84,7 @@ class ItemRepository {
         thumbnail,
         author,
       },
-      include: IR.Query.includeFullRelations(userId),
+      include: IR.Query.includeItemRelation(userId),
     })
   }
 
@@ -99,7 +99,7 @@ class ItemRepository {
         id: IR.Query.lessThanIdOrUndefined(cursor),
       },
       orderBy,
-      include: IR.Query.includeFullRelations(userId),
+      include: IR.Query.includeItemRelation(userId),
       take: limit,
     })
   }
@@ -125,7 +125,7 @@ class ItemRepository {
         },
       },
       orderBy,
-      include: IR.Query.includeFullRelations(userId),
+      include: IR.Query.includeItemRelation(userId),
       take: limit,
     })
   }
@@ -194,7 +194,7 @@ class ItemRepository {
     return db.item.update({
       where: { id: itemId },
       data: { link, title, body },
-      include: IR.Query.includeFullRelations(userId),
+      include: IR.Query.includeItemRelation(userId),
     })
   }
 
@@ -217,7 +217,7 @@ class ItemRepository {
         ? Prisma.validator<Prisma.IntFilter>()({ lt: cursor })
         : undefined
     }
-    static includeFullRelations(userId: number | undefined) {
+    static includeItemRelation(userId: number | undefined) {
       return Prisma.validator<Prisma.ItemInclude>()({
         user: {
           select: { id: true, username: true },
@@ -231,8 +231,12 @@ class ItemRepository {
           },
         },
         publisher: true,
-        itemLikes: userId ? { where: { userId } } : false,
-        bookmarks: userId ? { where: { userId } } : false,
+        itemLikes: userId
+          ? { where: { userId }, select: { id: true } }
+          : undefined,
+        bookmarks: userId
+          ? { where: { userId }, select: { id: true } }
+          : undefined,
       })
     }
   }
