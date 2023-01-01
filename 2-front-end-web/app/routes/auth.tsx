@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from '@remix-run/react'
 import { LoaderFunction, redirect } from '@remix-run/node'
-import { Authenticator } from '~/common/api/auth'
+import { Authenticator } from '~/core/api/auth'
 
 type AuthProps = {}
 

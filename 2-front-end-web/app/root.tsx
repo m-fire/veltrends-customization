@@ -10,7 +10,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import GlobalStyle from '~/GlobalStyle'
-import { Authenticator } from '~/common/api/auth'
+import { Authenticator } from '~/core/api/auth'
 import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
 import { UserContext } from '~/common/context/UserContext'

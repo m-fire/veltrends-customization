@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useActionData, useNavigate, useSearchParams } from '@remix-run/react'
 import { CatchValue } from '@remix-run/react/dist/transition'
-import { AuthResult } from '~/common/api/auth'
+import { AuthResult } from '~/core/api/auth'
 
 export function useAuthRedirect() {
   const resultOrError = useActionData<AuthResult | CatchValue>()
