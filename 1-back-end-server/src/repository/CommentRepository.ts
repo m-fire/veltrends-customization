@@ -230,7 +230,7 @@ type PrismaCommentOrderBy =
   | Prisma.CommentOrderByWithRelationInput
   | Prisma.CommentOrderByWithAggregationInput
 
-type UpdateCommentDataParams = { userId: number } & Pick<
+type UpdateCommentDataParams = { userId?: number } & Pick<
   Prisma.CommentUpdateInput,
   'text' | 'likeCount' | 'commentLikes' | 'subcommentCount'
 >

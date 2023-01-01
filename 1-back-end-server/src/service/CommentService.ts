@@ -186,7 +186,7 @@ class CommentService {
 
   static async likeComment({ commentId, userId }: LikeCommentParams) {
     const likeCount = await CLS.like({ commentId, userId })
-    await CS.syncLikeCount({ commentId, userId, likeCount })
+    await CS.syncLikeCount({ commentId, likeCount })
     return likeCount
   }
 
@@ -195,7 +195,7 @@ class CommentService {
       commentId,
       userId,
     })
-    await CS.syncLikeCount({ commentId, userId, likeCount })
+    await CS.syncLikeCount({ commentId, likeCount })
     return likeCount
   }
 
@@ -217,10 +217,9 @@ class CommentService {
 
   private static async syncLikeCount({
     commentId,
-    userId,
     likeCount,
-  }: UpdateLikeCountParams) {
-    await CR.updateComment(commentId, { userId, likeCount })
+  }: SyncLikeCountParams) {
+    await CR.updateComment(commentId, { likeCount })
   }
 
   private static async syncCommentCount(itemId: number) {
@@ -295,9 +294,8 @@ type UpdateCommentParams = DeleteCommentParams & {
   text: string
 }
 
-type UpdateLikeCountParams = {
+type SyncLikeCountParams = {
   commentId: number
-  userId: number
   likeCount: number
 }
 

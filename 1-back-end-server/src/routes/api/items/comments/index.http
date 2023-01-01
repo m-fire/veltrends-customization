@@ -75,12 +75,12 @@ client.test("/api/items/76/comments Comment 목록 조회", function() {
 
 ### 아이탬 의 모든 Comment 목록조회
 
-GET http://{{host}}:{{port}}/api/items/76/comments/1
+GET http://{{host}}:{{port}}/api/items/76/comments/71
 Accept: application/json
 
 > {%
 var status = 200;
-client.test("/api/items/76/comments/1 - 개별 Comment 조회", function() {
+client.test("/api/items/76/comments/71 - 개별 Comment 조회", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -97,7 +97,7 @@ client.test("/api/items/76/comments/1 - 개별 Comment 조회", function() {
 
 ### 아이탬 의 id:1 댓글 조회
 
-PATCH http://{{host}}:{{port}}/api/items/76/comments/1
+PATCH http://{{host}}:{{port}}/api/items/76/comments/71
 Content-Type: application/json
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
@@ -147,12 +147,12 @@ client.test("/api/items/76/comments - 랜덤아이디 삭제시도(성공/실패
 
 ### comment 랜덤아이디 삭제시도(성공/실패)
 
-POST http://{{host}}:{{port}}/api/items/76/comments/1/likes
+POST http://{{host}}:{{port}}/api/items/76/comments/71/likes
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 202;
-client.test("/api/items/76/comments/1/likes 1번 comment like(맘에듬) 처리 - 로그인필수", function() {
+client.test("/api/items/76/comments/71/likes 1번 comment like(맘에듬) 처리 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
@@ -169,12 +169,12 @@ client.test("/api/items/76/comments/1/likes 1번 comment like(맘에듬) 처리 
 
 ### 1번 comment like 처리
 
-DELETE http://{{host}}:{{port}}/api/items/76/comments/1/likes
+DELETE http://{{host}}:{{port}}/api/items/76/comments/71/likes
 Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
 
 > {%
 var status = 202;
-client.test("/api/items/76/comments/1/likes 1번 comment unlike(맘에안듬) 처리 - 로그인필수", function() {
+client.test("/api/items/76/comments/71/likes 1번 comment unlike(맘에안듬) 처리 - 로그인필수", function() {
   client.log("\n");
   client.log("response.body:\t" + JSON.stringify(response.body))
   client.log("\n");
