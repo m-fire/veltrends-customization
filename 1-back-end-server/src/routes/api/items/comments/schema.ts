@@ -40,7 +40,7 @@ const RES_COMMENT_SCHEMA = Type.Object({
   subcommentList: Type.Optional(Type.Array(COMMENT_SCHEMA)),
 })
 
-const RES_COMMENT_LIKE_SCHEMA = Type.Object({
+const RES_COMMENT_LIKED_SCHEMA = Type.Object({
   id: Type.Integer(),
   likeCount: Type.Number(),
 })
@@ -98,14 +98,14 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
     tags: ['items/:id/comments/:id/likes'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
-      200: RES_COMMENT_LIKE_SCHEMA,
+      200: RES_COMMENT_LIKED_SCHEMA,
     },
   },
   UNLIKE_COMMENT: {
     tags: ['items/:id/comments/:id/likes'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
-      200: RES_COMMENT_LIKE_SCHEMA,
+      200: RES_COMMENT_LIKED_SCHEMA,
     },
   },
 })

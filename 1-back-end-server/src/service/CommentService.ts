@@ -44,7 +44,7 @@ class CommentService {
 
     await CS.syncCommentCount(itemId)
 
-    return CS.serializeComment({
+    return CS.serialize({
       comment: newComment,
       isLiked: false,
       isDeleted: false,
@@ -76,7 +76,7 @@ class CommentService {
             mentionUser: null,
           })
         : c
-      return CS.serializeComment({
+      return CS.serialize({
         comment,
         isLiked: likesByIdMap[comment.id] != null,
         isDeleted,
@@ -133,7 +133,7 @@ class CommentService {
     })
 
     const serializedList = subcommentList.map((subcomment) =>
-      CS.serializeComment({
+      CS.serialize({
         comment: subcomment,
         isLiked: commentLikeMap[subcomment.id] != null,
         isDeleted: subcomment.deletedAt != null,
@@ -162,7 +162,7 @@ class CommentService {
       userId,
     })
 
-    return CS.serializeComment({
+    return CS.serialize({
       comment,
       isLiked: commentLikeOrNull != null,
       isDeleted: comment!.deletedAt != null,
@@ -201,7 +201,7 @@ class CommentService {
 
   // utils
 
-  private static serializeComment<C, SC>({
+  private static serialize<C, SC>({
     comment,
     isLiked,
     isDeleted,

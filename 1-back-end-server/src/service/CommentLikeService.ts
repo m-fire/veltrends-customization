@@ -22,7 +22,9 @@ class CommentLikeService {
       await db.commentLike.delete({
         where: { commentId_userId: { commentId, userId } },
       })
-    } catch (e) {}
+    } catch (e) {
+      console.log(`CommentLikeService.like() catch error`, { e })
+    }
     return CLS.countCommentLike(commentId)
   }
 
