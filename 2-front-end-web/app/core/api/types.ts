@@ -13,6 +13,7 @@ export interface Item {
   publisher: Publisher
   itemStatus: ItemStatus
   isLiked: boolean
+  isBookmarked: boolean
 }
 
 export interface Publisher {
@@ -64,3 +65,10 @@ export interface Highlight {
 export type SearchedItemPagination = GenericPagination<SearchedItem>
 
 export type ListMode = 'recent' | 'trending' | 'past'
+
+export interface Bookmark {
+  id: number
+  item: Item
+  createdAt: string
+}
+export type GetBookmarkListResult = GenericPagination<Bookmark>

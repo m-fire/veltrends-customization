@@ -47,7 +47,7 @@ export async function deleteItem(itemId: number) {
 }
 
 export async function likeItem(itemId: number, controller?: AbortController) {
-  const response = await client.post<ItemActionsApiResult>(
+  const response = await client.post<LikedItemApiResult>(
     `${URL_ITEMS}/${itemId}/likes`,
     {},
     { signal: controller?.signal },
@@ -56,31 +56,8 @@ export async function likeItem(itemId: number, controller?: AbortController) {
 }
 
 export async function unlikeItem(itemId: number, controller?: AbortController) {
-  const response = await client.delete<ItemActionsApiResult>(
+  const response = await client.delete<LikedItemApiResult>(
     `${URL_ITEMS}/${itemId}/likes`,
-    { signal: controller?.signal },
-  )
-  return response.data
-}
-
-export async function bookmarkItem(
-  itemId: number,
-  controller?: AbortController,
-) {
-  const response = await client.post<ItemActionsApiResult>(
-    `${URL_BOOKMARKS}/${itemId}`,
-    {},
-    { signal: controller?.signal },
-  )
-  return response.data
-}
-
-export async function unbookmarkItem(
-  itemId: number,
-  controller?: AbortController,
-) {
-  const response = await client.delete<ItemActionsApiResult>(
-    `${URL_BOOKMARKS}/${itemId}`,
     { signal: controller?.signal },
   )
   return response.data
@@ -108,7 +85,7 @@ type UpdateItem = {
   body: string
 }
 
-export type ItemActionsApiResult = {
+export type LikedItemApiResult = {
   id: number
   itemStatus: ItemStatus
 }
