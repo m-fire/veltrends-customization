@@ -1,10 +1,6 @@
 import { useCallback } from 'react'
-import {
-  bookmarkItem,
-  likeItem,
-  unbookmarkItem,
-  unlikeItem,
-} from '~/core/api/items'
+import { likeItem, unlikeItem } from '~/core/api/items'
+import { bookmarkItem, unbookmarkItem } from '~/core/api/bookmarks'
 import AppError from '~/common/error/AppError'
 import { ItemStatus } from '~/core/api/types'
 import {
@@ -64,20 +60,20 @@ export function useItemAction() {
     [itemStateMap],
   )
 
+  const { abortRequest, getAbortController, removeAbortController } =
+    abortRequestAction
   const bookmark = useCallback(
     async (itemId: number) => {
       try {
         stateActions.setBookmarked(itemId, false)
 
-        const result = await ignoreRepeatRequest(
-          itemId,
-          abortRequestAction,
-          (abortController) => {
-            return bookmarkItem(itemId, abortController)
-          },
-        )
+        abortRequest(itemId)
+        const result = await bookmarkItem(itemId, getAbortController(itemId))
+        /* 북마크는 연관엔티티 item.id 와 비교해야 한다 */
+        if (result.item.id !== itemId) throw new AppError('Unknown')
+        removeAbortController(itemId)
 
-        stateActions.setBookmarked(result.id, true) // result.isBookmarked)
+        stateActions.setBookmarked(itemId, result.item.isBookmarked)
       } catch (e) {
         // todo: handler error...
         console.error(e)
@@ -98,8 +94,9 @@ export function useItemAction() {
             return unbookmarkItem(itemId, abortController)
           },
         )
-
-        stateActions.setBookmarked(result.id, false) // result.isBookmarked)
+        if (result == null) {
+          stateActions.setBookmarked(itemId, false)
+        }
       } catch (e) {
         // todo: handler error...
         console.error(e)
