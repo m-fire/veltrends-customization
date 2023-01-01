@@ -11,10 +11,10 @@ import {
   useItemStateActions,
   useItemStateMap,
 } from '~/core/hook/store/useItemActionStore'
-import { useRequestControlAction } from '~/core/hook/http/useRequestControlAction'
+import { useAbortRequestAction } from '~/core/hook/http/useAbortRequestAction'
 
 export function useItemAction() {
-  const requestControl = useRequestControlAction('items')
+  const abortRequestAction = useAbortRequestAction('items')
   const stateActions = useItemStateActions()
   const itemStateMap = useItemStateMap()
 
@@ -27,7 +27,7 @@ export function useItemAction() {
 
         const result = await ignoreRepeatRequest(
           itemId,
-          requestControl,
+          abortRequestAction,
           (abortController) => {
             return likeItem(itemId, abortController)
           },
@@ -49,7 +49,7 @@ export function useItemAction() {
 
         const result = await ignoreRepeatRequest(
           itemId,
-          requestControl,
+          abortRequestAction,
           (abortController) => {
             return unlikeItem(itemId, abortController)
           },
@@ -71,7 +71,7 @@ export function useItemAction() {
 
         const result = await ignoreRepeatRequest(
           itemId,
-          requestControl,
+          abortRequestAction,
           (abortController) => {
             return bookmarkItem(itemId, abortController)
           },
@@ -93,7 +93,7 @@ export function useItemAction() {
 
         const result = await ignoreRepeatRequest(
           itemId,
-          requestControl,
+          abortRequestAction,
           (abortController) => {
             return unbookmarkItem(itemId, abortController)
           },
@@ -115,7 +115,7 @@ export function useItemAction() {
         abortRequest,
         getAbortController,
         removeAbortController,
-      }: ReturnType<typeof useRequestControlAction<'items'>>,
+      }: ReturnType<typeof useAbortRequestAction<'items'>>,
       requestApi: (abortController?: AbortController) => Promise<R>,
     ) => {
       abortRequest(entityId)

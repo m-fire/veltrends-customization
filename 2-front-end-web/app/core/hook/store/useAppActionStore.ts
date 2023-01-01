@@ -82,7 +82,7 @@ const useAppActionStore = create(
 
     /*  request controls by entity's AbortController */
 
-    requestControlActions: {
+    abortRequestsActions: {
       abort: (type: EntityType, entityId: number) =>
         set((s) =>
           produce(s, (next) => {
@@ -167,7 +167,7 @@ interface AppStore {
     }
   }
 
-  requestControlActions: {
+  abortRequestsActions: {
     abort(type: EntityType, entityId: number): void
     getController(
       type: EntityType,
@@ -177,7 +177,7 @@ interface AppStore {
   }
 }
 
-export type EntityType = keyof Omit<AppStore, 'requestControlActions'>
+export type EntityType = keyof Omit<AppStore, 'abortRequestsActions'>
 
 export interface ItemInteractState {
   itemStatus: ItemStatus

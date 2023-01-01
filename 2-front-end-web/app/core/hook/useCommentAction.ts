@@ -5,11 +5,11 @@ import {
   useCommentActionStateMap,
   useCommentStateAction,
 } from '~/core/hook/store/useCommentActionStore'
-import { useRequestControlAction } from '~/core/hook/http/useRequestControlAction'
+import { useAbortRequestAction } from '~/core/hook/http/useAbortRequestAction'
 import useAppActionStore from '~/core/hook/store/useAppActionStore'
 
 export function useCommentAction() {
-  const requestControl = useRequestControlAction('items')
+  const itemAbortActions = useAbortRequestAction('comments')
   const stateActions = useCommentStateAction()
   const itemStateMap = useCommentActionStateMap()
 
@@ -22,7 +22,7 @@ export function useCommentAction() {
 
         const result = await ignoreRepeatRequest(
           commentId,
-          requestControl,
+          itemAbortActions,
           (abortController) => {
             return likeComment({ itemId, commentId }, abortController)
           },
@@ -44,7 +44,7 @@ export function useCommentAction() {
 
         const result = await ignoreRepeatRequest(
           commentId,
-          requestControl,
+          itemAbortActions,
           (abortController) => {
             return unlikeComment({ itemId, commentId }, abortController)
           },
@@ -66,7 +66,7 @@ export function useCommentAction() {
         abortRequest,
         getAbortController,
         removeAbortController,
-      }: ReturnType<typeof useRequestControlAction<'comments'>>,
+      }: ReturnType<typeof useAbortRequestAction<'comments'>>,
       requestApi: (abortController?: AbortController) => Promise<R>,
     ) => {
       abortRequest(entityId)
