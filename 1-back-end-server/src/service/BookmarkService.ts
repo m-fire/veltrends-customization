@@ -4,9 +4,10 @@ import AppError from '../common/error/AppError.js'
 import { createEmptyPage, createPage } from '../core/util/paginations.js'
 import ItemService from './ItemService.js'
 import ItemRepository from '../repository/ItemRepository.js'
+import { validateMatchToUserAndOwner } from '../core/util/validates'
 
 class BookmarkService {
-  static async mark({ itemId, userId }: MarkParams) {
+  static async mark({ itemId, userId }: MarkedParams) {
     try {
       const newBookmark = await db.bookmark.create({
         data: { userId, itemId },
@@ -28,9 +29,9 @@ class BookmarkService {
     }
   }
 
-  static async unmark({ bookmarkId, userId }: UnmarkParams) {
-    await BS.findBookmarkOrThrow({ bookmarkId, userId })
-    await db.bookmark.delete({ where: { id: bookmarkId } })
+  static async unmark({ itemId, userId }: MarkedParams) {
+    await BS.findBookmarkOrThrow({ itemId, userId })
+    await db.bookmark.delete({ where: { id: itemId } })
   }
 
   static async getBookmarkList({
@@ -103,24 +104,21 @@ class BookmarkService {
   }
 
   private static async findBookmarkOrThrow({
-    bookmarkId,
+    itemId,
     userId,
     include,
   }: {
-    bookmarkId: number
-    userId?: number | null
+    itemId: number
+    userId: number
     include?: Partial<Parameters<typeof db.bookmark.findUnique>[0]['include']>
   }) {
     const bookmark = await db.bookmark.findUnique({
-      where: { id: bookmarkId },
+      where: { userId_itemId: { itemId, userId } },
       include,
     })
-
-    // userId 를 비교해야 한다면, 반드시 bookmark.userId 와 동일해야 한다.
-    if (userId != null && bookmark?.userId !== userId)
-      throw new AppError('Forbidden')
-
     if (bookmark == null) throw new AppError('NotFound')
+
+    validateMatchToUserAndOwner(userId, bookmark?.userId)
 
     return bookmark
   }
@@ -137,12 +135,7 @@ const IR = ItemRepository
 
 // types
 
-type MarkParams = { itemId: number; userId: number }
-
-type UnmarkParams = {
-  bookmarkId: number
-  userId: number
-}
+type MarkedParams = { itemId: number; userId: number }
 
 type GetBookmarkListParams = {
   userId: number
