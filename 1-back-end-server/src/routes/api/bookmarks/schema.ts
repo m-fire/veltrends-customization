@@ -30,8 +30,8 @@ const BOOKMARKS_SCHEMA = createFastifySchemaMap({
   },
   UNMARK: {
     tags: ['bookmarks'],
-    params: Type.Object({
-      bookmarkId: Type.Number(),
+    querystring: Type.Object({
+      itemId: Type.Number(),
     }),
     response: {
       204: Type.Null(),

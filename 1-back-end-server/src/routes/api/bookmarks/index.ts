@@ -32,13 +32,13 @@ const bookmarksAuthRoute = createAuthRoute(async (fastify) => {
   )
 
   fastify.delete<BookmarksRequestMap['UNMARK']>(
-    '/:bookmarkId',
+    '/',
     { schema: BOOKMARKS_SCHEMA.UNMARK },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
-      const { bookmarkId } = request.params
+      const { itemId } = request.query
 
-      await BookmarkService.unmark({ bookmarkId, userId })
+      await BookmarkService.unmark({ itemId, userId })
       reply.statusCode = 204
     },
   )
