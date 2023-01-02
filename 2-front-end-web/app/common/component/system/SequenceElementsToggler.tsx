@@ -4,55 +4,56 @@ import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { flexStyles } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
 import {
+  Numbers as n,
   RandomNumbers as rn,
   SequenceNumbers as sn,
 } from '~/common/util/numbers'
 
 export type SequenceElementsTogglerProps = {
   elements: ReactNode[]
-  // 시퀀스 타입. default: increase
-  seqType?: SequenceType
+  // 시퀀스 방향타입. default: forward
+  direction?: SeqDirection
   // 시퀀싱이 시작될 요소의 최초 index
   startIndex?: number
   // 다음 시퀀스 스탭. default: 1
   seqStep?: number
   size?: Size
-  canAnimate?: boolean
   disabled?: boolean
+  canAnimate?: boolean
   onClick?: () => void
 }
+type SeqDirection = 'forward' | 'backward' | 'random'
 type Size = 'xxs' | 'xs' | 'small' | 'medium' | 'large' | 'xl' | 'xxl'
-type SequenceType = 'forward' | 'backward' | 'random'
 
 function SequenceElementsToggler({
   elements,
-  seqType = 'forward',
+  direction = 'forward',
   startIndex = 0,
   seqStep = 1,
   size = 'medium',
-  canAnimate = true,
   disabled = false,
+  // 초기값: disabled=false -> canAnimate=true 또는 반대 설정
+  canAnimate = !disabled,
   onClick,
 }: SequenceElementsTogglerProps) {
   //
   const initialSeqState = {
     seq:
-      startIndex == null
-        ? seqType === 'backward'
-          ? elements.length - 1
-          : seqType === 'random'
-          ? rn.randomInt({ bound: elements.length })
-          : 0 // `increase` init value or No`startSequence`prop,
-        : startIndex,
+      direction === 'backward'
+        ? elements.length - 1
+        : direction === 'random'
+        ? rn.randomInt({ bound: elements.length })
+        : startIndex, // `forward` 초기 값
     bound: elements.length,
     step: seqStep,
   }
-  validateState(initialSeqState)
 
-  type SequenceReducerState = Pick<typeof initialSeqState, 'seq' | 'bound'>
-  const sequenceReducer = useCallback(
-    (state: SequenceReducerState, { type }: { type: SequenceType }) => {
-      switch (type) {
+  const [sequenceState, nextSequence] = useReducer(
+    (
+      state: Pick<typeof initialSeqState, 'seq' | 'bound'>,
+      direction: SeqDirection,
+    ) => {
+      switch (direction) {
         case 'forward':
           return {
             ...state,
@@ -71,88 +72,63 @@ function SequenceElementsToggler({
       }
       return state
     },
-    [],
-  )
-  const [sequenceState, nextSequence] = useReducer(
-    sequenceReducer,
     initialSeqState,
   )
 
-  /* Optional rendering */
-
-  // 입력된 element 가 1개일 경우 랜더링
-  if (elements.length === 1) {
-    const nonMotionElement = createMotionChild(sequenceState.seq, elements[0])
-    return renderOptional({
-      child: nonMotionElement,
-      size,
-      canAnimate,
-      onClick,
-    })
-  }
-
-  // 입력된 element 가 2~N개일 경우 랜더링
-  const toggleElement = () => {
-    onClick?.()
-    if (!disabled) nextSequence({ type: seqType })
-  }
-  const motionElements = useMemo(
-    () => elements.map((child) => createMotionChild(sequenceState.seq, child)),
-    [elements],
-  )
-  return renderOptional({
-    child: motionElements[sequenceState.seq],
-    size,
-    canAnimate,
-    onClick: toggleElement,
-  })
-  // end render
-}
-export default SequenceElementsToggler
-
-// utils
-
-function renderOptional({
-  size,
-  child,
-  canAnimate,
-  onClick,
-}: RenderOptionalParams) {
-  return (
-    <Block size={size} onClick={onClick}>
-      <AnimatePresence initial={false}>
-        <MotionConfig reducedMotion={canAnimate ? 'user' : 'never'}>
-          {child}
-        </MotionConfig>
-      </AnimatePresence>
-    </Block>
-  )
-}
-type RenderOptionalParams = {
-  child: ReactNode
-} & Pick<Required<SequenceElementsTogglerProps>, 'size' | 'canAnimate'> &
-  Pick<SequenceElementsTogglerProps, 'onClick'>
-
-function createMotionChild(motionKey: any, child: ReactNode) {
-  return (
-    <StyledMotionSpan
-      key={motionKey}
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      exit={{ scale: 0 }}
-    >
-      {child}
-    </StyledMotionSpan>
-  )
-}
-
-function validateState({ seq, bound }: { seq: number; bound: number }) {
+  // validate states
+  const { seq, bound } = sequenceState
   if (seq < 0 || seq >= bound)
     throw new Error(
       `sequence(${seq}) number must equal and greater than 0 or less than children length(${bound})`,
     )
   if (bound < 1) throw new Error(`bound(${bound}) must 1 or more`)
+
+  //
+  // useEffect(() => {
+  //
+  // }, [elements, xxxx]);
+  //
+
+  /* Render part */
+
+  const canToggle = !disabled && elements.length > 1
+
+  const mappedElements = useMemo(
+    () =>
+      elements.map((child) => {
+        const hashKey = n.stringToHashCode(`${seq}${child}`)
+        return (
+          <StyledMotionSpan
+            key={hashKey}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+          >
+            {child}
+          </StyledMotionSpan>
+        )
+      }),
+    [elements, canAnimate],
+  )
+
+  const toggleElements = () => {
+    if (canToggle) nextSequence(direction)
+    onClick?.()
+  }
+
+  return (
+    <Block size={size} onClick={toggleElements}>
+      <AnimatePresence initial={false}>
+        <MotionConfig reducedMotion={canAnimate ? 'user' : 'never'}>
+          {mappedElements[seq]}
+        </MotionConfig>
+      </AnimatePresence>
+    </Block>
+  )
 }
+export default SequenceElementsToggler
+
+// utils
 
 // Inner Components
 

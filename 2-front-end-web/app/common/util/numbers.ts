@@ -2,7 +2,19 @@ const { random: math_random, sign: math_sign, abs: math_abs } = Math
 
 /* Numbers */
 
-class Numbers {}
+export class Numbers {
+  static stringToHashCode(s: string) {
+    let hash = 0
+    let i = 0
+    for (; i < s.length; i++) {
+      var code = s.charCodeAt(i)
+      hash = (hash << 5) - hash + code
+      hash = hash & hash // Convert to 32bit integer
+    }
+    return hash
+  }
+}
+
 const N = Numbers
 
 /* Random Numbers */
