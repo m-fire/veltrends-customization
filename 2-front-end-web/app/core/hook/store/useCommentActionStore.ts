@@ -1,25 +1,23 @@
-import useAppActionStore, {
-  EntityType,
-} from '~/core/hook/store/useAppActionStore'
+import useAppStore, { EntityType } from './useAppStore'
 
-export function useCommentActionStateMap() {
-  const stateMap = useAppActionStore((store) => store.comments.stateMap)
+export function useCommentStateMap() {
+  const stateMap = useAppStore((store) => store.comments.stateMap)
   return stateMap
 }
 
 export function useCommentActionStateById(commentId: number) {
-  const stateById = useCommentActionStateMap()[commentId]
+  const stateById = useCommentStateMap()[commentId]
   return stateById
 }
 
-export function useCommentInputState() {
-  const inputState = useAppActionStore((store) => store.comments.inputState)
-  return inputState
-}
-
 export function useCommentStateAction() {
-  const commentActions = useAppActionStore(
+  const commentStateActions = useAppStore(
     (store) => store.comments.stateActions,
   )
-  return commentActions
+  return commentStateActions
+}
+
+export function useCommentInputState() {
+  const inputState = useAppStore((store) => store.comments.inputState)
+  return inputState
 }

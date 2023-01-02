@@ -1,83 +1,64 @@
 import { useCallback, useMemo } from 'react'
 import { likeComment, unlikeComment } from '~/core/api/items$comments'
 import AppError from '~/common/error/AppError'
-import {
-  useCommentActionStateMap,
-  useCommentStateAction,
-} from '~/core/hook/store/useCommentActionStore'
+import { useCommentStateAction } from '~/core/hook/store/useCommentActionStore'
 import { useAbortRequestAction } from '~/core/hook/http/useAbortRequestAction'
-import useAppActionStore from '~/core/hook/store/useAppActionStore'
+import useAppStore from './store/useAppStore'
 
 export function useCommentAction() {
-  const itemAbortActions = useAbortRequestAction('comments')
   const stateActions = useCommentStateAction()
-  const itemStateMap = useCommentActionStateMap()
+  const requestAction = useAbortRequestAction('comments')
+
+  const { setLiked } = stateActions
+  const { abortRequest, getAbortController, removeAbortController } =
+    requestAction
 
   // actions(interactions)
 
   const like = useCallback(
     async ({ itemId, commentId, likeCount }: CommentLikedParams) => {
       try {
-        stateActions.setLiked(commentId, likeCount)
+        setLiked(commentId, likeCount)
 
-        const result = await ignoreRepeatRequest(
-          commentId,
-          itemAbortActions,
-          (abortController) => {
-            return likeComment({ itemId, commentId }, abortController)
-          },
+        abortRequest(commentId)
+        const result = await likeComment(
+          { itemId, commentId },
+          getAbortController(commentId),
         )
+        if (result.id !== commentId) throw new AppError('Unknown')
 
-        stateActions.setLiked(result.id, result.likeCount)
+        setLiked(result.id, result.likeCount)
       } catch (e) {
         // todo: handler error...
         console.error(e)
+      } finally {
+        removeAbortController(commentId)
       }
     },
-    [itemStateMap],
+    [stateActions, requestAction],
   )
 
   const unlike = useCallback(
     async ({ itemId, commentId, likeCount }: CommentLikedParams) => {
       try {
-        stateActions.setLiked(commentId, likeCount)
+        setLiked(commentId, likeCount)
 
-        const result = await ignoreRepeatRequest(
-          commentId,
-          itemAbortActions,
-          (abortController) => {
-            return unlikeComment({ itemId, commentId }, abortController)
-          },
+        abortRequest(commentId)
+        const result = await unlikeComment(
+          { itemId, commentId },
+          getAbortController(commentId),
         )
+        if (result.id !== commentId) throw new AppError('Unknown')
 
-        stateActions.setLiked(result.id, result.likeCount)
+        setLiked(result.id, result.likeCount)
       } catch (e) {
         // todo: handler error...
         console.error(e)
+      } finally {
+        removeAbortController(commentId)
       }
     },
-    [itemStateMap],
-  )
-
-  const ignoreRepeatRequest = useCallback(
-    async <R extends { id: number }>(
-      entityId: number,
-      {
-        abortRequest,
-        getAbortController,
-        removeAbortController,
-      }: ReturnType<typeof useAbortRequestAction<'comments'>>,
-      requestApi: (abortController?: AbortController) => Promise<R>,
-    ) => {
-      abortRequest(entityId)
-
-      const result = await requestApi(getAbortController(entityId))
-      if (result.id !== entityId) throw new AppError('Unknown')
-
-      removeAbortController(entityId)
-      return result
-    },
-    [itemStateMap],
+    [stateActions, requestAction],
   )
 
   return {
@@ -86,14 +67,8 @@ export function useCommentAction() {
   }
 }
 
-type CommentLikedParams = {
-  itemId: number
-  commentId: number
-  likeCount: number
-}
-
 export function useCommentInputAction() {
-  const { write, edit, close } = useAppActionStore(
+  const { write, edit, close } = useAppStore(
     (s) => s.comments.inputStateActions,
   )
 
@@ -110,4 +85,12 @@ export function useCommentInputAction() {
   )
 
   return inputActionMemo
+}
+
+// types
+
+type CommentLikedParams = {
+  itemId: number
+  commentId: number
+  likeCount: number
 }

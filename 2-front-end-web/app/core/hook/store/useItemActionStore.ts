@@ -1,7 +1,7 @@
-import useAppActionStore from '~/core/hook/store/useAppActionStore'
+import useAppStore from './useAppStore'
 
 export function useItemStateMap() {
-  const stateMap = useAppActionStore((store) => store.items.stateMap)
+  const stateMap = useAppStore((store) => store.items.stateMap)
   return stateMap
 }
 
@@ -10,9 +10,7 @@ export function useItemStateById(itemId: number) {
   return stateById
 }
 
-export function useItemStateActions() {
-  const itemStateMapActions = useAppActionStore(
-    (store) => store.items.stateActions,
-  )
-  return itemStateMapActions
+export function useItemStateAction() {
+  const itemStateActions = useAppStore((store) => store.items.stateActions)
+  return itemStateActions
 }

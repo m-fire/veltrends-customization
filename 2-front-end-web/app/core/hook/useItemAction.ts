@@ -4,126 +4,107 @@ import { bookmarkItem, unbookmarkItem } from '~/core/api/bookmarks'
 import AppError from '~/common/error/AppError'
 import { ItemStatus } from '~/core/api/types'
 import {
-  useItemStateActions,
+  useItemStateAction,
   useItemStateMap,
 } from '~/core/hook/store/useItemActionStore'
 import { useAbortRequestAction } from '~/core/hook/http/useAbortRequestAction'
 
 export function useItemAction() {
-  const abortRequestAction = useAbortRequestAction('items')
-  const stateActions = useItemStateActions()
-  const itemStateMap = useItemStateMap()
+  const stateActions = useItemStateAction()
+  const requestActions = useAbortRequestAction('items')
 
-  // actions(interactions)
+  const { setLiked, setBookmarked } = stateActions
+  const { abortRequest, getAbortController, removeAbortController } =
+    requestActions
+
+  /* like actions */
 
   const like = useCallback(
     async (itemId: number, prevItemStatus: ItemStatus) => {
       try {
-        stateActions.setLiked(itemId, prevItemStatus)
+        setLiked(itemId, prevItemStatus)
 
-        const result = await ignoreRepeatRequest(
-          itemId,
-          abortRequestAction,
-          (abortController) => {
-            return likeItem(itemId, abortController)
-          },
-        )
+        abortRequest(itemId)
+        const result = await likeItem(itemId, getAbortController(itemId))
+        if (result?.id !== itemId) throw new AppError('Unknown')
 
-        stateActions.setLiked(result.id, result.itemStatus)
+        setLiked(result.id, result.itemStatus)
       } catch (e) {
         // todo: handler error...
         console.error(e)
+      } finally {
+        removeAbortController(itemId)
       }
     },
-    [itemStateMap],
+    [stateActions, requestActions],
   )
 
   const unlike = useCallback(
     async (itemId: number, prevItemStatus: ItemStatus) => {
       try {
-        stateActions.setLiked(itemId, prevItemStatus)
+        setLiked(itemId, prevItemStatus)
 
-        const result = await ignoreRepeatRequest(
-          itemId,
-          abortRequestAction,
-          (abortController) => {
-            return unlikeItem(itemId, abortController)
-          },
-        )
+        abortRequest(itemId)
+        const result = await unlikeItem(itemId, getAbortController(itemId))
+        if (result?.id !== itemId) throw new AppError('Unknown')
 
-        stateActions.setLiked(result.id, result.itemStatus)
+        setLiked(result.id, result.itemStatus)
       } catch (e) {
         // todo: handler error...
         console.error(e)
+      } finally {
+        removeAbortController(itemId)
       }
     },
-    [itemStateMap],
+    [stateActions, requestActions],
   )
 
-  const { abortRequest, getAbortController, removeAbortController } =
-    abortRequestAction
+  /* bookmark actions */
+
+  const stateMap = useItemStateMap()
+
   const bookmark = useCallback(
     async (itemId: number) => {
       try {
-        stateActions.setBookmarked(itemId, false)
+        setBookmarked(itemId, stateMap[itemId]?.isBookmarked ?? false)
 
         abortRequest(itemId)
         const result = await bookmarkItem(itemId, getAbortController(itemId))
-        /* 북마크는 연관엔티티 item.id 와 비교해야 한다 */
-        if (result.item.id !== itemId) throw new AppError('Unknown')
-        removeAbortController(itemId)
 
-        stateActions.setBookmarked(itemId, result.item.isBookmarked)
+        /* 유효성검사 시 북마크는 연관엔티티 item.id 와 비교해야 한다 */
+        if (result?.item.id !== itemId) throw new AppError('Unknown')
+
+        setBookmarked(itemId, result.item.isBookmarked)
       } catch (e) {
         // todo: handler error...
         console.error(e)
+      } finally {
+        removeAbortController(itemId)
       }
     },
-    [itemStateMap],
+    [stateActions, requestActions],
   )
 
   const unbookmark = useCallback(
     async (itemId: number) => {
       try {
-        stateActions.setBookmarked(itemId, true)
+        setBookmarked(itemId, stateMap[itemId]?.isBookmarked ?? true)
 
-        const result = await ignoreRepeatRequest(
-          itemId,
-          abortRequestAction,
-          (abortController) => {
-            return unbookmarkItem(itemId, abortController)
-          },
-        )
-        if (result == null) {
-          stateActions.setBookmarked(itemId, false)
-        }
+        abortRequest(itemId)
+        const result = await unbookmarkItem(itemId, getAbortController(itemId))
+
+        /* 북마크 제거 시 반환값이 null | undefined 이어야 정상응답 이다 */
+        if (result) throw new AppError('Unknown')
+
+        setBookmarked(itemId, false)
       } catch (e) {
         // todo: handler error...
         console.error(e)
+      } finally {
+        removeAbortController(itemId)
       }
     },
-    [itemStateMap],
-  )
-
-  const ignoreRepeatRequest = useCallback(
-    async <R extends { id: number }>(
-      entityId: number,
-      {
-        abortRequest,
-        getAbortController,
-        removeAbortController,
-      }: ReturnType<typeof useAbortRequestAction<'items'>>,
-      requestApi: (abortController?: AbortController) => Promise<R>,
-    ) => {
-      abortRequest(entityId)
-
-      const result = await requestApi(getAbortController(entityId))
-      if (result.id !== entityId) throw new AppError('Unknown')
-
-      removeAbortController(entityId)
-      return result
-    },
-    [itemStateMap],
+    [stateActions, requestActions],
   )
 
   return {

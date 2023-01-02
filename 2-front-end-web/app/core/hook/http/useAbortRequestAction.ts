@@ -1,9 +1,7 @@
-import useAppActionStore, {
-  EntityType,
-} from '~/core/hook/store/useAppActionStore'
+import useAppStore, { EntityType } from '../store/useAppStore'
 
 export function useAbortRequestAction<K extends EntityType>(type: K) {
-  const { abort, remove, getController } = useAppActionStore(
+  const { abort, remove, getController } = useAppStore(
     (s) => s.abortRequestsActions,
   )
 

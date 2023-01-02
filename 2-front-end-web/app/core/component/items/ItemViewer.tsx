@@ -29,11 +29,11 @@ function ItemViewer({ item }: ItemViewerProps) {
     link,
   } = item
 
-  const itemInteractionState = useItemStateById(itemId)
+  const stateById = useItemStateById(itemId)
   const { likeItem, unlikeItem } = useItemAction()
 
   // Dialog settings
-  const itemStatus = itemInteractionState?.itemStatus ?? item.itemStatus
+  const itemStatus = stateById?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
   const authUser = useAuthUser()
   const toggleLike = async () => {
@@ -49,9 +49,8 @@ function ItemViewer({ item }: ItemViewerProps) {
   }
 
   const pastDistance = useDateDistance(createdAt)
-  const isLiked = itemInteractionState?.isLiked ?? item.isLiked
-  const likeCount =
-    itemInteractionState?.itemStatus.likeCount ?? itemStatus.likeCount
+  const isLiked = stateById?.isLiked ?? item.isLiked
+  const likeCount = stateById?.itemStatus?.likeCount ?? itemStatus.likeCount
 
   return (
     <Block>

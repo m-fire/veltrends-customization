@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 type AppErrorType =
-  | 'UserExists'
+  | 'AlreadyExists'
   | 'Authentication'
   | 'Unauthorized'
   | 'BadRequest'
@@ -25,8 +25,8 @@ interface ErrorInfo {
 }
 
 export const APP_ERRORS_INFO: Record<AppErrorType, ErrorInfo> = {
-  UserExists: {
-    message: 'User already exists',
+  AlreadyExists: {
+    message: 'Already exists',
     statusCode: 409,
   },
   Authentication: {
