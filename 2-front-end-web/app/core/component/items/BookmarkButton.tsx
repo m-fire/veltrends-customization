@@ -18,7 +18,7 @@ function BookmarkButton({
 }: BookmarkButtonProps) {
   return (
     <SequenceElementsToggler
-      elements={[StyledBookmarksOutline, StyledBookmarksFill]}
+      elements={[<StyledBookmarksOutline />, <StyledBookmarksFill />]}
       startIndex={isBookmarked ? 1 : 0}
       size={size}
       disabled={disabled}
@@ -31,8 +31,8 @@ export default BookmarkButton
 // Inner Components
 
 const StyledBookmarksFill = styled(Bookmarks)`
-  color: ${colors.grey4};
+  color: ${colors.primary1};
 `
 const StyledBookmarksOutline = styled(Bookmarks)`
-  color: ${colors.primary1};
+  color: ${colors.grey4};
 `
