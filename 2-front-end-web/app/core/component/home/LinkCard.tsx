@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -6,6 +6,7 @@ import { Item } from '~/core/api/types'
 import { colors } from '~/common/style/colors'
 import { Earth } from '~/core/component/generate/svg'
 import LikeButton from '~/core/component/items/LikeButton'
+import BookmarkButton from '~/core/component/items/BookmarkButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
@@ -18,7 +19,6 @@ type LinkCardProps = {
 }
 
 function LinkCard({ item }: LinkCardProps) {
-  // define Data
   const {
     id: itemId,
     thumbnail,
@@ -108,13 +108,19 @@ function LinkCard({ item }: LinkCardProps) {
       </AnimatePresence>
 
       <ItemFooter>
-        <ToggleButtons>
+        <ActionButtons>
           <LikeButton
             onClick={() => toggleActionByType('LIKE_ITEM')}
             isLiked={isLiked}
             disabled={!authUser}
           />
-        </ToggleButtons>
+
+          <BookmarkButton
+            onClick={() => toggleActionByType('BOOKMARK_ITEM')}
+            isBookmarked={isBookmarked}
+            disabled={!authUser}
+          />
+        </ActionButtons>
 
         <UserInfo>
           by <b>{username}</b> · {pastDistance}
@@ -216,6 +222,11 @@ const LikeCount = styled(motion.div)`
     color: colors.grey3,
     lineHeight: 1.5,
   })};
+`
+
+const ActionButtons = styled.div`
+  ${flexStyles({ alignItems: 'center' })}
+  gap: 8px;
 `
 
 const UserInfo = styled.div`

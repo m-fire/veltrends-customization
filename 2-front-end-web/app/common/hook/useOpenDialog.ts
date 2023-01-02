@@ -53,6 +53,10 @@ const descriptionMap = {
     title: '로그인 후 이용해주세요.',
     description: '이 글이 마음에 드세요? 로그인 이후 좋아요를 눌러주세요.',
   },
+  BOOKMARK_ITEM: {
+    title: '로그인 후 이용해주세요.',
+    description: '이 글이 마음에 드세요? 로그인 이후 북마크를 눌러주세요.',
+  },
   LIKE_COMMENT: {
     title: '로그인 후 이용해주세요.',
     description: '이 댓글이 마음에 드세요? 로그인 이후 좋아요를 눌러주세요.',

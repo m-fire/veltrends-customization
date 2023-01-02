@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Item } from '~/core/api/types'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
@@ -11,6 +11,7 @@ import Earth from '~/core/component/generate/svg/Earth'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
+import BookmarkButton from '~/core/component/items/BookmarkButton'
 
 type ItemViewerProps = {
   item: Item
@@ -101,7 +102,14 @@ function ItemViewer({ item }: ItemViewerProps) {
         </a>
 
         <Footer>
-          <LikeBlock>
+          <BottomActionBlock>
+            <BookmarkButton
+              size="large"
+              isBookmarked={isBookmarked}
+              disabled={!authUser}
+              onClick={() => toggleActionByType('BOOKMARK_ITEM')}
+            />
+
             <LikeButton
               size="large"
               isLiked={isLiked}
@@ -124,7 +132,7 @@ function ItemViewer({ item }: ItemViewerProps) {
           </BottomActionBlock>
 
           <UserInfo>
-            by <b>{user.username}</b> · <span>{pastDistance}</span>
+            writen by <b>{user.username}</b> · <span>{pastDistance}</span>
           </UserInfo>
         </Footer>
       </Content>
@@ -234,7 +242,7 @@ const Body = styled.p`
   word-break: keep-all;
 `
 
-const LikeBlock = styled.div`
+const BottomActionBlock = styled.div`
   ${flexStyles({ direction: 'column', alignItems: 'center' })};
   gap: 4px;
   margin-bottom: 40px;
