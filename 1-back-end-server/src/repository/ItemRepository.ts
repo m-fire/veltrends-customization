@@ -217,6 +217,7 @@ class ItemRepository {
         ? Prisma.validator<Prisma.IntFilter>()({ lt: cursor })
         : undefined
     }
+
     static includeItemRelation(userId: number | undefined) {
       return Prisma.validator<Prisma.ItemInclude>()({
         user: {
@@ -231,12 +232,10 @@ class ItemRepository {
           },
         },
         publisher: true,
-        itemLikes: userId
-          ? { where: { userId }, select: { id: true } }
-          : undefined,
-        bookmarks: userId
-          ? { where: { userId }, select: { id: true } }
-          : undefined,
+        // 주의! 조건 제외는 반드시 `false` 를 대입할 것. 제외하기 위해 undefined 를 대입할 경우,
+        // 해당 엔티티의 모든 itemLikes 갯수가 카운트 되므로 예상치 못한 결과로 이어진다.
+        itemLikes: userId ? { where: { userId }, select: { id: true } } : false,
+        bookmarks: userId ? { where: { userId }, select: { id: true } } : false,
       })
     }
   }
