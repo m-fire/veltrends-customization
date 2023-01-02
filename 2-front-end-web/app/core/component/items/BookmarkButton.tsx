@@ -33,6 +33,7 @@ export default BookmarkButton
 const ActiveBookmark = styled(Bookmarks)`
   color: ${colors.primary1};
 `
+
 const DeactiveBookmark = styled(Bookmarks)`
-  color: ${colors.grey4};
+  color: ${colors.grey2};
 `

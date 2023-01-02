@@ -3,6 +3,8 @@ import { HeartFill, HeartOutline } from '~/core/component/generate/svg'
 import SequenceElementsToggler, {
   SequenceElementsTogglerProps,
 } from '~/common/component/system/SequenceElementsToggler'
+import styled from 'styled-components'
+import { colors } from '~/common/style/colors'
 
 type LikeButtonProps = {
   isLiked?: boolean
@@ -16,7 +18,7 @@ function LikeButton({
 }: LikeButtonProps) {
   return (
     <SequenceElementsToggler
-      elements={[<HeartOutline />, <HeartFill />]}
+      elements={[<StyledHeartOutline />, <HeartFill />]}
       startIndex={isLiked ? 1 : 0}
       size={size}
       disabled={disabled}
@@ -27,3 +29,7 @@ function LikeButton({
 export default LikeButton
 
 // Inner Components
+
+const StyledHeartOutline = styled(HeartOutline)`
+  color: ${colors.grey2};
+`
