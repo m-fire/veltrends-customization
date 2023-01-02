@@ -1,10 +1,10 @@
 import { client } from '~/common/api/client'
-import { SearchedItemPagination } from '~/core/api/types'
+import { SearchedItemPage } from '~/core/api/types'
 
 const URL_SEARCH = '/api/search'
 
 export async function searchItemList({ q, offset }: SearchItemListParams) {
-  const response = await client.get<SearchedItemPagination>(URL_SEARCH, {
+  const response = await client.get<SearchedItemPage>(URL_SEARCH, {
     params: { q, offset },
   })
   return response.data

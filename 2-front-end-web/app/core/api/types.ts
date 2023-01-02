@@ -29,7 +29,14 @@ export interface ItemStatus {
   commentCount: number
 }
 
-export type ItemListPagination = GenericPagination<Item>
+export type ItemListMode = 'recent' | 'trending' | 'past'
+
+export type ItemListPage = GenericPagination<Item>
+
+export type LikedItemResult = {
+  id: number
+  itemStatus: ItemStatus
+}
 
 export interface Comment {
   id: number
@@ -45,6 +52,8 @@ export interface Comment {
   isDeleted: boolean
   isLiked: boolean
 }
+
+// algolia result type
 
 export interface SearchedItem {
   id: number
@@ -62,13 +71,4 @@ export interface Highlight {
   body: string
 }
 
-export type SearchedItemPagination = GenericPagination<SearchedItem>
-
-export type ListMode = 'recent' | 'trending' | 'past'
-
-export interface Bookmark {
-  id: number
-  item: Item
-  createdAt: string
-}
-export type GetBookmarkListResult = GenericPagination<Bookmark>
+export type SearchedItemPage = GenericPagination<SearchedItem>

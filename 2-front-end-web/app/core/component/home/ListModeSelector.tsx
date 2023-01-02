@@ -13,13 +13,13 @@ import { motion } from 'framer-motion'
 import produce from 'immer'
 import qs from 'qs'
 import { colors } from '~/common/style/colors'
-import { ListMode } from '~/core/api/types'
+import { ItemListMode } from '~/core/api/types'
 import { Calendar, Clock, Fire } from '~/core/component/generate/svg'
 import { flexStyles, fontStyles } from '~/common/style/styled'
 import { DateStringRange } from '~/common/util/converters'
 
 type ModeSelectorProps = {
-  currentMode: ListMode
+  currentMode: ItemListMode
   dateRange: DateStringRange
 }
 
@@ -122,7 +122,7 @@ function ListModeSelector({ currentMode, dateRange }: ModeSelectorProps) {
     )
   }
 
-  function linkByMode(mode: ListMode, range?: DateStringRange) {
+  function linkByMode(mode: ItemListMode, range?: DateStringRange) {
     const paramsMap = mode == 'past' ? { mode, ...range } : { mode }
     return '/'.concat(qs.stringify(paramsMap, { addQueryPrefix: true }))
   }
@@ -178,7 +178,7 @@ const Indicator = styled(motion.div)`
 
 type ModeItemProps = {
   index: number
-  currentMode: ListMode
+  currentMode: ItemListMode
   state: ModeItemState
   onUpdateItemState: (
     itemIndex: number,
@@ -187,7 +187,7 @@ type ModeItemProps = {
   ) => void
 }
 type ModeItemState = {
-  mode: ListMode
+  mode: ItemListMode
   name: string
   icon: ReactNode
   size: { width: number }

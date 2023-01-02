@@ -1,9 +1,8 @@
 import qs from 'qs'
 import { client } from '~/common/api/client'
-import { Item, ItemListPagination, ItemStatus, ListMode } from './types'
+import { Item, ItemListPage, LikedItemResult, ItemListMode } from './types'
 
 export const URL_ITEMS = '/api/items' as const
-export const URL_BOOKMARKS = '/api/bookmarks' as const
 
 export async function createItem(params: CreateItemParams) {
   const response = await client.post<Item>(URL_ITEMS, params)
@@ -16,7 +15,7 @@ export async function getItemList({
   startDate,
   endDate,
 }: GetItemListParams) {
-  const response = await client.get<ItemListPagination>(
+  const response = await client.get<ItemListPage>(
     URL_ITEMS.concat(
       qs.stringify(
         { mode, cursor, startDate, endDate },
@@ -47,7 +46,7 @@ export async function deleteItem(itemId: number) {
 }
 
 export async function likeItem(itemId: number, controller?: AbortController) {
-  const response = await client.post<LikedItemApiResult>(
+  const response = await client.post<LikedItemResult>(
     `${URL_ITEMS}/${itemId}/likes`,
     {},
     { signal: controller?.signal },
@@ -56,7 +55,7 @@ export async function likeItem(itemId: number, controller?: AbortController) {
 }
 
 export async function unlikeItem(itemId: number, controller?: AbortController) {
-  const response = await client.delete<LikedItemApiResult>(
+  const response = await client.delete<LikedItemResult>(
     `${URL_ITEMS}/${itemId}/likes`,
     { signal: controller?.signal },
   )
@@ -72,7 +71,7 @@ type CreateItemParams = {
 }
 
 type GetItemListParams = {
-  mode: ListMode
+  mode: ItemListMode
   cursor?: number
   startDate?: string
   endDate?: string
@@ -83,9 +82,4 @@ type UpdateItem = {
   link: string
   title: string
   body: string
-}
-
-export type LikedItemApiResult = {
-  id: number
-  itemStatus: ItemStatus
 }

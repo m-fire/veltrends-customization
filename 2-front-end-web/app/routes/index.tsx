@@ -4,7 +4,7 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Requests } from '~/common/util/https'
 import { getItemList } from '~/core/api/items'
-import { ItemListPagination, ListMode } from '~/core/api/types'
+import { ItemListPage, ItemListMode } from '~/core/api/types'
 import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
 import TabLayout from '~/common/component/layout/TabLayout'
 import LinkCardList from '~/core/component/home/LinkCardList'
@@ -77,7 +77,7 @@ function Index() {
     return ref
   }
   type UseItemsInfiniteQueryParams = {
-    mode: ListMode
+    mode: ItemListMode
     dateRange: DateStringRange
   }
 
@@ -85,7 +85,7 @@ function Index() {
     queryKey: Parameters<typeof useInfiniteQuery>[0],
     { mode, dateRange }: UseItemsInfiniteQueryParams,
   ) {
-    const initialData = useLoaderData<ItemListPagination>()
+    const initialData = useLoaderData<ItemListPage>()
     const queryResult = useInfiniteQuery(
       queryKey,
       async ({ pageParam: cursor }) => {
@@ -116,12 +116,12 @@ function Index() {
   }
 
   function getCurrentURLParams(
-    defaultMode: ListMode,
+    defaultMode: ItemListMode,
     defaultDateRange: DateStringRange,
   ) {
     const [searchParams] = useSearchParams()
     return {
-      mode: (searchParams.get('mode') as ListMode) ?? defaultMode,
+      mode: (searchParams.get('mode') as ItemListMode) ?? defaultMode,
       dateRange: {
         start: searchParams.get('start') ?? defaultDateRange.start,
         end: searchParams.get('end') ?? defaultDateRange.end,
