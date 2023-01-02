@@ -1,12 +1,18 @@
 import { client } from '~/common/api/client'
-import { URL_BOOKMARKS } from '~/core/api/items'
-import { Bookmark, GetBookmarkListResult } from '~/core/api/types'
+import {
+  EmptyResult,
+  Bookmark,
+  BookmarkItemListPage,
+  Item,
+} from '~/core/api/types'
+
+export const URL_BOOKMARKS = '/api/bookmarks' as const
 
 export async function bookmarkItem(
   itemId: number,
   controller?: AbortController,
 ) {
-  const response = await client.post<Bookmark>(
+  const response = await client.post<Bookmark<Item>>(
     `${URL_BOOKMARKS}`,
     { itemId },
     { signal: controller?.signal },
@@ -14,20 +20,20 @@ export async function bookmarkItem(
   return response.data
 }
 
-export async function getBookmarkList(cursor?: number) {
-  const response = await client.get<GetBookmarkListResult>('/api/bookmarks', {
-    params: { cursor },
-  })
-  return response.data
-}
-
 export async function unbookmarkItem(
   itemId: number,
   controller?: AbortController,
 ) {
-  const response = await client.delete(`${URL_BOOKMARKS}`, {
+  const response = await client.delete<EmptyResult>(`${URL_BOOKMARKS}`, {
     params: { itemId },
     signal: controller?.signal,
+  })
+  return response.data
+}
+
+export async function getBookmarkItemList(cursor?: number) {
+  const response = await client.get<BookmarkItemListPage>(`${URL_BOOKMARKS}`, {
+    params: { cursor },
   })
   return response.data
 }

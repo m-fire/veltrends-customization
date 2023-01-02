@@ -1,5 +1,11 @@
 import { GenericPagination, SimpleUser } from '~/common/api/types'
 
+// general result
+
+export type EmptyResult = null | undefined
+
+// serialized entity result
+
 export interface Item {
   id: number
   title: string
@@ -53,7 +59,15 @@ export interface Comment {
   isLiked: boolean
 }
 
-// algolia result type
+export interface Bookmark<T> {
+  id: number
+  item: T
+  createdAt: string
+}
+
+export type BookmarkItemListPage = GenericPagination<Bookmark<Item>>
+
+// algolia search result
 
 export interface SearchedItem {
   id: number
