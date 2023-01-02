@@ -28,7 +28,7 @@ export function useItemAction() {
         const result = await likeItem(itemId, getAbortController(itemId))
         if (
           result?.id !== itemId &&
-          prevItemStatus.likeCount + 1 === result.itemStatus.likeCount
+          prevItemStatus.likeCount + 1 !== result.itemStatus.likeCount
         )
           throw new AppError('Unknown')
 
@@ -51,7 +51,7 @@ export function useItemAction() {
         const result = await unlikeItem(itemId, getAbortController(itemId))
         if (
           result?.id !== itemId &&
-          prevItemStatus.likeCount - 1 === result.itemStatus.likeCount
+          prevItemStatus.likeCount - 1 !== result.itemStatus.likeCount
         )
           throw new AppError('Unknown')
 
@@ -96,10 +96,13 @@ export function useItemAction() {
         abortRequest(itemId)
         setBookmarked(itemId, isBookmarked)
 
-        const result = await unbookmarkItem(itemId, getAbortController(itemId))
+        const nullableResult = await unbookmarkItem(
+          itemId,
+          getAbortController(itemId),
+        )
 
         /* 북마크 제거 시 반환값이 null | undefined 이어야 정상응답 이다 */
-        if (result === '') throw new AppError('Unknown')
+        if (nullableResult !== '') throw new AppError('Unknown')
 
         setBookmarked(itemId, false)
         removeAbortController(itemId)
