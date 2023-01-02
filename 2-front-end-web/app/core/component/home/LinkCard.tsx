@@ -209,9 +209,10 @@ const ItemFooter = styled.div`
     ${flexStyles({ alignItems: 'center' })};
     gap: 4px;
   }
-  & svg {
-    color: ${colors.grey2};
-  }
+  // 이 코드 때문에 하위 컴포넌트의 SVG 컬러가 적용되지 않았음.
+  // & svg {
+  //   color: ${colors.grey2};
+  // }
 `
 
 const LikeCount = styled(motion.div)`
