@@ -31,26 +31,45 @@ function LinkCard({ item }: LinkCardProps) {
   } = item
 
   // Dialog settings
-  const { likeItem, unlikeItem } = useItemAction()
-  const itemState = useItemStateById(itemId)
-  const itemStatus = itemState?.itemStatus ?? item.itemStatus
+  const stateById = useItemStateById(itemId)
+  const itemStatus = stateById?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
   const authUser = useAuthUser()
-  const toggleLike = async () => {
-    if (authUser == null) {
-      openDialog('LIKE_ITEM', { gotoLogin: true })
-      return
-    }
-    if (isLiked) {
-      await unlikeItem(itemId, itemStatus)
-    } else {
-      await likeItem(itemId, itemStatus)
-    }
-  }
+
+  const isLiked = stateById?.isLiked ?? item.isLiked
+  const isBookmarked = stateById?.isBookmarked ?? item.isBookmarked
+  const { likeItem, unlikeItem, bookmarkItem, unbookmarkItem } = useItemAction()
+
+  const toggleActionByType = useCallback(
+    async (type: ActionType) => {
+      if (!authUser) {
+        openDialog(type, { gotoLogin: true })
+        return
+      }
+      switch (type) {
+        case 'LIKE_ITEM': {
+          isLiked
+            ? await unlikeItem(itemId, itemStatus, isLiked)
+            : await likeItem(itemId, itemStatus, isLiked)
+          break
+        }
+        case 'BOOKMARK_ITEM': {
+          isBookmarked
+            ? await unbookmarkItem(itemId, isBookmarked)
+            : await bookmarkItem(itemId, isBookmarked)
+          break
+        }
+      }
+    },
+    [stateById],
+  )
+  type ActionType = Extract<
+    Parameters<ReturnType<typeof useOpenDialog>>[0],
+    'LIKE_ITEM' | 'BOOKMARK_ITEM'
+  >
 
   const pastDistance = useDateDistance(createdAt)
-  const isLiked = itemState?.isLiked ?? item.isLiked
-  const likeCount = itemState?.itemStatus.likeCount ?? itemStatus.likeCount
+  const likeCount = stateById?.itemStatus?.likeCount ?? itemStatus.likeCount
   const link = `/items/${itemId}`
 
   return (
@@ -89,11 +108,14 @@ function LinkCard({ item }: LinkCardProps) {
       </AnimatePresence>
 
       <ItemFooter>
-        <LikeButton
-          onClick={toggleLike}
-          isLiked={isLiked}
-          disabled={authUser == null}
-        />
+        <ToggleButtons>
+          <LikeButton
+            onClick={() => toggleActionByType('LIKE_ITEM')}
+            isLiked={isLiked}
+            disabled={!authUser}
+          />
+        </ToggleButtons>
+
         <UserInfo>
           by <b>{username}</b> · {pastDistance}
         </UserInfo>

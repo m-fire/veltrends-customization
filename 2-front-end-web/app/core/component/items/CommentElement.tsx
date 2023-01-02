@@ -52,9 +52,9 @@ function CommentElement({ comment, type }: CommentElementProps) {
       return
     }
     if (isLiked) {
-      await unlikeComment({ itemId, commentId, likeCount })
+      await unlikeComment({ itemId, commentId, likeCount, isLiked })
     } else {
-      await likeComment({ itemId, commentId, likeCount })
+      await likeComment({ itemId, commentId, likeCount, isLiked })
     }
   }
 

@@ -16,46 +16,46 @@ export function useCommentAction() {
   // actions(interactions)
 
   const like = useCallback(
-    async ({ itemId, commentId, likeCount }: CommentLikedParams) => {
+    async ({ itemId, commentId, likeCount, isLiked }: CommentLikedParams) => {
       try {
-        setLiked(commentId, likeCount)
-
         abortRequest(commentId)
+        setLiked(commentId, likeCount, isLiked)
+
         const result = await likeComment(
           { itemId, commentId },
           getAbortController(commentId),
         )
-        if (result.id !== commentId) throw new AppError('Unknown')
+        if (result.id !== commentId || likeCount + 1 !== result.likeCount)
+          throw new AppError('Unknown')
 
-        setLiked(result.id, result.likeCount)
+        setLiked(result.id, result.likeCount, true)
+        removeAbortController(commentId)
       } catch (e) {
         // todo: handler error...
         console.error(e)
-      } finally {
-        removeAbortController(commentId)
       }
     },
     [stateActions, requestAction],
   )
 
   const unlike = useCallback(
-    async ({ itemId, commentId, likeCount }: CommentLikedParams) => {
+    async ({ itemId, commentId, likeCount, isLiked }: CommentLikedParams) => {
       try {
-        setLiked(commentId, likeCount)
-
         abortRequest(commentId)
+        setLiked(commentId, likeCount, isLiked)
+
         const result = await unlikeComment(
           { itemId, commentId },
           getAbortController(commentId),
         )
-        if (result.id !== commentId) throw new AppError('Unknown')
+        if (result.id !== commentId || likeCount - 1 !== result.likeCount)
+          throw new AppError('Unknown')
 
-        setLiked(result.id, result.likeCount)
+        setLiked(result.id, result.likeCount, false)
+        removeAbortController(commentId)
       } catch (e) {
         // todo: handler error...
         console.error(e)
-      } finally {
-        removeAbortController(commentId)
       }
     },
     [stateActions, requestAction],
@@ -93,4 +93,5 @@ type CommentLikedParams = {
   itemId: number
   commentId: number
   likeCount: number
+  isLiked: boolean
 }

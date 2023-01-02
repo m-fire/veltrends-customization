@@ -29,27 +29,45 @@ function ItemViewer({ item }: ItemViewerProps) {
     link,
   } = item
 
-  const stateById = useItemStateById(itemId)
-  const { likeItem, unlikeItem } = useItemAction()
-
   // Dialog settings
+  const stateById = useItemStateById(itemId)
   const itemStatus = stateById?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
   const authUser = useAuthUser()
-  const toggleLike = async () => {
-    if (authUser == null) {
-      openDialog('LIKE_ITEM', { gotoLogin: true })
-      return
-    }
-    if (isLiked) {
-      await unlikeItem(itemId, itemStatus)
-    } else {
-      await likeItem(itemId, itemStatus)
-    }
-  }
+
+  const isLiked = stateById?.isLiked ?? item.isLiked
+  const isBookmarked = stateById?.isBookmarked ?? item.isBookmarked
+  const { likeItem, unlikeItem, bookmarkItem, unbookmarkItem } = useItemAction()
+
+  const toggleActionByType = useCallback(
+    async (type: ActionType) => {
+      if (!authUser) {
+        openDialog(type, { gotoLogin: true })
+        return
+      }
+      switch (type) {
+        case 'LIKE_ITEM': {
+          isLiked
+            ? await unlikeItem(itemId, itemStatus, isLiked)
+            : await likeItem(itemId, itemStatus, isLiked)
+          break
+        }
+        case 'BOOKMARK_ITEM': {
+          isBookmarked
+            ? await unbookmarkItem(itemId, isBookmarked)
+            : await bookmarkItem(itemId, isBookmarked)
+          break
+        }
+      }
+    },
+    [stateById],
+  )
+  type ActionType = Extract<
+    Parameters<ReturnType<typeof useOpenDialog>>[0],
+    'LIKE_ITEM' | 'BOOKMARK_ITEM'
+  >
 
   const pastDistance = useDateDistance(createdAt)
-  const isLiked = stateById?.isLiked ?? item.isLiked
   const likeCount = stateById?.itemStatus?.likeCount ?? itemStatus.likeCount
 
   return (
@@ -87,9 +105,10 @@ function ItemViewer({ item }: ItemViewerProps) {
             <LikeButton
               size="large"
               isLiked={isLiked}
-              disabled={authUser == null}
-              onClick={toggleLike}
+              disabled={!authUser}
+              onClick={() => toggleActionByType('LIKE_ITEM')}
             />
+
             <AnimatePresence initial={false}>
               {likeCount === 0 ? null : (
                 <LikesCount
@@ -102,7 +121,7 @@ function ItemViewer({ item }: ItemViewerProps) {
                 </LikesCount>
               )}
             </AnimatePresence>
-          </LikeBlock>
+          </BottomActionBlock>
 
           <UserInfo>
             by <b>{user.username}</b> · <span>{pastDistance}</span>

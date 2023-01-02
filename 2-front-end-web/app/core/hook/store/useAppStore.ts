@@ -9,13 +9,12 @@ const useAppStore = create(
     items: {
       stateMap: {},
       stateActions: {
-        setLiked: (itemId: number, itemStatus) =>
+        setLiked: (itemId: number, itemStatus, isLiked) =>
           set((prev) =>
             produce(prev, (next) => {
               const stateById = extractTypeStateById('items', itemId, next)
-              const beforeLikeCount = stateById.itemStatus?.likeCount ?? -1
               stateById.itemStatus = itemStatus
-              stateById.isLiked = beforeLikeCount + 1 === itemStatus.likeCount
+              stateById.isLiked = isLiked
             }),
           ),
         setBookmarked: (itemId: number, isBookmarked: boolean) =>
@@ -32,7 +31,7 @@ const useAppStore = create(
       /* state by id */
       stateMap: {},
       stateActions: {
-        setLiked: (commentId, likeCount) =>
+        setLiked: (commentId, likeCount, isLiked) =>
           set((prev) =>
             produce(prev, (next) => {
               if (likeCount == null) return
@@ -41,9 +40,8 @@ const useAppStore = create(
                 commentId,
                 next,
               )
-              const beforeLikeCount = stateById?.likeCount ?? -1
               stateById.likeCount = likeCount
-              stateById.isLiked = beforeLikeCount + 1 === likeCount
+              stateById.isLiked = isLiked
             }),
           ),
       },
@@ -89,8 +87,10 @@ const useAppStore = create(
         set((prev) =>
           produce(prev, (next) => {
             const stateById = extractTypeStateById(type, entityId, next)
-            stateById.abortController?.abort()
-            if (stateById.abortController != null) return
+            if (stateById.abortController != null) {
+              stateById.abortController.abort()
+              return
+            }
             stateById.abortController = new AbortController()
           }),
         ),
@@ -116,10 +116,7 @@ function extractTypeStateById<K extends EntityType>(
   store: WritableDraft<AppStore>,
 ) {
   let stateMap: WritableDraft<
-    Record<
-      number,
-      Partial<ItemInteractState | CommentInteractState> | undefined
-    >
+    Record<number, Partial<ItemActionState | CommentActionState> | undefined>
   >
   switch (type) {
     case 'items': {
@@ -137,9 +134,9 @@ function extractTypeStateById<K extends EntityType>(
 
   return stateMap[entityId] as Partial<
     K extends 'items'
-      ? ItemInteractState
+      ? ItemActionState
       : K extends 'comments'
-      ? CommentInteractState
+      ? CommentActionState
       : {}
   >
 }
@@ -148,17 +145,21 @@ function extractTypeStateById<K extends EntityType>(
 
 interface AppStore {
   items: {
-    stateMap: Record<number, ItemInteractState>
+    stateMap: Record<number, ItemActionState>
     stateActions: {
-      setLiked: (entityId: number, itemStatus: ItemStatus) => void
+      setLiked: (
+        entityId: number,
+        itemStatus: ItemStatus,
+        isLiked: boolean,
+      ) => void
       setBookmarked: (entityId: number, isBookmarked: boolean) => void
     }
   }
 
   comments: {
-    stateMap: Record<number, CommentInteractState>
+    stateMap: Record<number, CommentActionState>
     stateActions: {
-      setLiked: (entityId: number, likeCount: number) => void
+      setLiked: (entityId: number, likeCount: number, isLiked: boolean) => void
     }
 
     inputState: CommentInputState
@@ -181,7 +182,7 @@ interface AppStore {
 
 export type EntityType = keyof Omit<AppStore, 'abortRequestsActions'>
 
-export interface ItemInteractState {
+export interface ItemActionState {
   itemStatus?: ItemStatus
   isLiked?: boolean
   isBookmarked?: boolean
@@ -189,7 +190,7 @@ export interface ItemInteractState {
   abortController?: AbortController
 }
 
-export interface CommentInteractState {
+export interface CommentActionState {
   likeCount?: number
   isLiked?: boolean
   // 반복 재요청 방지
