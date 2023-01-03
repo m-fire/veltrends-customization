@@ -11,7 +11,7 @@ import SearchInput, {
 } from '~/core/component/search/SearchInput'
 import { useDebounce } from 'use-debounce'
 import { Requests } from '~/common/util/https'
-import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
+import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import { searchItemList } from '~/core/api/search'
 import SearchResultCardList from '~/core/component/search/SearchResultCardList'
 import { SearchedItemPage } from '~/core/api/types'
@@ -61,12 +61,10 @@ function Search() {
     },
   )
 
-  const fetchNext = useCallback(async () => {
-    if (!hasNextPage) return
-    await fetchNextPage()
-  }, [hasNextPage, fetchNextPage])
-  const intersectionRef = useRef<HTMLDivElement>(null)
-  useInfiniteScroll(intersectionRef, fetchNext)
+  const triggerRef = useInfinityScrollTriggerRef<HTMLDivElement>({
+    hasNextPage,
+    fetchNextPage,
+  })
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -107,7 +105,7 @@ function Search() {
         )}
       </AnimatePresence>
 
-      <div ref={intersectionRef} />
+      <div ref={triggerRef} />
     </TabLayout>
   )
 }

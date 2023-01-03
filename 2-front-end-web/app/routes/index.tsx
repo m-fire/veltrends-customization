@@ -5,7 +5,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { Requests } from '~/common/util/https'
 import { getItemList } from '~/core/api/items'
 import { ItemListPage, ItemListMode } from '~/core/api/types'
-import { useInfiniteScroll } from '~/common/hook/useInfiniteScroll'
+import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import TabLayout from '~/common/component/layout/TabLayout'
 import LinkCardList from '~/core/component/home/LinkCardList'
 import ListModeSelector from '~/core/component/home/ListModeSelector'
@@ -35,7 +35,7 @@ function Index() {
     }
   }, [mode, start, end])
 
-  const intersectionRef = useInfinityScrollIntersectionRef<HTMLDivElement>({
+  const triggerRef = useInfinityScrollTriggerRef<HTMLDivElement>({
     hasNextPage,
     fetchNextPage,
   })
@@ -55,32 +55,11 @@ function Index() {
       {itemList ? <LinkCardList items={itemList} /> : null}
 
       {/* Infinity Scroll Intersection Area */}
-      <div ref={intersectionRef} />
+      <div ref={triggerRef} />
     </TabLayout>
   )
 
   /* refactoring */
-
-  function useInfinityScrollIntersectionRef<E extends HTMLElement>({
-    hasNextPage,
-    fetchNextPage,
-  }: Partial<ReturnType<typeof useInfiniteQuery>>) {
-    /* 무한 스크롤 로딩 Ref 및 기능정의 */
-    const ref = useRef<E>(null)
-
-    const fetchNext = useCallback(() => {
-      if (hasNextPage === false) return
-      fetchNextPage?.()
-    }, [hasNextPage, fetchNextPage])
-
-    useInfiniteScroll(ref, fetchNext)
-    return ref
-  }
-  type UseItemsInfiniteQueryParams = {
-    mode: ItemListMode
-    dateRange: DateStringRange
-  }
-
   function useItemsInfiniteQuery(
     queryKey: Parameters<typeof useInfiniteQuery>[0],
     { mode, dateRange }: UseItemsInfiniteQueryParams,
@@ -109,6 +88,10 @@ function Index() {
       },
     )
     return queryResult
+  }
+  type UseItemsInfiniteQueryParams = {
+    mode: ItemListMode
+    dateRange: DateStringRange
   }
 
   function useCurrentDateRange() {
