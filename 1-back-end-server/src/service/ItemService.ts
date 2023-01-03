@@ -80,7 +80,8 @@ class ItemService {
       startDate,
       endDate,
     })
-    if (listingInfo.totalCount === 0) return createEmptyPage()
+    if (listingInfo.totalCount === 0 || listingInfo.list.length === 0)
+      return createEmptyPage()
 
     const serializedItemList = listingInfo.list.map((item) =>
       IS.serialize(item),
