@@ -7,11 +7,12 @@ import { Authenticator } from '~/core/api/auth'
 import TabLayout from '~/common/component/layout/TabLayout'
 import LinkCardList from '~/core/component/home/LinkCardList'
 import { getBookmarkItemList } from '~/core/api/bookmarks'
+import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 
 function Bookmarks() {
   const initialData = useLoaderData<BookmarkItemList>()
 
-  const { data } = useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
     ['bookmarks'],
     ({ pageParam }) => getBookmarkItemList(pageParam),
     {
@@ -27,6 +28,11 @@ function Bookmarks() {
     },
   )
 
+  const triggerRef = useInfinityScrollTriggerRef<HTMLDivElement>({
+    hasNextPage,
+    fetchNextPage,
+  })
+
   const bookmarkItemList = data?.pages.flatMap((page) =>
     page.list.map((bookmark) => bookmark.item),
   )
@@ -34,6 +40,7 @@ function Bookmarks() {
   return (
     <StyledTabLayout>
       {bookmarkItemList ? <LinkCardList items={bookmarkItemList} /> : null}
+      <div ref={triggerRef} />
     </StyledTabLayout>
   )
 }
