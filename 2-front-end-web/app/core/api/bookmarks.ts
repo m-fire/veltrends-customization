@@ -1,6 +1,6 @@
 import { client } from '~/common/api/client'
 import {
-  EmptyResult,
+  EmptyStringResult,
   Bookmark,
   BookmarkItemListPage,
   Item,
@@ -24,7 +24,7 @@ export async function unbookmarkItem(
   itemId: number,
   controller?: AbortController,
 ) {
-  const response = await client.delete<EmptyResult>(`${URL_BOOKMARKS}`, {
+  const response = await client.delete<EmptyStringResult>(`${URL_BOOKMARKS}`, {
     params: { itemId },
     signal: controller?.signal,
   })

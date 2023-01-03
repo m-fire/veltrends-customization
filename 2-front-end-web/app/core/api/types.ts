@@ -2,7 +2,7 @@ import { GenericPagination, SimpleUser } from '~/common/api/types'
 
 // general result
 
-export type EmptyResult = null | undefined
+export type EmptyStringResult = ''
 
 // serialized entity result
 
