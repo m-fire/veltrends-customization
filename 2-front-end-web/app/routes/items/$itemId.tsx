@@ -12,6 +12,8 @@ import MoreVertButton from '~/common/component/system/MoreVertButton'
 import { useAuthUser } from '~/common/context/UserContext'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
+import { screenMediaQueryMap } from '~/common/style/media-query'
+import styled from 'styled-components'
 
 type ItemProps = {}
 
@@ -64,22 +66,26 @@ function Item({}: ItemProps) {
 
   //Todo: Header tool menu 구성
   return (
-    <BasicLayout
-      title={null}
-      headerRight={
-        isMyItem ? (
-          <MoreVertButton position="header" onClick={onMoreVert} />
-        ) : null
-      }
-      hasBackButton
-    >
-      <ItemViewer item={item} />
-      <CommentList commentList={commentList!} />
+    <>
+      <BasicLayout
+        title={null}
+        headerRight={
+          isMyItem ? (
+            <MoreVertButton position="header" onClick={onMoreVert} />
+          ) : null
+        }
+        hasBackButton
+      >
+        <Content>
+          <ItemViewer item={item} />
+          <CommentList commentList={commentList!} />
+        </Content>
+      </BasicLayout>
       <CommentInputOverlay />
-    </BasicLayout>
+    </>
   )
 }
-export default Item
+export default ItemById
 
 // Remix handler
 
@@ -103,3 +109,12 @@ interface ItemLoaderData {
 // todo: handle 404
 
 // Inner Components
+
+const Content = styled.div`
+  ${screenMediaQueryMap.tablet} {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 0 auto;
+    margin-top: 32px;
+  }
+`
