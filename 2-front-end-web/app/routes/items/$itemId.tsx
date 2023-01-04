@@ -12,7 +12,7 @@ import MoreVertButton from '~/common/component/system/MoreVertButton'
 import { useAuthUser } from '~/common/context/UserContext'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
-import { screenMediaQueryMap } from '~/common/style/media-query'
+import { screen } from '~/common/style/media-query'
 import styled from 'styled-components'
 
 type ItemByIdProps = {}
@@ -111,7 +111,7 @@ interface ItemLoaderData {
 // Inner Components
 
 const Content = styled.div`
-  ${screenMediaQueryMap.tablet} {
+  ${screen.tablet} {
     padding-left: 1rem;
     padding-right: 1rem;
     margin: 0 auto;

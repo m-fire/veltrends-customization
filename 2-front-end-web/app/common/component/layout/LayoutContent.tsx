@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { flexContainer } from '~/common/style/styled'
-import { screenMediaQueryMap } from '~/common/style/media-query'
+import { screen } from '~/common/style/media-query'
 
 type LayoutContentProps = {
   className?: string
@@ -17,16 +17,15 @@ export default LayoutContent
 
 const Container = styled.div`
   ${flexContainer({ direction: 'column' })};
-  // grow:1, shrink:1, basis:0%
-  flex: 1;
+  padding-top: 56px;
+
+  flex: 1; // grow:1, shrink:1, basis:0%
   overflow: scroll;
-  padding-left: 30px;
-  padding-right: 30px;
-  ${screenMediaQueryMap.tablet} {
-    padding-left: 40px;
-    padding-right: 40px;
+  ${screen.tablet} {
+    padding-left: 30px;
+    padding-right: 30px;
   }
-  ${screenMediaQueryMap.wide} {
+  ${screen.wide} {
     width: 1280px; // wide screen minWidth
     margin-left: auto;
     margin-right: auto;

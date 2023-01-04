@@ -22,7 +22,7 @@ function Header({
       {headerLeft ? (
         <HeaderSide position={'left'}>{headerLeft}</HeaderSide>
       ) : null}
-      <Title className="title">{title}</Title>
+      <HeaderTitle className="title">{title}</HeaderTitle>
       {headerRight ? (
         <HeaderSide position={'right'}>{headerRight}</HeaderSide>
       ) : null}
@@ -38,14 +38,7 @@ const Block = styled.header`
   ${flexContainer({ alignItems: 'center', justifyContent: 'center' })};
   position: relative;
   height: 56px;
-  border-bottom: 1px solid ${colors.grey1};
-  z-index: 1;
-
-  // todo: backdrop-filter 적용안됨 수정
-  //padding-left: 16px;
-  //padding-right: 16px;
-  //backdrop-filter: grayscale(80%) blur(8px);
-  //-webkit-backdrop-filter: grayscale(80%) blur(8px);
+  //border-bottom: 1px solid ${colors.grey1};
 `
 
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
@@ -56,11 +49,16 @@ const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
   height: 100%;
 `
 
-const Title = styled.div`
+const HeaderTitle = styled.div`
   ${fontStyles({ size: '20px', weight: 800, color: colors.grey5 })};
+
   svg {
     display: block;
     width: 130px;
     height: 30px;
   }
+  -webkit-filter: drop-shadow(0px 0px 0.8px white)
+    drop-shadow(0px 0px 1px white) drop-shadow(0px 0px 8px white);
+  filter: drop-shadow(0px 0px 0.8px white) drop-shadow(0px 0px 1px white)
+    drop-shadow(0px 0px 8px white);
 `

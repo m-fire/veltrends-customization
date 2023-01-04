@@ -4,6 +4,7 @@ import Header from '~/common/component/base/Header'
 import HeaderBackButton from '~/common/component/base/HeaderBackButton'
 import { useGoBack } from '~/common/hook/useGoBack'
 import LayoutContent from '~/common/component/layout/LayoutContent'
+import styled from 'styled-components'
 
 type BasicLayoutProps = {
   title?: ReactNode
@@ -29,7 +30,7 @@ function BasicLayout({
 
   return (
     <FullHeightPage>
-      <Header
+      <StyledHeader
         title={title}
         headerLeft={
           hasBackButton ? (
@@ -45,3 +46,12 @@ function BasicLayout({
 export default BasicLayout
 
 // Inner Components
+
+const StyledHeader = styled(Header)`
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  backdrop-filter: blur(8px); // grayscale(80%)
+  -webkit-backdrop-filter: blur(8px); // grayscale(80%)
+`

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Item } from '~/core/api/types'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/core/component/items/LikeButton'
@@ -12,6 +12,7 @@ import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
 import BookmarkButton from '~/core/component/items/BookmarkButton'
+import { screen } from '~/common/style/media-query'
 
 type ItemViewerProps = {
   item: Item
@@ -201,39 +202,54 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
       color: colors.grey3,
     })};
   }
+  ${screen.tablet} {
+    font-size: 16px;
+    strong {
+      font-size: 16px;
+    }
+    gap: 8px;
+    margin-bottom: 12px;
+    img,
+    svg {
+      width: 24px;
+      height: 24px;
+      border-radius: 0.25vw;
+    }
+  }
+  ${screen.desktop} {
+    font-size: 20px;
+    strong {
+      font-size: 20px;
+    }
+    gap: 12px;
+    margin-bottom: 16px;
+    img,
+    svg {
+      width: 26px;
+      height: 26px;
+    }
+  }
 `
 
 const Title = styled.h2`
   ${fontStyles({
-    size: '20px',
+    size: '28px',
     weight: 800,
     color: colors.grey5,
     letterSpacing: '-0.5px',
   })};
+  ${screen.tablet} {
+    font-size: 32px;
+  }
+  ${screen.desktop} {
+    font-size: 40px;
+  }
+  ${screen.xwide} {
+    font-size: 48px;
+  }
   margin-top: 0;
   margin-bottom: 8px;
 `
-
-// const OriginLink = styled.a`
-//   ${flexStyles({
-//     alignItems: 'flex-end',
-//     justifyContent: 'flex-end',
-//   })};
-//   ${fontStyles({
-//     size: '18px',
-//     weight: 600,
-//     color: colors.primary1,
-//     lineHeight: 1,
-//   })};
-//   text-decoration: none;
-//   margin-bottom: 30px;
-//   gap: 6px;
-//   & > svg {
-//     display: inline-block;
-//     width: 20px;
-//     height: 20px;
-//   }
-// `
 
 const ActionButtons = styled.div`
   ${flexContainer({ justifyContent: 'flex-end', alignItems: 'center' })};
@@ -243,13 +259,20 @@ const ActionButtons = styled.div`
 
 const Body = styled.p`
   ${fontStyles({
-    size: '16px',
+    size: '18px',
     weight: 500,
     color: colors.grey4,
     lineHeight: 1.5,
-    letterSpacing: '-0.5px',
   })};
-  line-height: 1.5;
+  ${screen.tablet} {
+    font-size: 22px;
+  }
+  ${screen.desktop} {
+    font-size: 24px;
+  }
+  ${screen.xwide} {
+    font-size: 26px;
+  }
   margin-top: 0;
   margin-bottom: 40px;
   white-space: pre-wrap;
@@ -279,11 +302,17 @@ const UserInfo = styled.div`
 const LikesCount = styled(motion.div)`
   ${flexContainer()};
   ${fontStyles({
-    size: '12px',
+    size: '14px',
     weight: 600,
     color: colors.grey3,
     lineHeight: 1.5,
   })};
+  ${screen.tablet} {
+    font-size: 16px;
+  }
+  ${screen.desktop} {
+    font-size: 20px;
+  }
 `
 
 const Footer = styled.div`

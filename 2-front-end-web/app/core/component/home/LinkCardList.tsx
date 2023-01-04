@@ -3,7 +3,7 @@ import { Item } from '~/core/api/types'
 import styled from 'styled-components'
 import LinkCard from '~/core/component/home/LinkCard'
 import { gridContiner } from '~/common/style/styled'
-import { screenMediaQueryMap } from '~/common/style/media-query'
+import { screen } from '~/common/style/media-query'
 
 type LinkCardListProps = {
   items: Item[]
@@ -26,17 +26,18 @@ const List = styled.ul`
   ${gridContiner({
     templateColumns: 'repeat(1, 1fr)',
   })}
-  ${screenMediaQueryMap.tablet} {
+  ${screen.tablet} {
     ${gridContiner({
       templateColumns: 'repeat(2, 1fr)',
     })}
   }
-  ${screenMediaQueryMap.wide} {
+  ${screen.wide} {
     ${gridContiner({
       templateColumns: 'repeat(3, 1fr)',
     })}
   }
-  gap: 30px;
+  row-gap: 56px;
+  column-gap: 30px;
 
   & > li:last-child {
     margin-bottom: 72px;

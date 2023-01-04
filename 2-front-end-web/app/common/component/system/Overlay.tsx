@@ -31,7 +31,10 @@ const Fill = styled(motion.div)`
   left: 0;
   width: 100vw;
   height: 100vh;
-  height: -webkit-fill-available; // safari browser 100vh 이슈해결
+  height: -webkit-fill-available; // safari browser 100vh 이슈해결용
   background-color: rgba(0, 0, 0, 0.6);
   box-shadow: inset 0 0 100px 0 rgba(0, 0, 0, 1);
+
+  z-index: 10;
+  // z-index: ${Number.MAX_SAFE_INTEGER};
 `

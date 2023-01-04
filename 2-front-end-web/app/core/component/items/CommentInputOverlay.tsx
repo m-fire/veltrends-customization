@@ -183,6 +183,7 @@ const Footer = styled(motion.div)`
   height: 48px;
   background: white;
   padding: 2px 2px;
+  z-index: 15;
 `
 
 const StyledInput = styled.input`

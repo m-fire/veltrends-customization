@@ -6,7 +6,7 @@ const breakWidthMap = {
   xwide: 1440,
 } as const
 
-export const screenMediaQueryMap = Object.entries(breakWidthMap).reduce(
+export const screen = Object.entries(breakWidthMap).reduce(
   (acc, [name, width]) => {
     acc[name as DeviceNames] = createMediaQuery(width)
     return acc

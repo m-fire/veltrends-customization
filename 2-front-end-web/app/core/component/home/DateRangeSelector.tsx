@@ -97,9 +97,15 @@ export default DateRangeSelector
 
 // Inner Components
 
+const Block = styled.div`
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: ${colors.grey5};
+`
+
 const WeekNavigator = styled.div`
   ${flexContainer({ justifyContent: 'center' })}
-  margin-top: -12px;
+  //margin-top: -12px;
   margin-bottom: 12px;
   gap: 32px;
 `
@@ -128,10 +134,4 @@ const StyledLink = styled(Link)<{
         transform: rotate(180deg);
       `}
   }
-`
-
-const Block = styled.div`
-  font-size: 16px;
-  margin-bottom: 16px;
-  color: ${colors.grey5};
 `

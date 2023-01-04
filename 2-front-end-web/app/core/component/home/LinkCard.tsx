@@ -13,7 +13,7 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
-import { screenMediaQueryMap } from '~/common/style/media-query'
+import { screen } from '~/common/style/media-query'
 
 type LinkCardProps = {
   item: Item
@@ -94,9 +94,9 @@ function LinkCard({ item }: LinkCardProps) {
         {body ? <p>{body}</p> : null}
       </StyledLink>
 
-      <LinkCountWrapper>
-        <AnimatePresence initial={false}>
-          {likeCount === 0 ? null : (
+      <AnimatePresence initial={false}>
+        {likeCount === 0 ? null : (
+          <LinkCountWrapper>
             <LikeCount
               key="likeCount"
               initial={{ height: 0, opacity: 0, y: 10 }}
@@ -106,9 +106,9 @@ function LinkCard({ item }: LinkCardProps) {
             >
               좋아요 {likeCount.toLocaleString()}
             </LikeCount>
-          )}
-        </AnimatePresence>
-      </LinkCountWrapper>
+          </LinkCountWrapper>
+        )}
+      </AnimatePresence>
 
       <ItemFooter>
         <ActionButtons>
@@ -139,7 +139,6 @@ const ListItem = styled.li`
   ${flexContainer({ direction: 'column' })};
 `
 
-// <a></a>
 const StyledLink = styled(Link)`
   ${flexContainer({ direction: 'column' })};
   text-decoration: none;
@@ -150,26 +149,37 @@ const StyledLink = styled(Link)`
     padding: 0;
   }
   & > h3 {
-    ${fontStyles({ size: '18px', weight: 800, color: colors.grey4 })};
+    ${fontStyles({ size: '20px', weight: 800, color: colors.grey4 })};
     margin-bottom: 8px;
+    ${screen.desktop} {
+      font-size: 24px;
+    }
   }
   & > p {
-    ${fontStyles({ size: '12px', weight: 500, color: colors.grey3 })};
-    display: block;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 4;
+    ${fontStyles({
+      size: '14px',
+      weight: 500,
+      color: colors.grey2,
+      lineHeight: 1.3,
+    })};
+    height: 70px;
+    margin-top: 0;
     margin-bottom: 8px;
-    ${screenMediaQueryMap.tablet} {
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      height: 84px;
+
+    ${screen.tablet} {
+      font-size: 14px;
+      height: 70px;
     }
   }
 `
 
 const LinkCountWrapper = styled.div`
-  ${screenMediaQueryMap.tablet} {
+  ${screen.tablet} {
     height: 26px;
   }
 `
@@ -179,12 +189,12 @@ const Thumbnail = styled.img`
   width: 100%;
   //aspect-ratio: 280/100; // 비율 고정값
   max-height: 40vh; // 이미지 height 가 최대값 아래로 유동적 변경
-  ${screenMediaQueryMap.tablet} {
+  ${screen.tablet} {
     aspect-ratio: 288/192; // 비율 고정값
   }
   object-fit: cover;
   border-radius: 6px;
-  box-shadow: 0 0 3px rgba(0 0 0 / 15%);
+  box-shadow: 0 0 3px rgba(0 0 0 / 10%);
 
   margin-bottom: 12px;
 `

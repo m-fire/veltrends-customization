@@ -149,14 +149,15 @@ const Block = styled.div`
   ${flexContainer({ justifyContent: 'center' })};
   top: 0;
 
-  // todo: 가로 사이즈가 꽉 차도록 수정
   padding-top: 8px;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-
-  backdrop-filter: grayscale(80%) blur(4px);
-  -webkit-backdrop-filter: grayscale(80%) blur(4px);
+  padding-bottom: 24px;
+  margin-bottom: 8px;
+  margin-left: -20px;
+  margin-right: -20px;
   z-index: 1;
+
+  backdrop-filter: blur(8px); // grayscale(80%)
+  -webkit-backdrop-filter: blur(8px); // grayscale(80%)
 `
 
 const SelectorList = styled.nav`
@@ -172,6 +173,11 @@ const Indicator = styled(motion.div)`
   left: 0;
   bottom: -8px;
   border-radius: 99px;
+
+  -webkit-filter: drop-shadow(0px 0px 0.5px white)
+    drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white);
+  filter: drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white)
+    drop-shadow(0px 0px 0.5px white);
 `
 
 // Inner function component
