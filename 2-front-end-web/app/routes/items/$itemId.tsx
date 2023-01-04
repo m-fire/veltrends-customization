@@ -15,9 +15,9 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { screenMediaQueryMap } from '~/common/style/media-query'
 import styled from 'styled-components'
 
-type ItemProps = {}
+type ItemByIdProps = {}
 
-function Item({}: ItemProps) {
+function ItemById({}: ItemByIdProps) {
   const loaderData = useLoaderData<ItemLoaderData>()
   const authUser = useAuthUser()
   const { item } = loaderData

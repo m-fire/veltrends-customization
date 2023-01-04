@@ -226,7 +226,7 @@ const Title = styled.h2`
 //     lineHeight: 1,
 //   })};
 //   text-decoration: none;
-//   margin: 0 0 30px;
+//   margin-bottom: 30px;
 //   gap: 6px;
 //   & > svg {
 //     display: inline-block;

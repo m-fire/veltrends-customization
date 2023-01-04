@@ -10,18 +10,18 @@ type SearchResultCardListProps = {
 
 function SearchResultCardList({ list }: SearchResultCardListProps) {
   return (
-    <Block>
+    <ResultContainer>
       {list.map((item) => (
         <SearchResultCard key={item.id} item={item} />
       ))}
-    </Block>
+    </ResultContainer>
   )
 }
 export default SearchResultCardList
 
 // Inner Components
 
-const Block = styled.div`
+const ResultContainer = styled.div`
   ${flexContainer({ direction: 'column' })};
   padding: 24px 16px;
   gap: 24px;

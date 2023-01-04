@@ -31,8 +31,10 @@ const Block = styled.div`
   height: 40px;
   border-radius: 4px;
   border: 2px solid ${colors.primary1};
-  margin: 0 4px;
-  padding: 0 12px;
+  margin-left: 4px;
+  margin-right: 4px;
+  padding-left: 12px;
+  padding-right: 12px;
   input {
     // input tag 초기화
     background: none;
@@ -40,7 +42,8 @@ const Block = styled.div`
     outline: none;
     ${fontStyles({ size: '16px' })};
     flex: 1; // grow:1, shrink:1, basis:0%
-    margin: 0 8px;
+    margin-left: 8px;
+    margin-right: 8px;
     &::placeholder {
       color: ${colors.grey1};
     }

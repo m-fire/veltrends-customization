@@ -22,11 +22,12 @@ function Index() {
     mode,
     dateRange: { start, end },
   } = getCurrentURLParams('trending', defaultDateRange)
+  //
   const [dateRange, setDateRange] = useState<DateStringRange>({ start, end })
+
+  const submodeOrNull = mode === 'past' ? { start } : null
   const { data, hasNextPage, fetchNextPage } = useItemsInfiniteQuery(
-    ['items', mode, mode === 'past' ? { start } : undefined].filter(
-      (key) => key != null,
-    ),
+    ['items', mode, submodeOrNull].filter((key) => key != null),
     { mode, dateRange },
   )
 
