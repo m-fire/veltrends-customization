@@ -3,8 +3,7 @@ import FullHeightPage from '~/common/component/system/FullHeightPage'
 import Header from '~/common/component/base/Header'
 import HeaderBackButton from '~/common/component/base/HeaderBackButton'
 import { useGoBack } from '~/common/hook/useGoBack'
-import styled from 'styled-components'
-import { flexContainer, flexItem } from '~/common/style/styled'
+import LayoutContent from '~/common/component/layout/LayoutContent'
 
 type BasicLayoutProps = {
   title?: ReactNode
@@ -39,17 +38,10 @@ function BasicLayout({
         }
         headerRight={headerRight}
       />
-      <Content>{children}</Content>
+      <LayoutContent>{children}</LayoutContent>
     </FullHeightPage>
   )
 }
 export default BasicLayout
 
 // Inner Components
-
-const Content = styled.div`
-  ${flexContainer({ direction: 'column' })};
-  // grow:1, shrink:1, basis:0%
-  flex: 1;
-  overflow: scroll;
-`
