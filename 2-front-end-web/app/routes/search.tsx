@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react'
 import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
@@ -29,8 +29,8 @@ function Search() {
     searched: queryText,
     current: queryText,
   })
-  // textState 변경시 값 변동이 없는 상태에서 딜레이 이후 debouncedSearchText 값 변경
-  const [debouncedSearchText] = useDebounce(textState.current, 600)
+  // textState 변경시 값 변동이 없는 상태에서 딜레이 이후 debouncedText 값 변경
+  const [debouncedText] = useDebounce(textState.current, 600)
 
   const data = useLoaderData<Pagination<SearchedItem>>()
   const {
@@ -39,18 +39,16 @@ function Search() {
     isFetching,
     fetchNextPage, // 다음 페이지 가져오기 요청함수
   } = useInfiniteQuery(
-    ['searchResults', debouncedSearchText],
+    ['searchResults', debouncedText],
     async ({ pageParam: offset }) => {
-      const trimedText = debouncedSearchText.trim()
+      const trimedText = debouncedText.trim()
       setSearchParams({ ...searchParams, q: trimedText })
       setTextState({ current: trimedText, searched: trimedText })
       const items = await searchItemList({ q: trimedText, offset })
       return items
     },
     {
-      enabled:
-        debouncedSearchText !== textState.searched &&
-        debouncedSearchText !== '',
+      enabled: debouncedText !== textState.searched && debouncedText !== '',
       getNextPageParam: (lastPage, pages) => {
         if (!lastPage.pageInfo.hasNextPage) return null
         return lastPage.pageInfo.nextOffset
@@ -69,8 +67,8 @@ function Search() {
 
   const navigate = useNavigate()
   useEffect(() => {
-    navigate('/search?' + stringify({ q: debouncedSearchText }))
-  }, [debouncedSearchText, navigate])
+    navigate('/search?' + stringify({ q: debouncedText }))
+  }, [debouncedText, navigate])
 
   const itemList = infiniteData?.pages.flatMap((page) => page.list)
   const isSearched = itemList != null && itemList.length > 0
