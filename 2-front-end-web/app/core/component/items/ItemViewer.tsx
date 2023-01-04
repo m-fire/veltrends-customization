@@ -92,24 +92,33 @@ function ItemViewer({ item }: ItemViewerProps) {
               <strong>{domain}</strong>
             )}
           </Publisher>
-          <Title>{title}</Title>
-          {/*<OriginLink href={link}>*/}
-          {/*  이동*/}
-          {/*  <Shortcut />*/}
-          {/*</OriginLink>*/}
 
-          <Body>{body}</Body>
+          <Title>{title}</Title>
         </a>
+        {/*<OriginLink href={link}>*/}
+        {/*  이동*/}
+        {/*  <Shortcut />*/}
+        {/*</OriginLink>*/}
+
+        <ActionButtons>
+          <LikeButton
+            size="medium"
+            isLiked={isLiked}
+            disabled={!authUser}
+            onClick={() => toggleActionByType('LIKE_ITEM')}
+          />
+          <BookmarkButton
+            size="medium"
+            isBookmarked={isBookmarked}
+            disabled={!authUser}
+            onClick={() => toggleActionByType('BOOKMARK_ITEM')}
+          />
+        </ActionButtons>
+
+        <Body>{body}</Body>
 
         <Footer>
           <BottomActionBlock>
-            <BookmarkButton
-              size="large"
-              isBookmarked={isBookmarked}
-              disabled={!authUser}
-              onClick={() => toggleActionByType('BOOKMARK_ITEM')}
-            />
-
             <LikeButton
               size="large"
               isLiked={isLiked}
@@ -176,8 +185,8 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
     color: colors.grey2,
     lineHeight: 1.33,
   })};
-  margin: 0;
   gap: 4px;
+  margin-bottom: 8px;
   img,
   svg {
     display: inline-block;
@@ -190,7 +199,6 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
       size: '12px',
       weight: 600,
       color: colors.grey3,
-      lineHeight: 1.33,
     })};
   }
 `
@@ -202,8 +210,8 @@ const Title = styled.h2`
     color: colors.grey5,
     letterSpacing: '-0.5px',
   })};
-  line-height: 1.5;
-  margin: 0 0 56px;
+  margin-top: 0;
+  margin-bottom: 8px;
 `
 
 // const OriginLink = styled.a`
@@ -227,6 +235,12 @@ const Title = styled.h2`
 //   }
 // `
 
+const ActionButtons = styled.div`
+  ${flexStyles({ justifyContent: 'flex-end', alignItems: 'center' })};
+  gap: 8px;
+  margin-bottom: 48px;
+`
+
 const Body = styled.p`
   ${fontStyles({
     size: '16px',
@@ -246,15 +260,12 @@ const BottomActionBlock = styled.div`
   ${flexStyles({ direction: 'column', alignItems: 'center' })};
   gap: 4px;
   margin-bottom: 40px;
-  & svg {
-    color: ${colors.grey2};
-  }
 `
 
 const UserInfo = styled.div`
   ${flexStyles({ justifyContent: 'end' })};
   ${fontStyles({
-    size: '14px',
+    size: '13px',
     weight: 400,
     color: colors.grey4,
     lineHeight: 1.33,
@@ -270,7 +281,7 @@ const LikesCount = styled(motion.div)`
   ${fontStyles({
     size: '12px',
     weight: 600,
-    color: colors.grey4,
+    color: colors.grey3,
     lineHeight: 1.5,
   })};
 `

@@ -205,10 +205,6 @@ const ItemFooter = styled.div`
     lineHeight: 1.5,
   })};
   // HeartVote, UserInfo 공통스타일
-  & div {
-    ${flexStyles({ alignItems: 'center' })};
-    gap: 4px;
-  }
   // 이 코드 때문에 하위 컴포넌트의 SVG 컬러가 적용되지 않았음.
   // & svg {
   //   color: ${colors.grey2};
@@ -231,6 +227,8 @@ const ActionButtons = styled.div`
 `
 
 const UserInfo = styled.div`
+  ${flexStyles({ alignItems: 'center' })};
+  gap: 4px;
   b {
     ${fontStyles({ weight: 600, lineHeight: 1.5 })};
     color: ${colors.grey3};
