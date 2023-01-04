@@ -20,10 +20,14 @@ export function useItemAction() {
   /* like actions */
 
   const like = useCallback(
-    async (itemId: number, prevItemStatus: ItemStatus, isLiked: boolean) => {
+    async (
+      itemId: number,
+      prevItemStatus: ItemStatus,
+      currentLiked: boolean,
+    ) => {
       try {
         abortRequest(itemId)
-        setLiked(itemId, prevItemStatus, isLiked)
+        setLiked(itemId, prevItemStatus, currentLiked)
 
         const result = await likeItem(itemId, getAbortController(itemId))
         if (
@@ -43,10 +47,14 @@ export function useItemAction() {
   )
 
   const unlike = useCallback(
-    async (itemId: number, prevItemStatus: ItemStatus, isLiked: boolean) => {
+    async (
+      itemId: number,
+      prevItemStatus: ItemStatus,
+      currentLiked: boolean,
+    ) => {
       try {
         abortRequest(itemId)
-        setLiked(itemId, prevItemStatus, isLiked)
+        setLiked(itemId, prevItemStatus, currentLiked)
 
         const result = await unlikeItem(itemId, getAbortController(itemId))
         if (
@@ -70,10 +78,10 @@ export function useItemAction() {
   const stateMap = useItemStateMap()
 
   const bookmark = useCallback(
-    async (itemId: number, isBookmarked: boolean) => {
+    async (itemId: number, currentMarked: boolean) => {
       try {
         abortRequest(itemId)
-        setBookmarked(itemId, isBookmarked)
+        setBookmarked(itemId, currentMarked)
 
         const result = await bookmarkItem(itemId, getAbortController(itemId))
 
@@ -91,10 +99,10 @@ export function useItemAction() {
   )
 
   const unbookmark = useCallback(
-    async (itemId: number, isBookmarked: boolean) => {
+    async (itemId: number, currentMarked: boolean) => {
       try {
         abortRequest(itemId)
-        setBookmarked(itemId, isBookmarked)
+        setBookmarked(itemId, currentMarked)
 
         const nullableResult = await unbookmarkItem(
           itemId,
