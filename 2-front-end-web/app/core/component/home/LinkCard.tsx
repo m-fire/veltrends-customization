@@ -13,6 +13,7 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
+import { screenMediaQueryMap } from '~/common/style/media-query'
 
 type LinkCardProps = {
   item: Item
@@ -93,19 +94,21 @@ function LinkCard({ item }: LinkCardProps) {
         {body ? <p>{body}</p> : null}
       </StyledLink>
 
-      <AnimatePresence initial={false}>
-        {likeCount === 0 ? null : (
-          <LikeCount
-            key="likeCount"
-            initial={{ height: 0, opacity: 0, y: 10 }}
-            animate={{ height: 22, opacity: 1, y: 0 }}
-            transition={{ stiffness: 100 }}
-            exit={{ height: 0, opacity: 0 }}
-          >
-            좋아요 {likeCount.toLocaleString()}
-          </LikeCount>
-        )}
-      </AnimatePresence>
+      <LinkCountWrapper>
+        <AnimatePresence initial={false}>
+          {likeCount === 0 ? null : (
+            <LikeCount
+              key="likeCount"
+              initial={{ height: 0, opacity: 0, y: 10 }}
+              animate={{ height: 22, opacity: 1, y: 0 }}
+              transition={{ stiffness: 100 }}
+              exit={{ height: 0, opacity: 0 }}
+            >
+              좋아요 {likeCount.toLocaleString()}
+            </LikeCount>
+          )}
+        </AnimatePresence>
+      </LinkCountWrapper>
 
       <ItemFooter>
         <ActionButtons>
@@ -154,6 +157,20 @@ const StyledLink = styled(Link)`
     ${fontStyles({ size: '12px', weight: 500, color: colors.grey3 })};
     display: block;
     margin-bottom: 8px;
+    ${screenMediaQueryMap.tablet} {
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 84px;
+    }
+  }
+`
+
+const LinkCountWrapper = styled.div`
+  ${screenMediaQueryMap.tablet} {
+    height: 26px;
   }
 `
 
@@ -162,6 +179,9 @@ const Thumbnail = styled.img`
   width: 100%;
   //aspect-ratio: 280/100; // 비율 고정값
   max-height: 40vh; // 이미지 height 가 최대값 아래로 유동적 변경
+  ${screenMediaQueryMap.tablet} {
+    aspect-ratio: 288/192; // 비율 고정값
+  }
   object-fit: cover;
   border-radius: 6px;
   box-shadow: 0 0 3px rgba(0 0 0 / 15%);
