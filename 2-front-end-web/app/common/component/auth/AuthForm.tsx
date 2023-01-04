@@ -10,7 +10,7 @@ import AppError from '~/common/error/AppError'
 import { colors } from '~/common/style/colors'
 import { useFormValidation } from '~/common/hook/useFormValidation'
 import { Validator } from '~/common/util/validates'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -154,22 +154,22 @@ const formDescriptions = {
 // Inner Components
 
 const StyledFormRef = styled(Form)`
-  ${flexStyles({
+  ${flexContainer({
     direction: 'column',
     justifyContent: 'space-between',
-    flex: 1,
   })};
+  flex: 1; // grow:1, shrink:1, basis:0%
   padding: 16px 20px;
 `
 
 const InputGroup = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
   gap: 16px; // 사용주의! 구형브라우저 적용불가
 `
 
 // Footer 대용
 const ActionBox = styled.div`
-  ${flexStyles({ direction: 'column', alignItems: 'center' })};
+  ${flexContainer({ direction: 'column', alignItems: 'center' })};
   width: 100%;
   gap: 24px;
 `

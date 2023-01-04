@@ -17,7 +17,7 @@ import SearchResultCardList from '~/core/component/search/SearchResultCardList'
 import { Pagination } from '~/common/api/types'
 import { SearchedItem } from '~/core/api/types'
 import { Loading, NotSearch } from '~/core/component/generate/svg'
-import { flexStyles } from '~/common/style/styled'
+import { flexContainer } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
 import { AnimatePresence } from 'framer-motion'
 
@@ -140,12 +140,12 @@ const StyledHeader = styled(Header)`
 `
 
 const NotSearchedBlock = styled.div`
-  ${flexStyles({
+  ${flexContainer({
     direction: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
   })}
+  flex: 1; // grow:1, shrink:1, basis:0%
 
   h3 {
     color: ${colors.grey2};

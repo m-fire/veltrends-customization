@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 import { colors } from '~/common/style/colors'
 import Overlay from '~/common/component/system/Overlay'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { BottomSheetModalStore } from '~/common/hook/store/useBottomSheetModalStore'
 
 type BottomSheetModalProps = {
@@ -54,7 +54,7 @@ const Sheet = styled(motion.div)`
 `
 
 const Items = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
 `
 
 const Item = styled.div`

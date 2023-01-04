@@ -8,7 +8,7 @@ import { useDateDistance } from '~/common/hook/useDateDistance'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/core/component/generate/svg/Earth'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
 import BookmarkButton from '~/core/component/items/BookmarkButton'
@@ -153,7 +153,7 @@ export default ItemViewer
 // Inner Components
 
 const Block = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
   & > a {
     display: block;
   }
@@ -178,7 +178,7 @@ const Content = styled.div`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${flexStyles({ alignItems: 'center' })};
+  ${flexContainer({ alignItems: 'center' })};
   ${fontStyles({
     size: '12px',
     weight: 400,
@@ -236,7 +236,7 @@ const Title = styled.h2`
 // `
 
 const ActionButtons = styled.div`
-  ${flexStyles({ justifyContent: 'flex-end', alignItems: 'center' })};
+  ${flexContainer({ justifyContent: 'flex-end', alignItems: 'center' })};
   gap: 8px;
   margin-bottom: 48px;
 `
@@ -257,13 +257,13 @@ const Body = styled.p`
 `
 
 const BottomActionBlock = styled.div`
-  ${flexStyles({ direction: 'column', alignItems: 'center' })};
+  ${flexContainer({ direction: 'column', alignItems: 'center' })};
   gap: 4px;
   margin-bottom: 40px;
 `
 
 const UserInfo = styled.div`
-  ${flexStyles({ justifyContent: 'end' })};
+  ${flexContainer({ justifyContent: 'end' })};
   ${fontStyles({
     size: '13px',
     weight: 400,
@@ -277,7 +277,7 @@ const UserInfo = styled.div`
 `
 
 const LikesCount = styled(motion.div)`
-  ${flexStyles()};
+  ${flexContainer()};
   ${fontStyles({
     size: '12px',
     weight: 600,
@@ -287,5 +287,5 @@ const LikesCount = styled(motion.div)`
 `
 
 const Footer = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
 `

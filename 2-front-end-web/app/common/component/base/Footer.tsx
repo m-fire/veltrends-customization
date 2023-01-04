@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import FooterTabItem from '~/common/component/base/FooterTabItem'
-import { flexStyles } from '~/common/style/styled'
+import { flexContainer } from '~/common/style/styled'
 
 const paths = ['search', 'bookmarks', 'setting'] as const
 
@@ -30,7 +30,7 @@ export default Footer
 // Inner Components
 
 const StyledFooter = styled.footer`
-  ${flexStyles()};
+  ${flexContainer()};
   height: 56px;
   border-top: 1px solid ${colors.grey1};
 `

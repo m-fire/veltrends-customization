@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { SearchedItem } from '~/core/api/types'
 import { Earth } from '~/core/component/generate/svg'
 
@@ -69,7 +69,7 @@ const Block = styled.div`
 `
 
 const Publisher = styled.div`
-  ${flexStyles({ alignItems: 'center' })};
+  ${flexContainer({ alignItems: 'center' })};
   ${fontStyles({
     size: '14px',
     color: colors.grey4,

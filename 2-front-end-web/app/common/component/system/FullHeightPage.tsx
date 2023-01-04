@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import { flexStyles } from '~/common/style/styled'
+import { flexContainer } from '~/common/style/styled'
 
 const GlobalFullHeight = createGlobalStyle`
   html, body {
@@ -25,6 +25,6 @@ export default FullHeightPage
 // Sub Comps
 
 const Page = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
   height: 100%;
 `

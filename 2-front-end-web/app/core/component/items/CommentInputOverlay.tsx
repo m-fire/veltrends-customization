@@ -7,7 +7,7 @@ import Overlay from '../../../common/component/system/Overlay'
 import Spinner from '~/common/component/system/Spinner'
 import { colors } from '~/common/style/colors'
 import { SpeechBubble, Write } from '~/core/component/generate/svg'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import { commentsKey } from '~/core/hook/query/useCommentsQuery'
 import { Comment } from '~/core/api/types'
@@ -176,7 +176,7 @@ export default CommentInputOverlay
 // Inner components
 
 const Footer = styled(motion.div)`
-  ${flexStyles({ alignItems: 'center' })};
+  ${flexContainer({ alignItems: 'center' })};
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -186,7 +186,7 @@ const Footer = styled(motion.div)`
 `
 
 const StyledInput = styled.input`
-  flex: 1;
+  flex: 1; // grow:1, shrink:1, basis:0%
   ${fontStyles({ size: '16px', weight: 400 })};
   height: 100%;
   border: none;
@@ -197,7 +197,7 @@ const StyledInput = styled.input`
 `
 
 const TransparentButton = styled.button`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })};
+  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })};
   height: 100%;
   padding: 0 8px;
   position: relative;

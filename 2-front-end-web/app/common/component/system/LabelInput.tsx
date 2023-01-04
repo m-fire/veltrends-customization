@@ -2,7 +2,7 @@ import React, { FocusEventHandler, forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import Input, { InputProps } from '~/common/component/system/Input'
 import { colors } from '~/common/style/colors'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 
 interface LabelInputProps extends InputProps {
   label: string
@@ -48,7 +48,7 @@ export default LabelInput
 // Inner Components
 
 const Block = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
   /* 부모컴포넌트에서 gap 속성값(16px) 설정 되었으므로 불필요함 */
   // 주의: 구형브라우저 적용불가
   //& + & {

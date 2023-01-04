@@ -10,7 +10,7 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import AppError from '~/common/error/AppError'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { MoreVert } from '~/core/component/generate/svg'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useDeleteComment } from '~/core/hook/useDeleteComment'
@@ -165,7 +165,7 @@ export default CommentElement
 // Inner Components
 
 const Block = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
   ${fontStyles({
     size: '14px',
     weight: 600,
@@ -177,12 +177,15 @@ const Block = styled.div`
 // Header
 
 const CommentHead = styled.div`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'space-between' })};
+  ${flexContainer({
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  })};
   font-weight: 500;
 `
 
 const LeftGroup = styled.div`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'flex-end' })};
+  ${flexContainer({ alignItems: 'center', justifyContent: 'flex-end' })};
   gap: 4px;
 `
 
@@ -195,7 +198,7 @@ const Time = styled.div`
 `
 
 const MoreButton = styled.button`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })};
+  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })};
   width: 24px;
   height: 24px;
   color: ${colors.grey4};
@@ -229,7 +232,7 @@ const DeletedComment = styled(CommentText)`
 // Footer
 
 const CommentFooter = styled.div`
-  ${flexStyles({ display: 'inline-flex' })};
+  ${flexContainer({ display: 'inline-flex' })};
   ${fontStyles({
     size: '12px',
     weight: 600,
@@ -240,7 +243,7 @@ const CommentFooter = styled.div`
 `
 
 const LikeBlock = styled.div`
-  ${flexStyles({ alignItems: 'center' })};
+  ${flexContainer({ alignItems: 'center' })};
   ${fontStyles({ weight: 700, color: colors.grey4 })};
   gap: 4px;
   & svg {
@@ -253,7 +256,7 @@ const LikeCount = styled.span`
 `
 
 const ReplyBlock = styled.div`
-  ${flexStyles({ alignItems: 'center' })};
+  ${flexContainer({ alignItems: 'center' })};
   gap: 2px;
   & svg {
     color: ${colors.grey2};

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { LogoVeltrend } from '~/core/component/generate/svg'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 
 type HeaderProps = {
   title?: ReactNode
@@ -35,7 +35,7 @@ export default Header
 // Sub Comps
 
 const Block = styled.header`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })};
+  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })};
   position: relative;
   height: 56px;
   border-bottom: 1px solid ${colors.grey1};
@@ -49,7 +49,7 @@ const Block = styled.header`
 `
 
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
-  ${flexStyles({ alignItems: 'center' })};
+  ${flexContainer({ alignItems: 'center' })};
   position: absolute;
   ${(props) => props.position}: 16px;
   top: 0;

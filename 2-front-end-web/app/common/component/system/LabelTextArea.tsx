@@ -6,7 +6,7 @@ import {
 } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 
 interface LabelTextAreaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -56,7 +56,7 @@ export default LabelTextArea
 // Inner Components
 
 const Block = styled.div`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
 `
 
 const Label = styled.label<{ focused?: boolean }>`

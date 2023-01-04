@@ -8,7 +8,7 @@ import {
   WeekRangeConverters as wrc,
   YYYY_MM_DD,
 } from '~/common/util/converters'
-import { flexStyles } from '~/common/style/styled'
+import { flexContainer } from '~/common/style/styled'
 import { ArrowLeft } from '~/core/component/generate/svg'
 
 const SERVICE_START_DATE = new Date('2022-09-01')
@@ -98,7 +98,7 @@ export default DateRangeSelector
 // Inner Components
 
 const WeekNavigator = styled.div`
-  ${flexStyles({ justifyContent: 'center' })}
+  ${flexContainer({ justifyContent: 'center' })}
   margin-top: -12px;
   margin-bottom: 12px;
   gap: 32px;
@@ -108,7 +108,7 @@ const StyledLink = styled(Link)<{
   direction: 'left' | 'right'
   disabled: boolean
 }>`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'center' })}
+  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })}
   color: ${colors.primary1};
   font-size: inherit;
   text-decoration: none;

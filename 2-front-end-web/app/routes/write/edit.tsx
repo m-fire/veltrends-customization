@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
 import BasicLayout from '~/common/component/layout/BasicLayout'
 import WriteFormTemplate from '~/core/component/write/WriteFormTemplate'
@@ -90,7 +90,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 // Inner Components
 
 const Group = styled.div`
-  ${flexStyles({ direction: 'column', flex: 1 })};
+  ${flexContainer({ direction: 'column' })};
+  flex: 1; // grow:1, shrink:1, basis:0%
   gap: 16px;
   padding-bottom: 16px;
 `
@@ -103,9 +104,9 @@ const LinkLabelTextArea = styled(LabelTextArea)`
 `
 
 const BodyLabelTextArea = styled(LabelTextArea)`
-  flex: 1;
+  flex: 1; // grow:1, shrink:1, basis:0%
   textarea {
-    flex: 1;
+    flex: 1; // grow:1, shrink:1, basis:0%
     resize: none;
     font-family: inherit;
   }

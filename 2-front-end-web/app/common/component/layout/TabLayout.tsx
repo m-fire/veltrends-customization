@@ -3,7 +3,7 @@ import FullHeightPage from '~/common/component/system/FullHeightPage'
 import Header from '~/common/component/base/Header'
 import Footer from '~/common/component/base/Footer'
 import styled from 'styled-components'
-import { flexStyles } from '~/common/style/styled'
+import { flexContainer } from '~/common/style/styled'
 
 type TabLayoutProps = {
   header?: ReactNode
@@ -28,7 +28,9 @@ export default TabLayout
 // Inner Components
 
 const Content = styled.section`
-  ${flexStyles({ direction: 'column', flex: 1 })};
+  ${flexContainer({ direction: 'column' })};
+  // grow:1, shrink:1, basis:0%
+  flex: 1;
   overflow: scroll;
   padding-left: 20px;
   padding-right: 20px;

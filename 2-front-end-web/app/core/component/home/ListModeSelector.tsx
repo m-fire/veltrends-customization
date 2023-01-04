@@ -15,7 +15,7 @@ import qs from 'qs'
 import { colors } from '~/common/style/colors'
 import { ItemListMode } from '~/core/api/types'
 import { Calendar, Clock, Fire } from '~/core/component/generate/svg'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { DateStringRange } from '~/common/util/converters'
 
 type ModeSelectorProps = {
@@ -146,7 +146,7 @@ export default ListModeSelector
 
 const Block = styled.div`
   position: sticky;
-  ${flexStyles({ justifyContent: 'center' })};
+  ${flexContainer({ justifyContent: 'center' })};
   top: 0;
 
   // todo: 가로 사이즈가 꽉 차도록 수정
@@ -160,7 +160,7 @@ const Block = styled.div`
 `
 
 const SelectorList = styled.nav`
-  ${flexStyles()};
+  ${flexContainer()};
   position: relative;
   gap: 24px;
 `
@@ -225,7 +225,7 @@ export function ModeItem({
 }
 
 const StyledLink = styled(Link)<{ active?: 'true' | 'false' }>`
-  ${flexStyles({ alignItems: 'flex-end' })};
+  ${flexContainer({ alignItems: 'flex-end' })};
   ${fontStyles({
     size: '14px',
     color: colors.grey4,

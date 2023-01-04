@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useMemo, useReducer } from 'react'
 import styled, { css } from 'styled-components'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
-import { flexStyles } from '~/common/style/styled'
+import { flexContainer } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
 import {
   Numbers as n,
@@ -133,7 +133,7 @@ export default SequenceElementsToggler
 // Inner Components
 
 const Block = styled.div<{ size: Size }>`
-  ${flexStyles({
+  ${flexContainer({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'flex-start',

@@ -10,7 +10,7 @@ import BookmarkButton from '~/core/component/items/BookmarkButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
 
@@ -133,12 +133,12 @@ export default LinkCard
 
 // Inner Components
 const ListItem = styled.li`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
 `
 
 // <a></a>
 const StyledLink = styled(Link)`
-  ${flexStyles({ direction: 'column' })};
+  ${flexContainer({ direction: 'column' })};
   text-decoration: none;
   h3,
   p,
@@ -170,7 +170,7 @@ const Thumbnail = styled.img`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${flexStyles()};
+  ${flexContainer()};
   ${fontStyles({
     size: '12px',
     weight: 400,
@@ -197,7 +197,10 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
 `
 
 const ItemFooter = styled.div`
-  ${flexStyles({ alignItems: 'center', justifyContent: 'space-between' })};
+  ${flexContainer({
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  })};
   ${fontStyles({
     size: '12px',
     weight: 400,
@@ -212,7 +215,7 @@ const ItemFooter = styled.div`
 `
 
 const LikeCount = styled(motion.div)`
-  ${flexStyles()};
+  ${flexContainer()};
   ${fontStyles({
     size: '12px',
     weight: 600,
@@ -222,12 +225,12 @@ const LikeCount = styled(motion.div)`
 `
 
 const ActionButtons = styled.div`
-  ${flexStyles({ alignItems: 'center' })}
+  ${flexContainer({ alignItems: 'center' })}
   gap: 8px;
 `
 
 const UserInfo = styled.div`
-  ${flexStyles({ alignItems: 'center' })};
+  ${flexContainer({ alignItems: 'center' })};
   gap: 4px;
   b {
     ${fontStyles({ weight: 600, lineHeight: 1.5 })};

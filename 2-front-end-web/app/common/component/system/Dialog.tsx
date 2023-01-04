@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Modal from '~/common/component/system/Modal'
 import { colors } from '~/common/style/colors'
 import Button from '~/common/component/system/Button'
-import { flexStyles, fontStyles } from '~/common/style/styled'
+import { flexContainer, fontStyles } from '~/common/style/styled'
 
 export type DialogProps = {
   mode?: 'OK' | 'YESNO'
@@ -82,7 +82,7 @@ const Description = styled.p`
 `
 
 const Footer = styled.section`
-  ${flexStyles({ justifyContent: 'flex-end' })};
+  ${flexContainer({ justifyContent: 'flex-end' })};
   margin-top: 16px;
 `
 

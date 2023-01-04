@@ -1,18 +1,22 @@
 import { css, CSSProperties } from 'styled-components'
 
-export function flexStyles<OptKey extends keyof CSSProperties>({
+export function flexContainer({
   display = 'flex',
   direction,
+  alignContent,
   alignItems,
   justifyContent,
-  flex,
-}: FlexStylesParams = {}) {
+}: FlexContainerParams = {}) {
   return css`
     display: ${display};
 
     ${direction &&
     css`
       flex-direction: ${direction};
+    `}
+    ${alignContent &&
+    css`
+      align-content: ${alignContent};
     `}
     ${alignItems &&
     css`
@@ -22,19 +26,52 @@ export function flexStyles<OptKey extends keyof CSSProperties>({
     css`
       justify-content: ${justifyContent};
     `}
-    ${flex &&
+  `
+}
+
+type FlexContainerParams = {
+  display?: CSSProperties['display']
+  direction?: CSSProperties['flexDirection']
+  justifyContent?: CSSProperties['justifyContent']
+  alignContent?: CSSProperties['alignContent']
+  alignItems?: CSSProperties['alignItems']
+}
+
+export function flexItem({
+  grow,
+  shrink,
+  basis,
+  alignSelf,
+}: FlexItemParams = {}) {
+  return css`
+    ${grow &&
     css`
-      flex: ${flex};
+      flex-grow: ${grow};
+    `}
+    ${shrink &&
+    css`
+      flex-shrink: ${shrink};
+    `}
+    ${basis &&
+    css`
+      flex-basis: ${basis};
+    `}
+    ${alignSelf &&
+    css`
+      align-self: ${alignSelf};
     `}
   `
 }
 
-type FlexStylesParams = {
-  display?: CSSProperties['display']
-  direction?: CSSProperties['flexDirection']
-  alignItems?: CSSProperties['alignItems']
-  justifyContent?: CSSProperties['justifyContent']
-  flex?: CSSProperties['flex']
+type FlexItemParams = {
+  // Flex Item 의 증가너비 비율
+  grow?: CSSProperties['flexGrow']
+  // Flex Item 의 증가감소 비율
+  shrink?: CSSProperties['flexShrink']
+  // 공간 배분 전에 기본너비 설정
+  basis?: CSSProperties['flexBasis']
+  // cross-axis 에서 Item 의 정렬설정
+  alignSelf?: CSSProperties['alignSelf']
 }
 
 export function fontStyles({
