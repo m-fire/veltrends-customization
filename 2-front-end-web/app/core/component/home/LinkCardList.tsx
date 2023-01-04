@@ -1,8 +1,9 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { Item } from '~/core/api/types'
 import styled from 'styled-components'
 import LinkCard from '~/core/component/home/LinkCard'
-import { flexContainer } from '~/common/style/styled'
+import { gridContiner } from '~/common/style/styled'
+import { screenMediaQueryMap } from '~/common/style/media-query'
 
 type LinkCardListProps = {
   items: Item[]
@@ -22,9 +23,21 @@ export default LinkCardList
 // Inner Components
 
 const List = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 72px;
+  ${gridContiner({
+    templateColumns: 'repeat(1, 1fr)',
+  })}
+  ${screenMediaQueryMap.tablet} {
+    ${gridContiner({
+      templateColumns: 'repeat(2, 1fr)',
+    })}
+  }
+  ${screenMediaQueryMap.wide} {
+    ${gridContiner({
+      templateColumns: 'repeat(3, 1fr)',
+    })}
+  }
+  gap: 30px;
+
   & > li:last-child {
     margin-bottom: 72px;
   }
