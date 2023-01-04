@@ -1,4 +1,4 @@
-import { GenericPagination, SimpleUser } from '~/common/api/types'
+import { SimpleUser } from '~/common/api/types'
 
 // general result
 
@@ -37,8 +37,6 @@ export interface ItemStatus {
 
 export type ItemListMode = 'recent' | 'trending' | 'past'
 
-export type ItemListPage = GenericPagination<Item>
-
 export type LikedItemResult = {
   id: number
   itemStatus: ItemStatus
@@ -59,13 +57,11 @@ export interface Comment {
   isLiked: boolean
 }
 
-export interface Bookmark<T> {
+export interface Bookmark {
   id: number
-  item: T
+  item: Item
   createdAt: string
 }
-
-export type BookmarkItemListPage = GenericPagination<Bookmark<Item>>
 
 // algolia search result
 
@@ -84,5 +80,3 @@ export interface Highlight {
   title: string
   body: string
 }
-
-export type SearchedItemPage = GenericPagination<SearchedItem>

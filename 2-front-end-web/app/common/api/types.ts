@@ -3,7 +3,7 @@ export interface SimpleUser {
   username: string
 }
 
-export type GenericPagination<T> = {
+export type Pagination<T> = {
   list: T[]
   totalCount: number
   pageInfo: PageInfo

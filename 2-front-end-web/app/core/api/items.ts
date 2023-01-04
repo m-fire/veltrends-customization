@@ -1,6 +1,7 @@
 import qs from 'qs'
 import { client } from '~/common/api/client'
-import { Item, ItemListPage, LikedItemResult, ItemListMode } from './types'
+import { Item, LikedItemResult, ItemListMode } from './types'
+import { Pagination } from '~/common/api/types'
 
 export const URL_ITEMS = '/api/items' as const
 
@@ -15,7 +16,7 @@ export async function getItemList({
   startDate,
   endDate,
 }: GetItemListParams) {
-  const response = await client.get<ItemListPage>(
+  const response = await client.get<Pagination<Item>>(
     URL_ITEMS.concat(
       qs.stringify(
         { mode, cursor, startDate, endDate },

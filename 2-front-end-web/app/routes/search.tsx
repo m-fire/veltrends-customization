@@ -14,7 +14,8 @@ import { Requests } from '~/common/util/https'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import { searchItemList } from '~/core/api/search'
 import SearchResultCardList from '~/core/component/search/SearchResultCardList'
-import { SearchedItemPage } from '~/core/api/types'
+import { Pagination } from '~/common/api/types'
+import { SearchedItem } from '~/core/api/types'
 import { Loading, NotSearch } from '~/core/component/generate/svg'
 import { flexStyles } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
@@ -31,7 +32,7 @@ function Search() {
   // textState 변경시 값 변동이 없는 상태에서 딜레이 이후 debouncedSearchText 값 변경
   const [debouncedSearchText] = useDebounce(textState.current, 600)
 
-  const data = useLoaderData<SearchedItemPage>()
+  const data = useLoaderData<Pagination<SearchedItem>>()
   const {
     hasNextPage,
     data: infiniteData,

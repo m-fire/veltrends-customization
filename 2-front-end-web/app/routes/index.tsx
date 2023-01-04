@@ -4,7 +4,8 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Requests } from '~/common/util/https'
 import { getItemList } from '~/core/api/items'
-import { ItemListPage, ItemListMode } from '~/core/api/types'
+import { Pagination } from '~/common/api/types'
+import { Item, ItemListMode } from '~/core/api/types'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import TabLayout from '~/common/component/layout/TabLayout'
 import LinkCardList from '~/core/component/home/LinkCardList'
@@ -64,7 +65,7 @@ function Index() {
     queryKey: Parameters<typeof useInfiniteQuery>[0],
     { mode, dateRange }: UseItemsInfiniteQueryParams,
   ) {
-    const initialData = useLoaderData<ItemListPage>()
+    const initialData = useLoaderData<Pagination<Item>>()
     const queryResult = useInfiniteQuery(
       queryKey,
       async ({ pageParam: cursor }) => {
