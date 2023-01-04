@@ -56,7 +56,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 // Inner Components
 
-const StyledTabLayout = styled(TabLayout)``
+const StyledTabLayout = styled(TabLayout)`
+  margin-top: 58px;
+`
 
 // types
 
