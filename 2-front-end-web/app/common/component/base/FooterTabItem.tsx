@@ -10,7 +10,7 @@ import {
   Search,
   Setting,
 } from '~/core/component/generate/svg'
-import { flexContainer } from '~/common/style/styled'
+import Flex from '~/common/style/css-flex'
 
 const iconMap = {
   home: Fire,
@@ -46,10 +46,10 @@ export default FooterTabItem
 // Inner Components
 
 const NavLinkItemRef = styled(NavLink)<Partial<FooterTabItemProps>>`
-  ${flexContainer({
-    alignItems: 'center',
-    justifyContent: 'center',
-  })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('center')
+    .create()};
   flex: 1; // grow:1, shrink:1, basis:0%
   position: relative;
   svg {

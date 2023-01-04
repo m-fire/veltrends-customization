@@ -12,7 +12,8 @@ import { useWriteContext } from '~/core/context/WriteContext'
 import AppError, { APP_ERRORS_INFO } from '~/common/error/AppError'
 import { useAppErrorCatch } from '~/common/hook/useAppErrorCatch'
 import { colors } from '~/common/style/colors'
-import { flexContainer, fontStyles } from '~/common/style/styled'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type IntroProps = {}
 
@@ -109,7 +110,7 @@ export function CatchBoundary() {
 // Inner Components
 
 const Group = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   flex: 1; // grow:1, shrink:1, basis:0%
   gap: 16px;
   padding-bottom: 16px;
@@ -125,7 +126,7 @@ const StyledLabelTextArea = styled(LabelTextArea)`
 `
 
 const Message = styled.div`
-  ${fontStyles({ size: '14px', color: colors.secondary1 })};
+  ${Font.style().size('14px').color(colors.secondary1).create()};
   margin-top: 8px;
   text-align: center;
 `

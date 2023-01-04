@@ -1,8 +1,8 @@
 import React from 'react'
 import { SearchedItem } from '~/core/api/types'
 import styled from 'styled-components'
-import { flexContainer } from '~/common/style/styled'
 import SearchResultCard from '~/core/component/search/SearchResultCard'
+import Flex from '~/common/style/css-flex'
 
 type SearchResultCardListProps = {
   list: SearchedItem[]
@@ -22,7 +22,7 @@ export default SearchResultCardList
 // Inner Components
 
 const ResultContainer = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   padding: 24px 16px;
   gap: 24px;
 `

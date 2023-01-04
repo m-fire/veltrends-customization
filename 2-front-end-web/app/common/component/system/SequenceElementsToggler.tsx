@@ -1,13 +1,13 @@
 import React, { ReactNode, useCallback, useMemo, useReducer } from 'react'
 import styled, { css } from 'styled-components'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
-import { flexContainer } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
 import {
   Numbers as n,
   RandomNumbers as rn,
   SequenceNumbers as sn,
 } from '~/common/util/numbers'
+import Flex from '~/common/style/css-flex'
 
 export type SequenceElementsTogglerProps = {
   elements: ReactNode[]
@@ -133,11 +133,10 @@ export default SequenceElementsToggler
 // Inner Components
 
 const Block = styled.div<{ size: Size }>`
-  ${flexContainer({
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  })};
+  ${Flex.Container.style(true)
+    .alignItems('center')
+    .justifyContent('flex-start')
+    .create()};
   position: relative;
   svg {
     width: 100%;

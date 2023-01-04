@@ -2,8 +2,9 @@ import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useCommentInputAction } from '~/core/hook/useCommentAction'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type CommentInputParams = {}
 
@@ -24,8 +25,8 @@ function CommentInput({}: CommentInputParams) {
 }
 
 const PseudoInput = styled.div`
-  ${flexContainer({ alignItems: 'center' })};
-  ${fontStyles({ size: '14px', color: colors.grey1 })};
+  ${Flex.Container.style().alignItems('center').create()};
+  ${Font.style().size('14px').color(colors.grey1).create()};
   width: 100%;
   height: 40px;
   border-radius: 4px;

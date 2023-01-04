@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { Search } from '~/core/component/generate/svg'
-import { flexContainer, fontStyles } from '~/common/style/styled'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 export type SearchInputProps = {
   value: string
@@ -26,7 +27,7 @@ export default SearchInput
 // Inner Components
 
 const Block = styled.div`
-  ${flexContainer({ alignItems: 'center' })};
+  ${Flex.Container.style().alignItems('center').create()};
   box-sizing: content-box; // 전역 border-box 설정해제
   height: 40px;
   border-radius: 4px;
@@ -40,7 +41,7 @@ const Block = styled.div`
     background: none;
     border: none;
     outline: none;
-    ${fontStyles({ size: '16px' })};
+    ${Font.style().size('16px').create()};
     flex: 1; // grow:1, shrink:1, basis:0%
     margin-left: 8px;
     margin-right: 8px;

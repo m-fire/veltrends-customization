@@ -3,7 +3,8 @@ import { Comment } from '~/core/api/types'
 import CommentInput from '~/core/component/items/CommentInput'
 import { colors } from '~/common/style/colors'
 import CommentElement from '~/core/component/items/CommentElement'
-import { flexContainer, fontStyles } from '~/common/style/styled'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type CommentListProps = {
   commentList: Comment[]
@@ -31,19 +32,19 @@ const Block = styled.div`
 `
 
 const CommentTitle = styled.h3`
-  ${fontStyles({
-    size: '16px',
-    weight: 800,
-    color: colors.grey6,
-    lineHeight: 1.5,
-    letterSpacing: '-0.5px',
-  })}
+  ${Font.style()
+    .size('16px')
+    .weight(800)
+    .color(colors.grey6)
+    .lineHeight(1.5)
+    .letterSpacing('-0.5px')
+    .create()};
   margin: 0;
   margin-bottom: 8px;
 `
 
 const List = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   width: 100%;
   margin-top: 32px;
   gap: 40px;

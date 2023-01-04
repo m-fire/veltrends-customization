@@ -1,7 +1,6 @@
 import React, { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
 import BasicLayout from '~/common/component/layout/BasicLayout'
 import WriteFormTemplate from '~/core/component/write/WriteFormTemplate'
@@ -11,6 +10,8 @@ import { Item } from '~/core/api/types'
 import { json, LoaderFunction } from '@remix-run/node'
 import { Requests } from '~/common/util/https'
 import { getItem, updateItem } from '~/core/api/items'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 function Edit() {
   const item = useLoaderData<Item>()
@@ -90,7 +91,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 // Inner Components
 
 const Group = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   flex: 1; // grow:1, shrink:1, basis:0%
   gap: 16px;
   padding-bottom: 16px;
@@ -98,7 +99,7 @@ const Group = styled.div`
 
 const LinkLabelTextArea = styled(LabelTextArea)`
   & textarea {
-    ${fontStyles({ size: '14px' })};
+    ${Font.style().size('14px').create()};
     padding: 8px;
   }
 `
@@ -113,7 +114,7 @@ const BodyLabelTextArea = styled(LabelTextArea)`
 `
 
 const Message = styled.div`
-  ${fontStyles({ size: '14px', color: colors.secondary1 })};
+  ${Font.style().size('14px').color(colors.secondary1).create()};
   margin-top: 8px;
   text-align: center;
 `

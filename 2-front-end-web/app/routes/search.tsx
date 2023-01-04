@@ -17,9 +17,9 @@ import SearchResultCardList from '~/core/component/search/SearchResultCardList'
 import { Pagination } from '~/common/api/types'
 import { SearchedItem } from '~/core/api/types'
 import { Loading, NotSearch } from '~/core/component/generate/svg'
-import { flexContainer } from '~/common/style/styled'
 import { colors } from '~/common/style/colors'
 import { AnimatePresence } from 'framer-motion'
+import Flex from '~/common/style/css-flex'
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -140,11 +140,11 @@ const StyledHeader = styled(Header)`
 `
 
 const NotSearchedBlock = styled.div`
-  ${flexContainer({
-    direction: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  })}
+  ${Flex.Container.style()
+    .direction('column')
+    .alignItems('center')
+    .justifyContent('center')
+    .create()};
   flex: 1; // grow:1, shrink:1, basis:0%
 
   h3 {

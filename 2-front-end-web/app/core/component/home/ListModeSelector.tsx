@@ -15,8 +15,9 @@ import qs from 'qs'
 import { colors } from '~/common/style/colors'
 import { ItemListMode } from '~/core/api/types'
 import { Calendar, Clock, Fire } from '~/core/component/generate/svg'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { DateStringRange } from '~/common/util/converters'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type ModeSelectorProps = {
   currentMode: ItemListMode
@@ -146,7 +147,7 @@ export default ListModeSelector
 
 const Block = styled.div`
   position: sticky;
-  ${flexContainer({ justifyContent: 'center' })};
+  ${Flex.Container.style().justifyContent('center').create()};
   top: 0;
 
   padding-top: 8px;
@@ -161,7 +162,7 @@ const Block = styled.div`
 `
 
 const SelectorList = styled.nav`
-  ${flexContainer()};
+  ${Flex.Container.style().create()};
   position: relative;
   gap: 24px;
 `
@@ -231,12 +232,13 @@ export function ModeItem({
 }
 
 const StyledLink = styled(Link)<{ active?: 'true' | 'false' }>`
-  ${flexContainer({ alignItems: 'flex-end' })};
-  ${fontStyles({
-    size: '14px',
-    color: colors.grey4,
-    weight: 700, // lineHeight: 1.5,
-  })};
+  ${Flex.Container.style().alignItems('flex-end').create()};
+  ${Font.style()
+    .size('14px')
+    .weight(700)
+    .color(colors.grey4)
+    // .lineHeight(1.5)
+    .create()};
   text-decoration: none;
   ///* white border 처리 */
   -webkit-filter: drop-shadow(0px 0px 0.5px white)

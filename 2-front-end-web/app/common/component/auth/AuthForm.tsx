@@ -10,7 +10,8 @@ import AppError from '~/common/error/AppError'
 import { colors } from '~/common/style/colors'
 import { useFormValidation } from '~/common/hook/useFormValidation'
 import { Validator } from '~/common/util/validates'
-import { flexContainer, fontStyles } from '~/common/style/styled'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -154,22 +155,22 @@ const formDescriptions = {
 // Inner Components
 
 const StyledFormRef = styled(Form)`
-  ${flexContainer({
-    direction: 'column',
-    justifyContent: 'space-between',
-  })};
+  ${Flex.Container.style()
+    .direction('column')
+    .justifyContent('space-between')
+    .create()};
   flex: 1; // grow:1, shrink:1, basis:0%
   padding: 16px 20px;
 `
 
 const InputGroup = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   gap: 16px; // 사용주의! 구형브라우저 적용불가
 `
 
 // Footer 대용
 const ActionBox = styled.div`
-  ${flexContainer({ direction: 'column', alignItems: 'center' })};
+  ${Flex.Container.style().direction('column').alignItems('center').create()};
   width: 100%;
   gap: 24px;
 `
@@ -182,6 +183,6 @@ const StyledButton = styled(Button)`
 `
 
 const ActionErrorMessage = styled.div`
-  ${fontStyles({ size: '14px', color: colors.secondary1 })};
+  ${Font.style().size('14px').color(colors.secondary1).create()};
   text-align: center;
 `

@@ -1,7 +1,7 @@
 import React, { forwardRef, InputHTMLAttributes } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { fontStyles } from '~/common/style/styled'
+import Font from '~/common/style/css-font'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string | null
@@ -24,7 +24,7 @@ export default Input
 // Inner Components
 
 const StyledInput = styled.input<Pick<InputProps, 'errorMessage'>>`
-  ${fontStyles({ size: '16px' })};
+  ${Font.style().size('16px').create()};
   height: 48px;
   border: 2px solid ${colors.grey2};
   border-radius: 6px;
@@ -46,6 +46,6 @@ const StyledInput = styled.input<Pick<InputProps, 'errorMessage'>>`
 `
 
 const Message = styled.div`
-  ${fontStyles({ size: '14px', color: colors.secondary1 })};
+  ${Font.style().size('14px').color(colors.secondary1).create()}
   margin-top: 6px;
 `

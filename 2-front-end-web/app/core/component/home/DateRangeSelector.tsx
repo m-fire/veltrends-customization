@@ -8,8 +8,8 @@ import {
   WeekRangeConverters as wrc,
   YYYY_MM_DD,
 } from '~/common/util/converters'
-import { flexContainer } from '~/common/style/styled'
 import { ArrowLeft } from '~/core/component/generate/svg'
+import Flex from '~/common/style/css-flex'
 
 const SERVICE_START_DATE = new Date('2022-09-01')
 const yy년MM월dd일 = 'yy년 MM월 dd일' as const
@@ -104,8 +104,8 @@ const Block = styled.div`
 `
 
 const WeekNavigator = styled.div`
-  ${flexContainer({ justifyContent: 'center' })}
-  //margin-top: -12px;
+  ${Flex.Container.style().justifyContent('center').create()};
+  margin-top: -12px;
   margin-bottom: 12px;
   gap: 32px;
 `
@@ -114,7 +114,10 @@ const StyledLink = styled(Link)<{
   direction: 'left' | 'right'
   disabled: boolean
 }>`
-  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })}
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('center')
+    .create()};
   color: ${colors.primary1};
   font-size: inherit;
   text-decoration: none;

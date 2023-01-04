@@ -10,10 +10,11 @@ import BookmarkButton from '~/core/component/items/BookmarkButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
 import { screen } from '~/common/style/media-query'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type LinkCardProps = {
   item: Item
@@ -136,11 +137,11 @@ export default LinkCard
 
 // Inner Components
 const ListItem = styled.li`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
 `
 
 const StyledLink = styled(Link)`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   text-decoration: none;
   h3,
   p,
@@ -149,7 +150,7 @@ const StyledLink = styled(Link)`
     padding: 0;
   }
   & > h3 {
-    ${fontStyles({ size: '20px', weight: 800, color: colors.grey4 })};
+    ${Font.style().size('18px').weight(800).color(colors.grey4).create()};
     margin-bottom: 8px;
     ${screen.desktop} {
       font-size: 24px;
@@ -161,12 +162,7 @@ const StyledLink = styled(Link)`
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 4;
-    ${fontStyles({
-      size: '14px',
-      weight: 500,
-      color: colors.grey2,
-      lineHeight: 1.3,
-    })};
+    ${Font.style().size('12px').weight(500).color(colors.grey3).create()};
     height: 70px;
     margin-top: 0;
     margin-bottom: 8px;
@@ -200,13 +196,13 @@ const Thumbnail = styled.img`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${flexContainer()};
-  ${fontStyles({
-    size: '12px',
-    weight: 400,
-    color: colors.grey2,
-    lineHeight: 1.33,
-  })};
+  ${Flex.Container.style().create()};
+  ${Font.style()
+    .size('12px')
+    .weight(400)
+    .color(colors.grey2)
+    .lineHeight(1.33)
+    .create()};
   gap: 4px;
   margin-bottom: 2px;
   img,
@@ -217,26 +213,26 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
     border-radius: 2px;
   }
   strong {
-    ${fontStyles({
-      size: '12px',
-      weight: 600,
-      color: colors.grey3,
-      lineHeight: 1.33,
-    })};
+    ${Font.style()
+      .size('12px')
+      .weight(600)
+      .color(colors.grey3)
+      .lineHeight(1.33)
+      .create()};
   }
 `
 
 const ItemFooter = styled.div`
-  ${flexContainer({
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  })};
-  ${fontStyles({
-    size: '12px',
-    weight: 400,
-    color: colors.grey2,
-    lineHeight: 1.5,
-  })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('space-between')
+    .create()};
+  ${Font.style()
+    .size('12px')
+    .weight(400)
+    .color(colors.grey2)
+    .lineHeight(1.5)
+    .create()};
   // HeartVote, UserInfo 공통스타일
   // 이 코드 때문에 하위 컴포넌트의 SVG 컬러가 적용되지 않았음.
   // & svg {
@@ -245,25 +241,25 @@ const ItemFooter = styled.div`
 `
 
 const LikeCount = styled(motion.div)`
-  ${flexContainer()};
-  ${fontStyles({
-    size: '12px',
-    weight: 600,
-    color: colors.grey3,
-    lineHeight: 1.5,
-  })};
+  ${Flex.Container.style().create()};
+  ${Font.style()
+    .size('12px')
+    .weight(600)
+    .color(colors.grey3)
+    .lineHeight(1.5)
+    .create()};
 `
 
 const ActionButtons = styled.div`
-  ${flexContainer({ alignItems: 'center' })}
+  ${Flex.Container.style().alignItems('center').create()};
   gap: 8px;
 `
 
 const UserInfo = styled.div`
-  ${flexContainer({ alignItems: 'center' })};
+  ${Flex.Container.style().alignItems('center').create()};
   gap: 4px;
   b {
-    ${fontStyles({ weight: 600, lineHeight: 1.5 })};
+    ${Font.style().weight(600).lineHeight(1.5).create()};
     color: ${colors.grey3};
   }
 `

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import styled from 'styled-components'
-import { flexContainer } from '~/common/style/styled'
 import { screen } from '~/common/style/media-query'
+import Flex from '~/common/style/css-flex'
 
 type LayoutContentProps = {
   className?: string
@@ -16,7 +16,7 @@ export default LayoutContent
 // Inner Components
 
 const Container = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   padding-top: 56px;
 
   flex: 1; // grow:1, shrink:1, basis:0%

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Item } from '~/core/api/types'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
 import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/core/component/items/LikeButton'
@@ -8,11 +8,12 @@ import { useDateDistance } from '~/common/hook/useDateDistance'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import Earth from '~/core/component/generate/svg/Earth'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
 import BookmarkButton from '~/core/component/items/BookmarkButton'
 import { screen } from '~/common/style/media-query'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type ItemViewerProps = {
   item: Item
@@ -154,7 +155,7 @@ export default ItemViewer
 // Inner Components
 
 const Block = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
   & > a {
     display: block;
   }
@@ -179,13 +180,13 @@ const Content = styled.div`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${flexContainer({ alignItems: 'center' })};
-  ${fontStyles({
-    size: '12px',
-    weight: 400,
-    color: colors.grey2,
-    lineHeight: 1.33,
-  })};
+  ${Flex.Container.style().alignItems('center').create()};
+  ${Font.style()
+    .size('12px')
+    .weight(400)
+    .color(colors.grey2)
+    .lineHeight(1.33)
+    .create()};
   gap: 4px;
   margin-bottom: 8px;
   img,
@@ -196,11 +197,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
     border-radius: 2px;
   }
   strong {
-    ${fontStyles({
-      size: '12px',
-      weight: 600,
-      color: colors.grey3,
-    })};
+    ${Font.style().size('12px').weight(600).color(colors.grey3).create()};
   }
   ${screen.tablet} {
     font-size: 16px;
@@ -232,12 +229,12 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
 `
 
 const Title = styled.h2`
-  ${fontStyles({
-    size: '28px',
-    weight: 800,
-    color: colors.grey5,
-    letterSpacing: '-0.5px',
-  })};
+  ${Font.style()
+    .size('20px')
+    .weight(800)
+    .color(colors.grey5)
+    .letterSpacing('-0.5px')
+    .create()};
   ${screen.tablet} {
     font-size: 32px;
   }
@@ -252,18 +249,22 @@ const Title = styled.h2`
 `
 
 const ActionButtons = styled.div`
-  ${flexContainer({ justifyContent: 'flex-end', alignItems: 'center' })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('flex-end')
+    .create()};
   gap: 8px;
   margin-bottom: 48px;
 `
 
 const Body = styled.p`
-  ${fontStyles({
-    size: '18px',
-    weight: 500,
-    color: colors.grey4,
-    lineHeight: 1.5,
-  })};
+  ${Font.style()
+    .size('16px')
+    .weight(500)
+    .color(colors.grey4)
+    .lineHeight(1.5)
+    .letterSpacing('-0.5px')
+    .create()};
   ${screen.tablet} {
     font-size: 22px;
   }
@@ -280,19 +281,19 @@ const Body = styled.p`
 `
 
 const BottomActionBlock = styled.div`
-  ${flexContainer({ direction: 'column', alignItems: 'center' })};
+  ${Flex.Container.style().direction('column').alignItems('center').create()};
   gap: 4px;
   margin-bottom: 40px;
 `
 
 const UserInfo = styled.div`
-  ${flexContainer({ justifyContent: 'end' })};
-  ${fontStyles({
-    size: '13px',
-    weight: 400,
-    color: colors.grey4,
-    lineHeight: 1.33,
-  })};
+  ${Flex.Container.style().justifyContent('end').create()};
+  ${Font.style()
+    .size('13px')
+    .weight(400)
+    .color(colors.grey4)
+    .lineHeight(1.33)
+    .create()};
   gap: 4px;
   & b {
     font-weight: 700;
@@ -300,13 +301,13 @@ const UserInfo = styled.div`
 `
 
 const LikesCount = styled(motion.div)`
-  ${flexContainer()};
-  ${fontStyles({
-    size: '14px',
-    weight: 600,
-    color: colors.grey3,
-    lineHeight: 1.5,
-  })};
+  ${Flex.Container.style().create()};
+  ${Font.style()
+    .size('12px')
+    .weight(600)
+    .color(colors.grey3)
+    .lineHeight(1.5)
+    .create()};
   ${screen.tablet} {
     font-size: 16px;
   }
@@ -316,5 +317,5 @@ const LikesCount = styled(motion.div)`
 `
 
 const Footer = styled.div`
-  ${flexContainer({ direction: 'column' })};
+  ${Flex.Container.style().direction('column').create()};
 `

@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { SearchedItem } from '~/core/api/types'
 import { Earth } from '~/core/component/generate/svg'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type SearchResultCardProps = {
   item: SearchedItem
@@ -36,12 +37,12 @@ export default SearchResultCard
 
 const Block = styled.div`
   h3 {
-    ${fontStyles({
-      size: '16px',
-      weight: 600,
-      color: colors.grey4,
-      lineHeight: 1.5,
-    })};
+    ${Font.style()
+      .size('16px')
+      .weight(600)
+      .color(colors.grey4)
+      .lineHeight(1.5)
+      .create()};
     margin-top: 0;
     margin-bottom: 0;
     em {
@@ -55,11 +56,7 @@ const Block = styled.div`
   }
 
   p {
-    ${fontStyles({
-      size: '14px',
-      color: colors.grey3,
-      lineHeight: 1.5,
-    })};
+    ${Font.style().size('14px').color(colors.grey3).lineHeight(1.5).create()};
     margin-top: 8px;
     margin-bottom: 8px;
     em {
@@ -69,12 +66,8 @@ const Block = styled.div`
 `
 
 const Publisher = styled.div`
-  ${flexContainer({ alignItems: 'center' })};
-  ${fontStyles({
-    size: '14px',
-    color: colors.grey4,
-    lineHeight: 1.5,
-  })};
+  ${Flex.Container.style().alignItems('center').create()};
+  ${Font.style().size('14px').color(colors.grey4).lineHeight(1.5).create()};
   margin-bottom: 4px;
 
   img,

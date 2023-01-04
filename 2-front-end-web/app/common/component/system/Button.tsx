@@ -1,7 +1,8 @@
 import React, { ButtonHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/common/style/colors'
-import { flexContainer, fontStyles } from '~/common/style/styled'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type ButtonProps = {
   layoutMode?: 'inline' | 'fullWidth'
@@ -21,8 +22,11 @@ export default Button
 // Inner Components
 
 const StyledButton = styled.button<ButtonProps>`
-  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })};
-  ${fontStyles({ size: '16px', weight: 600 })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('center')
+    .create()};
+  ${Font.style().size('16px').weight(600).create()};
   height: 48px;
   padding-left: 20px;
   padding-right: 20px;
@@ -57,7 +61,7 @@ const variantStyles: Record<VariantType, ReturnType<typeof css>> = {
     color: white;
   `,
   nobg: css`
-    ${fontStyles({ weight: 800, color: colors.grey5 })};
+    ${Font.style().weight(800).color(colors.grey5).create()};
     background: none;
   `,
 } as const

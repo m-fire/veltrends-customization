@@ -10,7 +10,6 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import AppError from '~/common/error/AppError'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { MoreVert } from '~/core/component/generate/svg'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useDeleteComment } from '~/core/hook/useDeleteComment'
@@ -19,6 +18,8 @@ import {
   useCommentAction,
 } from '~/core/hook/useCommentAction'
 import { useCommentActionStateById } from '~/core/hook/store/useCommentActionStore'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 export interface CommentElementProps {
   type: CommentType
@@ -165,27 +166,30 @@ export default CommentElement
 // Inner Components
 
 const Block = styled.div`
-  ${flexContainer({ direction: 'column' })};
-  ${fontStyles({
-    size: '14px',
-    weight: 600,
-    color: colors.grey2,
-    letterSpacing: '-0.5px',
-  })};
+  ${Flex.Container.style().direction('column').create()};
+  ${Font.style()
+    .size('14px')
+    .weight(600)
+    .color(colors.grey2)
+    .letterSpacing('-0.5px')
+    .create()};
 `
 
 // Header
 
 const CommentHead = styled.div`
-  ${flexContainer({
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('space-between')
+    .create()};
   font-weight: 500;
 `
 
 const LeftGroup = styled.div`
-  ${flexContainer({ alignItems: 'center', justifyContent: 'flex-end' })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('flex-end')
+    .create()};
   gap: 4px;
 `
 
@@ -194,11 +198,14 @@ const Username = styled.div`
 `
 
 const Time = styled.div`
-  ${fontStyles({ size: '12px', weight: 400, color: colors.grey2 })};
+  ${Font.style().size('12px').weight(400).color(colors.grey2).create()};
 `
 
 const MoreButton = styled.button`
-  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('center')
+    .create()};
   width: 24px;
   height: 24px;
   color: ${colors.grey4};
@@ -217,7 +224,7 @@ const Mention = styled.span`
 `
 
 const CommentText = styled.p`
-  ${fontStyles({ size: '14px', color: colors.grey6, lineHeight: 1.6 })};
+  ${Font.style().size('14px').color(colors.grey6).lineHeight(1.6).create()};
   white-space: pre-wrap;
   word-break: keep-all;
   margin: 0;
@@ -232,19 +239,19 @@ const DeletedComment = styled(CommentText)`
 // Footer
 
 const CommentFooter = styled.div`
-  ${flexContainer({ display: 'inline-flex' })};
-  ${fontStyles({
-    size: '12px',
-    weight: 600,
-    color: colors.grey2,
-    lineHeight: 1,
-  })};
+  ${Flex.Container.style(true).create()};
+  ${Font.style()
+    .size('12px')
+    .weight(600)
+    .color(colors.grey2)
+    .lineHeight(1)
+    .create()};
   gap: 10px;
 `
 
 const LikeBlock = styled.div`
-  ${flexContainer({ alignItems: 'center' })};
-  ${fontStyles({ weight: 700, color: colors.grey4 })};
+  ${Flex.Container.style().alignItems('center').create()};
+  ${Font.style().weight(700).color(colors.grey4).create()};
   gap: 4px;
   & svg {
     color: ${colors.grey2};
@@ -256,7 +263,7 @@ const LikeCount = styled.span`
 `
 
 const ReplyBlock = styled.div`
-  ${flexContainer({ alignItems: 'center' })};
+  ${Flex.Container.style().alignItems('center').create()};
   gap: 2px;
   & svg {
     color: ${colors.grey2};

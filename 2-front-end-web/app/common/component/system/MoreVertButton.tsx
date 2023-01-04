@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { MoreVert } from '~/core/component/generate/svg'
 import { colors } from '~/common/style/colors'
-import { flexContainer } from '~/common/style/styled'
+import Flex from '~/common/style/css-flex'
 
 type MoreVertButtonProps = {
   position?: PositionType
@@ -22,7 +22,10 @@ export default MoreVertButton
 // Inner Components
 
 const StyledButton = styled.button<Pick<MoreVertButtonProps, 'position'>>`
-  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })}
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('center')
+    .create()};
   ${({ position }) => variantStyles[position!]}
   svg {
     width: 20px;

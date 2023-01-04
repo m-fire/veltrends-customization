@@ -7,7 +7,6 @@ import Overlay from '../../../common/component/system/Overlay'
 import Spinner from '~/common/component/system/Spinner'
 import { colors } from '~/common/style/colors'
 import { SpeechBubble, Write } from '~/core/component/generate/svg'
-import { flexContainer, fontStyles } from '~/common/style/styled'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import { commentsKey } from '~/core/hook/query/useCommentsQuery'
 import { Comment } from '~/core/api/types'
@@ -19,6 +18,8 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import useFocus from '~/common/hook/useFocus'
 import { useCommentInputState } from '~/core/hook/store/useCommentActionStore'
 import { useCommentInputAction } from '~/core/hook/useCommentAction'
+import Flex from '~/common/style/css-flex'
+import Font from '~/common/style/css-font'
 
 type CommentInputOverlayParams = {}
 
@@ -176,7 +177,7 @@ export default CommentInputOverlay
 // Inner components
 
 const Footer = styled(motion.div)`
-  ${flexContainer({ alignItems: 'center' })};
+  ${Flex.Container.style().alignItems('center').create()};
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -188,7 +189,7 @@ const Footer = styled(motion.div)`
 
 const StyledInput = styled.input`
   flex: 1; // grow:1, shrink:1, basis:0%
-  ${fontStyles({ size: '16px', weight: 400 })};
+  ${Font.style().size('16px').weight(400).create()};
   height: 100%;
   border: none;
   padding: 0 20px;
@@ -198,7 +199,10 @@ const StyledInput = styled.input`
 `
 
 const TransparentButton = styled.button`
-  ${flexContainer({ alignItems: 'center', justifyContent: 'center' })};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('center')
+    .create()};
   height: 100%;
   padding: 0 8px;
   position: relative;
