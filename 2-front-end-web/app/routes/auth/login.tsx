@@ -12,6 +12,7 @@ type LoginProps = {
   error?: AppError
 }
 
+//Todo: 로그인폼 UI는 디바이스 스크린사이즈에 따라 너비 폭 줄이거나 키움
 function Login({ error }: LoginProps) {
   useAuthRedirect()
 

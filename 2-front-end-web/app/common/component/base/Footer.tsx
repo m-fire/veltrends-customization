@@ -4,12 +4,7 @@ import { colors } from '~/common/style/colors'
 import FooterTabItem from '~/common/component/base/FooterTabItem'
 import Flex from '~/common/style/css-flex'
 
-const paths = ['search', 'bookmarks', 'setting'] as const
-
-function isValidPath(path: any): path is typeof paths[number] {
-  return paths.includes(path)
-}
-
+//Todo: 데스크탑/모바일 스크린사이즈에 따라 보여짐/사라짐 구현
 type FooterProps = {}
 
 function Footer({}: FooterProps) {

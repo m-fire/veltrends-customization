@@ -12,6 +12,7 @@ type HeaderProps = {
   className?: string
 }
 
+//Todo: 데스크탑/모바일 각각의 해더를 디바이스 스크린사이즈에 따라 형태변경 구현
 function Header({
   title = <LogoVeltrend />, // 기본 해더 타이틀: 메인로고
   headerLeft,

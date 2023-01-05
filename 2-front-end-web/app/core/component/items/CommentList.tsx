@@ -14,6 +14,7 @@ function CommentList({ commentList }: CommentListProps) {
   return (
     <Block>
       <CommentTitle>댓글 {commentList.length ?? 0}</CommentTitle>
+      {/* Todo: 데스크탑 환경에서는 댓글오버레이 대신, UI 자체적으로 text input 기능수행 구현 */}
       <CommentInput />
       <List>
         {commentList.map((comment) => (

@@ -7,6 +7,7 @@ import { APP_ERRORS_INFO } from '~/common/error/AppError'
 
 const ERROR_CODE_INVALID_URL = APP_ERRORS_INFO.InvalidUrl.statusCode
 
+//Todo: 글쓰기폼 UI는 디바이스 스크린사이즈에 따라 너비 폭 줄이거나 키움
 function WriteLink() {
   const navigate = useNavigate()
   const {
