@@ -3,14 +3,11 @@ import { Listing, ListingInfo, ListingParams } from './types.js'
 abstract class AbstractModeListing<E> implements Listing<E> {
   async listing(options: ListingParams): Promise<ListingInfo<E>> {
     //
-    const [totalCount, list] = await Promise.all([
-      this.getTotalCount(options),
-      this.findList(options),
-    ])
-
+    const totalCount = await this.getTotalCount(options)
     if (totalCount === 0) {
-      return { totalCount: 0, list, hasNextPage: false, lastCursor: null }
+      return { totalCount: 0, list: [], hasNextPage: false, lastCursor: null }
     }
+    const list = await this.findList(options)
     const lastElement = list?.at(-1)
     const hasNextPage = await this.hasNextPage(options, lastElement)
     const lastCursor = this.getLastCursorOrNull(lastElement)
