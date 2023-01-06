@@ -151,7 +151,7 @@ const StyledLink = styled(Link)`
   & > h3 {
     ${Font.style().size('18px').weight(800).color(colors.grey4).create()};
     margin-bottom: 8px;
-    ${screen.desktop} {
+    ${screen.min_w.desktop} {
       font-size: 24px;
     }
   }
@@ -166,7 +166,7 @@ const StyledLink = styled(Link)`
     margin-top: 0;
     margin-bottom: 8px;
 
-    ${screen.tablet} {
+    ${screen.min_w.tablet} {
       font-size: 14px;
       height: 70px;
     }
@@ -174,7 +174,7 @@ const StyledLink = styled(Link)`
 `
 
 const LinkCountWrapper = styled.div`
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     height: 26px;
   }
 `
@@ -184,7 +184,7 @@ const Thumbnail = styled.img`
   width: 100%;
   //aspect-ratio: 280/100; // 비율 고정값
   max-height: 40vh; // 이미지 height 가 최대값 아래로 유동적 변경
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     aspect-ratio: 288/192; // 비율 고정값
   }
   object-fit: cover;

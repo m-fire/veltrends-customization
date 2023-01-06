@@ -198,7 +198,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
   strong {
     ${Font.style().size('12px').weight(600).color(colors.grey3).create()};
   }
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     font-size: 16px;
     strong {
       font-size: 16px;
@@ -212,7 +212,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
       border-radius: 0.25vw;
     }
   }
-  ${screen.desktop} {
+  ${screen.min_w.desktop} {
     font-size: 20px;
     strong {
       font-size: 20px;
@@ -234,13 +234,13 @@ const Title = styled.h2`
     .color(colors.grey5)
     .letterSpacing('-0.5px')
     .create()};
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     font-size: 32px;
   }
-  ${screen.desktop} {
+  ${screen.min_w.desktop} {
     font-size: 40px;
   }
-  ${screen.xwide} {
+  ${screen.min_w.xwide} {
     font-size: 48px;
   }
   margin-top: 0;
@@ -264,13 +264,13 @@ const Body = styled.p`
     .lineHeight(1.5)
     .letterSpacing('-0.5px')
     .create()};
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     font-size: 22px;
   }
-  ${screen.desktop} {
+  ${screen.min_w.desktop} {
     font-size: 24px;
   }
-  ${screen.xwide} {
+  ${screen.min_w.xwide} {
     font-size: 26px;
   }
   margin-top: 0;
@@ -307,10 +307,10 @@ const LikesCount = styled(motion.div)`
     .color(colors.grey3)
     .lineHeight(1.5)
     .create()};
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     font-size: 16px;
   }
-  ${screen.desktop} {
+  ${screen.min_w.desktop} {
     font-size: 20px;
   }
 `

@@ -24,10 +24,10 @@ export default LinkCardList
 
 const List = styled.ul`
   ${Grid.Container.style().templateColumns('repeat(1, 1fr)').create()};
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     ${Grid.Container.style().templateColumns('repeat(2, 1fr)').create()};
   }
-  ${screen.wide} {
+  ${screen.min_w.wide} {
     ${Grid.Container.style().templateColumns('repeat(3, 1fr)').create()};
   }
   row-gap: 56px;

@@ -111,7 +111,7 @@ interface ItemLoaderData {
 // Inner Components
 
 const Content = styled.div`
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     padding-left: 1rem;
     padding-right: 1rem;
     margin: 0 auto;

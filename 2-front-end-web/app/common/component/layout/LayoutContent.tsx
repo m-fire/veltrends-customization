@@ -21,11 +21,11 @@ const Container = styled.div`
 
   flex: 1; // grow:1, shrink:1, basis:0%
   overflow: scroll;
-  ${screen.tablet} {
+  ${screen.min_w.tablet} {
     padding-left: 30px;
     padding-right: 30px;
   }
-  ${screen.wide} {
+  ${screen.min_w.wide} {
     width: 1280px; // wide screen minWidth
     margin-left: auto;
     margin-right: auto;

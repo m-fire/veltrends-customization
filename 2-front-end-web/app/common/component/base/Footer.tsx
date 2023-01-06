@@ -28,7 +28,7 @@ const StyledFooter = styled.footer`
   ${Flex.Container.style().create()};
   height: 56px;
   border-top: 1px solid ${colors.grey1};
-  ${screen.desktop} {
+  ${screen.min_w.desktop} {
     // 데스크탑/모바일 스크린사이즈에 따라 보여짐/사라짐
     display: none;
   }
