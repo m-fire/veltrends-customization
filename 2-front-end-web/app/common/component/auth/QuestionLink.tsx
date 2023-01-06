@@ -1,8 +1,8 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { Link } from '@remix-run/react'
-import { colors } from '~/common/style/colors'
-import Font from '~/common/style/css-font'
+import { colors } from '~/core/style/colors'
+import { Font } from '~/common/style/css-builder'
 
 type QuestionLinkProps = {
   question: string

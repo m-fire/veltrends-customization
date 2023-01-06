@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { SearchedItem } from '~/core/api/types'
 import { Earth } from '~/core/component/generate/svg'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type SearchResultCardProps = {
   item: SearchedItem

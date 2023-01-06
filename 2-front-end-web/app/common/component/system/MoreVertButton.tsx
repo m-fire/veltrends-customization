@@ -1,8 +1,8 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { MoreVert } from '~/core/component/generate/svg'
-import { colors } from '~/common/style/colors'
-import Flex from '~/common/style/css-flex'
+import { colors } from '~/core/style/colors'
+import { Flex } from '~/common/style/css-builder'
 
 type MoreVertButtonProps = {
   position?: PositionType

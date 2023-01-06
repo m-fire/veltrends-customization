@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { Item } from '~/core/api/types'
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/core/component/items/LikeButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
@@ -12,8 +12,7 @@ import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
 import BookmarkButton from '~/core/component/items/BookmarkButton'
 import { screen } from '~/common/style/media-query'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type ItemViewerProps = {
   item: Item

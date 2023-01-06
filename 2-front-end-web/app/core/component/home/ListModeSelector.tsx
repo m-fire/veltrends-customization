@@ -12,12 +12,11 @@ import styled, { css } from 'styled-components'
 import { motion } from 'framer-motion'
 import produce from 'immer'
 import qs from 'qs'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { ItemListMode } from '~/core/api/types'
 import { Calendar, Clock, Fire } from '~/core/component/generate/svg'
 import { DateStringRange } from '~/common/util/converters'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type ModeSelectorProps = {
   currentMode: ItemListMode

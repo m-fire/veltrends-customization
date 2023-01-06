@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { Comment } from '~/core/api/types'
 import CommentElement from '~/core/component/items/CommentElement'
-import { colors } from '~/common/style/colors'
-import Flex from '~/common/style/css-flex'
+import { colors } from '~/core/style/colors'
+import { Flex } from '~/common/style/css-builder'
 
 type SubcommentListProps = {
   commentList: Comment[]

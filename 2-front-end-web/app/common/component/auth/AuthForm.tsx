@@ -7,11 +7,10 @@ import { Form, useSearchParams } from '@remix-run/react'
 import { useSubmitLoading } from '~/common/hook/useSubmitLoading'
 import { Key, Write } from '~/core/component/generate/svg'
 import AppError from '~/common/error/AppError'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { useFormValidation } from '~/common/hook/useFormValidation'
 import { Validator } from '~/common/util/validates'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type AuthFormProps = {
   mode: 'login' | 'register'

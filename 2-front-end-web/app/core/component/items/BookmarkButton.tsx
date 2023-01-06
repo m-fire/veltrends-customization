@@ -4,7 +4,7 @@ import SequenceElementsToggler, {
   SequenceElementsTogglerProps,
 } from '~/common/component/system/SequenceElementsToggler'
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 
 type BookmarkButtonProps = {
   isBookmarked?: boolean

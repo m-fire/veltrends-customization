@@ -1,7 +1,7 @@
 import React, { forwardRef, InputHTMLAttributes } from 'react'
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
-import Font from '~/common/style/css-font'
+import { colors } from '~/core/style/colors'
+import { Font } from '~/common/style/css-builder'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string | null

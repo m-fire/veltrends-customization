@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { screen } from '~/common/style/media-query'
-import Flex from '~/common/style/css-flex'
+import { Flex } from '~/common/style/css-builder'
 
 type LayoutContentProps = {
   className?: string

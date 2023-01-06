@@ -1,7 +1,7 @@
 import React, { createElement } from 'react'
 import { NavLink } from '@remix-run/react'
 import styled, { css } from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { RoutePath } from '~/common/api/client'
 import {
   Bookmarks,
@@ -10,7 +10,7 @@ import {
   Search,
   Setting,
 } from '~/core/component/generate/svg'
-import Flex from '~/common/style/css-flex'
+import { Flex } from '~/common/style/css-builder'
 
 const iconMap = {
   home: Fire,

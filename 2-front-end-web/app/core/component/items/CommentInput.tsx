@@ -1,10 +1,9 @@
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { useAuthUser } from '~/common/context/UserContext'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useCommentInputAction } from '~/core/hook/useCommentAction'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type CommentInputParams = {}
 

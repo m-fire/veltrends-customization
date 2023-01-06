@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import BasicLayout from '~/common/component/layout/BasicLayout'
 import WriteFormTemplate from '~/core/component/write/WriteFormTemplate'
 import LabelInput from '~/common/component/system/LabelInput'
@@ -10,8 +10,7 @@ import { Item } from '~/core/api/types'
 import { json, LoaderFunction } from '@remix-run/node'
 import { Requests } from '~/common/util/https'
 import { getItem, updateItem } from '~/core/api/items'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 function Edit() {
   const item = useLoaderData<Item>()

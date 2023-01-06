@@ -5,9 +5,8 @@ import {
   useState,
 } from 'react'
 import styled, { css } from 'styled-components'
-import { colors } from '~/common/style/colors'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { colors } from '~/core/style/colors'
+import { Flex, Font } from '~/common/style/css-builder'
 
 interface LabelTextAreaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> {

@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import FooterTabItem from '~/common/component/base/FooterTabItem'
-import Flex from '~/common/style/css-flex'
+import { Flex } from '~/common/style/css-builder'
 
 //Todo: 데스크탑/모바일 스크린사이즈에 따라 보여짐/사라짐 구현
 type FooterProps = {}

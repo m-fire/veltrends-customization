@@ -1,9 +1,8 @@
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { LogoVeltrend } from '~/core/component/generate/svg'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type HeaderProps = {
   title?: ReactNode

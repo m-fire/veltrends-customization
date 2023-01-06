@@ -1,9 +1,8 @@
 import { FormEventHandler, ReactNode } from 'react'
 import styled from 'styled-components'
 import Button from '../../../common/component/system/Button'
-import { colors } from '~/common/style/colors'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { colors } from '~/core/style/colors'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type WriteFormTemplateProps = {
   description?: string

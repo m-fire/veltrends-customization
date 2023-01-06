@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { ArrowLeft } from '~/core/component/generate/svg'
-import Flex from '~/common/style/css-flex'
+import { Flex } from '~/common/style/css-builder'
 
 type HeaderBackButtonProps = {
   onClick?: () => void

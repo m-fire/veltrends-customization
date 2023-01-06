@@ -1,13 +1,13 @@
 import React, { ReactNode, useCallback, useMemo, useReducer } from 'react'
 import styled, { css } from 'styled-components'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import {
   Numbers as n,
   RandomNumbers as rn,
   SequenceNumbers as sn,
 } from '~/common/util/numbers'
-import Flex from '~/common/style/css-flex'
+import { Flex } from '~/common/style/css-builder'
 
 export type SequenceElementsTogglerProps = {
   elements: ReactNode[]

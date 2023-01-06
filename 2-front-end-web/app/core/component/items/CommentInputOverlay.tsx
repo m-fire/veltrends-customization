@@ -5,7 +5,7 @@ import produce from 'immer'
 import { useQueryClient } from '@tanstack/react-query'
 import Overlay from '../../../common/component/system/Overlay'
 import Spinner from '~/common/component/system/Spinner'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { SpeechBubble, Write } from '~/core/component/generate/svg'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import { commentsKey } from '~/core/hook/query/useCommentsQuery'
@@ -18,8 +18,7 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import useFocus from '~/common/hook/useFocus'
 import { useCommentInputState } from '~/core/hook/store/useCommentActionStore'
 import { useCommentInputAction } from '~/core/hook/useCommentAction'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type CommentInputOverlayParams = {}
 

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Item } from '~/core/api/types'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { Earth } from '~/core/component/generate/svg'
 import LikeButton from '~/core/component/items/LikeButton'
 import BookmarkButton from '~/core/component/items/BookmarkButton'
@@ -13,8 +13,7 @@ import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
 import { screen } from '~/common/style/media-query'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type LinkCardProps = {
   item: Item

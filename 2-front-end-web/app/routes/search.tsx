@@ -17,9 +17,9 @@ import SearchResultCardList from '~/core/component/search/SearchResultCardList'
 import { Pagination } from '~/common/api/types'
 import { SearchedItem } from '~/core/api/types'
 import { Loading, NotSearch } from '~/core/component/generate/svg'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { AnimatePresence } from 'framer-motion'
-import Flex from '~/common/style/css-flex'
+import { Flex } from '~/common/style/css-builder'
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams()

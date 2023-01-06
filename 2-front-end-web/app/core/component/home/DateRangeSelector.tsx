@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { format } from 'date-fns'
 import { Link } from '@remix-run/react'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import {
   DateStringRange,
   WeekRangeConverters as wrc,
   YYYY_MM_DD,
 } from '~/common/util/converters'
 import { ArrowLeft } from '~/core/component/generate/svg'
-import Flex from '~/common/style/css-flex'
+import { Flex } from '~/common/style/css-builder'
 
 const SERVICE_START_DATE = new Date('2022-09-01')
 const yy년MM월dd일 = 'yy년 MM월 dd일' as const

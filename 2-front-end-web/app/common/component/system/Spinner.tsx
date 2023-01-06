@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import { Loading } from '~/core/component/generate/svg'
 
 type SpinnerProps = {}

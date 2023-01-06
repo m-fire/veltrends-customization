@@ -1,11 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import Overlay from '~/common/component/system/Overlay'
 import { BottomSheetModalStore } from '~/common/hook/store/useBottomSheetModalStore'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 type BottomSheetModalProps = {
   items: BottomSheetModalStore['state']['items']

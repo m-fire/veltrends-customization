@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Comment } from '~/core/api/types'
 import { useDateDistance } from '~/common/hook/useDateDistance'
-import { colors } from '~/common/style/colors'
+import { colors } from '~/core/style/colors'
 import LikeButton from '~/core/component/items/LikeButton'
 import React from 'react'
 import ReplyButton from '~/core/component/items/ReplyButton'
@@ -18,8 +18,7 @@ import {
   useCommentAction,
 } from '~/core/hook/useCommentAction'
 import { useCommentActionStateById } from '~/core/hook/store/useCommentActionStore'
-import Flex from '~/common/style/css-flex'
-import Font from '~/common/style/css-font'
+import { Flex, Font } from '~/common/style/css-builder'
 
 export interface CommentElementProps {
   type: CommentType
