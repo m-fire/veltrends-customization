@@ -13,10 +13,10 @@ class TrendingListing extends AbstractModeListing<TredingItem> {
   private static instance: TrendingListing
 
   static getInstance() {
-    if (TrendingListing.instance == null) {
-      TrendingListing.instance = new TrendingListing()
+    if (TL.instance == null) {
+      TL.instance = new TrendingListing()
     }
-    return TrendingListing.instance
+    return TL.instance
   }
 
   protected async getTotalCount(options: ListingParams) {
@@ -54,3 +54,6 @@ class TrendingListing extends AbstractModeListing<TredingItem> {
   }
 }
 export default TrendingListing
+
+const TL = TrendingListing
+const ISS = ItemStatusService
