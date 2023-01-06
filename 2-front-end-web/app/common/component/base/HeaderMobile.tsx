@@ -4,7 +4,7 @@ import { colors } from '~/core/style/colors'
 import { LogoVeltrend } from '~/core/component/generate/svg'
 import { Flex, Font } from '~/common/style/css-builder'
 
-type HeaderProps = {
+type HeaderMobileProps = {
   title?: ReactNode
   headerLeft?: ReactNode
   headerRight?: ReactNode
@@ -12,12 +12,12 @@ type HeaderProps = {
 }
 
 //Todo: 데스크탑/모바일 각각의 해더를 디바이스 스크린사이즈에 따라 형태변경 구현
-function Header({
+function HeaderMobile({
   title = <LogoVeltrend />, // 기본 해더 타이틀: 메인로고
   headerLeft,
   headerRight,
   className,
-}: HeaderProps) {
+}: HeaderMobileProps) {
   return (
     <Block className={className}>
       {headerLeft ? (
@@ -31,7 +31,7 @@ function Header({
   )
 }
 
-export default Header
+export default HeaderMobile
 
 // Sub Comps
 

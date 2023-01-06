@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import FullHeightPage from '~/common/component/system/FullHeightPage'
-import Header from '~/common/component/base/Header'
+import HeaderMobile from '~/common/component/base/HeaderMobile'
 import HeaderBackButton from '~/common/component/base/HeaderBackButton'
 import { useGoBack } from '~/common/hook/useGoBack'
 import LayoutContent from '~/common/component/layout/LayoutContent'
@@ -47,7 +47,7 @@ export default BasicLayout
 
 // Inner Components
 
-const StyledHeader = styled(Header)`
+const StyledHeader = styled(HeaderMobile)`
   position: absolute;
   left: 0;
   right: 0;

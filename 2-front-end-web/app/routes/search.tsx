@@ -5,7 +5,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
 import TabLayout from '~/common/component/layout/TabLayout'
-import Header from '~/common/component/base/Header'
+import HeaderMobile from '~/common/component/base/HeaderMobile'
 import SearchInput, {
   SearchInputProps,
 } from '~/core/component/search/SearchInput'
@@ -133,7 +133,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 // Inner Components
 
-const StyledHeader = styled(Header)`
+const StyledHeader = styled(HeaderMobile)`
   & > .title {
     width: 100%;
   }

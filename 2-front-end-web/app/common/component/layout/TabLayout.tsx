@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import FullHeightPage from '~/common/component/system/FullHeightPage'
-import Header from '~/common/component/base/Header'
+import HeaderMobile from '~/common/component/base/HeaderMobile'
 import Footer from '~/common/component/base/Footer'
 import LayoutContent from '~/common/component/layout/LayoutContent'
 import styled from 'styled-components'
@@ -29,7 +29,7 @@ export default TabLayout
 
 // Inner Components
 
-const StyledHeader = styled(Header)`
+const StyledHeader = styled(HeaderMobile)`
   position: absolute;
   left: 0;
   right: 0;
