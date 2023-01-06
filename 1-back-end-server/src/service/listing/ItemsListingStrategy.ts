@@ -1,5 +1,5 @@
 import RecentListing from './RecentListing.js'
-import TrendingListing from './TrendingListing.js'
+import TrendListing from './TrendListing.js'
 import PastListing from './PastListing.js'
 import { ListMode } from '../../core/pagination/types.js'
 
@@ -11,7 +11,7 @@ class ItemsListingStrategy {
       case 'recent':
         return RecentListing.getInstance()
       case 'trending':
-        return TrendingListing.getInstance()
+        return TrendListing.getInstance()
       case 'past':
         return PastListing.getInstance()
       default:

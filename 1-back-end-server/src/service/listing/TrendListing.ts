@@ -9,12 +9,12 @@ const MIN_PAGE = 2
 
 type TredingItem = Awaited<ReturnType<typeof IR.findItemListByCursor>>[0]
 
-class TrendingListing extends AbstractModeListing<TredingItem> {
-  private static instance: TrendingListing
+class TrendListing extends AbstractModeListing<TredingItem> {
+  private static instance: TrendListing
 
   static getInstance() {
     if (TL.instance == null) {
-      TL.instance = new TrendingListing()
+      TL.instance = new TrendListing()
     }
     return TL.instance
   }
@@ -101,8 +101,8 @@ class TrendingListing extends AbstractModeListing<TredingItem> {
     return reducedThreshold * REDUCE_STEP
   }
 }
-export default TrendingListing
+export default TrendListing
 
-const TL = TrendingListing
+const TL = TrendListing
 const ISS = ItemStatusService
 const IR = ItemRepository

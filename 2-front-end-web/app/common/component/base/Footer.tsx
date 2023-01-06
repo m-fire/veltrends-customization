@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { colors } from '~/core/style/colors'
 import FooterTabItem from '~/common/component/base/FooterTabItem'
 import { Flex } from '~/common/style/css-builder'
+import { screen } from '~/common/style/media-query'
 
-//Todo: 데스크탑/모바일 스크린사이즈에 따라 보여짐/사라짐 구현
 type FooterProps = {}
 
 function Footer({}: FooterProps) {
@@ -28,4 +28,8 @@ const StyledFooter = styled.footer`
   ${Flex.Container.style().create()};
   height: 56px;
   border-top: 1px solid ${colors.grey1};
+  ${screen.desktop} {
+    // 데스크탑/모바일 스크린사이즈에 따라 보여짐/사라짐
+    display: none;
+  }
 `
