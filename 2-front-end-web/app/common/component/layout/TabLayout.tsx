@@ -4,6 +4,7 @@ import HeaderMobile from '~/common/component/base/HeaderMobile'
 import Footer from '~/common/component/base/Footer'
 import LayoutContent from '~/common/component/layout/LayoutContent'
 import styled from 'styled-components'
+import HeaderDesktop from '~/common/component/base/HeaderDesktop'
 
 type TabLayoutProps = {
   header?: ReactNode
@@ -17,7 +18,12 @@ type TabLayoutProps = {
 function TabLayout({ header, children, className }: TabLayoutProps) {
   return (
     <FullHeightPage>
-      {header ? header : <StyledHeader />}
+      {header ?? (
+        <Headers>
+          <HeaderMobile />
+          <HeaderDesktop />
+        </Headers>
+      )}
       <StyledLayoutContent className={className}>
         {children}
       </StyledLayoutContent>
@@ -29,13 +35,13 @@ export default TabLayout
 
 // Inner Components
 
-const StyledHeader = styled(HeaderMobile)`
+const Headers = styled.div`
   position: absolute;
   left: 0;
   right: 0;
   z-index: 5;
-  backdrop-filter: blur(8px); // grayscale(80%)
-  -webkit-backdrop-filter: blur(8px); // grayscale(80%)
+  backdrop-filter: grayscale(80%) blur(8px); // blur(8px)
+  -webkit-backdrop-filter: grayscale(80%) blur(8px); // blur(8px)
 `
 
 const StyledLayoutContent = styled(LayoutContent)`

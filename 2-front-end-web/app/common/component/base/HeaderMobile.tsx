@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { colors } from '~/core/style/colors'
 import { LogoVeltrend } from '~/core/component/generate/svg'
 import { Flex, Font } from '~/common/style/css-builder'
+import { screen } from '~/common/style/media-query'
 
 type HeaderMobileProps = {
   title?: ReactNode
@@ -40,6 +41,9 @@ const Block = styled.header`
     .alignItems('center')
     .justifyContent('center')
     .create()};
+  ${screen.min_w.desktop} {
+    display: none;
+  }
   position: relative;
   height: 56px;
   //border-bottom: 1px solid ${colors.grey1};
