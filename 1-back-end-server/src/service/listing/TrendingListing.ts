@@ -3,7 +3,8 @@ import { ListingParams } from '../../core/pagination/types.js'
 import ItemRepository from '../../repository/ItemRepository.js'
 import ItemStatusService from '../ItemStatusService.js'
 
-const THRESHOLD_SCORE = 0.001 as const
+const THRESHOLD_SCORE = 0.001
+const REDUCE_STEP = 0.1
 
 type TredingItem = Awaited<
   ReturnType<typeof ItemRepository.findItemListByCursor>
@@ -36,6 +37,12 @@ class TrendingListing extends AbstractModeListing<TredingItem> {
     const existingMaxScore = await ISS.getMaxScoreOrNull()
     if (existingMaxScore == null || existingMaxScore === 0) return 0
 
+    // 임계스코어 1차 감소
+    let reducedThreshold = THRESHOLD_SCORE
+    while (existingMaxScore <= reducedThreshold) {
+      reducedThreshold = TL.reduceThreshold(reducedThreshold)
+    }
+
     return 0
   }
 
@@ -65,6 +72,10 @@ class TrendingListing extends AbstractModeListing<TredingItem> {
 
   protected getLastCursorOrNull(lastElement: TredingItem): number | null {
     return lastElement?.id ?? null
+  }
+
+  private static reduceThreshold(reducedThreshold: number) {
+    return reducedThreshold * REDUCE_STEP
   }
 }
 export default TrendingListing
