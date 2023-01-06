@@ -65,6 +65,14 @@ class ItemStatusService {
     })
     return targetStatusList
   }
+
+  static async getMaxScoreOrNull() {
+    const aggregated = await db.itemStatus.aggregate({
+      _max: { score: true },
+    })
+
+    return aggregated._max.score
+  }
 }
 export default ItemStatusService
 
