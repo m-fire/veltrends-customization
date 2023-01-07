@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/core/style/colors'
-import { Flex, Font } from '~/common/style/css-builder'
+import { Filters, Flex, Font } from '~/common/style/css-builder'
 
 type ButtonProps = {
   layoutMode?: 'inline' | 'fullWidth'
@@ -41,7 +41,7 @@ const StyledButton = styled.button<ButtonProps>`
     padding-right: 6px;
   }
   &:disabled {
-    filter: brightness(70%);
+    ${Filters.filter().brightness(70).create()};
   }
   ${({ layoutMode: lm }) =>
     lm === 'fullWidth' &&

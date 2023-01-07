@@ -5,6 +5,7 @@ import HeaderBackButton from '~/common/component/base/HeaderBackButton'
 import { useGoBack } from '~/common/hook/useGoBack'
 import LayoutContent from '~/common/component/layout/LayoutContent'
 import styled from 'styled-components'
+import { Filters } from '~/common/style/css-builder'
 
 type BasicLayoutProps = {
   title?: ReactNode
@@ -52,6 +53,5 @@ const StyledHeader = styled(HeaderMobile)`
   left: 0;
   right: 0;
   z-index: 5;
-  backdrop-filter: blur(8px); // grayscale(80%)
-  -webkit-backdrop-filter: blur(8px); // grayscale(80%)
+  ${Filters.backdrop().blur(8).create()};
 `

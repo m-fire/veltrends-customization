@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/core/style/colors'
 import { LogoVeltrend } from '~/core/component/generate/svg'
-import { Flex, Font } from '~/common/style/css-builder'
+import { Filters, Flex, Font } from '~/common/style/css-builder'
 import { screen } from '~/common/style/media-query'
 
 type HeaderMobileProps = {
@@ -64,8 +64,9 @@ const HeaderTitle = styled.div`
     width: 130px;
     height: 30px;
   }
-  -webkit-filter: drop-shadow(0px 0px 0.8px white)
-    drop-shadow(0px 0px 1px white) drop-shadow(0px 0px 8px white);
-  filter: drop-shadow(0px 0px 0.8px white) drop-shadow(0px 0px 1px white)
-    drop-shadow(0px 0px 8px white);
+  ${Filters.filter()
+    .dropShadow(0, 0, 0.8, 'white')
+    .dropShadow(0, 0, 1, 'white')
+    .dropShadow(0, 0, 8, 'white')
+    .create()};
 `

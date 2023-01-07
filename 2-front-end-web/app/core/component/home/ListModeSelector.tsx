@@ -2,7 +2,6 @@ import {
   ReactNode,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -16,7 +15,7 @@ import { colors } from '~/core/style/colors'
 import { ItemListMode } from '~/core/api/types'
 import { Calendar, Clock, Fire } from '~/core/component/generate/svg'
 import { DateStringRange } from '~/common/util/converters'
-import { Flex, Font } from '~/common/style/css-builder'
+import { Filters, Flex, Font } from '~/common/style/css-builder'
 
 type ModeSelectorProps = {
   currentMode: ItemListMode
@@ -155,15 +154,18 @@ const Block = styled.div`
   margin-left: -20px;
   margin-right: -20px;
   z-index: 1;
-
-  backdrop-filter: blur(8px); // grayscale(80%)
-  -webkit-backdrop-filter: blur(8px); // grayscale(80%)
+  ${Filters.backdrop().brightness(120).blur(8).create()};
 `
 
 const SelectorList = styled.nav`
   ${Flex.Container.style().create()};
   position: relative;
   gap: 24px;
+  ${Filters.filter()
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 0.5, 'white')
+    .create()};
 `
 
 const Indicator = styled(motion.div)`
@@ -173,11 +175,11 @@ const Indicator = styled(motion.div)`
   left: 0;
   bottom: -8px;
   border-radius: 99px;
-
-  -webkit-filter: drop-shadow(0px 0px 0.5px white)
-    drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white);
-  filter: drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white)
-    drop-shadow(0px 0px 0.5px white);
+  ${Filters.filter()
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 0.5, 'white')
+    .create()};
 `
 
 // Inner function component
@@ -239,13 +241,6 @@ const StyledLink = styled(Link)<{ active?: 'true' | 'false' }>`
     // .lineHeight(1.5)
     .create()};
   text-decoration: none;
-  ///* white border 처리 */
-  -webkit-filter: drop-shadow(0px 0px 0.5px white)
-    drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white)
-    drop-shadow(0px 0px 0.5px white);
-  filter: drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white)
-    drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white);
-
   ${({ active }) =>
     active === 'true'
       ? css`

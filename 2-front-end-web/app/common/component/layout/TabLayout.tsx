@@ -5,6 +5,7 @@ import Footer from '~/common/component/base/Footer'
 import LayoutContent from '~/common/component/layout/LayoutContent'
 import styled from 'styled-components'
 import HeaderDesktop from '~/common/component/base/HeaderDesktop'
+import { Filters } from '~/common/style/css-builder'
 
 type TabLayoutProps = {
   header?: ReactNode
@@ -40,8 +41,7 @@ const Headers = styled.div`
   left: 0;
   right: 0;
   z-index: 5;
-  backdrop-filter: grayscale(80%) blur(8px); // blur(8px)
-  -webkit-backdrop-filter: grayscale(80%) blur(8px); // blur(8px)
+  ${Filters.backdrop().grayscale(50).blur(8).create()};
 `
 
 const StyledLayoutContent = styled(LayoutContent)`

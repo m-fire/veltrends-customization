@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/core/style/colors'
 import { screen } from '~/common/style/media-query'
-import { Flex } from '~/common/style/css-builder'
+import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend } from '~/core/component/generate/svg'
 
 type HeaderDesktopProps = {
@@ -41,8 +41,9 @@ const StyledLogoVeltrend = styled(LogoVeltrend)`
   height: 32px;
   width: auto;
   margin-top: -10px;
-  -webkit-filter: drop-shadow(0px 0px 0.8px white)
-    drop-shadow(0px 0px 1px white) drop-shadow(0px 0px 8px white);
-  filter: drop-shadow(0px 0px 0.8px white) drop-shadow(0px 0px 1px white)
-    drop-shadow(0px 0px 8px white);
+  ${Filters.filter()
+    .dropShadow(0, 0, 0.8, 'white')
+    .dropShadow(0, 0, 1, 'white')
+    .dropShadow(0, 0, 8, 'white')
+    .create()};
 `
