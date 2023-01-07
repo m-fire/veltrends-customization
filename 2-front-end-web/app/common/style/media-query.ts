@@ -1,4 +1,4 @@
-const screenBreakpointMap = {
+export const screenBreakpointMap = {
   mobile: 500,
   tablet: 768,
   desktop: 1024,
