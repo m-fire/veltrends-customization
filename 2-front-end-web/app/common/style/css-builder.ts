@@ -84,7 +84,8 @@ export class Flex {
 
     /* presets */
 
-    static readonly flex1: `;flex: 1;`
+    // grow:1, shrink:1, basis:0%
+    static readonly flex1 = `;flex: 1;`
   }
 }
 

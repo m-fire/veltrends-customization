@@ -187,7 +187,7 @@ const Footer = styled(motion.div)`
 `
 
 const StyledInput = styled.input`
-  flex: 1; // grow:1, shrink:1, basis:0%
+  ${Flex.Item.flex1};
   ${Font.style().size('16px').weight(400).create()};
   height: 100%;
   border: none;

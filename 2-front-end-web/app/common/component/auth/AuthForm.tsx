@@ -154,11 +154,11 @@ const formDescriptions = {
 // Inner Components
 
 const StyledFormRef = styled(Form)`
+  ${Flex.Item.flex1};
   ${Flex.Container.style()
     .direction('column')
     .justifyContent('space-between')
     .create()};
-  flex: 1; // grow:1, shrink:1, basis:0%
   padding: 16px 20px;
 `
 

@@ -16,10 +16,9 @@ export default LayoutContent
 // Inner Components
 
 const Container = styled.div`
+  ${Flex.Item.flex1};
   ${Flex.Container.style().direction('column').create()};
   padding-top: 56px;
-
-  flex: 1; // grow:1, shrink:1, basis:0%
   overflow: scroll;
   ${screen.min_w.tablet} {
     padding-left: 30px;

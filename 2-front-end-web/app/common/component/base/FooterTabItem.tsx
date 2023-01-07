@@ -46,11 +46,11 @@ export default FooterTabItem
 // Inner Components
 
 const NavLinkItemRef = styled(NavLink)<Partial<FooterTabItemProps>>`
+  ${Flex.Item.flex1};
   ${Flex.Container.style()
     .alignItems('center')
     .justifyContent('center')
     .create()};
-  flex: 1; // grow:1, shrink:1, basis:0%
   position: relative;
   svg {
     color: ${colors.grey5};

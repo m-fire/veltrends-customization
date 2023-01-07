@@ -109,16 +109,16 @@ export function CatchBoundary() {
 // Inner Components
 
 const Group = styled.div`
+  ${Flex.Item.flex1};
   ${Flex.Container.style().direction('column').create()};
-  flex: 1; // grow:1, shrink:1, basis:0%
   gap: 16px;
   padding-bottom: 16px;
 `
 
 const StyledLabelTextArea = styled(LabelTextArea)`
-  flex: 1; // grow:1, shrink:1, basis:0%
+  ${Flex.Item.flex1};
   textarea {
-    flex: 1; // grow:1, shrink:1, basis:0%
+    ${Flex.Item.flex1};
     resize: none;
     font-family: inherit;
   }

@@ -30,8 +30,8 @@ export default WriteFormTemplate
 // Inner Components
 
 const StyledForm = styled.form`
+  ${Flex.Item.flex1};
   ${Flex.Container.style().direction('column').create()};
-  flex: 1; // grow:1, shrink:1, basis:0%
   padding: 16px 20px 24px;
 
   h3 {
@@ -42,6 +42,6 @@ const StyledForm = styled.form`
 `
 
 const Content = styled.section`
+  ${Flex.Item.flex1};
   ${Flex.Container.style().direction('column').create()};
-  flex: 1; // grow:1, shrink:1, basis:0%
 `

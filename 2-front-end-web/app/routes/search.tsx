@@ -140,12 +140,12 @@ const StyledHeader = styled(HeaderMobile)`
 `
 
 const NotSearchedBlock = styled.div`
+  ${Flex.Item.flex1};
   ${Flex.Container.style()
     .direction('column')
     .alignItems('center')
     .justifyContent('center')
     .create()};
-  flex: 1; // grow:1, shrink:1, basis:0%
 
   h3 {
     color: ${colors.grey2};

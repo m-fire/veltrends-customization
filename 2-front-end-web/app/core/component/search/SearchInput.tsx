@@ -37,11 +37,11 @@ const Block = styled.div`
   padding-right: 12px;
   input {
     // input tag 초기화
+    ${Flex.Item.flex1};
     background: none;
     border: none;
     outline: none;
     ${Font.style().size('16px').create()};
-    flex: 1; // grow:1, shrink:1, basis:0%
     margin-left: 8px;
     margin-right: 8px;
     &::placeholder {
