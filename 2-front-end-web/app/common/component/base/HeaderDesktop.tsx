@@ -4,6 +4,7 @@ import { colors } from '~/core/style/colors'
 import { screen } from '~/common/style/media-query'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend } from '~/core/component/generate/svg'
+import Button from '~/common/component/system/Button'
 
 type HeaderDesktopProps = {
   title?: ReactNode
@@ -19,7 +20,17 @@ function HeaderMobile({
 // headerRight,
 // className,
 HeaderDesktopProps) {
-  return <Block>{title}</Block>
+  return (
+    <Block>
+      {title}
+      <Content>
+        <AddOn>AddOn: Left</AddOn>
+        <AddOn>
+          <Button>AddOn: 회원가입</Button>
+        </AddOn>
+      </Content>
+    </Block>
+  )
 }
 
 export default HeaderMobile
@@ -46,4 +57,16 @@ const StyledLogoVeltrend = styled(LogoVeltrend)`
     .dropShadow(0, 0, 1, 'white')
     .dropShadow(0, 0, 8, 'white')
     .create()};
+`
+
+const Content = styled.div`
+  ${Flex.Item.flex1};
+  ${Flex.Container.style()
+    .alignItems('center')
+    .justifyContent('space-between')
+    .create()};
+`
+
+const AddOn = styled.div`
+  ${Flex.Container.style().alignItems('center').create()};
 `
