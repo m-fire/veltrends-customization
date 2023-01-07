@@ -26,7 +26,10 @@ HeaderDesktopProps) {
       <Content>
         <AddOn>AddOn: Left</AddOn>
         <AddOn>
-          <Button>AddOn: 회원가입</Button>
+          <Button variant="wire" size="small">
+            로그인
+          </Button>
+          <Button size="small">회원가입</Button>
         </AddOn>
       </Content>
     </Block>

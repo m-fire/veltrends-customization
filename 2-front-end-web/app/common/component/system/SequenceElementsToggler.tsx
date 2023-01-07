@@ -145,7 +145,7 @@ const Block = styled.div<{ size: Size }>`
     left: 0;
     top: 0;
   }
-  ${({ size }) => buttonStyleBySize(size)};
+  ${({ size }) => sizeStyles[size]};
 `
 
 const StyledMotionSpan = styled(motion.span)`
@@ -157,49 +157,42 @@ const StyledMotionSpan = styled(motion.span)`
   //color: ${colors.primary1};
 `
 
-// styles functions
+// styles
 
-function buttonStyleBySize(size: Size) {
-  if (size === 'xxs')
-    return css`
-      font-size: 8px;
-      width: 10px;
-      height: 10px;
-    `
-  if (size === 'xs')
-    return css`
-      font-size: 10px;
-      width: 12px;
-      height: 12px;
-    `
-  if (size === 'small')
-    return css`
-      font-size: 12px;
-      width: 16px;
-      height: 16px;
-    `
-  if (size === 'medium')
-    return css`
-      font-size: 14px;
-      width: 20px;
-      height: 20px;
-    `
-  if (size === 'large')
-    return css`
-      font-size: 16px;
-      width: 24px;
-      height: 24px;
-    `
-  if (size === 'xl')
-    return css`
-      font-size: 20px;
-      width: 32px;
-      height: 32px;
-    `
-  if (size === 'xxl')
-    return css`
-      font-size: 24px;
-      width: 40px;
-      height: 40px;
-    `
+const sizeStyles: Record<Size, ReturnType<typeof css>> = {
+  xxs: css`
+    font-size: 8px;
+    width: 10px;
+    height: 10px;
+  `,
+  xs: css`
+    font-size: 10px;
+    width: 12px;
+    height: 12px;
+  `,
+  small: css`
+    font-size: 12px;
+    width: 16px;
+    height: 16px;
+  `,
+  medium: css`
+    font-size: 14px;
+    width: 20px;
+    height: 20px;
+  `,
+  large: css`
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
+  `,
+  xl: css`
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+  `,
+  xxl: css`
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+  `,
 }
