@@ -14,7 +14,7 @@ type HeaderMobileProps = {
 
 //Todo: 데스크탑/모바일 각각의 해더를 디바이스 스크린사이즈에 따라 형태변경 구현
 function HeaderMobile({
-  title = <LogoVeltrend />, // 기본 해더 타이틀: 메인로고
+  title = <StyledLogoVeltrend />, // 기본 해더 타이틀: 메인로고
   headerLeft,
   headerRight,
   className,
@@ -48,6 +48,18 @@ const Block = styled.header`
   height: 56px;
   //border-bottom: 1px solid ${colors.grey1};
 `
+const StyledLogoVeltrend = styled(LogoVeltrend)`
+  color: ${colors.primary1};
+  display: block;
+  height: 32px;
+  width: auto;
+  margin-top: -10px;
+  ${Filters.filter()
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 8, colors.grey1)
+    .create()};
+`
 
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
   ${Flex.Container.style().alignItems('center').create()};
@@ -64,9 +76,4 @@ const HeaderTitle = styled.div`
     width: 130px;
     height: 30px;
   }
-  ${Filters.filter()
-    .dropShadow(0, 0, 0.8, 'white')
-    .dropShadow(0, 0, 1, 'white')
-    .dropShadow(0, 0, 8, 'white')
-    .create()};
 `

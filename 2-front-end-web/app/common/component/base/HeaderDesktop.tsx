@@ -58,14 +58,15 @@ const Block = styled.div`
 `
 
 const StyledLogoVeltrend = styled(LogoVeltrend)`
+  color: ${colors.primary1};
   display: block;
   height: 32px;
   width: auto;
   margin-top: -10px;
   ${Filters.filter()
-    .dropShadow(0, 0, 0.8, 'white')
-    .dropShadow(0, 0, 1, 'white')
-    .dropShadow(0, 0, 8, 'white')
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 0.5, 'white')
+    .dropShadow(0, 0, 8, colors.grey1)
     .create()};
 `
 
@@ -81,9 +82,4 @@ const Content = styled.div`
 const AddOn = styled.div`
   ${Flex.Container.style().alignItems('center').create()};
   gap: 8px;
-  ${Filters.filter()
-    .dropShadow(0, 0, 0.8, 'white')
-    .dropShadow(0, 0, 1, 'white')
-    .dropShadow(0, 0, 8, 'white')
-    .create()};
 `
