@@ -2,6 +2,7 @@ import React, { ButtonHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/core/style/colors'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
+import { desktopHover } from '~/common/style/styles'
 
 type ButtonProps = {
   size?: Size
@@ -39,11 +40,8 @@ const StyledButton = styled.button<Required<ButtonProps>>`
   ${Font.style().size('16px').weight(600).create()};
   ${({ variant }) => variantStyles[variant]};
   ${({ size }) => sizeStyles[size]};
-  height: 48px;
-  padding-left: 20px;
-  padding-right: 20px;
   border-radius: 6px;
-  transition: filter 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
   white-space: nowrap;
 
   & span {
@@ -67,19 +65,39 @@ const variantStyles: CSSRecord<VariantType> = {
   primary: css`
     background: ${colors.primary1};
     color: white;
+    ${desktopHover(
+      css`
+        background-color: ${colors.primary3};
+      `,
+    )};
   `,
   secondary: css`
     background: ${colors.secondary1};
     color: white;
+    ${desktopHover(
+      css`
+        background-color: ${colors.secondary3};
+      `,
+    )};
   `,
   textonly: css`
-    ${Font.style().weight(800).color(colors.grey5).create()};
+    ${Font.style().weight(800).color(colors.primary1).create()};
     background: transparent;
+    ${desktopHover(
+      css`
+        color: ${colors.primary3};
+      `,
+    )};
   `,
   wire: css`
     ${Font.style().weight(800).color(colors.primary1).create()};
     border: 2px solid ${colors.primary1};
     background: transparent;
+    ${desktopHover(css`
+      color: white;
+      border-color: ${colors.primary3};
+      background-color: ${colors.primary3};
+    `)};
   `,
 } as const
 
