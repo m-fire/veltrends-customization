@@ -3,11 +3,13 @@ import styled, { css } from 'styled-components'
 import { colors } from '~/core/style/colors'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
 import { desktopHover } from '~/common/style/styles'
+import { Link } from '@remix-run/react'
 
 type ButtonProps = {
   size?: Size
   layoutMode?: 'inline' | 'fullWidth'
   variant?: VariantType
+  to?: string
   [key: string]: any
 }
 type VariantType = 'primary' | 'secondary' | 'textonly' | 'wire'
@@ -17,8 +19,23 @@ function Button({
   size = 'medium',
   layoutMode = 'inline',
   variant = 'primary',
+  to,
   ...rest
 }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
+  if (to != null) {
+    return (
+      <StyledLink
+        layoutMode={layoutMode}
+        variant={variant}
+        size={size}
+        to={to}
+        className={rest.className}
+        style={rest.style}
+      >
+        {rest.children}
+      </StyledLink>
+    )
+  }
   return (
     <StyledButton
       layoutMode={layoutMode}
@@ -32,7 +49,7 @@ export default Button
 
 // Inner Components
 
-const StyledButton = styled.button<Required<ButtonProps>>`
+const sharedButtonStyles = css<Required<ButtonProps>>`
   ${Flex.Container.style()
     .alignItems('center')
     .justifyContent('center')
@@ -55,6 +72,15 @@ const StyledButton = styled.button<Required<ButtonProps>>`
     css`
       width: 100%;
     `}
+`
+
+const StyledButton = styled.button`
+  ${sharedButtonStyles};
+`
+
+const StyledLink = styled(Link)`
+  ${sharedButtonStyles};
+  text-decoration: none;
 `
 
 // types
