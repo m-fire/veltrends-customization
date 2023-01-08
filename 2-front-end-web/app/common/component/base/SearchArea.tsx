@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import { colors } from '~/core/style/colors'
 import Search from '~/core/component/generate/svg/Search'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
-import { useNavigate } from '@remix-run/react'
+import { useNavigate, useSearchParams } from '@remix-run/react'
 
 type SearchAreaProps = {}
 
 function SearchArea({}: SearchAreaProps) {
-  const ref = useRef<HTMLInputElement>(null)
+  const [searchParams] = useSearchParams()
 
+  const ref = useRef<HTMLInputElement>(null)
   const onClick = () => {
     ref.current?.focus()
   }
@@ -25,11 +26,12 @@ function SearchArea({}: SearchAreaProps) {
     }
   }
 
+  const initailSearchKeyword = searchParams.get('q') ?? ''
   return (
     <Block>
       <SearchInputWrapper onClick={onClick} onKeyUp={onKeyUp}>
         <Search />
-        <input ref={ref} />
+        <input ref={ref} defaultValue={initailSearchKeyword} />
       </SearchInputWrapper>
     </Block>
   )
