@@ -29,10 +29,12 @@ HeaderDesktopProps) {
         <AddOn>AddOn: Left</AddOn>
         <AddOn>
           <SearchArea />
-          <Button variant="wire" size="small">
+          <Button variant="wire" size="small" to="/auth/login">
             로그인
           </Button>
-          <Button size="small">회원가입</Button>
+          <Button size="small" to="/auth/register">
+            회원가입
+          </Button>
         </AddOn>
       </Content>
     </Block>
