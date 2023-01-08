@@ -6,9 +6,10 @@ import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend } from '~/core/component/generate/svg'
 import Button from '~/common/component/system/Button'
 import SearchArea from '~/common/component/base/SearchArea'
+import { Link } from '@remix-run/react'
 
 type HeaderDesktopProps = {
-  title?: ReactNode
+  logo?: ReactNode
   // headerLeft?: ReactNode
   // headerRight?: ReactNode
   // className?: string
@@ -16,14 +17,14 @@ type HeaderDesktopProps = {
 
 //Todo: 데스크탑/모바일 각각의 해더를 디바이스 스크린사이즈에 따라 형태변경 구현
 function HeaderDesktop({
-  title = <StyledLogoVeltrend />, // 기본 해더 타이틀: 메인로고
+  logo = <StyledLogoVeltrend />, // 기본 해더 타이틀: 메인로고
 }: // headerLeft,
 // headerRight,
 // className,
 HeaderDesktopProps) {
   return (
     <Block>
-      {title}
+      <HomeLink to="/">{logo}</HomeLink>
       <Content>
         <AddOn>AddOn: Left</AddOn>
         <AddOn>
@@ -57,6 +58,10 @@ const Block = styled.div`
   transform: translateX(-50%);
   height: 64px; // 56px;
   border-bottom: 1px solid ${colors.grey1};
+`
+
+const HomeLink = styled(Link)`
+  display: block;
 `
 
 const StyledLogoVeltrend = styled(LogoVeltrend)`
