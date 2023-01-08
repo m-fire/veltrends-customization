@@ -7,11 +7,17 @@ import { Filters, Flex, Font } from '~/common/style/css-builder'
 type SearchAreaProps = {}
 
 function SearchArea({}: SearchAreaProps) {
+  const ref = useRef<HTMLInputElement>(null)
+
+  const onClick = () => {
+    ref.current?.focus()
+  }
+
   return (
     <Block>
-      <SearchInputWrapper>
+      <SearchInputWrapper onClick={onClick}>
         <Search />
-        <input />
+        <input ref={ref} />
       </SearchInputWrapper>
     </Block>
   )
