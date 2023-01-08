@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react'
-import FullHeightPage from '~/common/component/system/FullHeightPage'
-import HeaderMobile from '~/common/component/base/HeaderMobile'
-import Footer from '~/common/component/base/Footer'
-import LayoutContent from '~/common/component/layout/LayoutContent'
+import FullHeightBlock from '~/common/component/atom/FullHeightBlock'
+import HeaderMobile from '~/common/component/element/HeaderMobile'
+import Footer from '~/common/component/template/Footer'
+import ContentBlock from '~/common/component/template/ContentBlock'
 import styled from 'styled-components'
-import HeaderDesktop from '~/common/component/base/HeaderDesktop'
+import HeaderDesktop from '~/common/component/element/HeaderDesktop'
 import { Filters } from '~/common/style/css-builder'
 
 type TabLayoutProps = {
@@ -18,7 +18,7 @@ type TabLayoutProps = {
  */
 function TabLayout({ header, children, className }: TabLayoutProps) {
   return (
-    <FullHeightPage>
+    <FullHeightBlock>
       {header ?? (
         <Headers>
           <HeaderMobile />
@@ -29,7 +29,7 @@ function TabLayout({ header, children, className }: TabLayoutProps) {
         {children}
       </StyledLayoutContent>
       <Footer />
-    </FullHeightPage>
+    </FullHeightBlock>
   )
 }
 export default TabLayout
@@ -44,7 +44,7 @@ const Headers = styled.div`
   ${Filters.backdrop().grayscale(50).blur(8).create()};
 `
 
-const StyledLayoutContent = styled(LayoutContent)`
+const StyledLayoutContent = styled(ContentBlock)`
   padding-left: 20px;
   padding-right: 20px;
 `

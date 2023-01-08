@@ -2,7 +2,7 @@ import React from 'react'
 import { Bookmarks } from '~/core/component/generate/svg'
 import SequenceElementsToggler, {
   SequenceElementsTogglerProps,
-} from '~/common/component/system/SequenceElementsToggler'
+} from '~/common/component/atom/SequenceElementsToggler'
 import styled from 'styled-components'
 import { colors } from '~/core/style/colors'
 

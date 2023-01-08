@@ -2,11 +2,16 @@ import React from 'react'
 import { Outlet } from '@remix-run/react'
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { Authenticator } from '~/core/api/auth'
+import AuthDesktopContainer from '~/core/component/auth/AuthDesktopContainer'
 
 type AuthProps = {}
 
 function Auth({}: AuthProps) {
-  return <Outlet />
+  return (
+    <AuthDesktopContainer>
+      <Outlet />
+    </AuthDesktopContainer>
+  )
 }
 export default Auth
 

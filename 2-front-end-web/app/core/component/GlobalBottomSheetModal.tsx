@@ -1,6 +1,6 @@
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import React from 'react'
-import BottomSheetModal from '~/common/component/system/BottomSheetModal'
+import BottomSheetModal from '~/common/component/element/BottomSheetModal'
 
 type GlobalBottomSheetModalParams = {}
 

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 import { colors } from '~/core/style/colors'
-import Overlay from '~/common/component/system/Overlay'
+import Overlay from '~/common/component/atom/Overlay'
 import { BottomSheetModalStore } from '~/common/hook/store/useBottomSheetModalStore'
 import { Flex, Font } from '~/common/style/css-builder'
 

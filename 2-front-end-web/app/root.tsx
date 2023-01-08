@@ -18,7 +18,7 @@ import { SimpleUser } from '~/common/api/types'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import GlobalBottomSheetModal from '~/common/component/system/GlobalBottomSheetModal'
+import GlobalBottomSheetModal from '~/core/component/GlobalBottomSheetModal'
 
 const queryClient = new QueryClient({
   defaultOptions: {

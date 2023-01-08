@@ -4,8 +4,8 @@ import { colors } from '~/core/style/colors'
 import { screen, screenBreakpointMap } from '~/common/style/media-query'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend } from '~/core/component/generate/svg'
-import Button from '~/common/component/system/Button'
-import SearchArea from '~/common/component/base/SearchArea'
+import Button from '~/common/component/atom/Button'
+import SearchArea from '~/common/component/element/SearchArea'
 import { Link } from '@remix-run/react'
 
 type HeaderDesktopProps = {

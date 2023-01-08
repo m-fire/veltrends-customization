@@ -4,8 +4,8 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
-import TabLayout from '~/common/component/layout/TabLayout'
-import HeaderMobile from '~/common/component/base/HeaderMobile'
+import TabLayout from '~/common/component/template/TabLayout'
+import HeaderMobile from '~/common/component/element/HeaderMobile'
 import SearchInput, {
   SearchInputProps,
 } from '~/core/component/search/SearchInput'
@@ -20,7 +20,7 @@ import { Loading, NotSearch } from '~/core/component/generate/svg'
 import { colors } from '~/core/style/colors'
 import { AnimatePresence } from 'framer-motion'
 import { Flex } from '~/common/style/css-builder'
-import HeaderDesktop from '~/common/component/base/HeaderDesktop'
+import HeaderDesktop from '~/common/component/element/HeaderDesktop'
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams()

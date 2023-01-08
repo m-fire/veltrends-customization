@@ -2,7 +2,7 @@ import React from 'react'
 import { SpeechBubble } from '~/core/component/generate/svg'
 import SequenceElementsToggler, {
   SequenceElementsTogglerProps,
-} from '~/common/component/system/SequenceElementsToggler'
+} from '~/common/component/atom/SequenceElementsToggler'
 
 type ReplyButtonProps = Pick<SequenceElementsTogglerProps, 'size' | 'onClick'>
 

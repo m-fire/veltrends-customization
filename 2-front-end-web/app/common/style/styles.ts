@@ -9,10 +9,10 @@ export const desktopHover = (
   styles: string | FlattenSimpleInterpolation,
 ) => css`
   @media (hover: hover) {
-    //: hover 되어있는 enabled 된 모든 element 대상
+    //: hover 와 enabled 된 모든 element 대상
     //&:hover:enabled {
 
-    //: hover 되어있는 disabled 이 안된 모든 element 대상
+    //: hover 와 disabled 이 안된 모든 element 대상
     &:hover:not([disabled]) {
       ${styles}
     }

@@ -2,11 +2,11 @@ import React, { ReactNode } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Flex } from '~/common/style/css-builder'
 
-type FullHeightPageProps = {
+type FullHeightBlockProps = {
   children: ReactNode
 }
 
-function FullHeightPage({ children }: FullHeightPageProps) {
+function FullHeightBlock({ children }: FullHeightBlockProps) {
   return (
     <>
       <Page>{children}</Page>
@@ -14,7 +14,7 @@ function FullHeightPage({ children }: FullHeightPageProps) {
     </>
   )
 }
-export default FullHeightPage
+export default FullHeightBlock
 
 const GlobalFullHeight = createGlobalStyle`
   html, body {

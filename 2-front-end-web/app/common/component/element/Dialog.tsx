@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import Modal from '~/common/component/system/Modal'
+import Modal from '~/common/component/template/Modal'
 import { colors } from '~/core/style/colors'
-import Button from '~/common/component/system/Button'
+import Button from '~/common/component/atom/Button'
 import { Flex, Font } from '~/common/style/css-builder'
 
 export type DialogProps = {

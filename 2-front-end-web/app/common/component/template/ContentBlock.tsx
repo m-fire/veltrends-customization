@@ -8,10 +8,10 @@ type LayoutContentProps = {
   children?: ReactNode
 }
 
-function LayoutContent({ className, children }: LayoutContentProps) {
+function ContentBlock({ className, children }: LayoutContentProps) {
   return <Container className={className}>{children}</Container>
 }
-export default LayoutContent
+export default ContentBlock
 
 // Inner Components
 

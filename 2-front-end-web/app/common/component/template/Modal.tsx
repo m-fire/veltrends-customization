@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
-import Overlay from '~/common/component/system/Overlay'
+import Overlay from '~/common/component/atom/Overlay'
 import { AnimatePresence, motion } from 'framer-motion'
 
 type ModalProps = {

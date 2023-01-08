@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
-import FullHeightPage from '~/common/component/system/FullHeightPage'
-import HeaderMobile from '~/common/component/base/HeaderMobile'
-import HeaderBackButton from '~/common/component/base/HeaderBackButton'
+import FullHeightBlock from '~/common/component/atom/FullHeightBlock'
+import HeaderMobile from '~/common/component/element/HeaderMobile'
+import HeaderBackButton from '~/common/component/atom/HeaderBackButton'
 import { useGoBack } from '~/common/hook/useGoBack'
-import LayoutContent from '~/common/component/layout/LayoutContent'
+import ContentBlock from '~/common/component/template/ContentBlock'
 import styled from 'styled-components'
 import { Filters } from '~/common/style/css-builder'
 
@@ -30,7 +30,7 @@ function BasicLayout({
   const goBack = useGoBack()
 
   return (
-    <FullHeightPage>
+    <FullHeightBlock>
       <StyledHeader
         title={title}
         headerLeft={
@@ -40,8 +40,8 @@ function BasicLayout({
         }
         headerRight={headerRight}
       />
-      <LayoutContent>{children}</LayoutContent>
-    </FullHeightPage>
+      <ContentBlock>{children}</ContentBlock>
+    </FullHeightBlock>
   )
 }
 export default BasicLayout

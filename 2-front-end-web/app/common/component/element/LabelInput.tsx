@@ -1,6 +1,6 @@
 import React, { FocusEventHandler, forwardRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import Input, { InputProps } from '~/common/component/system/Input'
+import Input, { InputProps } from '~/common/component/atom/Input'
 import { colors } from '~/core/style/colors'
 import { Flex, Font } from '~/common/style/css-builder'
 

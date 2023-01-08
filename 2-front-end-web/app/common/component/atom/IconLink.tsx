@@ -22,13 +22,13 @@ const iconMap = {
 
 type ThemeType = 'circle-stroke'
 
-type FooterTabItemProps = {
+type IconLinkProps = {
   to: RoutePath
   icon: keyof typeof iconMap
   theme?: ThemeType
 }
 
-function FooterTabItem({ to, icon, theme }: FooterTabItemProps) {
+function IconLink({ to, icon, theme }: IconLinkProps) {
   const iconEl = createElement(iconMap[icon])
 
   return (
@@ -41,11 +41,11 @@ function FooterTabItem({ to, icon, theme }: FooterTabItemProps) {
     </NavLinkItemRef>
   )
 }
-export default FooterTabItem
+export default IconLink
 
 // Inner Components
 
-const NavLinkItemRef = styled(NavLink)<Partial<FooterTabItemProps>>`
+const NavLinkItemRef = styled(NavLink)<Partial<IconLinkProps>>`
   ${Flex.Item.flex1};
   ${Flex.Container.style()
     .alignItems('center')
