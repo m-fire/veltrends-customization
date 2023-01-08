@@ -20,6 +20,7 @@ import { Loading, NotSearch } from '~/core/component/generate/svg'
 import { colors } from '~/core/style/colors'
 import { AnimatePresence } from 'framer-motion'
 import { Flex } from '~/common/style/css-builder'
+import HeaderDesktop from '~/common/component/base/HeaderDesktop'
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -79,14 +80,17 @@ function Search() {
   return (
     <TabLayout
       header={
-        <StyledHeader
-          title={
-            <SearchInput
-              value={textState.current}
-              onChangeText={onChangeText}
-            />
-          }
-        />
+        <>
+          <StyledHeader
+            title={
+              <SearchInput
+                value={textState.current}
+                onChangeText={onChangeText}
+              />
+            }
+          />
+          <HeaderDesktop />
+        </>
       }
     >
       <AnimatePresence initial={false}>
