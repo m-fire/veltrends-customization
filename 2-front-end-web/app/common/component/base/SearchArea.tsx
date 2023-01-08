@@ -1,8 +1,9 @@
-import React, { ReactNode, useRef } from 'react'
+import React, { KeyboardEventHandler, ReactNode, useRef } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/core/style/colors'
 import Search from '~/core/component/generate/svg/Search'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
+import { useNavigate } from '@remix-run/react'
 
 type SearchAreaProps = {}
 
@@ -13,9 +14,20 @@ function SearchArea({}: SearchAreaProps) {
     ref.current?.focus()
   }
 
+  const nevigate = useNavigate()
+  const onKeyUp: KeyboardEventHandler = (e) => {
+    if (e.key === 'Enter') {
+      const trimedText = ref.current?.value.trim()
+      if (!trimedText) return
+
+      alert(trimedText)
+      nevigate(`/search?q=${trimedText}`)
+    }
+  }
+
   return (
     <Block>
-      <SearchInputWrapper onClick={onClick}>
+      <SearchInputWrapper onClick={onClick} onKeyUp={onKeyUp}>
         <Search />
         <input ref={ref} />
       </SearchInputWrapper>
