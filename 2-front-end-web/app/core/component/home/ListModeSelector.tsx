@@ -240,7 +240,6 @@ const StyledLink = styled(Link)<{ active?: 'true' | 'false' }>`
     .color(colors.grey4)
     // .lineHeight(1.5)
     .create()};
-  text-decoration: none;
   ${({ active }) =>
     active === 'true'
       ? css`
@@ -248,6 +247,8 @@ const StyledLink = styled(Link)<{ active?: 'true' | 'false' }>`
           pointer-events: none;
         `
       : css``}
+  text-decoration: none;
+  cursor: pointer;
   svg {
     width: 18px;
     height: 18px;
