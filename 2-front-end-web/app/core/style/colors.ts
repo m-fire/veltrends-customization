@@ -26,7 +26,7 @@ export const colors = {
   secondary6: '#FFEFE6',
 
   // rgb(235, 235, 235),
-  grey1: '#EBEBEB',
+  grey1: '#F3F3F3', //'#EBEBEB',
   // rgb(204, 204, 204),
   grey2: '#BFBFBF',
   // rgb(153, 153, 153),
