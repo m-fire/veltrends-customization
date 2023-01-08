@@ -5,6 +5,7 @@ import { screen, screenBreakpointMap } from '~/common/style/media-query'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend } from '~/core/component/generate/svg'
 import Button from '~/common/component/system/Button'
+import SearchArea from '~/common/component/base/SearchArea'
 
 type HeaderDesktopProps = {
   title?: ReactNode
@@ -26,6 +27,7 @@ HeaderDesktopProps) {
       <Content>
         <AddOn>AddOn: Left</AddOn>
         <AddOn>
+          <SearchArea />
           <Button variant="wire" size="small">
             로그인
           </Button>
