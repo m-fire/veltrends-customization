@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react'
 import FullHeightBlock from '~/common/component/element/FullHeightBlock'
-import HeaderMobile from '~/core/component/routes/home/HeaderMobile'
-import FooterMobile from '~/core/component/routes/home/FooterMobile'
+import HeaderMobile from '~/core/component/home/HeaderMobile'
+import FooterMobile from '~/core/component/home/FooterMobile'
 import LayoutContentBlock from '~/common/component/element/LayoutContentBlock'
 import styled from 'styled-components'
-import HeaderDesktop from '~/core/component/routes/home/HeaderDesktop'
+import HeaderDesktop from '~/core/component/home/HeaderDesktop'
 import { Filters } from '~/common/style/css-builder'
 
 type TabLayoutProps = {

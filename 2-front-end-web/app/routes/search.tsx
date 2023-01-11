@@ -5,15 +5,15 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
 import LayoutTab from '~/core/component/LayoutTab'
-import HeaderMobile from '~/core/component/routes/home/HeaderMobile'
+import HeaderMobile from '~/core/component/home/HeaderMobile'
 import SearchInput, {
   SearchInputProps,
-} from '~/core/component/routes/search/SearchInput'
+} from '~/core/component/search/SearchInput'
 import { useDebounce } from 'use-debounce'
 import { Requests } from '~/common/util/https'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import { searchItemList } from '~/core/api/search'
-import SearchResultCardList from '~/core/component/routes/search/SearchResultCardList'
+import SearchResultCardList from '~/core/component/search/SearchResultCardList'
 import { Pagination } from '~/common/api/types'
 import { SearchedItem } from '~/core/api/types'
 import { Loading, NotSearch } from '~/core/component/generate/svg'
@@ -21,7 +21,7 @@ import { globalColors } from '~/common/style/global-colors'
 import { appColors } from '~/core/style/app-colors'
 import { AnimatePresence } from 'framer-motion'
 import { Flex } from '~/common/style/css-builder'
-import HeaderDesktop from '~/core/component/routes/home/HeaderDesktop'
+import HeaderDesktop from '~/core/component/home/HeaderDesktop'
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams()

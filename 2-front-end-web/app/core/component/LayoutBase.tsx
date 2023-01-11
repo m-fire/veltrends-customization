@@ -2,10 +2,10 @@ import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { useGoBack } from '~/common/hook/useGoBack'
 import LayoutFullHeight from '../../common/component/template/LayoutFullHeight'
-import HeaderMobile from '~/core/component/routes/home/HeaderMobile'
+import HeaderMobile from '~/core/component/home/HeaderMobile'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { Media } from '~/common/style/media-query'
-import MobileBackButton from '~/core/component/routes/home/MobileBackButton'
+import MobileBackButton from '~/core/component/home/MobileBackButton'
 
 type AppBasicLayoutProps = {
   title?: ReactNode

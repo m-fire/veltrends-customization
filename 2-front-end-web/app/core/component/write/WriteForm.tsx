@@ -1,6 +1,6 @@
 import { FormEventHandler, ReactNode } from 'react'
 import styled from 'styled-components'
-import VariantButtonOrLink from '../../VariantButtonOrLink'
+import VariantButtonOrLink from '../VariantButtonOrLink'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex, Font } from '~/common/style/css-builder'
 

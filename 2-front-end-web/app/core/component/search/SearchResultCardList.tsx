@@ -1,7 +1,7 @@
 import React from 'react'
 import { SearchedItem } from '~/core/api/types'
 import styled from 'styled-components'
-import SearchResultCard from '~/core/component/routes/search/SearchResultCard'
+import SearchResultCard from '~/core/component/search/SearchResultCard'
 import { Flex } from '~/common/style/css-builder'
 
 type SearchResultCardListProps = {

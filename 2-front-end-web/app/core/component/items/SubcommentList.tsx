@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Comment } from '~/core/api/types'
-import CommentElement from '~/core/component/routes/items/CommentElement'
+import CommentElement from '~/core/component/items/CommentElement'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex } from '~/common/style/css-builder'
 

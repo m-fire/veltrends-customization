@@ -2,8 +2,8 @@ import styled from 'styled-components'
 import { Comment } from '~/core/api/types'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex, Font } from '~/common/style/css-builder'
-import CommentInput from '~/core/component/routes/items/CommentInput'
-import CommentElement from '~/core/component/routes/items/CommentElement'
+import CommentInput from '~/core/component/items/CommentInput'
+import CommentElement from '~/core/component/items/CommentElement'
 
 type CommentListProps = {
   commentList: Comment[]

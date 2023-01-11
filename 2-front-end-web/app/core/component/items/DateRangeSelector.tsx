@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { format } from 'date-fns'
 import { Link } from '@remix-run/react'
 import { globalColors } from '~/common/style/global-colors'
-import { appColors } from '../../../style/app-colors'
+import { appColors } from '../../style/app-colors'
 import {
   DateStringRange,
   WeekRangeConverters as wrc,

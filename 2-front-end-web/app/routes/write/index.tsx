@@ -1,6 +1,6 @@
 import { useNavigate } from '@remix-run/react'
 import LayoutBase from '~/core/component/LayoutBase'
-import WriteForm from '~/core/component/routes/write/WriteForm'
+import WriteForm from '~/core/component/write/WriteForm'
 import { useWriteContext } from '~/core/context/WriteContext'
 import LabelInput from '~/core/component/LabelInput'
 import { APP_ERRORS_INFO } from '~/common/error/AppError'

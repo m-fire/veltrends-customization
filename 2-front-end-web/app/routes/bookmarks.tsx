@@ -5,7 +5,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import styled from 'styled-components'
 import { Authenticator } from '~/core/api/auth'
 import LayoutTab from '~/core/component/LayoutTab'
-import LinkCardList from '~/core/component/routes/items/LinkCardList'
+import LinkCardList from '~/core/component/items/LinkCardList'
 import { getBookmarkItemList } from '~/core/api/bookmarks'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 
