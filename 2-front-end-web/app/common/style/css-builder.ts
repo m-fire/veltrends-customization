@@ -212,8 +212,28 @@ export class Font {
     return this
   }
 
+  textAlign(v: CSSProps['textAlign']) {
+    this.props = `${this.props};text-align:${v};`
+    return this
+  }
+
+  whiteSpace(v: CSSProps['whiteSpace']) {
+    this.props = `${this.props};white-space:${v};`
+    return this
+  }
+
+  textDecoration(v: CSSProps['textDecoration']) {
+    this.props = `${this.props};text-decoration:${v};`
+    return this
+  }
+
   letterSpacing(v: CSSProps['letterSpacing']) {
     this.props = `${this.props};letter-spacing:${v};`
+    return this
+  }
+
+  wordBreak(v: CSSProps['wordBreak']) {
+    this.props = `${this.props};word-break:${v};`
     return this
   }
 
@@ -222,19 +242,26 @@ export class Font {
     this.props = null
     return result
   }
+
+  static presets = {
+    noneTextDecoration: ';text-decoration: none;',
+    //...
+  } as const
 }
 
 export class Filters {
   private constructor(
     private props: string | null,
-    private includeWebkit: boolean,
+    private hasWebkitFilter: boolean,
   ) {}
 
-  static filter(includeWebkit = true) {
-    return new Filters('filter:', includeWebkit)
+  // CSS 속성 `filter: ?` 빌더
+  static filter(hasWebkitFilter = true) {
+    return new Filters('filter:', hasWebkitFilter)
   }
-  static backdrop(includeWebkit = true) {
-    return new Filters('backdrop-filter:', includeWebkit)
+  // CSS 속성 `backdrop-filter: ?` 빌더
+  static backdrop(hasWebkitFilter = true) {
+    return new Filters('backdrop-filter:', hasWebkitFilter)
   }
 
   //SVG 필터 (en-US)를 가리키는 URI를 받습니다. 외부 XML 파일에 포함된 필터도 가능합니다.
@@ -341,7 +368,7 @@ export class Filters {
   }
 
   create() {
-    const result = this.includeWebkit
+    const result = this.hasWebkitFilter
       ? `;${this.props};-webkit-${this.props};`
       : `;${this.props};`
     this.props = null

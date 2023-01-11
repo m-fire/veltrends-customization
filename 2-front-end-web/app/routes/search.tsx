@@ -4,20 +4,21 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
-import TabLayout from '~/common/component/template/TabLayout'
+import TabLayout from '~/core/component/template/TabLayout'
 import HeaderMobile from '~/common/component/element/HeaderMobile'
 import SearchInput, {
   SearchInputProps,
-} from '~/core/component/search/SearchInput'
+} from '~/core/component/routes/search/SearchInput'
 import { useDebounce } from 'use-debounce'
 import { Requests } from '~/common/util/https'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import { searchItemList } from '~/core/api/search'
-import SearchResultCardList from '~/core/component/search/SearchResultCardList'
+import SearchResultCardList from '~/core/component/routes/search/SearchResultCardList'
 import { Pagination } from '~/common/api/types'
 import { SearchedItem } from '~/core/api/types'
 import { Loading, NotSearch } from '~/core/component/generate/svg'
-import { colors } from '~/core/style/colors'
+import { globalColors } from '~/common/style/global-colors'
+import { appColors } from '~/core/style/app-colors'
 import { AnimatePresence } from 'framer-motion'
 import { Flex } from '~/common/style/css-builder'
 import HeaderDesktop from '~/common/component/element/HeaderDesktop'
@@ -152,14 +153,14 @@ const NotSearchedBlock = styled.div`
     .create()};
 
   h3 {
-    color: ${colors.grey2};
+    color: ${globalColors.grey2};
   }
 `
 
 const StyledNotSearch = styled(NotSearch)`
   width: 200px;
   height: 200px;
-  color: ${colors.grey1};
+  color: ${globalColors.grey1};
 `
 
 const spin = keyframes`
@@ -171,6 +172,6 @@ const spin = keyframes`
 const StyledSpinner = styled(Loading)`
   width: 40px;
   height: 40px;
-  color: ${colors.primary1};
+  color: ${appColors.primary1};
   animation: ${spin} 1s infinite steps(8);
 `

@@ -1,10 +1,10 @@
 import React, { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
-import { colors } from '~/core/style/colors'
-import BasicLayout from '~/common/component/template/BasicLayout'
-import WriteFormTemplate from '~/core/component/write/WriteFormTemplate'
-import LabelInput from '~/common/component/element/LabelInput'
+import { appColors } from '~/core/style/app-colors'
+import AppBaseLayout from '~/core/component/template/AppBaseLayout'
+import WriteFormTemplate from '~/core/component/routes/write/WriteFormTemplate'
+import LabelInput from '~/core/component/element/LabelInput'
 import LabelTextArea from '~/common/component/element/LabelTextArea'
 import { Item } from '~/core/api/types'
 import { json, LoaderFunction } from '@remix-run/node'
@@ -43,7 +43,7 @@ function Edit() {
   const errorMessage = null
 
   return (
-    <BasicLayout title="수정" hasBackButton>
+    <AppBaseLayout title="수정" hasBackButton>
       <WriteFormTemplate buttonText="수정하기" onSubmit={onSubmit}>
         <Group>
           <LinkLabelTextArea
@@ -70,7 +70,7 @@ function Edit() {
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
-    </BasicLayout>
+    </AppBaseLayout>
   )
 }
 export default Edit
@@ -113,7 +113,10 @@ const BodyLabelTextArea = styled(LabelTextArea)`
 `
 
 const Message = styled.div`
-  ${Font.style().size('14px').color(colors.secondary1).create()};
+  ${Font.style()
+    .size('14px')
+    .color(appColors.secondary1)
+    .textAlign('center')
+    .create()};
   margin-top: 8px;
-  text-align: center;
 `

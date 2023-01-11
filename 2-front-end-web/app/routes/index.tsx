@@ -7,10 +7,10 @@ import { getItemList } from '~/core/api/items'
 import { Pagination } from '~/common/api/types'
 import { Item, ItemListMode } from '~/core/api/types'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
-import TabLayout from '~/common/component/template/TabLayout'
-import LinkCardList from '~/core/component/home/LinkCardList'
-import ListModeSelector from '~/core/component/home/ListModeSelector'
-import DateRangeSelector from '~/core/component/home/DateRangeSelector'
+import TabLayout from '~/core/component/template/TabLayout'
+import LinkCardList from '~/core/component/routes/home/LinkCardList'
+import ListModeSelector from '~/core/component/routes/home/ListModeSelector'
+import DateRangeSelector from '~/core/component/routes/home/DateRangeSelector'
 import {
   DateStringRange,
   WeekRangeConverters as wrc,

@@ -18,7 +18,9 @@ import { SimpleUser } from '~/common/api/types'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import GlobalBottomSheetModal from '~/core/component/GlobalBottomSheetModal'
+import AppBottomSheetModal from '~/core/component/atom/AppBottomSheetModal'
+import Dialog from '~/common/component/template/Dialog'
+import AppOverlay from '~/core/component/atom/AppOverlay'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,12 +61,13 @@ export default function App() {
         <GlobalStyle />
 
         <QueryClientProvider client={queryClient}>
-          <DialogContextProvider>
+          <DialogContextProvider dialog={Dialog} overlay={AppOverlay}>
             <UserContext.Provider value={data}>
               <Outlet />
             </UserContext.Provider>
           </DialogContextProvider>
-          <GlobalBottomSheetModal />
+
+          <AppBottomSheetModal />
 
           <ReactQueryDevtools initialIsOpen />
           {showDevtools && (

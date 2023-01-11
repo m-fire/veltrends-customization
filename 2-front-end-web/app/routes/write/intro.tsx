@@ -2,16 +2,16 @@ import { ChangeEventHandler, useEffect, useState } from 'react'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { ActionFunction, json, redirect } from '@remix-run/node'
 import styled from 'styled-components'
-import LabelInput from '~/common/component/element/LabelInput'
-import BasicLayout from '~/common/component/template/BasicLayout'
-import WriteFormTemplate from '~/core/component/write/WriteFormTemplate'
+import LabelInput from '~/core/component/element/LabelInput'
+import AppBaseLayout from '~/core/component/template/AppBaseLayout'
+import WriteFormTemplate from '~/core/component/routes/write/WriteFormTemplate'
 import LabelTextArea from '~/common/component/element/LabelTextArea'
 import { Authenticator } from '~/core/api/auth'
 import { createItem } from '~/core/api/items'
 import { useWriteContext } from '~/core/context/WriteContext'
 import AppError, { APP_ERRORS_INFO } from '~/common/error/AppError'
 import { useAppErrorCatch } from '~/common/hook/useAppErrorCatch'
-import { colors } from '~/core/style/colors'
+import { appColors } from '~/core/style/app-colors'
 import { Flex, Font } from '~/common/style/css-builder'
 
 type IntroProps = {}
@@ -36,7 +36,7 @@ function Intro({}: IntroProps) {
   }
 
   return (
-    <BasicLayout title="뉴스 소개" hasBackButton>
+    <AppBaseLayout title="뉴스 소개" hasBackButton>
       <WriteFormTemplate
         description="공유할 뉴스를 소개하세요."
         buttonText="등록하기"
@@ -65,7 +65,7 @@ function Intro({}: IntroProps) {
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
-    </BasicLayout>
+    </AppBaseLayout>
   )
 }
 export default Intro
@@ -125,7 +125,10 @@ const StyledLabelTextArea = styled(LabelTextArea)`
 `
 
 const Message = styled.div`
-  ${Font.style().size('14px').color(colors.secondary1).create()};
+  ${Font.style()
+    .size('14px')
+    .color(appColors.secondary1)
+    .textAlign('center')
+    .create()};
   margin-top: 8px;
-  text-align: center;
 `

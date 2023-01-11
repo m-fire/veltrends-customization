@@ -1,60 +1,72 @@
 import {
   createContext,
+  JSXElementConstructor,
   ReactNode,
   useCallback,
   useContext,
   useState,
 } from 'react'
-import Dialog, { DialogProps } from '~/common/component/element/Dialog'
+import { DialogProps } from '~/common/component/template/Dialog'
 
 const DialogContext = createContext<DialogActionContext | null>(null)
+type DialogActionContext = { open(config: DialogConfig): void }
 
 interface DialogContextProviderProps {
+  dialog: JSXElementConstructor<DialogProps>
+  overlay: DialogProps['overlay']
   children: ReactNode
 }
 
 export function DialogContextProvider({
+  dialog: Dialog,
+  overlay,
   children,
 }: DialogContextProviderProps) {
   const [visible, setVisible] = useState(false)
   const [config, setConfig] = useState<DialogConfig | null>(null)
 
+  const onConfirm = useCallback(() => {
+    config?.onConfirm?.()
+    setVisible(false)
+  }, [config])
+
+  const onCancel = useCallback(() => {
+    config?.onCancel?.()
+    setVisible(false)
+  }, [config])
+
+  const textMap = config?.textMap
   const open = useCallback((config: DialogConfig) => {
     setVisible(true)
     setConfig(config)
   }, [])
 
-  const confirm = useCallback(() => {
-    config?.onConfirm?.()
-    setVisible(false)
-  }, [config])
-
-  const cancel = useCallback(() => {
-    config?.onCancel?.()
-    setVisible(false)
-  }, [config])
-
-  const providerValue = { open }
-  const dialogTexts = config?.textMap
   return (
-    <DialogContext.Provider value={providerValue}>
+    <DialogContext.Provider value={{ open: open }}>
       {children}
-      {/* 다이얼로그 창을 모든 하위컨탠츠 위에 랜더링 */}
       <Dialog
+        overlay={overlay}
         textMap={{
-          title: dialogTexts?.title ?? '',
-          description: dialogTexts?.description ?? '',
-          confirmText: dialogTexts?.confirmText ?? '확인',
-          cancelText: dialogTexts?.cancelText ?? '닫기',
+          title: textMap?.title ?? '',
+          description: textMap?.description ?? '',
+          confirmText: textMap?.confirmText ?? '확인',
+          cancelText: textMap?.cancelText ?? '닫기',
         }}
-        onConfirm={confirm}
-        onCancel={cancel}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
         visible={visible}
         mode={config?.mode ?? 'OK'}
       />
     </DialogContext.Provider>
   )
 }
+export type DialogConfig = Omit<
+  DialogProps,
+  'overlay' | 'visible' | 'onConfirm' | 'onCancel'
+> &
+  Partial<Pick<DialogProps, 'onConfirm' | 'onCancel'>>
+
+// utils
 
 export function getDialogContext() {
   const context = useContext(DialogContext)
@@ -63,14 +75,3 @@ export function getDialogContext() {
   }
   return context
 }
-
-//types
-
-type DialogActionContext = {
-  open(config: DialogConfig): void
-}
-
-export type DialogConfig = Omit<DialogProps, 'visible'> &
-  Partial<Pick<DialogProps, 'onConfirm' | 'onCancel'>> & {
-    mode?: DialogProps['mode']
-  }

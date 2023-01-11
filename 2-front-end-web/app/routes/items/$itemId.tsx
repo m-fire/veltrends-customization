@@ -3,16 +3,16 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { deleteItem, getItem } from '~/core/api/items'
 import { getCommentList } from '~/core/api/items$comments'
 import { Item, Comment } from '~/core/api/types'
-import BasicLayout from '~/common/component/template/BasicLayout'
-import ItemViewer from '~/core/component/items/ItemViewer'
-import CommentList from '~/core/component/items/CommentList'
+import AppBaseLayout from '~/core/component/template/AppBaseLayout'
+import ItemViewer from '~/core/component/routes/items/ItemViewer'
+import CommentList from '~/core/component/routes/items/CommentList'
 import { useCommentListQuery } from '~/core/hook/query/useCommentsQuery'
-import CommentInputOverlay from '~/core/component/items/CommentInputOverlay'
-import MoreVertButton from '~/common/component/atom/MoreVertButton'
+import CommentInputOverlay from '~/core/component/routes/items/CommentInputOverlay'
+import MoreVertButton from '~/core/component/atom/MoreVertButton'
 import { useAuthUser } from '~/common/context/UserContext'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
-import { screen } from '~/common/style/media-query'
+import { Media } from '~/common/style/media-query'
 import styled from 'styled-components'
 
 type ItemByIdProps = {}
@@ -67,7 +67,7 @@ function ItemById({}: ItemByIdProps) {
   //Todo: Header tool menu 구성
   return (
     <>
-      <BasicLayout
+      <AppBaseLayout
         title={null}
         headerRight={
           isMyItem ? (
@@ -80,7 +80,7 @@ function ItemById({}: ItemByIdProps) {
           <ItemViewer item={item} />
           <CommentList commentList={commentList!} />
         </Content>
-      </BasicLayout>
+      </AppBaseLayout>
       <CommentInputOverlay />
     </>
   )
@@ -111,7 +111,7 @@ interface ItemLoaderData {
 // Inner Components
 
 const Content = styled.div`
-  ${screen.min_w.tablet} {
+  ${Media.minWidth.tablet} {
     padding-left: 1rem;
     padding-right: 1rem;
     margin: 0 auto;

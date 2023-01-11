@@ -1,21 +1,28 @@
-import React from 'react'
+import React, { JSXElementConstructor } from 'react'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
-import { colors } from '~/core/style/colors'
-import Overlay from '~/common/component/atom/Overlay'
+import { globalColors } from '~/common/style/global-colors'
+import AppOverlay from '~/core/component/atom/AppOverlay'
 import { BottomSheetModalStore } from '~/common/hook/store/useBottomSheetModalStore'
 import { Flex, Font } from '~/common/style/css-builder'
+import { OverlayProps } from '~/common/component/atom/Overlay'
 
 type BottomSheetModalProps = {
+  overlay: JSXElementConstructor<OverlayProps>
   items: BottomSheetModalStore['state']['items']
   visible: BottomSheetModalStore['state']['visible']
   onClose(): void
 }
 
-function BottomSheetModal({ visible, items, onClose }: BottomSheetModalProps) {
+function BottomSheetModal({
+  overlay: Overlay,
+  visible,
+  items,
+  onClose,
+}: BottomSheetModalProps) {
   return (
     <>
-      <Overlay visible={visible} onClick={onClose} />
+      {visible ? <Overlay onClick={onClose} /> : null}
       <AnimatePresence>
         {visible && (
           <Sheet
@@ -59,6 +66,6 @@ const Items = styled.div`
 `
 
 const Item = styled.div`
-  ${Font.style().weight(600).color(colors.grey5).create()};
+  ${Font.style().weight(600).color(globalColors.grey5).create()};
   padding: 16px;
 `

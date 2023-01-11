@@ -6,17 +6,20 @@ export const screenBreakpointMap = {
   xwide: 1440,
 } as const
 
-export const screen = createScreenQueryMap()
+export const Media = createScreenQueryMap()
 
 function createScreenQueryMap() {
   return Object.entries(screenBreakpointMap).reduce(
     (acc, [name, width]) => {
-      acc.min_w[name as DeviceNames] = `@media (min-width: ${width}px)`
-      acc.max_w[name as DeviceNames] = `@media (max-width: ${width}px)`
+      acc.minWidth[name as DeviceNames] = `@media (min-width: ${width}px)`
+      acc.maxWidth[name as DeviceNames] = `@media (max-width: ${width}px)`
       return acc
     },
-    { min_w: {}, max_w: {} } as ScreenQueryMap,
+    { minWidth: {}, maxWidth: {} } as ScreenQueryMap,
   )
 }
 type DeviceNames = keyof typeof screenBreakpointMap
-type ScreenQueryMap = Record<'min_w' | 'max_w', Record<DeviceNames, string>>
+type ScreenQueryMap = Record<
+  'minWidth' | 'maxWidth',
+  Record<DeviceNames, string>
+>

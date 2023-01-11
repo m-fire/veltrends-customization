@@ -1,13 +1,15 @@
 import React, { KeyboardEventHandler, ReactNode, useRef } from 'react'
 import styled from 'styled-components'
-import { colors } from '~/core/style/colors'
-import Search from '~/core/component/generate/svg/Search'
+import { globalColors } from '~/common/style/global-colors'
+import { appColors } from '~/core/style/app-colors'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
 import { useNavigate, useSearchParams } from '@remix-run/react'
 
-type SearchAreaProps = {}
+type SearchAreaProps = {
+  searchIcon: ReactNode
+}
 
-function SearchArea({}: SearchAreaProps) {
+function SearchArea({ searchIcon }: SearchAreaProps) {
   const [searchParams] = useSearchParams()
 
   const ref = useRef<HTMLInputElement>(null)
@@ -30,7 +32,7 @@ function SearchArea({}: SearchAreaProps) {
   return (
     <Block>
       <SearchInputWrapper onClick={onClick} onKeyUp={onKeyUp}>
-        <Search />
+        {searchIcon}
         <input ref={ref} defaultValue={initailSearchKeyword} />
       </SearchInputWrapper>
     </Block>
@@ -44,7 +46,7 @@ const Block = styled.div``
 
 const SearchInputWrapper = styled.div`
   ${Flex.Container.style().alignItems('center').create()};
-  background-color: ${colors.grey1};
+  background-color: ${globalColors.grey1};
   width: 180px;
   height: 36px;
   //border: 2px solid white;
@@ -56,7 +58,7 @@ const SearchInputWrapper = styled.div`
     ${Flex.Item.style().shrink(0).create()};
     width: 18px;
     height: 18px;
-    color: ${colors.primary1};
+    color: ${appColors.primary1};
     margin-right: 8px;
     ${Filters.filter()
       .dropShadow(0, 0, 1, 'white')
@@ -65,11 +67,11 @@ const SearchInputWrapper = styled.div`
   }
   input {
     ${Flex.Item.flex1};
-    ${Font.style().size(18).weight(700).color(colors.grey5).create()};
+    ${Font.style().size(18).weight(700).color(globalColors.grey5).create()};
     background: none;
     border: none;
     outline: none;
     min-width: 0;
-    ${Filters.filter().dropShadow(0, 0, 1, colors.primary1).create()};
+    ${Filters.filter().dropShadow(0, 0, 1, appColors.primary1).create()};
   }
 `

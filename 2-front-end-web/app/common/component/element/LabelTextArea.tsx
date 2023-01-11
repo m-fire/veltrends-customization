@@ -5,7 +5,8 @@ import {
   useState,
 } from 'react'
 import styled, { css } from 'styled-components'
-import { colors } from '~/core/style/colors'
+import { globalColors } from '~/common/style/global-colors'
+import { appColors } from '~/core/style/app-colors'
 import { Flex, Font } from '~/common/style/css-builder'
 
 interface LabelTextAreaProps
@@ -50,7 +51,7 @@ const LabelTextArea = forwardRef<HTMLTextAreaElement, LabelTextAreaProps>(
     )
   },
 )
-LabelTextArea.displayName = 'LabelTextArea'
+
 export default LabelTextArea
 
 // Inner Components
@@ -63,7 +64,7 @@ const Label = styled.label<{ focused?: boolean }>`
   ${Font.style()
     .size('16px')
     .weight(600)
-    .color(colors.secondary1)
+    .color(appColors.secondary1)
     .lineHeight(1.5)
     .create()};
   margin-bottom: 8px;
@@ -71,28 +72,32 @@ const Label = styled.label<{ focused?: boolean }>`
   ${({ focused }) =>
     focused &&
     css`
-      color: ${colors.primary1};
+      color: ${appColors.primary1};
     `}
 `
 
 const StyledTextArea = styled.textarea`
-  ${Font.style().size('16px').color(colors.grey5).lineHeight(1.5).create()};
-  border: 2px solid ${colors.grey2};
+  ${Font.style()
+    .size('16px')
+    .color(globalColors.grey5)
+    .lineHeight(1.5)
+    .create()};
+  border: 2px solid ${globalColors.grey2};
   border-radius: 4px;
   outline: none;
   padding: 16px;
   transition: all 0.25s ease-in-out;
 
   &:focus {
-    border: 2px solid ${colors.primary1};
+    border: 2px solid ${appColors.primary1};
   }
 
   &::placeholder {
-    color: ${colors.grey2};
+    color: ${globalColors.grey2};
   }
 
   &:disabled {
-    background: ${colors.grey1};
-    color: ${colors.grey3};
+    background: ${globalColors.grey1};
+    color: ${globalColors.grey3};
   }
 `

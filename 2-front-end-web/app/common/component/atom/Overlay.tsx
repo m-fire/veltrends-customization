@@ -2,22 +2,19 @@ import React, { MouseEventHandler } from 'react'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 
-type OverlayProps = {
-  visible: boolean
+export type OverlayProps = {
   onClick?: MouseEventHandler<HTMLElement>
 }
 
-function Overlay({ visible, onClick }: OverlayProps) {
+function Overlay({ onClick }: OverlayProps) {
   return (
     <AnimatePresence initial={false}>
-      {visible ? (
-        <Fill
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClick}
-        />
-      ) : null}
+      <Fill
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClick}
+      />
     </AnimatePresence>
   )
 }
@@ -33,8 +30,4 @@ const Fill = styled(motion.div)`
   height: 100vh;
   height: -webkit-fill-available; // safari browser 100vh 이슈해결용
   background-color: rgba(0, 0, 0, 0.6);
-  box-shadow: inset 0 0 100px 0 rgba(0, 0, 0, 1);
-
-  z-index: 10;
-  // z-index: ${Number.MAX_SAFE_INTEGER};
 `
