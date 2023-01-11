@@ -1,22 +1,22 @@
 import { FormEventHandler, ReactNode } from 'react'
 import styled from 'styled-components'
-import VariantButtonOrLink from '../../atom/VariantButtonOrLink'
+import VariantButtonOrLink from '../../VariantButtonOrLink'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex, Font } from '~/common/style/css-builder'
 
-type WriteFormTemplateProps = {
+type WriteFormProps = {
   description?: string
   buttonText: string
   onSubmit: FormEventHandler<HTMLFormElement>
   children: ReactNode
 }
 
-function WriteFormTemplate({
+function WriteForm({
   description,
   buttonText,
   onSubmit,
   children,
-}: WriteFormTemplateProps) {
+}: WriteFormProps) {
   return (
     <StyledForm onSubmit={onSubmit}>
       {description ? <h3>{description}</h3> : null}
@@ -25,12 +25,12 @@ function WriteFormTemplate({
     </StyledForm>
   )
 }
-export default WriteFormTemplate
+export default WriteForm
 
 // Inner Components
 
 const StyledForm = styled.form`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style().direction('column').create()};
   padding: 16px 20px 24px;
 
@@ -46,6 +46,6 @@ const StyledForm = styled.form`
 `
 
 const Content = styled.section`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style().direction('column').create()};
 `

@@ -7,10 +7,10 @@ import { getItemList } from '~/core/api/items'
 import { Pagination } from '~/common/api/types'
 import { Item, ItemListMode } from '~/core/api/types'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
-import TabLayout from '~/core/component/template/TabLayout'
-import LinkCardList from '~/core/component/routes/home/LinkCardList'
-import ListModeSelector from '~/core/component/routes/home/ListModeSelector'
-import DateRangeSelector from '~/core/component/routes/home/DateRangeSelector'
+import LayoutTab from '~/core/component/LayoutTab'
+import LinkCardList from '~/core/component/routes/items/LinkCardList'
+import ListModeSelector from '~/core/component/routes/items/ListModeSelector'
+import DateRangeSelector from '~/core/component/routes/items/DateRangeSelector'
 import {
   DateStringRange,
   WeekRangeConverters as wrc,
@@ -44,7 +44,7 @@ function Index() {
 
   const itemList = data?.pages.flatMap((page) => page.list)
   return (
-    <TabLayout>
+    <LayoutTab>
       <ListModeSelector currentMode={mode} dateRange={dateRange} />
 
       {mode === 'past' ? (
@@ -58,7 +58,7 @@ function Index() {
 
       {/* Infinity Scroll Intersection Area */}
       <div ref={triggerRef} />
-    </TabLayout>
+    </LayoutTab>
   )
 
   /* refactoring */

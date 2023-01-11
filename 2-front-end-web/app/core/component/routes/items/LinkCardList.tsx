@@ -1,7 +1,7 @@
 import React from 'react'
 import { Item } from '~/core/api/types'
 import styled from 'styled-components'
-import LinkCard from '~/core/component/routes/home/LinkCard'
+import LinkCard from '~/core/component/routes/items/LinkCard'
 import { Media } from '~/common/style/media-query'
 import { Grid } from '~/common/style/css-builder'
 

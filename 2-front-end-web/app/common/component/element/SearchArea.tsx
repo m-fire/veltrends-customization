@@ -66,7 +66,7 @@ const SearchInputWrapper = styled.div`
       .create()};
   }
   input {
-    ${Flex.Item.flex1};
+    ${Flex.Item.presets.flex1};
     ${Font.style().size(18).weight(700).color(globalColors.grey5).create()};
     background: none;
     border: none;

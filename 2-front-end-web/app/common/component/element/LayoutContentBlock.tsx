@@ -16,7 +16,7 @@ export default LayoutContentBlock
 // Inner Components
 
 const Container = styled.div`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style().direction('column').create()};
   padding-top: 56px;
   overflow: scroll;

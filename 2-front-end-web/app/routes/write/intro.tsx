@@ -2,9 +2,9 @@ import { ChangeEventHandler, useEffect, useState } from 'react'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import { ActionFunction, json, redirect } from '@remix-run/node'
 import styled from 'styled-components'
-import LabelInput from '~/core/component/element/LabelInput'
-import AppBaseLayout from '~/core/component/template/AppBaseLayout'
-import WriteFormTemplate from '~/core/component/routes/write/WriteFormTemplate'
+import LabelInput from '~/core/component/LabelInput'
+import LayoutBase from '~/core/component/LayoutBase'
+import WriteForm from '~/core/component/routes/write/WriteForm'
 import LabelTextArea from '~/common/component/element/LabelTextArea'
 import { Authenticator } from '~/core/api/auth'
 import { createItem } from '~/core/api/items'
@@ -36,8 +36,8 @@ function Intro({}: IntroProps) {
   }
 
   return (
-    <AppBaseLayout title="뉴스 소개" hasBackButton>
-      <WriteFormTemplate
+    <LayoutBase title="뉴스 소개" hasBackButton>
+      <WriteForm
         description="공유할 뉴스를 소개하세요."
         buttonText="등록하기"
         onSubmit={async (e) => {
@@ -64,8 +64,8 @@ function Intro({}: IntroProps) {
           />
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
-      </WriteFormTemplate>
-    </AppBaseLayout>
+      </WriteForm>
+    </LayoutBase>
   )
 }
 export default Intro
@@ -109,16 +109,16 @@ export function CatchBoundary() {
 // Inner Components
 
 const Group = styled.div`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style().direction('column').create()};
   gap: 16px;
   padding-bottom: 16px;
 `
 
 const StyledLabelTextArea = styled(LabelTextArea)`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   textarea {
-    ${Flex.Item.flex1};
+    ${Flex.Item.presets.flex1};
     resize: none;
     font-family: inherit;
   }

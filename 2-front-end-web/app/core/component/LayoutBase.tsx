@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { useGoBack } from '~/common/hook/useGoBack'
-import FullHeightLayout from '~/common/component/template/FullHeightLayout'
-import HeaderMobile from '~/common/component/element/HeaderMobile'
+import LayoutFullHeight from '../../common/component/template/LayoutFullHeight'
+import HeaderMobile from '~/core/component/routes/home/HeaderMobile'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { Media } from '~/common/style/media-query'
-import MobileBackButton from '~/core/component/atom/MobileBackButton'
+import MobileBackButton from '~/core/component/routes/home/MobileBackButton'
 
 type AppBasicLayoutProps = {
   title?: ReactNode
@@ -21,7 +21,7 @@ type AppBasicLayoutProps = {
  * Header might contain back button.
  * Header might contain title.
  */
-function AppBaseLayout({
+function LayoutBase({
   title,
   onGoBack,
   headerRight,
@@ -31,7 +31,7 @@ function AppBaseLayout({
   const goBack = useGoBack()
 
   return (
-    <FullHeightLayout
+    <LayoutFullHeight
       header={
         <StyledHeader
           title={title}
@@ -42,10 +42,10 @@ function AppBaseLayout({
       footer={null}
     >
       <Content className={className}>{children}</Content>
-    </FullHeightLayout>
+    </LayoutFullHeight>
   )
 }
-export default AppBaseLayout
+export default LayoutBase
 
 // Inner Components
 const StyledHeader = styled(HeaderMobile)`
@@ -57,7 +57,7 @@ const StyledHeader = styled(HeaderMobile)`
 `
 
 const Content = styled.div`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style().direction('column').create()};
   padding-top: 56px;
   overflow: scroll;

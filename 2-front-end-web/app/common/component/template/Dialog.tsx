@@ -4,7 +4,7 @@ import Modal from '~/common/component/atom/Modal'
 import Overlay, { OverlayProps } from '~/common/component/atom/Overlay'
 import { Flex, Font } from '~/common/style/css-builder'
 import { globalColors } from '~/common/style/global-colors'
-import VariantButtonOrLink from '~/core/component/atom/VariantButtonOrLink'
+import VariantButtonOrLink from '~/core/component/VariantButtonOrLink'
 
 export type DialogProps = {
   overlay: JSXElementConstructor<OverlayProps>

@@ -38,7 +38,7 @@ const Block = styled.div`
   padding-right: 12px;
   input {
     // input tag 초기화
-    ${Flex.Item.flex1};
+    ${Flex.Item.presets.flex1};
     background: none;
     border: none;
     outline: none;

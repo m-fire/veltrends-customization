@@ -1,7 +1,7 @@
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import React from 'react'
 import BottomSheetModal from '~/common/component/element/BottomSheetModal'
-import AppOverlay from '~/core/component/atom/AppOverlay'
+import AppOverlay from '~/core/component/AppOverlay'
 
 type GlobalBottomSheetModalParams = {}
 

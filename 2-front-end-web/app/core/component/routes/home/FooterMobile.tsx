@@ -7,7 +7,7 @@ import { Media } from '~/common/style/media-query'
 import { PseudoThemeType } from '~/core/style/pseudo-styles'
 import MenuItemLink, {
   MenuItemLinkProps,
-} from '~/core/component/atom/MenuItemLink'
+} from '~/core/component/routes/home/MenuItemLink'
 import {
   Bookmarks,
   Fire,

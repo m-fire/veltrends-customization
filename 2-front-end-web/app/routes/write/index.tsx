@@ -1,8 +1,8 @@
 import { useNavigate } from '@remix-run/react'
-import AppBaseLayout from '~/core/component/template/AppBaseLayout'
-import WriteFormTemplate from '~/core/component/routes/write/WriteFormTemplate'
+import LayoutBase from '~/core/component/LayoutBase'
+import WriteForm from '~/core/component/routes/write/WriteForm'
 import { useWriteContext } from '~/core/context/WriteContext'
-import LabelInput from '~/core/component/element/LabelInput'
+import LabelInput from '~/core/component/LabelInput'
 import { APP_ERRORS_INFO } from '~/common/error/AppError'
 
 const ERROR_CODE_INVALID_URL = APP_ERRORS_INFO.InvalidUrl.statusCode
@@ -19,8 +19,8 @@ function WriteLink() {
   } = useWriteContext()
 
   return (
-    <AppBaseLayout title="링크 입력" hasBackButton>
-      <WriteFormTemplate
+    <LayoutBase title="링크 입력" hasBackButton>
+      <WriteForm
         description="공유하고 싶은 URL을 입력하세요."
         buttonText="다음"
         onSubmit={(e) => {
@@ -42,9 +42,9 @@ function WriteLink() {
               : undefined
           }
         />
-      </WriteFormTemplate>
+      </WriteForm>
       {/* <Button onClick={() => navigate('/write/intro')}>다음</Button> */}
-    </AppBaseLayout>
+    </LayoutBase>
   )
 }
 

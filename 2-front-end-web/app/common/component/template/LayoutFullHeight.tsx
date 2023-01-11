@@ -18,7 +18,7 @@ export type MobileBasedLayoutProps = {
  * Header might contain back button.
  * Header might contain title.
  */
-function FullHeightLayout({
+function LayoutFullHeight({
   header,
   children,
   footer,
@@ -31,6 +31,6 @@ function FullHeightLayout({
     </FullHeightBlock>
   )
 }
-export default FullHeightLayout
+export default LayoutFullHeight
 
 // Inner Components

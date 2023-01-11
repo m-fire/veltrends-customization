@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import LabelInput from '~/core/component/element/LabelInput'
-import VariantButtonOrLink from '~/core/component/atom/VariantButtonOrLink'
+import LabelInput from '~/core/component/LabelInput'
+import VariantButtonOrLink from '~/core/component/VariantButtonOrLink'
 import QuestionLink from '~/core/component/routes/auth/QuestionLink'
 import { Form, useSearchParams } from '@remix-run/react'
 import { useSubmitLoading } from '~/common/hook/useSubmitLoading'
@@ -159,7 +159,7 @@ const formDescriptions = {
 // Inner Components
 
 const StyledFormRef = styled(Form)`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style()
     .direction('column')
     .justifyContent('space-between')

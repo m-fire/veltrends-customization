@@ -5,7 +5,7 @@ import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { Authenticator } from '~/core/api/auth'
 import AppError from '~/common/error/AppError'
-import AppBaseLayout from '~/core/component/template/AppBaseLayout'
+import LayoutBase from '~/core/component/LayoutBase'
 import { useAuthRedirect } from '~/common/hook/useAuthRedirect'
 
 type LoginProps = {
@@ -17,9 +17,9 @@ function Login({ error }: LoginProps) {
   useAuthRedirect()
 
   return (
-    <AppBaseLayout title="로그인" hasBackButton>
+    <LayoutBase title="로그인" hasBackButton>
       <AuthForm mode="login" error={error} />
-    </AppBaseLayout>
+    </LayoutBase>
   )
 }
 

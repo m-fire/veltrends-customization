@@ -85,7 +85,9 @@ export class Flex {
     /* presets */
 
     // grow:1, shrink:1, basis:0%
-    static readonly flex1 = `;flex: 1;`
+    static readonly presets = {
+      flex1: `;flex: 1;`,
+    } as const
   }
 }
 

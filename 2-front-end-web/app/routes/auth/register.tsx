@@ -5,7 +5,7 @@ import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { Authenticator } from '~/core/api/auth'
 import AppError from '~/common/error/AppError'
-import AppBaseLayout from '~/core/component/template/AppBaseLayout'
+import LayoutBase from '~/core/component/LayoutBase'
 import { useAuthRedirect } from '~/common/hook/useAuthRedirect'
 
 type RegisterProps = {
@@ -16,9 +16,9 @@ function Register({ error }: RegisterProps) {
   useAuthRedirect()
 
   return (
-    <AppBaseLayout title="회원가입" hasBackButton>
+    <LayoutBase title="회원가입" hasBackButton>
       <AuthForm mode="register" error={error} />
-    </AppBaseLayout>
+    </LayoutBase>
   )
 }
 

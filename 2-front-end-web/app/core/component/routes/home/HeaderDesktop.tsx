@@ -5,7 +5,7 @@ import { appColors } from '~/core/style/app-colors'
 import { Media, screenBreakpointMap } from '~/common/style/media-query'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend, Search } from '~/core/component/generate/svg'
-import VariantButtonOrLink from '~/core/component/atom/VariantButtonOrLink'
+import VariantButtonOrLink from '~/core/component/VariantButtonOrLink'
 import SearchArea from '~/common/component/element/SearchArea'
 import { Link } from '@remix-run/react'
 
@@ -81,7 +81,7 @@ const StyledLogoVeltrend = styled(LogoVeltrend)`
 `
 
 const Content = styled.div`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style()
     .alignItems('center')
     .justifyContent('space-between')

@@ -4,8 +4,8 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
-import TabLayout from '~/core/component/template/TabLayout'
-import HeaderMobile from '~/common/component/element/HeaderMobile'
+import LayoutTab from '~/core/component/LayoutTab'
+import HeaderMobile from '~/core/component/routes/home/HeaderMobile'
 import SearchInput, {
   SearchInputProps,
 } from '~/core/component/routes/search/SearchInput'
@@ -21,7 +21,7 @@ import { globalColors } from '~/common/style/global-colors'
 import { appColors } from '~/core/style/app-colors'
 import { AnimatePresence } from 'framer-motion'
 import { Flex } from '~/common/style/css-builder'
-import HeaderDesktop from '~/common/component/element/HeaderDesktop'
+import HeaderDesktop from '~/core/component/routes/home/HeaderDesktop'
 
 function Search() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -79,7 +79,7 @@ function Search() {
     setTextState({ ...textState, current: text })
   }
   return (
-    <TabLayout
+    <LayoutTab
       header={
         <>
           <StyledHeader
@@ -110,7 +110,7 @@ function Search() {
       </AnimatePresence>
 
       <div ref={triggerRef} />
-    </TabLayout>
+    </LayoutTab>
   )
 }
 export default Search
@@ -145,7 +145,7 @@ const StyledHeader = styled(HeaderMobile)`
 `
 
 const NotSearchedBlock = styled.div`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style()
     .direction('column')
     .alignItems('center')

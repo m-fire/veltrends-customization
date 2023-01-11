@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 import produce from 'immer'
 import { useQueryClient } from '@tanstack/react-query'
-import AppOverlay from '../../atom/AppOverlay'
-import Spinner from '~/core/component/atom/Spinner'
+import AppOverlay from '../../AppOverlay'
+import Spinner from '~/core/component/Spinner'
 import { globalColors } from '~/common/style/global-colors'
 import { appColors } from '~/core/style/app-colors'
 import { SpeechBubble, Write } from '~/core/component/generate/svg'
@@ -188,7 +188,7 @@ const Footer = styled(motion.div)`
 `
 
 const StyledInput = styled.input`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Font.style().size('16px').weight(400).create()};
   height: 100%;
   border: none;

@@ -4,8 +4,8 @@ import { json, LoaderFunction, redirect } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import styled from 'styled-components'
 import { Authenticator } from '~/core/api/auth'
-import TabLayout from '~/core/component/template/TabLayout'
-import LinkCardList from '~/core/component/routes/home/LinkCardList'
+import LayoutTab from '~/core/component/LayoutTab'
+import LinkCardList from '~/core/component/routes/items/LinkCardList'
 import { getBookmarkItemList } from '~/core/api/bookmarks'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 
@@ -56,7 +56,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 // Inner Components
 
-const StyledTabLayout = styled(TabLayout)`
+const StyledTabLayout = styled(LayoutTab)`
   margin-top: 58px;
 `
 

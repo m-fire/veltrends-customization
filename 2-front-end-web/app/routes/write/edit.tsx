@@ -2,9 +2,9 @@ import React, { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
 import { appColors } from '~/core/style/app-colors'
-import AppBaseLayout from '~/core/component/template/AppBaseLayout'
-import WriteFormTemplate from '~/core/component/routes/write/WriteFormTemplate'
-import LabelInput from '~/core/component/element/LabelInput'
+import LayoutBase from '~/core/component/LayoutBase'
+import WriteForm from '~/core/component/routes/write/WriteForm'
+import LabelInput from '~/core/component/LabelInput'
 import LabelTextArea from '~/common/component/element/LabelTextArea'
 import { Item } from '~/core/api/types'
 import { json, LoaderFunction } from '@remix-run/node'
@@ -43,8 +43,8 @@ function Edit() {
   const errorMessage = null
 
   return (
-    <AppBaseLayout title="수정" hasBackButton>
-      <WriteFormTemplate buttonText="수정하기" onSubmit={onSubmit}>
+    <LayoutBase title="수정" hasBackButton>
+      <WriteForm buttonText="수정하기" onSubmit={onSubmit}>
         <Group>
           <LinkLabelTextArea
             label="URL"
@@ -69,8 +69,8 @@ function Edit() {
 
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
-      </WriteFormTemplate>
-    </AppBaseLayout>
+      </WriteForm>
+    </LayoutBase>
   )
 }
 export default Edit
@@ -90,7 +90,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 // Inner Components
 
 const Group = styled.div`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style().direction('column').create()};
   gap: 16px;
   padding-bottom: 16px;
@@ -104,9 +104,9 @@ const LinkLabelTextArea = styled(LabelTextArea)`
 `
 
 const BodyLabelTextArea = styled(LabelTextArea)`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   textarea {
-    ${Flex.Item.flex1};
+    ${Flex.Item.presets.flex1};
     resize: none;
     font-family: inherit;
   }

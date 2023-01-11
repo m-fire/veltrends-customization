@@ -23,9 +23,9 @@ export default Input
 const StyledInput = styled.input<InputProps>`
   ${Font.style().size('16px').create()};
   height: 48px;
+  outline: none;
   border: 2px solid ${globalColors.grey2};
   border-radius: 6px;
-  outline: none;
   padding-left: 16px;
   padding-right: 16px;
   transition: all 0.25s ease-in-out;

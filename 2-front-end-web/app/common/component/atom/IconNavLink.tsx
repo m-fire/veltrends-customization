@@ -29,7 +29,7 @@ export default IconNavLink
 // Inner Components
 
 const StyledNavLink = styled(NavLink)`
-  ${Flex.Item.flex1};
+  ${Flex.Item.presets.flex1};
   ${Flex.Container.style()
     .alignItems('center')
     .justifyContent('center')

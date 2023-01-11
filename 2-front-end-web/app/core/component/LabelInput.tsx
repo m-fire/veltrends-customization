@@ -1,5 +1,5 @@
-import React, { FocusEventHandler, forwardRef, useState } from 'react'
-import Input, { InputProps } from '~/core/component/element/Input'
+import React, { FocusEventHandler, forwardRef } from 'react'
+import { InputProps } from '~/common/component/atom/Input'
 import { appColors } from '~/core/style/app-colors'
 import InteractiveLabelInput from '~/common/component/element/InteractiveLabelInput'
 

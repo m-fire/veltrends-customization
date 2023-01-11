@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react'
 import FullHeightBlock from '~/common/component/element/FullHeightBlock'
-import HeaderMobile from '~/common/component/element/HeaderMobile'
-import FooterMobile from '~/core/component/element/FooterMobile'
+import HeaderMobile from '~/core/component/routes/home/HeaderMobile'
+import FooterMobile from '~/core/component/routes/home/FooterMobile'
 import LayoutContentBlock from '~/common/component/element/LayoutContentBlock'
 import styled from 'styled-components'
-import HeaderDesktop from '~/common/component/element/HeaderDesktop'
+import HeaderDesktop from '~/core/component/routes/home/HeaderDesktop'
 import { Filters } from '~/common/style/css-builder'
 
 type TabLayoutProps = {
@@ -16,7 +16,7 @@ type TabLayoutProps = {
 /**
  * Shows content with a header adn a tab bar.
  */
-function TabLayout({ header, children, className }: TabLayoutProps) {
+function LayoutTab({ header, children, className }: TabLayoutProps) {
   return (
     <FullHeightBlock>
       {header ?? (
@@ -32,7 +32,7 @@ function TabLayout({ header, children, className }: TabLayoutProps) {
     </FullHeightBlock>
   )
 }
-export default TabLayout
+export default LayoutTab
 
 // Inner Components
 

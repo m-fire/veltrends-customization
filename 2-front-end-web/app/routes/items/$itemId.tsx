@@ -3,12 +3,12 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { deleteItem, getItem } from '~/core/api/items'
 import { getCommentList } from '~/core/api/items$comments'
 import { Item, Comment } from '~/core/api/types'
-import AppBaseLayout from '~/core/component/template/AppBaseLayout'
+import LayoutBase from '~/core/component/LayoutBase'
 import ItemViewer from '~/core/component/routes/items/ItemViewer'
 import CommentList from '~/core/component/routes/items/CommentList'
 import { useCommentListQuery } from '~/core/hook/query/useCommentsQuery'
 import CommentInputOverlay from '~/core/component/routes/items/CommentInputOverlay'
-import MoreVertButton from '~/core/component/atom/MoreVertButton'
+import MoreVertButton from '~/core/component/routes/items/MoreVertButton'
 import { useAuthUser } from '~/common/context/UserContext'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
@@ -67,7 +67,7 @@ function ItemById({}: ItemByIdProps) {
   //Todo: Header tool menu 구성
   return (
     <>
-      <AppBaseLayout
+      <LayoutBase
         title={null}
         headerRight={
           isMyItem ? (
@@ -80,7 +80,7 @@ function ItemById({}: ItemByIdProps) {
           <ItemViewer item={item} />
           <CommentList commentList={commentList!} />
         </Content>
-      </AppBaseLayout>
+      </LayoutBase>
       <CommentInputOverlay />
     </>
   )
