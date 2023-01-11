@@ -6,36 +6,12 @@
 주의: 브랜치를 순차대로 생성할떄, 지나간 브랜치에 미래에서 추가한 브랜치가 존재한다.
 주의해서 분간할것.
 
-(was 71bdc30).
- (was b65b780).
- (was 998e675).
- (was 5bb2cef).
- (was 826d04f).
-1-back-end-server/03-fastify-swagger/3-schema-with-typebox (was d3eebad). 💢💢💢
- (was 3bdf739).
- (was 0cb5d2f).
- (was 4ffdce3).
- (was 23407e4).
- (was 1505a1e).
-1-back-end-server/06-route-security/1-config (was dbb76d2).
-1-back-end-server/06-route-security/2-header-token-validation (was 4507ea1).
-1-back-end-server/06-route-security/3-cookie-token-validation (was c159a3a).
-1-back-end-server/06-route-security/4-refactor-auth-logics (was 9b68116).
-1-back-end-server/06-route-security/5-refresh-token (was 660f0b9).
-1-back-end-server/06-route-security/6-blocked-n-rotation-counter (was b018751).
-1-back-end-server/07-news-items-crud/1-dev--create (was 6696d7f).
-1-back-end-server/07-news-items-crud/2-dev--read (was c0b4f1a).
-1-back-end-server/07-news-items-crud/3-dev--filter-n-pagination (was 2ef44cf).
-1-back-end-server/07-news-items-crud/4-dev--update (was c9ce55e).
-1-back-end-server/07-news-items-crud/5-dev--delete (was cff07ad).
-1-back-end-server/07-news-items-crud/6-item-with-publisher--validate-link (was 73a0410).
-1-back-end-server/07-news-items-crud/7-dev-items--include-publisher (was 392e7c7).
-1-back-end-server/07-news-items-crud/8-dev--likes (was 5d47efd).
-1-back-end-server/08-comment-by-news-crud/01-dev--db-n-schema-n-routes (was 8565dca).
-1-back-end-server/08-comment-by-news-crud/02-dev--comments-api (was 00f6a82).
-1-back-end-server/08-comment-by-news-crud/03-dev--sync-like-counts (was 8a44c53).
-1-back-end-server/08-comment-by-news-crud/04-dev--mention-user (was 2bb0a00).
-1-back-end-server/08-comment-by-news-crud/05-dev--delete-comment (was 6dd3a7a).
+
+ (was 8565dca).
+ (was 00f6a82).
+ (was 8a44c53).
+ (was 2bb0a00).
+ (was 6dd3a7a).
 1-back-end-server/08-comment-by-news-crud/06-dev--text-validation (was b1307a4).
 1-back-end-server/08-comment-by-news-crud/07-dev--like-comment (was 3c95c37).
 1-back-end-server/08-comment-by-news-crud/08-dev--update-comment (was 42a7e17).
@@ -53,34 +29,12 @@
 1-back-end-server/12-bookmark/4-fix-n-refactor--service-n-repository (was d894089).
 1-back-end-server/13-reponsive-ui-for-tablet-n-desktop/1-fix--search-by-score-in-trend-items (was f177836).
 
-2-front-end-client/1-remix-dev-server/1-project-setup (was 0c78c4a).
-2-front-end-client/1-remix-dev-server/2-config-default-styling (was 0a6a3e9).
-2-front-end-client/2-build-ui-comps/01-dev-pages (was 15275ed).
-2-front-end-client/2-build-ui-comps/02-full-height-via-global-comp (was c29055f).
-2-front-end-client/2-build-ui-comps/03-dev-form-comps (was e5bc6d9).
-2-front-end-client/2-build-ui-comps/04-auth-login-n-register (was f97f5f8).
-2-front-end-client/2-build-ui-comps/05-handle-messaging-n-cookie-n-errors (was b82c8f5).
-2-front-end-client/2-build-ui-comps/06-1-form-validation--custom-useForm (was 82414e5).
-2-front-end-client/2-build-ui-comps/06-2-form-validation--react-hook-form (was 6e3f433).
-2-front-end-client/2-build-ui-comps/07-dev-ui--tab-bar-footer (was 34af926).
-2-front-end-client/2-build-ui-comps/08-dev--check-authentication-access (was ae80df1).
-2-front-end-client/2-build-ui-comps/09-1-dev-ui--write-route (was 1b36773).
-2-front-end-client/2-build-ui-comps/09-2-dev-write--with-context (was 6a7367d).
-2-front-end-client/2-build-ui-comps/10-dev-write--handle-errors (was 46d121e).
-2-front-end-client/2-build-ui-comps/11-dev-items--listing (was 25ad0d5).
-2-front-end-client/2-build-ui-comps/12-dev-items--infinite-scroll (was ec02ea7).
-2-front-end-client/2-build-ui-comps/13-dev-items--likes (was a950d42).
-2-front-end-client/2-build-ui-comps/14-dev-items--animation (was 957bab3).
-2-front-end-client/3-minor-features/01-redirect-after-login (was e8ed9cf).
-2-front-end-client/3-minor-features/02-navigate-validation (was 6adc7c6).
-2-front-end-client/3-minor-features/03-show-valid-error-in-login (was 259b779).
-2-front-end-client/4-modal-window/01-dialog (was 68adc76).
-2-front-end-client/5-item-details/01-dev--item-viewer (was 09e813d).
-2-front-end-client/5-item-details/02-dev--comments-view (was 8c3dfb3).
-2-front-end-client/5-item-details/03-dev--mention-user (was 7b16b58).
-2-front-end-client/5-item-details/04-dev--comment-footer-ui (was ed61b38).
-2-front-end-client/5-item-details/05-dev--delete-comment (was 748eb84).
-2-front-end-client/5-item-details/06-refactor-comments-with-react-query (was 6d0fe2f).
+
+
+ (was 7b16b58).
+ (was ed61b38).
+ (was 748eb84).
+ (was 6d0fe2f).
 2-front-end-client/5-item-details/07-dev--create-comment-with-zustand (was eb3ebee).
 2-front-end-client/5-item-details/08-dev--attach-comment-n-scroll-move (was 06fd7e0).
 2-front-end-client/5-item-details/09-dev--attach-subcomment (was 293453d).
