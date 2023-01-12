@@ -16,7 +16,7 @@ type TabLayoutProps = {
 /**
  * Shows content with a header adn a tab bar.
  */
-function LayoutTab({ header, children, className }: TabLayoutProps) {
+function TabLayout({ header, children, className }: TabLayoutProps) {
   return (
     <FullHeightBlock>
       {header ?? (
@@ -32,7 +32,7 @@ function LayoutTab({ header, children, className }: TabLayoutProps) {
     </FullHeightBlock>
   )
 }
-export default LayoutTab
+export default TabLayout
 
 // Inner Components
 

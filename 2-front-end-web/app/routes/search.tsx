@@ -4,7 +4,7 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
-import LayoutTab from '~/core/component/LayoutTab'
+import TabLayout from '~/core/component/TabLayout'
 import HeaderMobile from '~/core/component/home/HeaderMobile'
 import SearchInput, {
   SearchInputProps,
@@ -79,7 +79,7 @@ function Search() {
     setTextState({ ...textState, current: text })
   }
   return (
-    <LayoutTab
+    <TabLayout
       header={
         <>
           <StyledHeader
@@ -110,7 +110,7 @@ function Search() {
       </AnimatePresence>
 
       <div ref={triggerRef} />
-    </LayoutTab>
+    </TabLayout>
   )
 }
 export default Search

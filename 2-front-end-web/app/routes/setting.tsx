@@ -1,10 +1,10 @@
 import React from 'react'
-import LayoutTab from '~/core/component/LayoutTab'
+import TabLayout from '~/core/component/TabLayout'
 
 type SettingProps = {}
 
 function Setting({}: SettingProps) {
-  return <LayoutTab>Setting route</LayoutTab>
+  return <TabLayout>Setting route</TabLayout>
 }
 export default Setting
 

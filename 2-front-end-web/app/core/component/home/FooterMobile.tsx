@@ -4,7 +4,7 @@ import { globalColors } from '~/common/style/global-colors'
 import { Flex } from '~/common/style/css-builder'
 import { RoutePath } from '~/common/api/client'
 import { Media } from '~/common/style/media-query'
-import { PseudoThemeType } from '~/core/style/pseudo-styles'
+import { PseudoThemeType } from '~/core/style/decorate-styles'
 import MenuItemLink, {
   MenuItemLinkProps,
 } from '~/core/component/home/MenuItemLink'

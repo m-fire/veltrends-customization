@@ -2,7 +2,7 @@ import { css } from 'styled-components'
 import { globalColors } from '~/common/style/global-colors'
 import { appColors } from '~/core/style/app-colors'
 
-export const pseudoStyles = {
+export const decorateStyles = {
   circleStroke: css`
     &::before {
       content: '';
@@ -23,4 +23,4 @@ export const pseudoStyles = {
   `,
 } as const
 
-export type PseudoThemeType = keyof typeof pseudoStyles
+export type PseudoThemeType = keyof typeof decorateStyles

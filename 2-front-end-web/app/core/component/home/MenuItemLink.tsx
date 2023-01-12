@@ -2,21 +2,21 @@ import React, { ReactElement, ReactFragment, ReactPortal } from 'react'
 import styled from 'styled-components'
 import { RoutePath } from '~/common/api/client'
 import IconNavLink from '~/common/component/atom/IconNavLink'
-import { pseudoStyles, PseudoThemeType } from '~/core/style/pseudo-styles'
+import { decorateStyles, PseudoThemeType } from '~/core/style/decorate-styles'
 import { appColors } from '~/core/style/app-colors'
 
 export type MenuItemLinkProps = {
   to: RoutePath
   icon: ReactElement | ReactFragment | ReactPortal
-  decorateType?: PseudoThemeType
+  $decorateType?: PseudoThemeType
 }
 
-function MenuItemLink({ to, icon, decorateType, ...rest }: MenuItemLinkProps) {
+function MenuItemLink({ to, icon, $decorateType, ...rest }: MenuItemLinkProps) {
   return (
     <StyledIconNavLink
       to={to}
       icon={icon}
-      decorateType={decorateType}
+      $decorateType={$decorateType}
       {...rest}
     />
   )
@@ -26,6 +26,6 @@ export default MenuItemLink
 // Inner Components
 
 const StyledIconNavLink = styled(IconNavLink)<MenuItemLinkProps>`
-  ${({ decorateType }) => decorateType && pseudoStyles[decorateType]}
+  ${({ $decorateType }) => $decorateType && decorateStyles[$decorateType]}
   color: ${appColors.primary1}
 `
