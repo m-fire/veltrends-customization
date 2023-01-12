@@ -4,7 +4,7 @@ import Modal from '~/common/component/atom/Modal'
 import Overlay, { OverlayProps } from '~/common/component/atom/Overlay'
 import { Flex, Font } from '~/common/style/css-builder'
 import { globalColors } from '~/common/style/global-colors'
-import VariantButtonOrLink from '~/core/component/VariantButtonOrLink'
+import VariantLinkButton from '~/core/component/VariantLinkButton'
 
 export type DialogProps = {
   overlay: JSXElementConstructor<OverlayProps>
@@ -58,30 +58,30 @@ function Dialog({
       <Footer styles={updatedStyles?.footer}>
         {mode === 'OK' ? (
           <>
-            <VariantButtonOrLink
+            <VariantLinkButton
               variant="primary"
               onClick={onConfirm}
-              customStyle={updatedStyles?.buttons}
+              $customStyle={updatedStyles?.buttons}
             >
               {confirmText}
-            </VariantButtonOrLink>
+            </VariantLinkButton>
           </>
         ) : (
           <>
-            <VariantButtonOrLink
+            <VariantLinkButton
               variant="textonly"
               onClick={onCancel}
-              customStyle={updatedStyles?.buttons}
+              $customStyle={updatedStyles?.buttons}
             >
               {cancelText}
-            </VariantButtonOrLink>
-            <VariantButtonOrLink
+            </VariantLinkButton>
+            <VariantLinkButton
               variant="primary"
               onClick={onConfirm}
-              customStyle={updatedStyles?.buttons}
+              $customStyle={updatedStyles?.buttons}
             >
               {confirmText}
-            </VariantButtonOrLink>
+            </VariantLinkButton>
           </>
         )}
       </Footer>

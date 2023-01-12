@@ -1,43 +1,42 @@
 import React from 'react'
-import { LinkProps } from '@remix-run/react'
 import styled from 'styled-components'
 import { variantStyles, VariantType } from '~/core/style/variant-styles'
-import ResizableButtonOrLink, {
-  ResizableButtonOrLinkProps,
-} from '~/common/component/atom/ResizableButtonOrLink'
+import ResizableLinkButton, {
+  ResizableLinkButtonProps,
+} from '~/common/component/atom/ResizableLinkButton'
 
-type VariantButtonOrLinkProps = {
+type VariantLinkButtonProps = {
   variant?: VariantType
-} & ResizableButtonOrLinkProps
+} & ResizableLinkButtonProps
 
-function VariantButtonOrLink({
+function VariantLinkButton({
   to,
   size = 'medium',
-  layoutMode = 'inline',
+  $layoutMode = 'inline',
   variant = 'primary',
-  customStyle,
+  $customStyle,
   children,
   ...rest
-}: VariantButtonOrLinkProps) {
+}: VariantLinkButtonProps) {
   return (
     <StyledResizableButtonOrLink
+      {...rest}
       to={to}
       size={size}
-      layoutMode={layoutMode}
+      $layoutMode={$layoutMode}
       variant={variant}
-      customStyle={customStyle}
-      {...rest}
+      $customStyle={$customStyle}
     >
       {children}
     </StyledResizableButtonOrLink>
   )
 }
-export default VariantButtonOrLink
+export default VariantLinkButton
 
 // Inner Components
 
 const StyledResizableButtonOrLink = styled(
-  ResizableButtonOrLink,
-)<VariantButtonOrLinkProps>`
+  ResizableLinkButton,
+)<VariantLinkButtonProps>`
   ${({ variant }) => variant && variantStyles[variant]};
 `

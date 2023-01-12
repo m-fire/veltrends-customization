@@ -15,7 +15,7 @@ function IconNavLink({ to, icon, ...rest }: IconNavLinkProps) {
     <StyledNavLink
       to={to}
       className={
-        // NavLInk 에만 존재하는 active 속성
+        // NavLInk 에만 존재하는 isActive 속성
         ({ isActive }) => (isActive ? 'active' : '')
       }
       {...rest}

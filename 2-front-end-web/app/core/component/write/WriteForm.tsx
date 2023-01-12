@@ -1,6 +1,6 @@
 import { FormEventHandler, ReactNode } from 'react'
 import styled from 'styled-components'
-import VariantButtonOrLink from '../VariantButtonOrLink'
+import VariantLinkButton from '../VariantLinkButton'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex, Font } from '~/common/style/css-builder'
 
@@ -21,7 +21,7 @@ function WriteForm({
     <StyledForm onSubmit={onSubmit}>
       {description ? <h3>{description}</h3> : null}
       <Content>{children}</Content>
-      <VariantButtonOrLink>{buttonText}</VariantButtonOrLink>
+      <VariantLinkButton>{buttonText}</VariantLinkButton>
     </StyledForm>
   )
 }

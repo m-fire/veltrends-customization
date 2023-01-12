@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import LabelInput from '~/core/component/LabelInput'
-import VariantButtonOrLink from '~/core/component/VariantButtonOrLink'
+import VariantLinkButton from '~/core/component/VariantLinkButton'
 import QuestionLink from '~/core/component/auth/QuestionLink'
 import { Form, useSearchParams } from '@remix-run/react'
 import { useSubmitLoading } from '~/common/hook/useSubmitLoading'
@@ -99,7 +99,7 @@ function AuthForm({ mode, error }: AuthFormProps) {
 
           <StyledButton
             type="submit"
-            layoutMode="fullWidth"
+            $layoutMode="fullWidth"
             disabled={isLoading}
           >
             <span>{submitBtnByMode.icon}</span>
@@ -179,7 +179,7 @@ const ActionBox = styled.div`
   gap: 24px;
 `
 
-const StyledButton = styled(VariantButtonOrLink)`
+const StyledButton = styled(VariantLinkButton)`
   svg {
     width: 20px;
     height: 20px;

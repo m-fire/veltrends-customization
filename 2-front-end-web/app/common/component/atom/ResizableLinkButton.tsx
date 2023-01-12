@@ -4,29 +4,29 @@ import styled, { css, FlattenSimpleInterpolation } from 'styled-components'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
 import { buttonSizeStyles, Size } from '~/common/style/styles'
 
-export type ResizableButtonOrLinkProps = {
+export type ResizableLinkButtonProps = {
   to?: LinkProps['to']
   size?: Size
-  layoutMode?: 'inline' | 'fullWidth'
-  customStyle?: FlattenSimpleInterpolation
+  $layoutMode?: 'inline' | 'fullWidth'
+  $customStyle?: FlattenSimpleInterpolation
   children: ReactNode
 } & (Omit<LinkProps, 'to'> | ButtonHTMLAttributes<HTMLButtonElement>)
 
-function ResizableButtonOrLink({
+function ResizableLinkButton({
   to,
   size,
-  layoutMode,
-  customStyle,
+  $layoutMode,
+  $customStyle,
   children,
   ...rest
-}: ResizableButtonOrLinkProps) {
+}: ResizableLinkButtonProps) {
   //
   return to == null ? (
     <StyledButton
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
       size={size}
-      layoutMode={layoutMode}
-      customStyle={customStyle}
+      $layoutMode={$layoutMode}
+      $customStyle={$customStyle}
     >
       {children}
     </StyledButton>
@@ -35,18 +35,18 @@ function ResizableButtonOrLink({
       {...(rest as Omit<LinkProps, 'to'>)}
       to={to as string}
       size={size}
-      layoutMode={layoutMode}
-      customStyle={customStyle}
+      $layoutMode={$layoutMode}
+      $customStyle={$customStyle}
     >
       {children}
     </StyledLink>
   )
 }
-export default ResizableButtonOrLink
+export default ResizableLinkButton
 
 // Inner Components
 
-const sharedButtonStyles = css<Omit<ResizableButtonOrLinkProps, 'to'>>`
+const sharedButtonStyles = css<Omit<ResizableLinkButtonProps, 'to'>>`
   ${Flex.Container.style()
     .alignItems('center')
     .justifyContent('center')
@@ -66,13 +66,13 @@ const sharedButtonStyles = css<Omit<ResizableButtonOrLinkProps, 'to'>>`
   &:disabled {
     ${Filters.filter().brightness(70).create()};
   }
-  ${({ layoutMode: mode }) =>
+  ${({ $layoutMode: mode }) =>
     mode === 'fullWidth' &&
     css`
       width: 100%;
     `}
   ${({ size }) => size && buttonSizeStyles[size]};
-  ${({ customStyle }) => customStyle && customStyle};
+  ${({ $customStyle }) => $customStyle && $customStyle};
 `
 
 const StyledButton = styled.button`

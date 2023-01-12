@@ -5,7 +5,7 @@ import { appColors } from '~/core/style/app-colors'
 import { Media, screenBreakpointMap } from '~/common/style/media-query'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend, Search } from '~/core/component/generate/svg'
-import VariantButtonOrLink from '~/core/component/VariantButtonOrLink'
+import VariantLinkButton from '~/core/component/VariantLinkButton'
 import SearchArea from '~/common/component/element/SearchArea'
 import { Link } from '@remix-run/react'
 
@@ -30,12 +30,12 @@ HeaderDesktopProps) {
         <AddOn>AddOn: Left</AddOn>
         <AddOn>
           <SearchArea searchIcon={<Search />} />
-          <VariantButtonOrLink variant="wire" size="small" to="/auth/login">
+          <VariantLinkButton to="/auth/login" variant="wire" size="small">
             로그인
-          </VariantButtonOrLink>
-          <VariantButtonOrLink size="small" to="/auth/register">
+          </VariantLinkButton>
+          <VariantLinkButton to="/auth/register" size="small">
             회원가입
-          </VariantButtonOrLink>
+          </VariantLinkButton>
         </AddOn>
       </Content>
     </Block>
