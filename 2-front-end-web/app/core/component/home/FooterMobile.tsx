@@ -19,22 +19,28 @@ import {
 type FooterProps = {}
 
 export const initialItemConfigs: {
+  name: string
   to: RoutePath
   icon: MenuItemLinkProps['icon']
   decorate?: PseudoThemeType
 }[] = [
-  { to: '/', icon: <Fire /> },
-  { to: '/search', icon: <Search /> },
-  { to: '/write', icon: <Plus />, decorate: 'circleStroke' },
-  { to: '/bookmarks', icon: <Bookmarks /> },
-  { to: '/setting', icon: <Setting /> },
+  { name: 'home', to: '/', icon: <Fire /> },
+  { name: 'search', to: '/search', icon: <Search /> },
+  { name: 'write', to: '/write', icon: <Plus />, decorate: 'circleStroke' },
+  { name: 'bookmarks', to: '/bookmarks', icon: <Bookmarks /> },
+  { name: 'setting', to: '/setting', icon: <Setting /> },
 ]
 
 function FooterMobile({}: FooterProps) {
   return (
     <Block>
       {initialItemConfigs.map((c) => (
-        <MenuItemLink to={c.to} icon={c.icon} decorateType={c.decorate} />
+        <MenuItemLink
+          key={c.name}
+          to={c.to}
+          icon={c.icon}
+          $decorateType={c.decorate}
+        />
       ))}
     </Block>
   )
