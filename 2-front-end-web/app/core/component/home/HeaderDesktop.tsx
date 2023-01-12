@@ -18,11 +18,11 @@ type HeaderDesktopProps = {
 
 //Todo: 데스크탑/모바일 각각의 해더를 디바이스 스크린사이즈에 따라 형태변경 구현
 function HeaderDesktop({
+  // headerLeft,
+  // headerRight,
+  // className,
   logo = <StyledLogoVeltrend />, // 기본 해더 타이틀: 메인로고
-}: // headerLeft,
-// headerRight,
-// className,
-HeaderDesktopProps) {
+}: HeaderDesktopProps) {
   return (
     <Block>
       <HomeLink to="/">{logo}</HomeLink>

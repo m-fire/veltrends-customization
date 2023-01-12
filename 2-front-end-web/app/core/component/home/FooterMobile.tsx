@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex } from '~/common/style/css-builder'

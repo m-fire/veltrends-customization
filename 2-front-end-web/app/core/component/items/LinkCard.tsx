@@ -41,7 +41,7 @@ function LinkCard({ item }: LinkCardProps) {
   const isBookmarked = stateById?.isBookmarked ?? item.isBookmarked
   const { likeItem, unlikeItem, bookmarkItem, unbookmarkItem } = useItemAction()
 
-  const toggleActionByType = useCallback(
+  const toggleActions = useCallback(
     async (type: ActionType) => {
       if (!authUser) {
         openDialog(type, { gotoLogin: true })
@@ -113,13 +113,13 @@ function LinkCard({ item }: LinkCardProps) {
       <ItemFooter>
         <ActionButtons>
           <LikeButton
-            onClick={() => toggleActionByType('LIKE_ITEM')}
+            onClick={() => toggleActions('LIKE_ITEM')}
             isLiked={isLiked}
             disabled={!authUser}
           />
 
           <BookmarkButton
-            onClick={() => toggleActionByType('BOOKMARK_ITEM')}
+            onClick={() => toggleActions('BOOKMARK_ITEM')}
             isBookmarked={isBookmarked}
             disabled={!authUser}
           />

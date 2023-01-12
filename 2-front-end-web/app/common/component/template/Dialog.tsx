@@ -27,6 +27,45 @@ export type DialogProps = {
   visible: boolean
 }
 
+const initialStyles = {
+  modal: css`
+    width: 375px;
+    max-width: calc(100vw - 32px);
+    padding: 16px 20px;
+  `,
+  header: css`
+    ${Font.style()
+      .size('20px')
+      .weight(800)
+      .color(globalColors.grey4)
+      .lineHeight(1.5)
+      .textAlign('center')
+      .create()};
+    margin-top: 0;
+    margin-bottom: 8px;
+  `,
+  description: css`
+    ${Font.style()
+      .size('14px')
+      .weight(600)
+      .color(globalColors.grey2)
+      .lineHeight(1.5)
+      .whiteSpace('pre-wrap')
+      .create()};
+    margin-top: 0;
+  `,
+  footer: css`
+    ${Flex.Container.style().justifyContent('flex-end').create()};
+    margin-top: 16px;
+  `,
+  button: css`
+    ${Font.style().size('14px').create()};
+    width: 70px;
+    height: 35px;
+    border-radius: 999px;
+  `,
+}
+
 function Dialog({
   overlay = Overlay,
   mode = 'OK',
@@ -107,42 +146,3 @@ const Description = styled.p<{ styles?: FlattenSimpleInterpolation }>`
 const Footer = styled.section<{ styles?: FlattenSimpleInterpolation }>`
   ${({ styles }) => styles};
 `
-
-const initialStyles = {
-  modal: css`
-    width: 375px;
-    max-width: calc(100vw - 32px);
-    padding: 16px 20px;
-  `,
-  header: css`
-    ${Font.style()
-      .size('20px')
-      .weight(800)
-      .color(globalColors.grey4)
-      .lineHeight(1.5)
-      .textAlign('center')
-      .create()};
-    margin-top: 0;
-    margin-bottom: 8px;
-  `,
-  description: css`
-    ${Font.style()
-      .size('14px')
-      .weight(600)
-      .color(globalColors.grey2)
-      .lineHeight(1.5)
-      .whiteSpace('pre-wrap')
-      .create()};
-    margin-top: 0;
-  `,
-  footer: css`
-    ${Flex.Container.style().justifyContent('flex-end').create()};
-    margin-top: 16px;
-  `,
-  button: css`
-    ${Font.style().size('14px').create()};
-    width: 70px;
-    height: 35px;
-    border-radius: 999px;
-  `,
-}
