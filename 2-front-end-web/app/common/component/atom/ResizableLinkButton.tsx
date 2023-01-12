@@ -21,7 +21,7 @@ function ResizableButtonOrLink({
   ...rest
 }: ResizableButtonOrLinkProps) {
   //
-  return typeof to == null ? (
+  return to == null ? (
     <StyledButton
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
       size={size}
