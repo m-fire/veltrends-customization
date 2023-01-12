@@ -39,4 +39,5 @@ const StyledResizableButtonOrLink = styled(
   ResizableLinkButton,
 )<VariantLinkButtonProps>`
   ${({ variant }) => variant && variantStyles[variant]};
+  ${({ $customStyle }) => $customStyle};
 `

@@ -15,17 +15,70 @@ export type DialogProps = {
     confirmText?: string
     cancelText?: string
   }
-  customStyles?: {
-    modal?: FlattenSimpleInterpolation
-    header?: FlattenSimpleInterpolation
-    description?: FlattenSimpleInterpolation
-    footer?: FlattenSimpleInterpolation
-    buttons?: FlattenSimpleInterpolation
-  }
+  customStyles?: Record<StyleNames, FlattenSimpleInterpolation>
   onConfirm: () => void
   onCancel: () => void
   visible: boolean
 }
+
+function Dialog({
+  overlay = Overlay,
+  mode = 'OK',
+  textMap: { title, description, confirmText = '확인', cancelText = '닫기' },
+  customStyles,
+  onConfirm,
+  onCancel,
+  visible,
+}: DialogProps) {
+  const styles: DialogProps['customStyles'] = {
+    //
+    modal: initialStyles.modal.concat(customStyles?.modal),
+    header: initialStyles.header.concat(customStyles?.header),
+    description: initialStyles.description.concat(customStyles?.description),
+    footer: initialStyles.footer.concat(customStyles?.footer),
+    buttons: initialStyles.buttons.concat(customStyles?.buttons),
+  }
+
+  return (
+    <StyledModal overlay={overlay} visible={visible} styles={styles?.modal}>
+      <Header styles={styles?.header}>{title}</Header>
+      <Description styles={styles?.description}>{description}</Description>
+      <Footer styles={styles?.footer}>
+        {mode === 'OK' ? (
+          <>
+            <VariantLinkButton
+              variant="primary"
+              onClick={onConfirm}
+              $customStyle={styles?.buttons}
+            >
+              {confirmText}
+            </VariantLinkButton>
+          </>
+        ) : (
+          <>
+            <VariantLinkButton
+              variant="textonly"
+              onClick={onCancel}
+              $customStyle={styles?.buttons}
+            >
+              {cancelText}
+            </VariantLinkButton>
+            <VariantLinkButton
+              variant="primary"
+              onClick={onConfirm}
+              $customStyle={styles?.buttons}
+            >
+              {confirmText}
+            </VariantLinkButton>
+          </>
+        )}
+      </Footer>
+    </StyledModal>
+  )
+}
+export default Dialog
+
+// Inner Components
 
 const initialStyles = {
   modal: css`
@@ -39,7 +92,6 @@ const initialStyles = {
       .weight(800)
       .color(globalColors.grey4)
       .lineHeight(1.5)
-      .textAlign('center')
       .create()};
     margin-top: 0;
     margin-bottom: 8px;
@@ -58,78 +110,14 @@ const initialStyles = {
     ${Flex.Container.style().justifyContent('flex-end').create()};
     margin-top: 16px;
   `,
-  button: css`
+  buttons: css`
     ${Font.style().size('14px').create()};
     width: 70px;
     height: 35px;
     border-radius: 999px;
   `,
 }
-
-function Dialog({
-  overlay = Overlay,
-  mode = 'OK',
-  textMap: { title, description, confirmText = '확인', cancelText = '닫기' },
-  customStyles,
-  onConfirm,
-  onCancel,
-  visible,
-}: DialogProps) {
-  const updatedStyles = {
-    //
-    modal: { ...initialStyles.modal, ...customStyles?.modal },
-    header: { ...initialStyles.header, ...customStyles?.header },
-    description: { ...initialStyles.description, ...customStyles?.description },
-    footer: { ...initialStyles.footer, ...customStyles?.footer },
-    buttons: { ...initialStyles.button, ...customStyles?.buttons },
-  } as DialogProps['customStyles']
-
-  return (
-    <StyledModal
-      overlay={overlay}
-      visible={visible}
-      styles={updatedStyles?.modal}
-    >
-      <Header styles={updatedStyles?.modal}>{title}</Header>
-      <Description styles={updatedStyles?.description}>
-        {description}
-      </Description>
-      <Footer styles={updatedStyles?.footer}>
-        {mode === 'OK' ? (
-          <>
-            <VariantLinkButton
-              variant="primary"
-              onClick={onConfirm}
-              $customStyle={updatedStyles?.buttons}
-            >
-              {confirmText}
-            </VariantLinkButton>
-          </>
-        ) : (
-          <>
-            <VariantLinkButton
-              variant="textonly"
-              onClick={onCancel}
-              $customStyle={updatedStyles?.buttons}
-            >
-              {cancelText}
-            </VariantLinkButton>
-            <VariantLinkButton
-              variant="primary"
-              onClick={onConfirm}
-              $customStyle={updatedStyles?.buttons}
-            >
-              {confirmText}
-            </VariantLinkButton>
-          </>
-        )}
-      </Footer>
-    </StyledModal>
-  )
-}
-export default Dialog
-
-// Inner Components
+type StyleNames = keyof typeof initialStyles
 
 const StyledModal = styled(Modal)<{ styles?: FlattenSimpleInterpolation }>`
   ${({ styles }) => styles}; //  custom
