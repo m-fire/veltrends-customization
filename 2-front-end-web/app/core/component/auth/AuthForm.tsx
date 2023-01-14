@@ -3,15 +3,16 @@ import styled from 'styled-components'
 import LabelInput from '~/core/component/LabelInput'
 import VariantLinkButton from '~/core/component/VariantLinkButton'
 import QuestionLink from '~/core/component/auth/QuestionLink'
-import { Form, useSearchParams } from '@remix-run/react'
+import { Form, Link, useSearchParams } from '@remix-run/react'
 import { useSubmitLoading } from '~/common/hook/useSubmitLoading'
-import { Key, Write } from '~/core/component/generate/svg'
+import { Key, LogoVeltrend, Write } from '~/core/component/generate/svg'
 import AppError from '~/common/error/AppError'
 import { appColors } from '~/core/style/app-colors'
 import { useFormValidation } from '~/common/hook/useFormValidation'
 import { Validator } from '~/common/util/validates'
 import { Flex, Font } from '~/common/style/css-builder'
 import { RoutePath } from '~/common/api/client'
+import { Media } from '~/common/style/media-query'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -73,6 +74,10 @@ function AuthForm({ mode, error }: AuthFormProps) {
   return (
     <>
       <StyledFormRef method="post" onSubmit={onSubmit}>
+        <DesktopLogoLink to="/">
+          <LogoVeltrend />
+        </DesktopLogoLink>
+
         <InputGroup>
           <LabelInput
             label="아이디"
@@ -173,6 +178,19 @@ const StyledFormRef = styled(Form)`
     width: 460px;
     padding-left: 72px;
     padding-right: 72px;
+  }
+`
+
+const DesktopLogoLink = styled(Link)`
+  ${Media.maxWidth.mobile} {
+    display: none;
+  }
+  ${Flex.container().justifyContent('center').create()};
+  margin-bottom: 48px;
+  svg {
+    width: auto;
+    height: 48px;
+    color: ${appColors.primary1};
   }
 `
 
