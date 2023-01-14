@@ -11,6 +11,7 @@ import { globalColors } from '~/common/style/global-colors'
 
 type TabLayoutProps = {
   header?: ReactNode
+  tabNavigator?: ReactNode
   className?: string
   children?: ReactNode
 }
@@ -18,15 +19,22 @@ type TabLayoutProps = {
 /**
  * Shows content with a header adn a tab bar.
  */
-function TabLayout({ header, children, className }: TabLayoutProps) {
+function TabLayout({
+  header,
+  tabNavigator,
+  children,
+  className,
+}: TabLayoutProps) {
   return (
     <FullHeightBlock>
       {header ?? (
         <Headers>
           <HeaderMobile />
           <HeaderDesktop />
+          {tabNavigator}
         </Headers>
       )}
+
       <StyledLayoutContent className={className}>
         {children}
       </StyledLayoutContent>

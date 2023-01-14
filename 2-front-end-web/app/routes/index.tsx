@@ -9,7 +9,7 @@ import { Item, ItemListMode } from '~/core/api/types'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import TabLayout from '~/core/component/TabLayout'
 import LinkCardList from '~/core/component/items/LinkCardList'
-import ListModeSelector from '~/core/component/items/ListModeSelector'
+import ListModeSelector from '~/core/component/home/ListModeSelector'
 import DateRangeSelector from '~/core/component/items/DateRangeSelector'
 import {
   DateStringRange,
@@ -44,9 +44,11 @@ function Index() {
 
   const itemList = data?.pages.flatMap((page) => page.list)
   return (
-    <TabLayout>
-      <ListModeSelector currentMode={mode} dateRange={dateRange} />
-
+    <TabLayout
+      tabNavigator={
+        <ListModeSelector currentMode={mode} dateRange={dateRange} />
+      }
+    >
       {mode === 'past' ? (
         <DateRangeSelector
           baseLinkTo={`/?mode=${mode}`}
