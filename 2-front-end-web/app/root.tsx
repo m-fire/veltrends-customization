@@ -18,9 +18,9 @@ import { SimpleUser } from '~/common/api/types'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import AppBottomSheetModal from '~/core/component/AppBottomSheetModal'
+import AppBottomSheetModal from '~/core/component/home/AppBottomSheetModal'
 import Dialog from '~/common/component/template/Dialog'
-import AppOverlay from '~/core/component/AppOverlay'
+import AppOverlay from '~/core/component/home/AppOverlay'
 
 const queryClient = new QueryClient({
   defaultOptions: {

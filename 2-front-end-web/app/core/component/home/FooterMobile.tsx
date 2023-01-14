@@ -5,9 +5,9 @@ import { Flex } from '~/common/style/css-builder'
 import { RoutePath } from '~/common/api/client'
 import { Media } from '~/common/style/media-query'
 import { PseudoThemeType } from '~/core/style/decorate-styles'
-import MenuItemNavLink, {
-  MenuItemLinkProps,
-} from '~/core/component/home/MenuItemNavLink'
+import FooterMenuItem, {
+  FooterMenuItemProps,
+} from '~/core/component/home/FooterMenuItem'
 import {
   Bookmarks,
   Fire,
@@ -22,7 +22,7 @@ type FooterProps = {}
 export const initialItemConfigs: {
   name: string
   to: RoutePath
-  icon: MenuItemLinkProps['icon']
+  icon: FooterMenuItemProps['icon']
   decorate?: PseudoThemeType
 }[] = [
   { name: 'home', to: '/', icon: <Fire /> },
@@ -36,7 +36,7 @@ function FooterMobile({}: FooterProps) {
   return (
     <Block>
       {initialItemConfigs.map((c) => (
-        <MenuItemNavLink
+        <FooterMenuItem
           key={c.name}
           to={c.to}
           icon={c.icon}

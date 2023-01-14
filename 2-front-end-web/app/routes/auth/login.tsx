@@ -5,7 +5,7 @@ import { ThrownResponse, useCatch } from '@remix-run/react'
 import { isString } from '~/common/util/strings'
 import { Authenticator } from '~/core/api/auth'
 import AppError from '~/common/error/AppError'
-import BasicLayout from '~/core/component/BasicLayout'
+import BasicLayout from '~/core/component/home/BasicLayout'
 import { useAuthRedirect } from '~/common/hook/useAuthRedirect'
 
 type LoginProps = {

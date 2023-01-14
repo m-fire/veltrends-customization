@@ -1,5 +1,5 @@
 import React from 'react'
-import TabLayout from '~/core/component/TabLayout'
+import TabLayout from '~/core/component/home/TabLayout'
 
 type SettingProps = {}
 

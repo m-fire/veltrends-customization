@@ -4,7 +4,7 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { stringify } from 'qs'
 import styled, { keyframes } from 'styled-components'
-import TabLayout from '~/core/component/TabLayout'
+import TabLayout from '~/core/component/home/TabLayout'
 import HeaderMobile from '~/core/component/home/HeaderMobile'
 import SearchInput, {
   SearchInputProps,

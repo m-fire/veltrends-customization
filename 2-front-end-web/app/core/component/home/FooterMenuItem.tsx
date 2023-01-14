@@ -6,18 +6,18 @@ import IconNavLink, {
 } from '~/common/component/atom/IconNavLink'
 import { decorateStyles, PseudoThemeType } from '~/core/style/decorate-styles'
 
-export type MenuItemLinkProps = {
+export type FooterMenuItemProps = {
   to: RoutePath
   icon: IconNavLinkProps['icon']
   $decorateType?: PseudoThemeType
 }
 
-function MenuItemNavLink({
+function FooterMenuItem({
   to,
   icon,
   $decorateType,
   ...rest
-}: MenuItemLinkProps) {
+}: FooterMenuItemProps) {
   return (
     <StyledIconNavLink
       to={to}
@@ -30,10 +30,10 @@ function MenuItemNavLink({
     />
   )
 }
-export default MenuItemNavLink
+export default FooterMenuItem
 
 // Inner Components
 
-const StyledIconNavLink = styled(IconNavLink)<MenuItemLinkProps>`
+const StyledIconNavLink = styled(IconNavLink)<FooterMenuItemProps>`
   ${({ $decorateType }) => $decorateType && decorateStyles[$decorateType]}
 `

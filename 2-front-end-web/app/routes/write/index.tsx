@@ -1,5 +1,5 @@
 import { useNavigate } from '@remix-run/react'
-import BasicLayout from '~/core/component/BasicLayout'
+import BasicLayout from '~/core/component/home/BasicLayout'
 import WriteForm from '~/core/component/write/WriteForm'
 import { useWriteContext } from '~/core/context/WriteContext'
 import LabelInput from '~/core/component/LabelInput'
