@@ -30,22 +30,18 @@ export default WriteForm
 // Inner Components
 
 const StyledForm = styled.form`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.item().flex(1).create()};
+  ${Flex.container().direction('column').create()};
   padding: 16px 20px 24px;
 
   h3 {
-    ${Font.style()
-      .size('18px')
-      .color(globalColors.grey5)
-      .lineHeight(1.5)
-      .create()};
+    ${Font.style().size(18).color(globalColors.grey5).lineHeight(1.5).create()};
     margin-top: 0;
     margin-bottom: 16px;
   }
 `
 
 const Content = styled.section`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.item().flex(1).create()};
+  ${Flex.container().direction('column').create()};
 `

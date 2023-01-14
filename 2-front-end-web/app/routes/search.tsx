@@ -145,8 +145,8 @@ const StyledHeader = styled(HeaderMobile)`
 `
 
 const NotSearchedBlock = styled.div`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style()
+  ${Flex.item().flex(1).create()};
+  ${Flex.container()
     .direction('column')
     .alignItems('center')
     .justifyContent('center')

@@ -7,7 +7,7 @@ import { Filters, Flex } from '~/common/style/css-builder'
 import { Media } from '~/common/style/media-query'
 import MobileBackButton from '~/core/component/home/MobileBackButton'
 
-type AppBasicLayoutProps = {
+type BasicLayoutProps = {
   title?: ReactNode
   onGoBack?: () => void
   headerRight?: ReactNode
@@ -21,13 +21,13 @@ type AppBasicLayoutProps = {
  * Header might contain back button.
  * Header might contain title.
  */
-function LayoutBase({
+function BasicLayout({
   title,
   onGoBack,
   headerRight,
   className,
   children,
-}: AppBasicLayoutProps) {
+}: BasicLayoutProps) {
   const goBack = useGoBack()
 
   return (
@@ -45,20 +45,19 @@ function LayoutBase({
     </LayoutFullHeight>
   )
 }
-export default LayoutBase
+export default BasicLayout
 
 // Inner Components
 const StyledHeader = styled(HeaderMobile)`
   position: absolute;
   left: 0;
   right: 0;
-  z-index: 5;
   ${Filters.backdrop().blur(8).create()};
 `
 
 const Content = styled.div`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.item().flex(1).create()};
+  ${Flex.container().direction('column').create()};
   padding-top: 56px;
   overflow: scroll;
   padding-left: 30px;

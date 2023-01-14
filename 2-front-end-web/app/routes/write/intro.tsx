@@ -3,7 +3,7 @@ import { useFetcher, useNavigate } from '@remix-run/react'
 import { ActionFunction, json, redirect } from '@remix-run/node'
 import styled from 'styled-components'
 import LabelInput from '~/core/component/LabelInput'
-import LayoutBase from '~/core/component/LayoutBase'
+import BasicLayout from '~/core/component/BasicLayout'
 import WriteForm from '~/core/component/write/WriteForm'
 import LabelTextArea from '~/common/component/element/LabelTextArea'
 import { Authenticator } from '~/core/api/auth'
@@ -36,7 +36,7 @@ function Intro({}: IntroProps) {
   }
 
   return (
-    <LayoutBase title="뉴스 소개" hasBackButton>
+    <BasicLayout title="뉴스 소개" hasBackButton>
       <WriteForm
         description="공유할 뉴스를 소개하세요."
         buttonText="등록하기"
@@ -65,7 +65,7 @@ function Intro({}: IntroProps) {
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteForm>
-    </LayoutBase>
+    </BasicLayout>
   )
 }
 export default Intro
@@ -109,16 +109,16 @@ export function CatchBoundary() {
 // Inner Components
 
 const Group = styled.div`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.item().flex(1).create()};
+  ${Flex.container().direction('column').create()};
   gap: 16px;
   padding-bottom: 16px;
 `
 
 const StyledLabelTextArea = styled(LabelTextArea)`
-  ${Flex.Item.presets.flex1};
+  ${Flex.item().flex(1).create()};
   textarea {
-    ${Flex.Item.presets.flex1};
+    ${Flex.item().flex(1).create()};
     resize: none;
     font-family: inherit;
   }
@@ -126,7 +126,7 @@ const StyledLabelTextArea = styled(LabelTextArea)`
 
 const Message = styled.div`
   ${Font.style()
-    .size('14px')
+    .size(14)
     .color(appColors.secondary1)
     .textAlign('center')
     .create()};

@@ -166,9 +166,9 @@ export default CommentElement
 // Inner Components
 
 const Block = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   ${Font.style()
-    .size('14px')
+    .size(14)
     .weight(600)
     .color(globalColors.grey2)
     .letterSpacing('-0.5px')
@@ -178,7 +178,7 @@ const Block = styled.div`
 // Header
 
 const CommentHead = styled.div`
-  ${Flex.Container.style()
+  ${Flex.container()
     .alignItems('center')
     .justifyContent('space-between')
     .create()};
@@ -186,10 +186,7 @@ const CommentHead = styled.div`
 `
 
 const LeftGroup = styled.div`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('flex-end')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('flex-end').create()};
   gap: 4px;
 `
 
@@ -198,14 +195,11 @@ const Username = styled.div`
 `
 
 const Time = styled.div`
-  ${Font.style().size('12px').weight(400).color(globalColors.grey2).create()};
+  ${Font.style().size(12).weight(400).color(globalColors.grey2).create()};
 `
 
 const MoreButton = styled.button`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('center')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('center').create()};
   width: 24px;
   height: 24px;
   color: ${globalColors.grey4};
@@ -225,7 +219,7 @@ const Mention = styled.span`
 
 const CommentText = styled.p`
   ${Font.style()
-    .size('14px')
+    .size(14)
     .color(globalColors.grey6)
     .lineHeight(1.6)
     .whiteSpace('pre-wrap')
@@ -243,9 +237,9 @@ const DeletedComment = styled(CommentText)`
 // Footer
 
 const CommentFooter = styled.div`
-  ${Flex.Container.style(true).create()};
+  ${Flex.container(true).create()};
   ${Font.style()
-    .size('12px')
+    .size(12)
     .weight(600)
     .color(globalColors.grey2)
     .lineHeight(1)
@@ -254,7 +248,7 @@ const CommentFooter = styled.div`
 `
 
 const LikeBlock = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   ${Font.style().weight(700).color(globalColors.grey4).create()};
   gap: 4px;
   & svg {
@@ -267,7 +261,7 @@ const LikeCount = styled.span`
 `
 
 const ReplyBlock = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   gap: 2px;
   & svg {
     color: ${globalColors.grey2};

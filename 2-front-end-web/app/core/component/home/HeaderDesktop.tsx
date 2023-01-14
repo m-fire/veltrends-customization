@@ -46,19 +46,15 @@ export default HeaderDesktop
 
 // Inner components
 
-const Block = styled.div`
+const Block = styled.header`
   display: none;
   ${Media.minWidth.desktop} {
-    ${Flex.Container.style().alignItems('center').create()};
-    padding-left: 20px;
-    padding-right: 20px;
+    ${Flex.container().alignItems('center').create()};
+    padding-left: 30px;
+    padding-right: 30px;
   }
-  ${Media.minWidth.wide} {
-    max-width: ${screenBreakpointMap.wide}px;
-  }
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  max-width: ${screenBreakpointMap.desktop}px;
+  width: 100%;
   height: 64px; // 56px;
   border-bottom: 1px solid ${globalColors.grey1};
 `
@@ -81,8 +77,8 @@ const StyledLogoVeltrend = styled(LogoVeltrend)`
 `
 
 const Content = styled.div`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style()
+  ${Flex.item().flex(1).create()};
+  ${Flex.container()
     .alignItems('center')
     .justifyContent('space-between')
     .create()};
@@ -90,6 +86,6 @@ const Content = styled.div`
 `
 
 const AddOn = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   gap: 8px;
 `

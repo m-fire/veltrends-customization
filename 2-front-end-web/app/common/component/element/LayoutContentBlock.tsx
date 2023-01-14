@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import styled from 'styled-components'
-import { Media } from '~/common/style/media-query'
+import { Media, screenBreakpointMap } from '~/common/style/media-query'
 import { Flex } from '~/common/style/css-builder'
 
 type LayoutContentProps = {
@@ -16,16 +16,11 @@ export default LayoutContentBlock
 // Inner Components
 
 const Container = styled.div`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style().direction('column').create()};
-  padding-top: 56px;
+  ${Flex.item().flex(1).create()};
+  ${Flex.container().direction('column').create()};
   overflow: scroll;
-  ${Media.minWidth.tablet} {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
   ${Media.minWidth.wide} {
-    width: 1280px; // wide screen minWidth
+    width: ${screenBreakpointMap.wide}px;
     margin-left: auto;
     margin-right: auto;
   }

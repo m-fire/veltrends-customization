@@ -5,9 +5,9 @@ import { Flex } from '~/common/style/css-builder'
 import { RoutePath } from '~/common/api/client'
 import { Media } from '~/common/style/media-query'
 import { PseudoThemeType } from '~/core/style/decorate-styles'
-import MenuItemLink, {
+import MenuItemNavLink, {
   MenuItemLinkProps,
-} from '~/core/component/home/MenuItemLink'
+} from '~/core/component/home/MenuItemNavLink'
 import {
   Bookmarks,
   Fire,
@@ -15,6 +15,7 @@ import {
   Search,
   Setting,
 } from '~/core/component/generate/svg'
+import { appColors } from '~/core/style/app-colors'
 
 type FooterProps = {}
 
@@ -35,7 +36,7 @@ function FooterMobile({}: FooterProps) {
   return (
     <Block>
       {initialItemConfigs.map((c) => (
-        <MenuItemLink
+        <MenuItemNavLink
           key={c.name}
           to={c.to}
           icon={c.icon}
@@ -50,7 +51,7 @@ export default FooterMobile
 // Inner Components
 
 const Block = styled.footer`
-  ${Flex.Container.style().create()};
+  ${Flex.container().create()};
   height: 56px;
   border-top: 1px solid ${globalColors.grey1};
   ${Media.minWidth.desktop} {

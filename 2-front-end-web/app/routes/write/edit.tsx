@@ -2,7 +2,7 @@ import React, { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
 import { appColors } from '~/core/style/app-colors'
-import LayoutBase from '~/core/component/LayoutBase'
+import BasicLayout from '~/core/component/BasicLayout'
 import WriteForm from '~/core/component/write/WriteForm'
 import LabelInput from '~/core/component/LabelInput'
 import LabelTextArea from '~/common/component/element/LabelTextArea'
@@ -43,7 +43,7 @@ function Edit() {
   const errorMessage = null
 
   return (
-    <LayoutBase title="수정" hasBackButton>
+    <BasicLayout title="수정" hasBackButton>
       <WriteForm buttonText="수정하기" onSubmit={onSubmit}>
         <Group>
           <LinkLabelTextArea
@@ -70,7 +70,7 @@ function Edit() {
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteForm>
-    </LayoutBase>
+    </BasicLayout>
   )
 }
 export default Edit
@@ -90,23 +90,23 @@ export const loader: LoaderFunction = async ({ request }) => {
 // Inner Components
 
 const Group = styled.div`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.item().flex(1).create()};
+  ${Flex.container().direction('column').create()};
   gap: 16px;
   padding-bottom: 16px;
 `
 
 const LinkLabelTextArea = styled(LabelTextArea)`
   & textarea {
-    ${Font.style().size('14px').create()};
+    ${Font.style().size(14).create()};
     padding: 8px;
   }
 `
 
 const BodyLabelTextArea = styled(LabelTextArea)`
-  ${Flex.Item.presets.flex1};
+  ${Flex.item().flex(1).create()};
   textarea {
-    ${Flex.Item.presets.flex1};
+    ${Flex.item().flex(1).create()};
     resize: none;
     font-family: inherit;
   }
@@ -114,7 +114,7 @@ const BodyLabelTextArea = styled(LabelTextArea)`
 
 const Message = styled.div`
   ${Font.style()
-    .size('14px')
+    .size(14)
     .color(appColors.secondary1)
     .textAlign('center')
     .create()};

@@ -22,7 +22,7 @@ export default SearchResultCardList
 // Inner Components
 
 const ResultContainer = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   padding: 24px 16px;
   gap: 24px;
 `

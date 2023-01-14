@@ -23,7 +23,7 @@ export default SubcommentList
 // Inner Components
 
 const List = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   padding: 24px 0 0 48px;
   gap: 24px;
 `

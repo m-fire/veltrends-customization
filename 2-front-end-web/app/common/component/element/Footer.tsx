@@ -22,7 +22,7 @@ export default Footer
 // Inner Components
 
 const StyledFooter = styled.footer<FooterProps>`
-  ${Flex.Container.style().create()};
+  ${Flex.container().create()};
   height: ${({ height }) =>
     typeof height == 'string' ? height : `${height}px`};
   border-top: 1px solid ${globalColors.grey1};

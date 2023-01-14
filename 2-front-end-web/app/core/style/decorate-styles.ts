@@ -12,7 +12,6 @@ export const decorateStyles = {
       height: 40px;
       border-radius: 999px;
       border: 5px solid ${globalColors.grey1};
-      z-index: -1;
     }
     &.active {
       &::before {

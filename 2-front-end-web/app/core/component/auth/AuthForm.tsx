@@ -97,14 +97,14 @@ function AuthForm({ mode, error }: AuthFormProps) {
             <ActionErrorMessage>잘못된 계정정보 입니다.</ActionErrorMessage>
           ) : null}
 
-          <StyledButton
+          <StyledVariantLinkButton
             type="submit"
-            $layoutMode="fullWidth"
+            layout="fullWidth"
             disabled={isLoading}
           >
             <span>{submitBtnByMode.icon}</span>
             {submitBtnByMode.text}
-          </StyledButton>
+          </StyledVariantLinkButton>
 
           <QuestionLink
             question={actionByMode.question}
@@ -159,8 +159,8 @@ const formDescriptions = {
 // Inner Components
 
 const StyledFormRef = styled(Form)`
-  ${Flex.Item.presets.flex1};
-  ${Flex.Container.style()
+  ${Flex.item().flex(1).create()};
+  ${Flex.container()
     .direction('column')
     .justifyContent('space-between')
     .create()};
@@ -168,18 +168,18 @@ const StyledFormRef = styled(Form)`
 `
 
 const InputGroup = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   gap: 16px; // 사용주의! 구형브라우저 적용불가
 `
 
 // Footer 대용
 const ActionBox = styled.div`
-  ${Flex.Container.style().direction('column').alignItems('center').create()};
+  ${Flex.container().direction('column').alignItems('center').create()};
   width: 100%;
   gap: 24px;
 `
 
-const StyledButton = styled(VariantLinkButton)`
+const StyledVariantLinkButton = styled(VariantLinkButton)`
   svg {
     width: 20px;
     height: 20px;
@@ -188,7 +188,7 @@ const StyledButton = styled(VariantLinkButton)`
 
 const ActionErrorMessage = styled.div`
   ${Font.style()
-    .size('14px')
+    .size(14)
     .color(appColors.secondary1)
     .textAlign('center')
     .create()};

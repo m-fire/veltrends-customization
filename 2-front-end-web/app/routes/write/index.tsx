@@ -1,5 +1,5 @@
 import { useNavigate } from '@remix-run/react'
-import LayoutBase from '~/core/component/LayoutBase'
+import BasicLayout from '~/core/component/BasicLayout'
 import WriteForm from '~/core/component/write/WriteForm'
 import { useWriteContext } from '~/core/context/WriteContext'
 import LabelInput from '~/core/component/LabelInput'
@@ -19,7 +19,7 @@ function WriteLink() {
   } = useWriteContext()
 
   return (
-    <LayoutBase title="링크 입력" hasBackButton>
+    <BasicLayout title="링크 입력" hasBackButton>
       <WriteForm
         description="공유하고 싶은 URL을 입력하세요."
         buttonText="다음"
@@ -44,7 +44,7 @@ function WriteLink() {
         />
       </WriteForm>
       {/* <Button onClick={() => navigate('/write/intro')}>다음</Button> */}
-    </LayoutBase>
+    </BasicLayout>
   )
 }
 

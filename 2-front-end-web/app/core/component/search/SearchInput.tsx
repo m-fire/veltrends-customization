@@ -27,7 +27,7 @@ export default SearchInput
 // Inner Components
 
 const Block = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   box-sizing: content-box; // 전역 border-box 설정해제
   height: 40px;
   border-radius: 4px;
@@ -38,11 +38,11 @@ const Block = styled.div`
   padding-right: 12px;
   input {
     // input tag 초기화
-    ${Flex.Item.presets.flex1};
+    ${Flex.item().flex(1).create()};
     background: none;
     border: none;
     outline: none;
-    ${Font.style().size('16px').create()};
+    ${Font.style().size(16).create()};
     margin-left: 8px;
     margin-right: 8px;
     &::placeholder {

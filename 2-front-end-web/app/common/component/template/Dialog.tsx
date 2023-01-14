@@ -1,4 +1,4 @@
-import React, { JSXElementConstructor } from 'react'
+import React, { JSXElementConstructor, useMemo } from 'react'
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components'
 import Modal from '~/common/component/atom/Modal'
 import Overlay, { OverlayProps } from '~/common/component/atom/Overlay'
@@ -22,7 +22,7 @@ export type DialogProps = {
 }
 
 function Dialog({
-  overlay = Overlay,
+  overlay,
   mode = 'OK',
   textMap: { title, description, confirmText = '확인', cancelText = '닫기' },
   customStyles,
@@ -30,50 +30,58 @@ function Dialog({
   onCancel,
   visible,
 }: DialogProps) {
-  const styles: DialogProps['customStyles'] = {
-    //
-    modal: initialStyles.modal.concat(customStyles?.modal),
-    header: initialStyles.header.concat(customStyles?.header),
-    description: initialStyles.description.concat(customStyles?.description),
-    footer: initialStyles.footer.concat(customStyles?.footer),
-    buttons: initialStyles.buttons.concat(customStyles?.buttons),
-  }
+  //
+  const styles: DialogProps['customStyles'] = useMemo(
+    () => ({
+      modal: initialStyles.modal.concat(customStyles?.modal),
+      header: initialStyles.header.concat(customStyles?.header),
+      description: initialStyles.description.concat(customStyles?.description),
+      footer: initialStyles.footer.concat(customStyles?.footer),
+      buttons: initialStyles.buttons.concat(customStyles?.buttons),
+    }),
+    [],
+  )
 
   return (
-    <StyledModal overlay={overlay} visible={visible} styles={styles?.modal}>
-      <Header styles={styles?.header}>{title}</Header>
-      <Description styles={styles?.description}>{description}</Description>
-      <Footer styles={styles?.footer}>
-        {mode === 'OK' ? (
-          <>
+    <>
+      <StyledModal
+        overlay={overlay}
+        onClick={onCancel}
+        styles={styles?.modal}
+        visible={visible}
+      >
+        <Header styles={styles?.header}>{title}</Header>
+        <Description styles={styles?.description}>{description}</Description>
+        <Footer styles={styles?.footer}>
+          {mode === 'OK' ? (
             <VariantLinkButton
               variant="primary"
               onClick={onConfirm}
-              $customStyle={styles?.buttons}
+              customstyles={styles?.buttons}
             >
               {confirmText}
             </VariantLinkButton>
-          </>
-        ) : (
-          <>
-            <VariantLinkButton
-              variant="textonly"
-              onClick={onCancel}
-              $customStyle={styles?.buttons}
-            >
-              {cancelText}
-            </VariantLinkButton>
-            <VariantLinkButton
-              variant="primary"
-              onClick={onConfirm}
-              $customStyle={styles?.buttons}
-            >
-              {confirmText}
-            </VariantLinkButton>
-          </>
-        )}
-      </Footer>
-    </StyledModal>
+          ) : (
+            <>
+              <VariantLinkButton
+                variant="textonly"
+                onClick={onCancel}
+                customstyles={styles?.buttons}
+              >
+                {cancelText}
+              </VariantLinkButton>
+              <VariantLinkButton
+                variant="primary"
+                onClick={onConfirm}
+                customstyles={styles?.buttons}
+              >
+                {confirmText}
+              </VariantLinkButton>
+            </>
+          )}
+        </Footer>
+      </StyledModal>
+    </>
   )
 }
 export default Dialog
@@ -85,10 +93,11 @@ const initialStyles = {
     width: 375px;
     max-width: calc(100vw - 32px);
     padding: 16px 20px;
+    z-index: 2;
   `,
   header: css`
     ${Font.style()
-      .size('20px')
+      .size(20)
       .weight(800)
       .color(globalColors.grey4)
       .lineHeight(1.5)
@@ -98,7 +107,7 @@ const initialStyles = {
   `,
   description: css`
     ${Font.style()
-      .size('14px')
+      .size(14)
       .weight(600)
       .color(globalColors.grey2)
       .lineHeight(1.5)
@@ -107,11 +116,11 @@ const initialStyles = {
     margin-top: 0;
   `,
   footer: css`
-    ${Flex.Container.style().justifyContent('flex-end').create()};
+    ${Flex.container().justifyContent('flex-end').create()};
     margin-top: 16px;
   `,
   buttons: css`
-    ${Font.style().size('14px').create()};
+    ${Font.style().size(14).create()};
     width: 70px;
     height: 35px;
     border-radius: 999px;

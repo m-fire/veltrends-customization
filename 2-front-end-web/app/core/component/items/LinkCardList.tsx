@@ -23,12 +23,12 @@ export default LinkCardList
 // Inner Components
 
 const List = styled.ul`
-  ${Grid.Container.style().templateColumns('repeat(1, 1fr)').create()};
+  ${Grid.container().templateColumns('repeat(1, 1fr)').create()};
   ${Media.minWidth.tablet} {
-    ${Grid.Container.style().templateColumns('repeat(2, 1fr)').create()};
+    ${Grid.container().templateColumns('repeat(2, 1fr)').create()};
   }
   ${Media.minWidth.wide} {
-    ${Grid.Container.style().templateColumns('repeat(3, 1fr)').create()};
+    ${Grid.container().templateColumns('repeat(3, 1fr)').create()};
   }
   row-gap: 56px;
   column-gap: 30px;

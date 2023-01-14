@@ -24,8 +24,8 @@ function CommentInput({}: CommentInputParams) {
 }
 
 const PseudoInput = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
-  ${Font.style().size('14px').color(globalColors.grey1).create()};
+  ${Flex.container().alignItems('center').create()};
+  ${Font.style().size(14).color(globalColors.grey1).create()};
   width: 100%;
   height: 40px;
   border-radius: 4px;

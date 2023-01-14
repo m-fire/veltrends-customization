@@ -177,19 +177,18 @@ export default CommentInputOverlay
 // Inner components
 
 const Footer = styled(motion.div)`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   position: fixed;
   bottom: 0;
   width: 100%;
   height: 48px;
   background: white;
   padding: 2px 2px;
-  z-index: 15;
 `
 
 const StyledInput = styled.input`
-  ${Flex.Item.presets.flex1};
-  ${Font.style().size('16px').weight(400).create()};
+  ${Flex.item().flex(1).create()};
+  ${Font.style().size(16).weight(400).create()};
   height: 100%;
   border: none;
   padding: 0 20px;
@@ -199,10 +198,7 @@ const StyledInput = styled.input`
 `
 
 const TransparentButton = styled.button`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('center')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('center').create()};
   height: 100%;
   padding: 0 8px;
   position: relative;

@@ -19,10 +19,7 @@ function IconButton({ icon, onClick, className, ...rest }: IconButtonProps) {
 export default IconButton
 
 const StyledButton = styled.button`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('center')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('center').create()};
   & svg,
   & image {
     width: 20px;

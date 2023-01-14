@@ -32,12 +32,12 @@ export default QuestionLink
 // Inner Components
 
 const Block = styled.div<Pick<QuestionLinkProps, 'disabled'>>`
-  ${Font.style().size('12px').color(globalColors.grey3).create()};
+  ${Font.style().size(12).color(globalColors.grey3).create()};
   span {
     padding-right: 8px;
   }
   a {
-    ${Font.style().size('14px').weight(600).color(globalColors.grey5).create()};
+    ${Font.style().size(14).weight(600).color(globalColors.grey5).create()};
     transition: color 0.25s ease-in-out;
 
     ${({ disabled }) =>

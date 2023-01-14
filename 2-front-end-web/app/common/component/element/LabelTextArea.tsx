@@ -57,12 +57,12 @@ export default LabelTextArea
 // Inner Components
 
 const Block = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
 `
 
 const Label = styled.label<{ focused?: boolean }>`
   ${Font.style()
-    .size('16px')
+    .size(16)
     .weight(600)
     .color(appColors.secondary1)
     .lineHeight(1.5)
@@ -77,11 +77,7 @@ const Label = styled.label<{ focused?: boolean }>`
 `
 
 const StyledTextArea = styled.textarea`
-  ${Font.style()
-    .size('16px')
-    .color(globalColors.grey5)
-    .lineHeight(1.5)
-    .create()};
+  ${Font.style().size(16).color(globalColors.grey5).lineHeight(1.5).create()};
   border: 2px solid ${globalColors.grey2};
   border-radius: 4px;
   outline: none;

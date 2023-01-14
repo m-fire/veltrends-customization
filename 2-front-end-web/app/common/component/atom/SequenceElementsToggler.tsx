@@ -133,7 +133,7 @@ export default SequenceElementsToggler
 // Inner Components
 
 const Block = styled.div<{ size: Size }>`
-  ${Flex.Container.style(true)
+  ${Flex.container(true)
     .alignItems('center')
     .justifyContent('flex-start')
     .create()};

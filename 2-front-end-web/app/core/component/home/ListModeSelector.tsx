@@ -17,6 +17,7 @@ import { ItemListMode } from '~/core/api/types'
 import { Calendar, Clock, Fire } from '~/core/component/generate/svg'
 import { DateStringRange } from '~/common/util/converters'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
+import { Media } from '~/common/style/media-query'
 
 type ModeSelectorProps = {
   currentMode: ItemListMode
@@ -51,10 +52,21 @@ function ListModeSelector({ currentMode, dateRange }: ModeSelectorProps) {
     },
   ])
 
-  const currentIndex = useMemoCurrentItemIndex()
+  const currentIndex = useMemo(
+    () => itemStates.findIndex((s) => s.mode === currentMode),
+    [itemStates, currentMode],
+  )
   const { indicatorLeft, indicatorWidth } = useIndicatorState(currentIndex)
 
-  useEffectToUpdatePastSelectorLinkDate(currentIndex)
+  useEffect(() => {
+    if (currentMode == 'past') {
+      setItemStates((prev) =>
+        produce(prev, (next) => {
+          next[currentIndex].linkTo = linkByMode(currentMode, dateRange)
+        }),
+      )
+    }
+  }, [dateRange])
 
   const onUpdateItemStates: ModeItemProps['onUpdateItemState'] = useCallback(
     (itemIndex, itemState, itemEl) => {
@@ -79,7 +91,7 @@ function ListModeSelector({ currentMode, dateRange }: ModeSelectorProps) {
     <Block>
       <SelectorList>
         {itemStates.map((s, index) => (
-          <ModeItem
+          <ListModeItem
             key={s.name}
             index={index}
             currentMode={currentMode}
@@ -102,25 +114,6 @@ function ListModeSelector({ currentMode, dateRange }: ModeSelectorProps) {
   )
 
   /* refactor */
-
-  function useEffectToUpdatePastSelectorLinkDate(index: number) {
-    useEffect(() => {
-      if (currentMode == 'past') {
-        setItemStates((prev) =>
-          produce(prev, (next) => {
-            next[index].linkTo = linkByMode(currentMode, dateRange)
-          }),
-        )
-      }
-    }, [dateRange])
-  }
-
-  function useMemoCurrentItemIndex() {
-    return useMemo(
-      () => itemStates.findIndex((s) => s.mode === currentMode),
-      [itemStates, currentMode],
-    )
-  }
 
   function linkByMode(mode: ItemListMode, range?: DateStringRange) {
     const paramsMap = mode == 'past' ? { mode, ...range } : { mode }
@@ -145,22 +138,14 @@ export default ListModeSelector
 // Inner Components
 
 const Block = styled.div`
-  position: sticky;
-  ${Flex.Container.style().justifyContent('center').create()};
-  top: 0;
-
-  padding-top: 8px;
-  padding-bottom: 24px;
-  margin-bottom: 8px;
-  margin-left: -20px;
-  margin-right: -20px;
-  z-index: 1;
-  ${Filters.backdrop().brightness(120).blur(8).create()};
+  ${Media.minWidth.desktop} {
+    display: none;
+  }
 `
 
 const SelectorList = styled.nav`
-  ${Flex.Container.style().create()};
-  position: relative;
+  ${Flex.container().create()};
+  //position: relative;
   gap: 24px;
   ${Filters.filter()
     .dropShadow(0, 0, 0.5, 'white')
@@ -170,12 +155,12 @@ const SelectorList = styled.nav`
 `
 
 const Indicator = styled(motion.div)`
-  height: 3px;
-  background: ${appColors.primary1};
   position: absolute;
+  height: 3px;
+  border-radius: 99px;
+  background: ${appColors.primary1};
   left: 0;
   bottom: -8px;
-  border-radius: 99px;
   ${Filters.filter()
     .dropShadow(0, 0, 0.5, 'white')
     .dropShadow(0, 0, 0.5, 'white')
@@ -204,7 +189,7 @@ type ModeItemState = {
   linkTo: string
 }
 
-export function ModeItem({
+export function ListModeItem({
   index,
   currentMode,
   state,
@@ -213,43 +198,39 @@ export function ModeItem({
   const { mode: itemMode, linkTo, name, icon } = state
   /* Link 이동 후 re-render 될때 Item state 업데이트 로직 실행 */
 
+  // useLayoutEffect(() => {
   useEffect(() => {
-    // useLayoutEffect(() => {
     const linkEl = modeLinkRef.current
     if (!linkEl) return
+
     onUpdateItemState(index, state, linkEl)
   }, [index, onUpdateItemState])
 
   const modeLinkRef = useRef<HTMLAnchorElement>(null)
 
   return (
-    <StyledLink
-      to={linkTo}
-      ref={modeLinkRef}
-      active={String(itemMode === currentMode) as 'true' | 'false'}
-    >
+    <StyledLink to={linkTo} ref={modeLinkRef} active={currentMode === itemMode}>
       {icon} {name}
     </StyledLink>
   )
 }
 
-const StyledLink = styled(Link)<{ active?: 'true' | 'false' }>`
-  ${Flex.Container.style().alignItems('flex-end').create()};
+const StyledLink = styled(Link)<{ active: boolean }>`
+  ${Flex.container().alignItems('flex-end').create()};
   ${Font.style()
-    .size('14px')
+    .size(14)
     .weight(700)
     .color(globalColors.grey4)
     // .lineHeight(1.5)
+    .textDecoration('none')
     .create()};
-  ${({ active }) =>
-    active === 'true'
-      ? css`
-          ${Font.presets.noneTextDecoration};
-          color: ${appColors.primary1};
-          pointer-events: none;
-        `
-      : css``}
   cursor: pointer;
+  ${({ active }) =>
+    active &&
+    css`
+      color: ${appColors.primary1};
+      pointer-events: none;
+    `}
   svg {
     width: 18px;
     height: 18px;

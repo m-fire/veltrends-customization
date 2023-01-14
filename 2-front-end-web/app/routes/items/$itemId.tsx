@@ -3,7 +3,7 @@ import { json, LoaderFunction } from '@remix-run/node'
 import { deleteItem, getItem } from '~/core/api/items'
 import { getCommentList } from '~/core/api/items$comments'
 import { Item, Comment } from '~/core/api/types'
-import LayoutBase from '~/core/component/LayoutBase'
+import BasicLayout from '~/core/component/BasicLayout'
 import ItemViewer from '~/core/component/items/ItemViewer'
 import CommentList from '~/core/component/items/CommentList'
 import { useCommentListQuery } from '~/core/hook/query/useCommentsQuery'
@@ -67,7 +67,7 @@ function ItemById({}: ItemByIdProps) {
   //Todo: Header tool menu 구성
   return (
     <>
-      <LayoutBase
+      <BasicLayout
         title={null}
         headerRight={
           isMyItem ? (
@@ -80,7 +80,7 @@ function ItemById({}: ItemByIdProps) {
           <ItemViewer item={item} />
           <CommentList commentList={commentList!} />
         </Content>
-      </LayoutBase>
+      </BasicLayout>
       <CommentInputOverlay />
     </>
   )

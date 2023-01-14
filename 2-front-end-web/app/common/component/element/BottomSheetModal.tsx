@@ -58,11 +58,10 @@ const Sheet = styled(motion.div)`
   width: 100%;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  z-index: 15;
 `
 
 const Items = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
 `
 
 const Item = styled.div`

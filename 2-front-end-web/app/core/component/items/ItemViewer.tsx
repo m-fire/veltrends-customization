@@ -154,7 +154,7 @@ export default ItemViewer
 // Inner Components
 
 const Block = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   & > a {
     display: block;
   }
@@ -179,9 +179,9 @@ const Content = styled.div`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   ${Font.style()
-    .size('12px')
+    .size(12)
     .weight(400)
     .color(globalColors.grey2)
     .lineHeight(1.33)
@@ -196,7 +196,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
     border-radius: 2px;
   }
   strong {
-    ${Font.style().size('12px').weight(600).color(globalColors.grey3).create()};
+    ${Font.style().size(12).weight(600).color(globalColors.grey3).create()};
   }
   ${Media.minWidth.tablet} {
     font-size: 16px;
@@ -229,7 +229,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
 
 const Title = styled.h2`
   ${Font.style()
-    .size('20px')
+    .size(20)
     .weight(800)
     .color(globalColors.grey5)
     .letterSpacing('-0.5px')
@@ -248,17 +248,14 @@ const Title = styled.h2`
 `
 
 const ActionButtons = styled.div`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('flex-end')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('flex-end').create()};
   gap: 8px;
   margin-bottom: 48px;
 `
 
 const Body = styled.p`
   ${Font.style()
-    .size('16px')
+    .size(16)
     .weight(500)
     .color(globalColors.grey4)
     .lineHeight(1.5)
@@ -280,15 +277,15 @@ const Body = styled.p`
 `
 
 const BottomActionBlock = styled.div`
-  ${Flex.Container.style().direction('column').alignItems('center').create()};
+  ${Flex.container().direction('column').alignItems('center').create()};
   gap: 4px;
   margin-bottom: 40px;
 `
 
 const UserInfo = styled.div`
-  ${Flex.Container.style().justifyContent('end').create()};
+  ${Flex.container().justifyContent('end').create()};
   ${Font.style()
-    .size('13px')
+    .size(13)
     .weight(400)
     .color(globalColors.grey4)
     .lineHeight(1.33)
@@ -300,9 +297,9 @@ const UserInfo = styled.div`
 `
 
 const LikesCount = styled(motion.div)`
-  ${Flex.Container.style().create()};
+  ${Flex.container().create()};
   ${Font.style()
-    .size('12px')
+    .size(12)
     .weight(600)
     .color(globalColors.grey3)
     .lineHeight(1.5)
@@ -316,5 +313,5 @@ const LikesCount = styled(motion.div)`
 `
 
 const Footer = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
 `

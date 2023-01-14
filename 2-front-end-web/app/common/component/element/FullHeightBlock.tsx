@@ -25,6 +25,6 @@ const GlobalFullHeight = createGlobalStyle`
 // Inner components
 
 const Page = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   height: 100%;
 `

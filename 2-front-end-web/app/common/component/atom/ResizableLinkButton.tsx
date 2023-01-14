@@ -7,16 +7,16 @@ import { buttonSizeStyles, Size } from '~/common/style/styles'
 export type ResizableLinkButtonProps = {
   to?: LinkProps['to']
   size?: Size
-  $layoutMode?: 'inline' | 'fullWidth'
-  $customStyle?: FlattenSimpleInterpolation
+  layout?: 'inline' | 'fullWidth'
+  customstyles?: FlattenSimpleInterpolation
   children: ReactNode
 } & (Omit<LinkProps, 'to'> | ButtonHTMLAttributes<HTMLButtonElement>)
 
 function ResizableLinkButton({
   to,
   size,
-  $layoutMode,
-  $customStyle,
+  layout,
+  customstyles,
   children,
   ...rest
 }: ResizableLinkButtonProps) {
@@ -25,8 +25,8 @@ function ResizableLinkButton({
     <StyledButton
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
       size={size}
-      $layoutMode={$layoutMode}
-      $customStyle={$customStyle}
+      layout={layout}
+      customstyles={customstyles}
     >
       {children}
     </StyledButton>
@@ -35,8 +35,8 @@ function ResizableLinkButton({
       {...(rest as Omit<LinkProps, 'to'>)}
       to={to as string}
       size={size}
-      $layoutMode={$layoutMode}
-      $customStyle={$customStyle}
+      layout={layout}
+      customstyles={customstyles}
     >
       {children}
     </StyledLink>
@@ -47,12 +47,9 @@ export default ResizableLinkButton
 // Inner Components
 
 const sharedButtonStyles = css<Omit<ResizableLinkButtonProps, 'to'>>`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('center')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('center').create()};
   ${Font.style()
-    .size('16px')
+    .size(16)
     .weight(600)
     .textDecoration('none')
     .whiteSpace('nowrap')
@@ -66,13 +63,13 @@ const sharedButtonStyles = css<Omit<ResizableLinkButtonProps, 'to'>>`
   &:disabled {
     ${Filters.filter().brightness(70).create()};
   }
-  ${({ $layoutMode: mode }) =>
+  ${({ layout: mode }) =>
     mode === 'fullWidth' &&
     css`
       width: 100%;
     `}
   ${({ size }) => size && buttonSizeStyles[size]};
-  ${({ $customStyle }) => $customStyle && $customStyle};
+  ${({ customstyles }) => customstyles};
 `
 
 const StyledButton = styled.button`

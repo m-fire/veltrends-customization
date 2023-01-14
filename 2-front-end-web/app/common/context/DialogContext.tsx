@@ -35,12 +35,12 @@ export function DialogContextProvider({
     setVisible(false)
   }, [config])
 
-  const textMap = config?.textMap
   const open = useCallback((config: DialogConfig) => {
     setVisible(true)
     setConfig(config)
   }, [])
 
+  const textMap = config?.textMap
   return (
     <DialogContext.Provider value={{ open: open }}>
       {children}

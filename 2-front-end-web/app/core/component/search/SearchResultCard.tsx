@@ -38,7 +38,7 @@ export default SearchResultCard
 const Block = styled.div`
   h3 {
     ${Font.style()
-      .size('16px')
+      .size(16)
       .weight(600)
       .color(globalColors.grey4)
       .lineHeight(1.5)
@@ -56,11 +56,7 @@ const Block = styled.div`
   }
 
   p {
-    ${Font.style()
-      .size('14px')
-      .color(globalColors.grey3)
-      .lineHeight(1.5)
-      .create()};
+    ${Font.style().size(14).color(globalColors.grey3).lineHeight(1.5).create()};
     margin-top: 8px;
     margin-bottom: 8px;
     em {
@@ -70,12 +66,8 @@ const Block = styled.div`
 `
 
 const Publisher = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
-  ${Font.style()
-    .size('14px')
-    .color(globalColors.grey4)
-    .lineHeight(1.5)
-    .create()};
+  ${Flex.container().alignItems('center').create()};
+  ${Font.style().size(14).color(globalColors.grey4).lineHeight(1.5).create()};
   margin-bottom: 4px;
 
   img,

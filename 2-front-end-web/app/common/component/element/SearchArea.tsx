@@ -45,7 +45,7 @@ export default SearchArea
 const Block = styled.div``
 
 const SearchInputWrapper = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   background-color: ${globalColors.grey1};
   width: 180px;
   height: 36px;
@@ -55,7 +55,7 @@ const SearchInputWrapper = styled.div`
   padding-right: 14px;
   margin-right: 8px;
   & > svg {
-    ${Flex.Item.style().shrink(0).create()};
+    ${Flex.item().shrink(0).create()};
     width: 18px;
     height: 18px;
     color: ${appColors.primary1};
@@ -66,7 +66,7 @@ const SearchInputWrapper = styled.div`
       .create()};
   }
   input {
-    ${Flex.Item.presets.flex1};
+    ${Flex.item().flex(1).create()};
     ${Font.style().size(18).weight(700).color(globalColors.grey5).create()};
     background: none;
     border: none;

@@ -32,24 +32,22 @@ function DateRangeSelector({ baseLinkTo, dateRange }: DateRangeSelectorProps) {
   }, [dateRange])
 
   return (
-    <Block>
-      <WeekNavigator>
-        <StyledLink
-          to={rangeLink.prevTo}
-          direction="left"
-          disabled={prevDisabled}
-        >
-          {startDate} <ArrowLeft />
-        </StyledLink>
-        <StyledLink
-          to={rangeLink.nextTo}
-          direction="right"
-          disabled={nextDisabled}
-        >
-          <ArrowLeft /> {endDate}
-        </StyledLink>
-      </WeekNavigator>
-    </Block>
+    <WeekNavigator>
+      <StyledLink
+        to={rangeLink.prevTo}
+        direction="left"
+        disabled={prevDisabled}
+      >
+        {startDate} <ArrowLeft />
+      </StyledLink>
+      <StyledLink
+        to={rangeLink.nextTo}
+        direction="right"
+        disabled={nextDisabled}
+      >
+        <ArrowLeft /> {endDate}
+      </StyledLink>
+    </WeekNavigator>
   )
 
   /* refactor */
@@ -98,27 +96,20 @@ export default DateRangeSelector
 
 // Inner Components
 
-const Block = styled.div`
-  font-size: 16px;
-  margin-bottom: 16px;
-  color: ${globalColors.grey5};
-`
-
 const WeekNavigator = styled.div`
-  ${Flex.Container.style().justifyContent('center').create()};
-  margin-top: -12px;
-  margin-bottom: 12px;
+  ${Flex.container().justifyContent('center').create()};
+  font-size: 16px;
+  color: ${globalColors.grey5};
   gap: 32px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 `
 
 const StyledLink = styled(Link)<{
   direction: 'left' | 'right'
   disabled: boolean
 }>`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('center')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('center').create()};
   ${Font.style()
     .size('inherit')
     .color(appColors.primary1)

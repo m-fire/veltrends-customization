@@ -69,7 +69,7 @@ export default InteractiveLabelInput
 // Inner Components
 
 const Block = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   /* 부모컴포넌트에서 gap 속성값(16px) 설정 되었으므로 불필요함 */
   // 주의: 구형브라우저 적용불가
   //& + & {
@@ -81,7 +81,7 @@ const StyledLabel = styled.label<
   Pick<InteractiveLabelInputProps, 'activeColor'> & { focused?: boolean }
 >`
   ${Font.style()
-    .size('16px')
+    .size(16)
     .weight(600)
     .color(globalColors.grey4)
     .lineHeight(1.5)
@@ -108,7 +108,7 @@ const StyledInput = styled(Input)<
 
 const Message = styled.div<Pick<InteractiveLabelInputProps, 'errorColor'>>`
   ${({ errorColor }) => {
-    const font = Font.style().size('14px')
+    const font = Font.style().size(14)
     errorColor && font.color(errorColor)
     return font.create()
   }};

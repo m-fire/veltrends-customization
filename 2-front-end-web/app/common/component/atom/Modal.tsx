@@ -1,25 +1,24 @@
-import React, {
-  JSXElementConstructor,
-  ReactElement,
-  ReactFragment,
-  ReactNode,
-  ReactPortal,
-} from 'react'
+import React, { JSXElementConstructor, ReactNode } from 'react'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 import { OverlayProps } from '~/common/component/atom/Overlay'
 
-export type ModalProps = {
+export type ModalProps = OverlayProps & {
   overlay: JSXElementConstructor<OverlayProps>
   className?: string
   children: ReactNode
-  visible: boolean
 }
 
-function Modal({ overlay: Overlay, className, children, visible }: ModalProps) {
+function Modal({
+  overlay: OverlayConstructor,
+  onClick,
+  visible,
+  className,
+  children,
+}: ModalProps) {
   return (
-    <>
-      {visible ? <Overlay /> : null}
+    <Block>
+      <OverlayConstructor onClick={onClick} visible={visible} />
       <Positioner>
         <AnimatePresence>
           {visible ? (
@@ -35,19 +34,20 @@ function Modal({ overlay: Overlay, className, children, visible }: ModalProps) {
           ) : null}
         </AnimatePresence>
       </Positioner>
-    </>
+    </Block>
   )
 }
 export default Modal
 
 // Inner Components
 
+const Block = styled.div``
+
 const Positioner = styled.div`
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 15;
 `
 
 const Content = styled(motion.div)`

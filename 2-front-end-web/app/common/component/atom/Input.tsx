@@ -21,7 +21,7 @@ export default Input
 // Inner Components
 
 const StyledInput = styled.input<InputProps>`
-  ${Font.style().size('16px').create()};
+  ${Font.style().size(16).create()};
   height: 48px;
   outline: none;
   border: 2px solid ${globalColors.grey2};

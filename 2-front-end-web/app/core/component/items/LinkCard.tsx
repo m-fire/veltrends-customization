@@ -136,11 +136,11 @@ export default LinkCard
 
 // Inner Components
 const ListItem = styled.li`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
 `
 
 const StyledLink = styled(Link)`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   ${Font.presets.noneTextDecoration};
   h3,
   p,
@@ -149,7 +149,7 @@ const StyledLink = styled(Link)`
     padding: 0;
   }
   & > h3 {
-    ${Font.style().size('18px').weight(800).color(globalColors.grey4).create()};
+    ${Font.style().size(18).weight(800).color(globalColors.grey4).create()};
     margin-bottom: 8px;
     ${Media.minWidth.desktop} {
       font-size: 24px;
@@ -161,7 +161,7 @@ const StyledLink = styled(Link)`
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 4;
-    ${Font.style().size('12px').weight(500).color(globalColors.grey3).create()};
+    ${Font.style().size(12).weight(500).color(globalColors.grey3).create()};
     height: 70px;
     margin-top: 0;
     margin-bottom: 8px;
@@ -195,9 +195,9 @@ const Thumbnail = styled.img`
 `
 
 const Publisher = styled.div<{ hasThumbnail: boolean }>`
-  ${Flex.Container.style().create()};
+  ${Flex.container().create()};
   ${Font.style()
-    .size('12px')
+    .size(12)
     .weight(400)
     .color(globalColors.grey2)
     .lineHeight(1.33)
@@ -213,7 +213,7 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
   }
   strong {
     ${Font.style()
-      .size('12px')
+      .size(12)
       .weight(600)
       .color(globalColors.grey3)
       .lineHeight(1.33)
@@ -222,12 +222,12 @@ const Publisher = styled.div<{ hasThumbnail: boolean }>`
 `
 
 const ItemFooter = styled.div`
-  ${Flex.Container.style()
+  ${Flex.container()
     .alignItems('center')
     .justifyContent('space-between')
     .create()};
   ${Font.style()
-    .size('12px')
+    .size(12)
     .weight(400)
     .color(globalColors.grey2)
     .lineHeight(1.5)
@@ -240,9 +240,9 @@ const ItemFooter = styled.div`
 `
 
 const LikeCount = styled(motion.div)`
-  ${Flex.Container.style().create()};
+  ${Flex.container().create()};
   ${Font.style()
-    .size('12px')
+    .size(12)
     .weight(600)
     .color(globalColors.grey3)
     .lineHeight(1.5)
@@ -250,12 +250,12 @@ const LikeCount = styled(motion.div)`
 `
 
 const ActionButtons = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   gap: 8px;
 `
 
 const UserInfo = styled.div`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   gap: 4px;
   b {
     ${Font.style().weight(600).lineHeight(1.5).create()};

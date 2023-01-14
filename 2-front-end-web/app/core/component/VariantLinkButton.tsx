@@ -12,9 +12,9 @@ type VariantLinkButtonProps = {
 function VariantLinkButton({
   to,
   size = 'medium',
-  $layoutMode = 'inline',
+  layout = 'inline',
   variant = 'primary',
-  $customStyle,
+  customstyles,
   children,
   ...rest
 }: VariantLinkButtonProps) {
@@ -23,9 +23,9 @@ function VariantLinkButton({
       {...rest}
       to={to}
       size={size}
-      $layoutMode={$layoutMode}
+      layout={layout}
       variant={variant}
-      $customStyle={$customStyle}
+      customstyles={customstyles}
     >
       {children}
     </StyledResizableButtonOrLink>
@@ -39,5 +39,4 @@ const StyledResizableButtonOrLink = styled(
   ResizableLinkButton,
 )<VariantLinkButtonProps>`
   ${({ variant }) => variant && variantStyles[variant]};
-  ${({ $customStyle }) => $customStyle};
 `

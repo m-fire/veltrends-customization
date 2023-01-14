@@ -33,7 +33,7 @@ const Block = styled.div`
 
 const CommentTitle = styled.h3`
   ${Font.style()
-    .size('16px')
+    .size(16)
     .weight(800)
     .color(globalColors.grey6)
     .lineHeight(1.5)
@@ -44,7 +44,7 @@ const CommentTitle = styled.h3`
 `
 
 const List = styled.div`
-  ${Flex.Container.style().direction('column').create()};
+  ${Flex.container().direction('column').create()};
   width: 100%;
   margin-top: 32px;
   gap: 40px;

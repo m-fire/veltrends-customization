@@ -38,10 +38,7 @@ export default HeaderMobile
 // Sub Comps
 
 const Block = styled.header`
-  ${Flex.Container.style()
-    .alignItems('center')
-    .justifyContent('center')
-    .create()};
+  ${Flex.container().alignItems('center').justifyContent('center').create()};
   ${Media.minWidth.desktop} {
     display: none;
   }
@@ -49,6 +46,7 @@ const Block = styled.header`
   height: 56px;
   //border-bottom: 1px solid ${globalColors.grey1};
 `
+
 const StyledLogoVeltrend = styled(LogoVeltrend)`
   color: ${appColors.primary1};
   display: block;
@@ -63,7 +61,7 @@ const StyledLogoVeltrend = styled(LogoVeltrend)`
 `
 
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
-  ${Flex.Container.style().alignItems('center').create()};
+  ${Flex.container().alignItems('center').create()};
   position: absolute;
   ${(props) => props.position}: 16px;
   top: 0;
@@ -71,7 +69,7 @@ const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
 `
 
 const HeaderTitle = styled.div`
-  ${Font.style().size('20px').weight(800).color(globalColors.grey5).create()};
+  ${Font.style().size(20).weight(800).color(globalColors.grey5).create()};
   svg {
     display: block;
     width: 130px;
