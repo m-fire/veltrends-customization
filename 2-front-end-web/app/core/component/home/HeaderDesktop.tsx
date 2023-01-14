@@ -8,6 +8,8 @@ import { LogoVeltrend, Search } from '~/core/component/generate/svg'
 import VariantLinkButton from '~/core/component/VariantLinkButton'
 import SearchArea from '~/common/component/element/SearchArea'
 import { Link } from '@remix-run/react'
+import { useAuthUser } from '~/common/context/UserContext'
+import UserInformation from '~/core/component/home/UserInformation'
 
 type HeaderDesktopProps = {
   logo?: ReactNode
@@ -23,6 +25,8 @@ function HeaderDesktop({
   // className,
   logo = <StyledLogoVeltrend />, // 기본 해더 타이틀: 메인로고
 }: HeaderDesktopProps) {
+  const authUser = useAuthUser()
+
   return (
     <Block>
       <HomeLink to="/">{logo}</HomeLink>
@@ -30,12 +34,19 @@ function HeaderDesktop({
         <AddOn>AddOn: Left</AddOn>
         <AddOn>
           <SearchArea searchIcon={<Search />} />
-          <VariantLinkButton to="/auth/login" variant="wire" size="small">
-            로그인
-          </VariantLinkButton>
-          <VariantLinkButton to="/auth/register" size="small">
-            회원가입
-          </VariantLinkButton>
+
+          {authUser ? (
+            <UserInformation username={authUser.username} />
+          ) : (
+            <>
+              <VariantLinkButton to="/auth/login" variant="wire" size="small">
+                로그인
+              </VariantLinkButton>
+              <VariantLinkButton to="/auth/register" size="small">
+                회원가입
+              </VariantLinkButton>
+            </>
+          )}
         </AddOn>
       </Content>
     </Block>
