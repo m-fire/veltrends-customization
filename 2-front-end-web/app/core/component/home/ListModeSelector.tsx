@@ -208,14 +208,15 @@ export function ListModeItem({
 
   const modeLinkRef = useRef<HTMLAnchorElement>(null)
 
+  const active = currentMode === itemMode
   return (
-    <StyledLink to={linkTo} ref={modeLinkRef} active={currentMode === itemMode}>
+    <StyledLink to={linkTo} ref={modeLinkRef} active={active.toString()}>
       {icon} {name}
     </StyledLink>
   )
 }
 
-const StyledLink = styled(Link)<{ active: boolean }>`
+const StyledLink = styled(Link)<{ active: string }>`
   ${Flex.container().alignItems('flex-end').create()};
   ${Font.style()
     .size(14)
@@ -226,7 +227,7 @@ const StyledLink = styled(Link)<{ active: boolean }>`
     .create()};
   cursor: pointer;
   ${({ active }) =>
-    active &&
+    active === 'true' &&
     css`
       color: ${appColors.primary1};
       pointer-events: none;
