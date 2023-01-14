@@ -164,7 +164,16 @@ const StyledFormRef = styled(Form)`
     .direction('column')
     .justifyContent('space-between')
     .create()};
-  padding: 16px 20px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+  ${Media.minWidth.mobile} {
+    ${Flex.item().alignSelf('center').create()};
+    ${Flex.container().justifyContent('center').create()}
+    width: 460px;
+    padding-left: 72px;
+    padding-right: 72px;
+  }
 `
 
 const InputGroup = styled.div`
@@ -177,6 +186,11 @@ const ActionBox = styled.div`
   ${Flex.container().direction('column').alignItems('center').create()};
   width: 100%;
   gap: 24px;
+
+  ${Media.minWidth.mobile} {
+    // form 에서 로긴/회원가입 버튼의 거리
+    margin-top: 56px;
+  }
 `
 
 const StyledVariantLinkButton = styled(VariantLinkButton)`
