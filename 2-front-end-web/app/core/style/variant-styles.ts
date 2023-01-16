@@ -3,7 +3,7 @@ import { appColors } from '~/core/style/app-colors'
 import { desktopHover } from '~/common/style/styles'
 import { Font } from '~/common/style/css-builder'
 
-export const variantStyles = {
+export const variantButtonStyles = {
   primary: css`
     background: ${appColors.primary1};
     color: white;
@@ -36,4 +36,4 @@ export const variantStyles = {
     `)};
   `,
 } as const
-export type VariantType = keyof typeof variantStyles
+export type VariantButtonType = keyof typeof variantButtonStyles

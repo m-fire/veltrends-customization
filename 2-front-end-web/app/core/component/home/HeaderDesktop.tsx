@@ -5,7 +5,7 @@ import { appColors } from '~/core/style/app-colors'
 import { Media, screenBreakpointMap } from '~/common/style/media-query'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { LogoVeltrend, Search } from '~/core/component/generate/svg'
-import VariantLinkButton from '~/core/component/VariantLinkButton'
+import VariantLinkOrButton from '~/core/component/VariantLinkOrButton'
 import SearchArea from '~/common/component/element/SearchArea'
 import { Link } from '@remix-run/react'
 import { useAuthUser } from '~/common/context/UserContext'
@@ -30,25 +30,25 @@ function HeaderDesktop({
   return (
     <Block>
       <HomeLink to="/">{logo}</HomeLink>
-      <Content>
-        <AddOn>AddOn: Left</AddOn>
-        <AddOn>
+      <Container>
+        <Item>Item: Left</Item>
+        <Item>
           <SearchArea searchIcon={<Search />} />
 
           {authUser ? (
             <UserInformation username={authUser.username} />
           ) : (
             <>
-              <VariantLinkButton to="/auth/login" variant="wire" size="small">
+              <VariantLinkOrButton to="/auth/login" variant="wire" size="small">
                 로그인
-              </VariantLinkButton>
-              <VariantLinkButton to="/auth/register" size="small">
+              </VariantLinkOrButton>
+              <VariantLinkOrButton to="/auth/register" size="small">
                 회원가입
-              </VariantLinkButton>
+              </VariantLinkOrButton>
             </>
           )}
-        </AddOn>
-      </Content>
+        </Item>
+      </Container>
     </Block>
   )
 }
@@ -87,7 +87,7 @@ const StyledLogoVeltrend = styled(LogoVeltrend)`
     .create()};
 `
 
-const Content = styled.div`
+const Container = styled.div`
   ${Flex.item().flex(1).create()};
   ${Flex.container()
     .alignItems('center')
@@ -96,7 +96,7 @@ const Content = styled.div`
   gap: 16px;
 `
 
-const AddOn = styled.div`
+const Item = styled.div`
   ${Flex.container().alignItems('center').create()};
   gap: 8px;
 `

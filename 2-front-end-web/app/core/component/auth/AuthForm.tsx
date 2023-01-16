@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import LabelInput from '~/core/component/LabelInput'
-import VariantLinkButton from '~/core/component/VariantLinkButton'
+import VariantLinkOrButton from '~/core/component/VariantLinkOrButton'
 import QuestionLink from '~/core/component/auth/QuestionLink'
 import { Form, Link, useSearchParams } from '@remix-run/react'
 import { useSubmitLoading } from '~/common/hook/useSubmitLoading'
@@ -211,7 +211,7 @@ const ActionBox = styled.div`
   }
 `
 
-const StyledVariantLinkButton = styled(VariantLinkButton)`
+const StyledVariantLinkButton = styled(VariantLinkOrButton)`
   svg {
     width: 20px;
     height: 20px;

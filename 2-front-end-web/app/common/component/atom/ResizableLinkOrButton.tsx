@@ -1,52 +1,63 @@
-import React, { ButtonHTMLAttributes, ReactNode } from 'react'
+import React, {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  forwardRef,
+  ReactNode,
+  RefObject,
+} from 'react'
 import { Link, LinkProps } from '@remix-run/react'
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
 import { buttonSizeStyles, Size } from '~/common/style/styles'
 
-export type ResizableLinkButtonProps = {
+export type ResizableLinkOrButtonProps = {
   to?: LinkProps['to']
   size?: Size
   layout?: 'inline' | 'fullWidth'
   customstyles?: FlattenSimpleInterpolation
+  disabled?: boolean
   children: ReactNode
-} & (Omit<LinkProps, 'to'> | ButtonHTMLAttributes<HTMLButtonElement>)
+} & (
+  | AnchorHTMLAttributes<HTMLAnchorElement>
+  | ButtonHTMLAttributes<HTMLButtonElement>
+)
+export type ResizableLinkOrButtonRef = HTMLAnchorElement | HTMLButtonElement
 
-function ResizableLinkButton({
-  to,
-  size,
-  layout,
-  customstyles,
-  children,
-  ...rest
-}: ResizableLinkButtonProps) {
+const ResizableLinkOrButton = forwardRef<
+  ResizableLinkOrButtonRef,
+  ResizableLinkOrButtonProps
+>(({ to, size, layout, customstyles, children, disabled, ...rest }, ref) => {
   //
   return to == null ? (
     <StyledButton
-      {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
       size={size}
       layout={layout}
       customstyles={customstyles}
+      disabled={disabled}
+      ref={ref as RefObject<HTMLButtonElement>}
+      {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {children}
     </StyledButton>
   ) : (
     <StyledLink
-      {...(rest as Omit<LinkProps, 'to'>)}
       to={to as string}
       size={size}
       layout={layout}
       customstyles={customstyles}
+      disabled={disabled}
+      ref={ref as RefObject<HTMLAnchorElement>}
+      {...(rest as Omit<LinkProps, 'to'>)}
     >
       {children}
     </StyledLink>
   )
-}
-export default ResizableLinkButton
+})
+export default ResizableLinkOrButton
 
 // Inner Components
 
-const sharedButtonStyles = css<Omit<ResizableLinkButtonProps, 'to'>>`
+const sharedButtonStyles = css<Omit<ResizableLinkOrButtonProps, 'to'>>`
   ${Flex.container().alignItems('center').justifyContent('center').create()};
   ${Font.style()
     .size(16)
@@ -56,12 +67,14 @@ const sharedButtonStyles = css<Omit<ResizableLinkButtonProps, 'to'>>`
     .create()};
   border-radius: 6px;
   transition: all 0.25s ease-in-out;
+  cursor: pointer;
 
   & span {
     padding-right: 6px;
   }
   &:disabled {
     ${Filters.filter().brightness(70).create()};
+    pointer-events: none;
   }
   ${({ layout: mode }) =>
     mode === 'fullWidth' &&
