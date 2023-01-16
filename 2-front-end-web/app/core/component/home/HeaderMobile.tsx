@@ -39,7 +39,7 @@ export default HeaderMobile
 
 const Block = styled.header`
   ${Flex.container().alignItems('center').justifyContent('center').create()};
-  ${Media.minWidth.desktop} {
+  ${Media.minWidth.tablet} {
     display: none;
   }
   position: relative;

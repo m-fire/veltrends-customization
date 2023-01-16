@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import VariantLinkOrButton from '../VariantLinkOrButton'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex, Font } from '~/common/style/css-builder'
+import { Media } from '~/common/style/media-query'
 
 type WriteFormProps = {
   description?: string
@@ -32,6 +33,13 @@ export default WriteForm
 const StyledForm = styled.form`
   ${Flex.item().flex(1).create()};
   ${Flex.container().direction('column').create()};
+  ${Media.minWidth.mobile} {
+    ${Flex.item().alignSelf('center').create()};
+    ${Flex.container().justifyContent('center').create()}
+    width: 460px;
+    padding-left: 72px;
+    padding-right: 72px;
+  }
   padding: 16px 20px 24px;
 
   h3 {
@@ -44,4 +52,7 @@ const StyledForm = styled.form`
 const Content = styled.section`
   ${Flex.item().flex(1).create()};
   ${Flex.container().direction('column').create()};
+  ${Media.minWidth.mobile} {
+    ${Flex.item().flex('initial').create()};
+  }
 `

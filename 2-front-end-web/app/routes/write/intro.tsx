@@ -77,15 +77,14 @@ export const action: ActionFunction = async ({ request }) => {
   if (!isAuthenticated) throw new Error('Not logged in')
 
   const form = await request.formData()
+  const link = form.get('link') as string
+  const title = form.get('title') as string
+  const body = form.get('body') as string
 
   try {
-    await createItem({
-      link: form.get('link') as string,
-      title: form.get('title') as string,
-      body: form.get('body') as string,
-    })
+    const item = await createItem({ link, title, body })
 
-    return redirect('/')
+    return redirect(`/items/${item.id}`)
   } catch (e) {
     const error = AppError.extract(e)
     throw json(error, { status: error.statusCode })

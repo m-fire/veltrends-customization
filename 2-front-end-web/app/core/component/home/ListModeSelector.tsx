@@ -138,7 +138,7 @@ export default ListModeSelector
 // Inner Components
 
 const Block = styled.div`
-  ${Media.minWidth.desktop} {
+  ${Media.minWidth.tablet} {
     display: none;
   }
 `

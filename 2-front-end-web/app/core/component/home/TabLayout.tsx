@@ -36,6 +36,7 @@ function TabLayout({
       )}
 
       <LayoutContent className={className}>{children}</LayoutContent>
+
       <FooterMobile />
     </FullHeightBlock>
   )
@@ -50,7 +51,9 @@ const HeaderContainer = styled.div`
   left: 0;
   right: 0;
   height: 96px;
-  ${Media.minWidth.desktop} {
+  padding-left: 30px;
+  padding-right: 30px;
+  ${Media.minWidth.tablet} {
     ${Flex.container().direction('row').justifyContent('center').create()};
     position: relative;
     height: 64px;
@@ -63,11 +66,7 @@ const LayoutContent = styled(LayoutContentBlock)`
   padding-top: 126px;
   padding-left: 30px;
   padding-right: 30px;
-  /* Footer 하단고정 */
-  height: auto;
-  min-height: 100%;
-  padding-bottom: 56px; // Footer 높이만큼 컨탠츠길이 늘림
-  ${Media.minWidth.desktop} {
+  ${Media.minWidth.tablet} {
     padding-top: 30px;
   }
 `

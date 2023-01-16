@@ -68,10 +68,6 @@ const sharedButtonStyles = css<Omit<ResizableLinkOrButtonProps, 'to'>>`
   border-radius: 6px;
   transition: all 0.25s ease-in-out;
   cursor: pointer;
-
-  & span {
-    padding-right: 6px;
-  }
   &:disabled {
     ${Filters.filter().brightness(70).create()};
     pointer-events: none;

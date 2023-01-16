@@ -53,7 +53,6 @@ const SearchInputWrapper = styled.div`
   border-radius: 6px;
   padding-left: 8px;
   padding-right: 14px;
-  margin-right: 8px;
   & > svg {
     ${Flex.item().shrink(0).create()};
     width: 18px;

@@ -212,6 +212,9 @@ const ActionBox = styled.div`
 `
 
 const StyledVariantLinkButton = styled(VariantLinkOrButton)`
+  & span {
+    padding-right: 6px;
+  }
   svg {
     width: 20px;
     height: 20px;

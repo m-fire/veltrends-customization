@@ -9,7 +9,7 @@ import VariantLinkOrButton from '~/core/component/VariantLinkOrButton'
 import SearchArea from '~/common/component/element/SearchArea'
 import { Link } from '@remix-run/react'
 import { useAuthUser } from '~/common/context/UserContext'
-import UserInformation from '~/core/component/home/UserInformation'
+import UserMenuButton from '~/core/component/home/UserMenuButton'
 
 type HeaderDesktopProps = {
   logo?: ReactNode
@@ -36,7 +36,12 @@ function HeaderDesktop({
           <SearchArea searchIcon={<Search />} />
 
           {authUser ? (
-            <UserInformation username={authUser.username} />
+            <>
+              <WriteOutterButton to="/write" variant="wire" size="small">
+                새 글 작성
+              </WriteOutterButton>
+              <UserMenuButton username={authUser.username} />
+            </>
           ) : (
             <>
               <VariantLinkOrButton to="/auth/login" variant="wire" size="small">
@@ -59,7 +64,7 @@ export default HeaderDesktop
 
 const Block = styled.header`
   display: none;
-  ${Media.minWidth.desktop} {
+  ${Media.minWidth.tablet} {
     ${Flex.container().alignItems('center').create()};
     padding-left: 30px;
     padding-right: 30px;
@@ -98,5 +103,11 @@ const Container = styled.div`
 
 const Item = styled.div`
   ${Flex.container().alignItems('center').create()};
-  gap: 8px;
+  gap: 16px;
+`
+
+const WriteOutterButton = styled(VariantLinkOrButton)`
+  ${Media.maxWidth.desktop} {
+    display: none;
+  }
 `
