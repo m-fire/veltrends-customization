@@ -1,28 +1,27 @@
-import React, { JSXElementConstructor } from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { AnimatePresence, motion } from 'framer-motion'
 import { globalColors } from '~/common/style/global-colors'
-import AppOverlay from '~/core/component/home/AppOverlay'
 import { BottomSheetModalStore } from '~/common/hook/store/useBottomSheetModalStore'
 import { Flex, Font } from '~/common/style/css-builder'
-import { OverlayProps } from '~/common/component/atom/Overlay'
+import Overlay from '~/common/component/atom/Overlay'
 
 type BottomSheetModalProps = {
-  overlay: JSXElementConstructor<OverlayProps>
+  overlay?: ReactNode
   items: BottomSheetModalStore['state']['items']
   visible: BottomSheetModalStore['state']['visible']
   onClose(): void
 }
 
 function BottomSheetModal({
-  overlay: Overlay,
+  overlay,
   visible,
   items,
   onClose,
 }: BottomSheetModalProps) {
   return (
     <>
-      {visible ? <Overlay onClick={onClose} /> : null}
+      {overlay ?? <Overlay onClick={onClose} visible={visible} />}
       <AnimatePresence>
         {visible && (
           <Sheet

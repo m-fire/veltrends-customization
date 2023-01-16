@@ -13,7 +13,7 @@ function AppBottomSheetModal({}: GlobalBottomSheetModalParams) {
 
   return (
     <BottomSheetModal
-      overlay={AppOverlay}
+      overlay={<AppOverlay onClick={close} visible={visible} />}
       items={items}
       visible={visible}
       onClose={close}
