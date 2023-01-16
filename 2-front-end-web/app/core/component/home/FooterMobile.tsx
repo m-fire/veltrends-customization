@@ -15,7 +15,6 @@ import {
   Search,
   Setting,
 } from '~/core/component/generate/svg'
-import { appColors } from '~/core/style/app-colors'
 
 type FooterProps = {}
 
@@ -52,7 +51,10 @@ export default FooterMobile
 
 const Block = styled.footer`
   ${Flex.container().create()};
+  position: relative;
   height: 56px;
+  background-color: white;
+  transform: translateY(-100%);
   border-top: 1px solid ${globalColors.grey1};
   ${Media.minWidth.desktop} {
     display: none;

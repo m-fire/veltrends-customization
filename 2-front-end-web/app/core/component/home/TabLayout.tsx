@@ -28,16 +28,14 @@ function TabLayout({
   return (
     <FullHeightBlock>
       {header ?? (
-        <Headers>
+        <HeaderContainer>
           <HeaderMobile />
           <HeaderDesktop />
           {tabNavigator}
-        </Headers>
+        </HeaderContainer>
       )}
 
-      <StyledLayoutContent className={className}>
-        {children}
-      </StyledLayoutContent>
+      <LayoutContent className={className}>{children}</LayoutContent>
       <FooterMobile />
     </FullHeightBlock>
   )
@@ -46,7 +44,7 @@ export default TabLayout
 
 // Inner Components
 
-const Headers = styled.div`
+const HeaderContainer = styled.div`
   ${Flex.container().direction('column').alignItems('center').create()};
   position: absolute;
   left: 0;
@@ -61,13 +59,15 @@ const Headers = styled.div`
   ${Filters.backdrop().grayscale(80).brightness(150).blur(16).create()};
 `
 
-const StyledLayoutContent = styled(LayoutContentBlock)`
-  /* 마진은 overflow 영역이 가려진다. 따라서 패딩으로 컨탠츠 위치를 조절해야 함 */
-  //margin-top: 96px;
+const LayoutContent = styled(LayoutContentBlock)`
   padding-top: 126px;
+  padding-left: 30px;
+  padding-right: 30px;
+  /* Footer 하단고정 */
+  height: auto;
+  min-height: 100%;
+  padding-bottom: 56px; // Footer 높이만큼 컨탠츠길이 늘림
   ${Media.minWidth.desktop} {
     padding-top: 30px;
   }
-  padding-left: 30px;
-  padding-right: 30px;
 `

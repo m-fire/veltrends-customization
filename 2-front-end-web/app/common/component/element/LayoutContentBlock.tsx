@@ -15,10 +15,11 @@ export default LayoutContentBlock
 
 // Inner Components
 
-const Container = styled.div`
+const Container = styled.main`
   ${Flex.item().flex(1).create()};
   ${Flex.container().direction('column').create()};
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   ${Media.minWidth.wide} {
     width: ${screenBreakpointMap.wide}px;
     margin-left: auto;

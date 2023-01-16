@@ -1,5 +1,4 @@
-import React, { MouseEventHandler } from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import Overlay, { OverlayProps } from '~/common/component/atom/Overlay'
 
 type AppOverlayProps = OverlayProps

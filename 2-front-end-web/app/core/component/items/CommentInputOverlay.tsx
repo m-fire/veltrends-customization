@@ -131,7 +131,7 @@ function CommentInputOverlay({}: CommentInputOverlayParams) {
 
   return (
     <>
-      {visible ? <AppOverlay onClick={closeInputModal} /> : null}
+      <AppOverlay onClick={closeInputModal} visible={visible} />
       <AnimatePresence initial={false}>
         {visible && (
           <Footer

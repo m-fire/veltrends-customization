@@ -21,7 +21,7 @@ function ItemById({}: ItemByIdProps) {
   const loaderData = useLoaderData<ItemLoaderData>()
   const authUser = useAuthUser()
   const { item } = loaderData
-  const isMyItem = authUser?.id === item.user.id
+  const isLoggedIn = authUser?.id === item.user.id
 
   /* react-query 적용 동기: velopert */
   // comments 에서 처리할 action 종류가 4가지가 되는데 (like, commenting, commentLike, subcommentLike)
@@ -70,7 +70,7 @@ function ItemById({}: ItemByIdProps) {
       <BasicLayout
         title={null}
         headerRight={
-          isMyItem ? (
+          isLoggedIn ? (
             <MoreVertButton position="header" onClick={onMoreVert} />
           ) : null
         }
@@ -111,10 +111,11 @@ interface ItemLoaderData {
 // Inner Components
 
 const Content = styled.div`
-  ${Media.minWidth.tablet} {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin: 0 auto;
-    margin-top: 32px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin: 0 auto;
+  margin-top: 32px;
+  ${Media.minWidth.desktop} {
+    margin-top: 0;
   }
 `

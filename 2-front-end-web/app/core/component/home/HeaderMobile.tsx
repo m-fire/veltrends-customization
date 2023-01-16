@@ -44,6 +44,7 @@ const Block = styled.header`
   }
   position: relative;
   height: 56px;
+  width: 100%;
   //border-bottom: 1px solid ${globalColors.grey1};
 `
 

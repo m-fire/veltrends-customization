@@ -1,20 +1,26 @@
 import React, { ReactNode } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useGoBack } from '~/common/hook/useGoBack'
-import LayoutFullHeight from '../../../common/component/template/LayoutFullHeight'
 import HeaderMobile from '~/core/component/home/HeaderMobile'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { Media } from '~/common/style/media-query'
 import MobileBackButton from '~/core/component/home/MobileBackButton'
+import HeaderDesktop from '~/core/component/home/HeaderDesktop'
+import FullHeightBlock from '~/common/component/element/FullHeightBlock'
+import LayoutContentBlock from '~/common/component/element/LayoutContentBlock'
+import { globalColors } from '~/common/style/global-colors'
 
 type BasicLayoutProps = {
   title?: ReactNode
   onGoBack?: () => void
   headerRight?: ReactNode
   hasBackButton?: boolean
+  mobileHeaderSize?: HeaderSize
+  desktopHeaderVisible?: boolean
   className?: string
   children?: ReactNode
 }
+type HeaderSize = 'small' | 'large'
 
 /**
  * Shows content with a header.
@@ -25,46 +31,64 @@ function BasicLayout({
   title,
   onGoBack,
   headerRight,
+  hasBackButton,
+  mobileHeaderSize = 'small',
+  desktopHeaderVisible = true,
   className,
   children,
 }: BasicLayoutProps) {
   const goBack = useGoBack()
 
   return (
-    <LayoutFullHeight
-      header={
-        <StyledHeader
+    <FullHeightBlock>
+      <HeaderContainer headerSize={mobileHeaderSize}>
+        <HeaderMobile
           title={title}
-          headerLeft={<MobileBackButton onClick={onGoBack ?? goBack} />}
+          headerLeft={
+            hasBackButton ? (
+              <MobileBackButton onClick={onGoBack ?? goBack} />
+            ) : null
+          }
           headerRight={headerRight}
         />
-      }
-      footer={null}
-    >
-      <Content className={className}>{children}</Content>
-    </LayoutFullHeight>
+
+        {desktopHeaderVisible ? <HeaderDesktop /> : null}
+      </HeaderContainer>
+
+      <LayoutContent className={className}>{children}</LayoutContent>
+    </FullHeightBlock>
   )
 }
 export default BasicLayout
 
-// Inner Components
-const StyledHeader = styled(HeaderMobile)`
+export const HeaderContainer = styled.div<{ headerSize: HeaderSize }>`
+  ${Flex.container().direction('column').alignItems('center').create()};
   position: absolute;
   left: 0;
   right: 0;
-  ${Filters.backdrop().blur(8).create()};
-`
-
-const Content = styled.div`
-  ${Flex.item().flex(1).create()};
-  ${Flex.container().direction('column').create()};
-  padding-top: 56px;
-  overflow: scroll;
+  height: 64px;
+  border-bottom: 1px solid ${globalColors.grey1};
   padding-left: 30px;
   padding-right: 30px;
-  ${Media.minWidth.wide} {
-    width: 1280px; // wide screen minWidth
-    margin-left: auto;
-    margin-right: auto;
+  ${Filters.backdrop().grayscale(80).brightness(150).blur(16).create()};
+  ${({ headerSize }) =>
+    headerSize === 'large'
+      ? css`
+          height: 96px;
+        `
+      : null}
+  ${Media.minWidth.desktop} {
+    ${Flex.container().direction('row').justifyContent('center').create()};
+    position: relative;
+    height: 64px;
+  }
+`
+
+const LayoutContent = styled(LayoutContentBlock)`
+  padding-top: 56px;
+  padding-left: 30px;
+  padding-right: 30px;
+  ${Media.minWidth.desktop} {
+    padding-top: 30px;
   }
 `

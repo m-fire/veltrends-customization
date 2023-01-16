@@ -73,7 +73,7 @@ function AuthForm({ mode, error }: AuthFormProps) {
 
   return (
     <>
-      <StyledFormRef method="post" onSubmit={onSubmit}>
+      <StyledForm method="post" onSubmit={onSubmit}>
         <DesktopLogoLink to="/">
           <LogoVeltrend />
         </DesktopLogoLink>
@@ -122,7 +122,7 @@ function AuthForm({ mode, error }: AuthFormProps) {
             disabled={isLoading}
           />
         </ActionBox>
-      </StyledFormRef>
+      </StyledForm>
     </>
   )
 }
@@ -163,7 +163,7 @@ const formDescriptions = {
 
 // Inner Components
 
-const StyledFormRef = styled(Form)`
+const StyledForm = styled(Form)`
   ${Flex.item().flex(1).create()};
   ${Flex.container()
     .direction('column')
