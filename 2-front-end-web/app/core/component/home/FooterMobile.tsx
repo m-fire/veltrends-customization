@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { globalColors } from '~/common/style/global-colors'
-import { Flex } from '~/common/style/css-builder'
+import { Filters, Flex } from '~/common/style/css-builder'
 import { RoutePath } from '~/common/api/client'
 import { Media } from '~/common/style/media-query'
 import { PseudoThemeType } from '~/core/style/decorate-styles'
@@ -18,7 +18,7 @@ import {
 
 type FooterProps = {}
 
-export const initialItemConfigs: {
+export const initialItems: {
   name: string
   to: RoutePath
   icon: FooterMenuItemProps['icon']
@@ -34,12 +34,12 @@ export const initialItemConfigs: {
 function FooterMobile({}: FooterProps) {
   return (
     <Block>
-      {initialItemConfigs.map((c) => (
+      {initialItems.map((c) => (
         <FooterMenuItem
           key={c.name}
           to={c.to}
           icon={c.icon}
-          $decorateType={c.decorate}
+          decorate={c.decorate}
         />
       ))}
     </Block>
@@ -51,12 +51,19 @@ export default FooterMobile
 
 const Block = styled.footer`
   ${Flex.container().create()};
-  position: relative;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
   height: 56px;
-  background-color: white;
-  transform: translateY(-100%);
+  //background-color: white;
   border-top: 1px solid ${globalColors.grey1};
-  ${Media.minWidth.desktop} {
+  ${Media.minWidth.mobile} {
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+  ${Media.minWidth.tablet} {
     display: none;
   }
+  ${Filters.backdrop().grayscale(100).brightness(180).blur(16).create()};
 `

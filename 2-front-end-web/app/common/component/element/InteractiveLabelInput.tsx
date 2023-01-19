@@ -4,7 +4,7 @@ import Input, { InputProps } from '~/common/component/atom/Input'
 import { globalColors } from '~/common/style/global-colors'
 import { Flex, Font } from '~/common/style/css-builder'
 
-type InteractiveLabelInputProps = {
+export type InteractiveLabelInputProps = {
   label: string
   errorMessage?: string | null
   activeColor?: string
@@ -102,7 +102,7 @@ const StyledInput = styled(Input)<
 >`
   &:focus {
     border: 2px solid
-      ${({ activeColor }) => (activeColor ? activeColor : globalColors.grey6)};
+      ${({ activeColor }) => (activeColor ? activeColor : globalColors.grey3)};
   }
 `
 

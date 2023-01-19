@@ -69,7 +69,11 @@ const sharedButtonStyles = css<Omit<ResizableLinkOrButtonProps, 'to'>>`
   transition: all 0.25s ease-in-out;
   cursor: pointer;
   &:disabled {
-    ${Filters.filter().brightness(70).create()};
+    svg {
+      color: #fff;
+    }
+    background-color: hsl(38, 100%, 35%); // primary1: hsl(38, 100%, 50%)
+    cursor: none;
     pointer-events: none;
   }
   ${({ layout: mode }) =>

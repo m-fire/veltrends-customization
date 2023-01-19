@@ -11,13 +11,7 @@ export const decorateStyles = {
       width: 40px;
       height: 40px;
       border-radius: 999px;
-      border: 5px solid ${globalColors.grey1};
-    }
-    &.active {
-      &::before {
-        border: 3px solid ${appColors.primary1};
-        background-color: ${appColors.primary6};
-      }
+      border: 4px solid rgba(252, 252, 252, 0.3);
     }
   `,
 } as const

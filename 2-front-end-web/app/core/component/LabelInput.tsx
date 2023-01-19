@@ -1,7 +1,10 @@
 import React, { FocusEventHandler, forwardRef } from 'react'
 import { InputProps } from '~/common/component/atom/Input'
 import { appColors } from '~/core/style/app-colors'
-import InteractiveLabelInput from '~/common/component/element/InteractiveLabelInput'
+import InteractiveLabelInput, {
+  InteractiveLabelInputProps,
+} from '~/common/component/element/InteractiveLabelInput'
+import styled from 'styled-components'
 
 interface LabelInputProps extends InputProps {
   label: string
@@ -15,7 +18,7 @@ interface LabelInputProps extends InputProps {
 
 const LabelInput = forwardRef<HTMLInputElement, LabelInputProps>(
   (params, ref) => (
-    <InteractiveLabelInput
+    <StyledLabelInput
       activeColor={appColors.primary1}
       errorColor={appColors.secondary1}
       {...params}
@@ -27,3 +30,13 @@ const LabelInput = forwardRef<HTMLInputElement, LabelInputProps>(
 export default LabelInput
 
 // Inner Components
+
+const StyledLabelInput = styled(InteractiveLabelInput)<
+  Pick<InteractiveLabelInputProps, 'activeColor'>
+>`
+  &:focus {
+    border: 2px solid
+      ${({ activeColor }) => (activeColor ? activeColor : appColors.primary1)};
+  }
+\`
+`

@@ -13,6 +13,7 @@ import { Validator } from '~/common/util/validates'
 import { Flex, Font } from '~/common/style/css-builder'
 import { RoutePath } from '~/common/api/client'
 import { Media } from '~/common/style/media-query'
+import Spinner from '~/core/component/Spinner'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -107,7 +108,7 @@ function AuthForm({ mode, error }: AuthFormProps) {
             layout="fullWidth"
             disabled={isLoading}
           >
-            <span>{submitBtnByMode.icon}</span>
+            <span>{isLoading ? <Spinner /> : submitBtnByMode.icon}</span>
             {submitBtnByMode.text}
           </StyledVariantLinkButton>
 

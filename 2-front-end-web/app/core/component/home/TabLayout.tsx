@@ -67,7 +67,7 @@ const HeaderContainer = styled.div`
     height: 64px;
   }
   border-bottom: 1px solid ${globalColors.grey1};
-  ${Filters.backdrop().grayscale(80).brightness(150).blur(16).create()};
+  ${Filters.backdrop().grayscale(100).brightness(180).blur(16).create()};
 `
 
 const ListModeSelectorMobile = styled(ListModeSelector)`

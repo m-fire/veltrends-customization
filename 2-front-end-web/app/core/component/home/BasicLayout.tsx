@@ -94,6 +94,7 @@ export const HeaderContainer = styled.div<{ headerSize: HeaderSize }>`
     position: relative;
     height: 64px;
   }
+  // ${Filters.backdrop().grayscale(100).brightness(180).blur(16).create()};
 `
 
 const ListModeSelectorDesktop = styled(ListModeSelector)`

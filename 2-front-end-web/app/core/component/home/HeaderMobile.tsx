@@ -23,11 +23,11 @@ function HeaderMobile({
   return (
     <Block className={className}>
       {headerLeft ? (
-        <HeaderSide position={'left'}>{headerLeft}</HeaderSide>
+        <HeaderSide position="left">{headerLeft}</HeaderSide>
       ) : null}
       <HeaderTitle className="title">{title}</HeaderTitle>
       {headerRight ? (
-        <HeaderSide position={'right'}>{headerRight}</HeaderSide>
+        <HeaderSide position="right">{headerRight}</HeaderSide>
       ) : null}
     </Block>
   )
@@ -64,7 +64,7 @@ const StyledLogoVeltrend = styled(LogoVeltrend)`
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
   ${Flex.container().alignItems('center').create()};
   position: absolute;
-  ${(props) => props.position}: 16px;
+  ${(props) => props.position}: 0;
   top: 0;
   height: 100%;
 `
