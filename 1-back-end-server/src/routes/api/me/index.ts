@@ -3,7 +3,7 @@ import { ME_SCHEMA } from './schema.js'
 import { endpointAuthPlugin } from '../../../common/config/fastify/plugin/auth-plugins.js'
 import { MeRequestMap } from './types.js'
 import UserService from '../../../service/UserService.js'
-import { clearCookie } from '../../../common/config/jwt/cookies'
+import { clearCookie } from '../../../common/config/jwt/cookies.js'
 
 const meRoute: FastifyPluginAsync = async (fastify) => {
   /* 특정 라우트에 인증정보검증 플러그인을 적용함. */
