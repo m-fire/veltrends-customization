@@ -13,14 +13,14 @@ import UserMenuButton from '~/core/component/home/UserMenuButton'
 
 type HeaderDesktopProps = {
   logo?: ReactNode
-  // headerLeft?: ReactNode
+  headerLeft?: ReactNode
   // headerRight?: ReactNode
   // className?: string
 }
 
 //Todo: 데스크탑/모바일 각각의 해더를 디바이스 스크린사이즈에 따라 형태변경 구현
 function HeaderDesktop({
-  // headerLeft,
+  headerLeft,
   // headerRight,
   // className,
   logo = <StyledLogoVeltrend />, // 기본 해더 타이틀: 메인로고
@@ -31,8 +31,8 @@ function HeaderDesktop({
     <Block>
       <HomeLink to="/">{logo}</HomeLink>
       <Container>
-        <Item>Item: Left</Item>
-        <Item>
+        <ItemLeft>{headerLeft}</ItemLeft>
+        <ItemRight>
           <SearchArea searchIcon={<Search />} />
 
           {authUser ? (
@@ -52,7 +52,7 @@ function HeaderDesktop({
               </VariantLinkOrButton>
             </>
           )}
-        </Item>
+        </ItemRight>
       </Container>
     </Block>
   )
@@ -77,6 +77,7 @@ const Block = styled.header`
 
 const HomeLink = styled(Link)`
   display: block;
+  margin-right: 32px;
 `
 
 const StyledLogoVeltrend = styled(LogoVeltrend)`
@@ -101,9 +102,14 @@ const Container = styled.div`
   gap: 16px;
 `
 
-const Item = styled.div`
+const ItemLeft = styled.div`
   ${Flex.container().alignItems('center').create()};
-  gap: 16px;
+  gap: 12px;
+`
+
+const ItemRight = styled.div`
+  ${Flex.container().alignItems('center').create()};
+  gap: 12px;
 `
 
 const WriteOutterButton = styled(VariantLinkOrButton)`

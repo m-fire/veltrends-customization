@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
@@ -15,6 +15,10 @@ import {
   DateStringRange,
   WeekRangeConverters as wrc,
 } from '~/common/util/converters'
+import styled from 'styled-components'
+import { Media } from '~/common/style/media-query'
+import HeaderMobile from '~/core/component/home/HeaderMobile'
+import HeaderDesktop from '~/core/component/home/HeaderDesktop'
 
 function Index() {
   const defaultDateRange = useCurrentDateRange()
@@ -45,16 +49,27 @@ function Index() {
   const itemList = data?.pages.flatMap((page) => page.list)
   return (
     <TabLayout
-      tabNavigator={
-        <ListModeSelector currentMode={mode} dateRange={dateRange} />
+      header={
+        <>
+          <HeaderMobile />
+          <ListModeSelectorMobile currentMode={mode} dateRange={dateRange} />
+
+          <HeaderDesktop
+            headerLeft={
+              <ListModeSelectorDesktop
+                currentMode={mode}
+                dateRange={dateRange}
+              />
+            }
+          />
+        </>
       }
     >
-      {mode === 'past' ? (
-        <DateRangeSelector
-          baseLinkTo={`/?mode=${mode}`}
-          dateRange={dateRange}
-        />
-      ) : null}
+      <StyledDateRangeSelector
+        baseLinkTo={`/?mode=${mode}`}
+        dateRange={dateRange}
+        visible={mode === 'past'}
+      />
 
       {itemList ? <LinkCardList items={itemList} /> : null}
 
@@ -139,6 +154,33 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 // Inner Components
+
+const ListModeSelectorMobile = styled(ListModeSelector)`
+  & > ul {
+    gap: 24px;
+  }
+  ${Media.minWidth.tablet} {
+    display: none;
+  }
+`
+const ListModeSelectorDesktop = styled(ListModeSelector)`
+  & > ul {
+    gap: 16px;
+  }
+  ${Media.maxWidth.tablet} {
+    display: none;
+  }
+`
+
+const StyledDateRangeSelector = styled(DateRangeSelector)`
+  padding-top: 12px;
+  padding-bottom: 32px;
+
+  ${Media.minWidth.tablet} {
+    padding-top: 16px;
+    gap: 48px;
+  }
+`
 
 // types
 

@@ -11,6 +11,7 @@ import {
 } from '~/common/util/converters'
 import { ArrowLeft } from '~/core/component/generate/svg'
 import { Flex, Font } from '~/common/style/css-builder'
+import { Media } from '~/common/style/media-query'
 
 const SERVICE_START_DATE = new Date('2022-09-01')
 const yy년MM월dd일 = 'yy년 MM월 dd일' as const
@@ -18,9 +19,15 @@ const yy년MM월dd일 = 'yy년 MM월 dd일' as const
 interface DateRangeSelectorProps {
   baseLinkTo: string
   dateRange: DateStringRange
+  visible: boolean
 }
 
-function DateRangeSelector({ baseLinkTo, dateRange }: DateRangeSelectorProps) {
+function DateRangeSelector({
+  baseLinkTo,
+  dateRange,
+  visible,
+  ...rest
+}: DateRangeSelectorProps) {
   const [startDate, endDate] = useMemoFormattedRange(dateRange, yy년MM월dd일)
   const [rangeLink, setRangeLink] = useState(
     createRangeLink({ baseLinkTo, dateRange }),
@@ -32,21 +39,26 @@ function DateRangeSelector({ baseLinkTo, dateRange }: DateRangeSelectorProps) {
   }, [dateRange])
 
   return (
-    <WeekNavigator>
-      <StyledLink
-        to={rangeLink.prevTo}
-        direction="left"
-        disabled={prevDisabled}
-      >
-        {startDate} <ArrowLeft />
-      </StyledLink>
-      <StyledLink
-        to={rangeLink.nextTo}
-        direction="right"
-        disabled={nextDisabled}
-      >
-        <ArrowLeft /> {endDate}
-      </StyledLink>
+    <WeekNavigator {...rest}>
+      {visible ? (
+        <>
+          <StyledLink
+            to={rangeLink.prevTo}
+            direction="left"
+            disabled={prevDisabled}
+          >
+            {startDate} <ArrowLeft />
+          </StyledLink>
+
+          <StyledLink
+            to={rangeLink.nextTo}
+            direction="right"
+            disabled={nextDisabled}
+          >
+            <ArrowLeft /> {endDate}
+          </StyledLink>
+        </>
+      ) : null}
     </WeekNavigator>
   )
 
@@ -101,8 +113,6 @@ const WeekNavigator = styled.div`
   font-size: 16px;
   color: ${globalColors.grey5};
   gap: 32px;
-  margin-top: 16px;
-  margin-bottom: 16px;
 `
 
 const StyledLink = styled(Link)<{
@@ -129,5 +139,13 @@ const StyledLink = styled(Link)<{
       css`
         transform: rotate(180deg);
       `}
+  }
+
+  ${Media.minWidth.tablet} {
+    ${Font.style().size(18).weight(600).create()}
+    gap: 12px;
+    svg {
+      height: 18px;
+    }
   }
 `

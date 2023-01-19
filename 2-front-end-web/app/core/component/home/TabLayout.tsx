@@ -1,17 +1,14 @@
 import React, { ReactNode } from 'react'
 import FullHeightBlock from '~/common/component/element/FullHeightBlock'
-import HeaderMobile from '~/core/component/home/HeaderMobile'
 import FooterMobile from '~/core/component/home/FooterMobile'
 import LayoutContentBlock from '~/common/component/element/LayoutContentBlock'
 import styled from 'styled-components'
-import HeaderDesktop from '~/core/component/home/HeaderDesktop'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { Media } from '~/common/style/media-query'
 import { globalColors } from '~/common/style/global-colors'
 
 type TabLayoutProps = {
   header?: ReactNode
-  tabNavigator?: ReactNode
   className?: string
   children?: ReactNode
 }
@@ -19,21 +16,10 @@ type TabLayoutProps = {
 /**
  * Shows content with a header adn a tab bar.
  */
-function TabLayout({
-  header,
-  tabNavigator,
-  children,
-  className,
-}: TabLayoutProps) {
+function TabLayout({ header, children, className }: TabLayoutProps) {
   return (
     <FullHeightBlock>
-      {header ?? (
-        <HeaderContainer>
-          <HeaderMobile />
-          <HeaderDesktop />
-          {tabNavigator}
-        </HeaderContainer>
-      )}
+      <HeaderContainer>{header}</HeaderContainer>
 
       <LayoutContent className={className}>{children}</LayoutContent>
 
@@ -63,10 +49,9 @@ const HeaderContainer = styled.div`
 `
 
 const LayoutContent = styled(LayoutContentBlock)`
-  padding-top: 126px;
+  ${Media.maxWidth.tablet} {
+    padding-top: 96px;
+  }
   padding-left: 30px;
   padding-right: 30px;
-  ${Media.minWidth.tablet} {
-    padding-top: 30px;
-  }
 `

@@ -46,13 +46,13 @@ const Block = styled.div``
 
 const SearchInputWrapper = styled.div`
   ${Flex.container().alignItems('center').create()};
-  background-color: ${globalColors.grey1};
   width: 180px;
   height: 36px;
-  //border: 2px solid white;
   border-radius: 6px;
   padding-left: 8px;
   padding-right: 14px;
+  background-color: #f6f6f6;
+  border: 1px solid #ececec;
   & > svg {
     ${Flex.item().shrink(0).create()};
     width: 18px;
