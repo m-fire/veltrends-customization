@@ -61,6 +61,7 @@ const HeaderContainer = styled.div`
   height: 96px;
   padding-left: 30px;
   padding-right: 30px;
+  z-index: 1;
   ${Media.minWidth.tablet} {
     ${Flex.container().direction('row').justifyContent('center').create()};
     position: relative;

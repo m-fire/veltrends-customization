@@ -82,7 +82,7 @@ export const HeaderContainer = styled.div<{ headerSize: HeaderSize }>`
   border-bottom: 1px solid ${globalColors.grey1};
   padding-left: 30px;
   padding-right: 30px;
-  ${Filters.backdrop().grayscale(80).brightness(150).blur(16).create()};
+  z-index: 1;
   ${({ headerSize }) =>
     headerSize === 'large'
       ? css`
