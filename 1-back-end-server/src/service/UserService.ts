@@ -30,7 +30,7 @@ class UserService {
   }
 
   /**
-   * 사용자를 못찾거나 PW가 틀릴경우, 보안상 모두 동일한 `AuthenticationError` 발생시킨다.
+   * 사용자를 못찾거나 PW가 틀릴경우, 보안상 `AuthenticationError` 발생시킨다.
    */
   static async login({ username, password }: AuthBody): Promise<TokensAndUser> {
     const existsUser = await db.user.findUnique({ where: { username } })
@@ -40,9 +40,9 @@ class UserService {
       if (
         !existsUser ||
         !(await bcrypt.compare(password, existsUser.passwordHash))
-      )
+      ) {
         throw new AppError('Authentication')
-
+      }
       const tokens = await TokenService.generateTokens(existsUser)
       // console.log(`UserService.login() existsUser, tokens:`, existsUser, tokens)
       return { tokens, user: existsUser }
@@ -88,7 +88,38 @@ class UserService {
       throw new AppError('RefreshFailure')
     }
   }
+
+  static async changePassword({
+    oldPassword,
+    newPassword,
+    userId,
+  }: ChangePasswordParams) {
+    const existsUser = await db.user.findUnique({ where: { id: userId } })
+    try {
+      if (!existsUser) throw new AppError('Authentication')
+      if (!(await bcrypt.compare(oldPassword, existsUser.passwordHash)))
+        throw new AppError('Forbidden', { message: 'Password does not match' })
+
+      if (!Validator.Auth.isValidPassword(newPassword))
+        throw new AppError('BadRequest', { message: 'Password is invalid' })
+
+      const passwordHash = await bcrypt.hash(newPassword, SOLT_ROUNDS)
+      await db.user.update({
+        where: { id: userId },
+        data: { passwordHash },
+      })
+    } catch (e) {
+      if (AppError.is(e)) throw e
+      throw new AppError('Unknown')
+    }
+  }
 }
 export default UserService
 
+//types
+
 type TokensAndUser = { tokens: TokenStringMap; user: AuthUserInfo }
+
+type ChangePasswordParams = MeRequestMap['CHANGE_PASSWORD']['Body'] & {
+  userId: number
+}
