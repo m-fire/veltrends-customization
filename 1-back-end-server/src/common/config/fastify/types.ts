@@ -41,5 +41,5 @@ export type RouteResponseCodeMap<T extends Record<string, FastifySchema>> = {
 }
 
 type FastifyResponseCodeProps<Res extends Record<string, TSchema>> = {
-  [Code in keyof Res]: Res[Code] extends TSchema ? Static<Res[Code]> : never
+  [RCode in keyof Res]: Res[RCode] extends TSchema ? Static<Res[RCode]> : never
 }
