@@ -6,6 +6,10 @@ import styled from 'styled-components'
 import { Filters, Flex } from '~/common/style/css-builder'
 import { Media } from '~/common/style/media-query'
 import { globalColors } from '~/common/style/global-colors'
+import { useListModeURLParams } from '~/core/hook/request/useListModeURLParams'
+import HeaderMobile from '~/core/component/home/HeaderMobile'
+import HeaderDesktop from '~/core/component/home/HeaderDesktop'
+import ListModeSelector from '~/core/component/home/ListModeSelector'
 
 type TabLayoutProps = {
   header?: ReactNode
@@ -17,9 +21,27 @@ type TabLayoutProps = {
  * Shows content with a header adn a tab bar.
  */
 function TabLayout({ header, children, className }: TabLayoutProps) {
+  const { mode, dateRange } = useListModeURLParams('trending')
+
   return (
     <FullHeightBlock>
-      <HeaderContainer>{header}</HeaderContainer>
+      <HeaderContainer>
+        {header ?? (
+          <>
+            <HeaderMobile />
+            <ListModeSelectorMobile currentMode={mode} dateRange={dateRange} />
+
+            <HeaderDesktop
+              headerLeft={
+                <ListModeSelectorDesktop
+                  currentMode={mode}
+                  dateRange={dateRange}
+                />
+              }
+            />
+          </>
+        )}
+      </HeaderContainer>
 
       <LayoutContent className={className}>{children}</LayoutContent>
 
@@ -46,6 +68,23 @@ const HeaderContainer = styled.div`
   }
   border-bottom: 1px solid ${globalColors.grey1};
   ${Filters.backdrop().grayscale(80).brightness(150).blur(16).create()};
+`
+
+const ListModeSelectorMobile = styled(ListModeSelector)`
+  & > ul {
+    gap: 24px;
+  }
+  ${Media.minWidth.tablet} {
+    display: none;
+  }
+`
+const ListModeSelectorDesktop = styled(ListModeSelector)`
+  & > ul {
+    gap: 16px;
+  }
+  ${Media.maxWidth.tablet} {
+    display: none;
+  }
 `
 
 const LayoutContent = styled(LayoutContentBlock)`

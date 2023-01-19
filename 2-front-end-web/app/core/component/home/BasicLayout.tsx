@@ -9,7 +9,9 @@ import HeaderDesktop from '~/core/component/home/HeaderDesktop'
 import FullHeightBlock from '~/common/component/element/FullHeightBlock'
 import LayoutContentBlock from '~/common/component/element/LayoutContentBlock'
 import { globalColors } from '~/common/style/global-colors'
+import { useListModeURLParams } from '~/core/hook/request/useListModeURLParams'
 
+import ListModeSelector from '~/core/component/home/ListModeSelector'
 type BasicLayoutProps = {
   title?: ReactNode
   onGoBack?: () => void
@@ -33,10 +35,11 @@ function BasicLayout({
   headerRight,
   hasBackButton,
   mobileHeaderSize = 'small',
-  desktopHeaderVisible = true,
+  desktopHeaderVisible,
   className,
   children,
 }: BasicLayoutProps) {
+  const { mode, dateRange } = useListModeURLParams('trending')
   const goBack = useGoBack()
 
   return (
@@ -52,7 +55,16 @@ function BasicLayout({
           headerRight={headerRight}
         />
 
-        {desktopHeaderVisible ? <HeaderDesktop /> : null}
+        {desktopHeaderVisible ? (
+          <HeaderDesktop
+            headerLeft={
+              <ListModeSelectorDesktop
+                currentMode={mode}
+                dateRange={dateRange}
+              />
+            }
+          />
+        ) : null}
       </HeaderContainer>
 
       <LayoutContent className={className}>{children}</LayoutContent>
@@ -81,6 +93,15 @@ export const HeaderContainer = styled.div<{ headerSize: HeaderSize }>`
     ${Flex.container().direction('row').justifyContent('center').create()};
     position: relative;
     height: 64px;
+  }
+`
+
+const ListModeSelectorDesktop = styled(ListModeSelector)`
+  & > ul {
+    gap: 16px;
+  }
+  ${Media.maxWidth.tablet} {
+    display: none;
   }
 `
 

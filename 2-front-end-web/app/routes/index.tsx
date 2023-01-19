@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import React, { useEffect, useState } from 'react'
+import { useLoaderData } from '@remix-run/react'
 import { json, LoaderFunction } from '@remix-run/node'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Requests } from '~/common/util/https'
@@ -9,7 +9,6 @@ import { Item, ItemListMode } from '~/core/api/types'
 import { useInfinityScrollTriggerRef } from '~/common/hook/useInfiniteScroll'
 import TabLayout from '~/core/component/home/TabLayout'
 import LinkCardList from '~/core/component/items/LinkCardList'
-import ListModeSelector from '~/core/component/home/ListModeSelector'
 import DateRangeSelector from '~/core/component/items/DateRangeSelector'
 import {
   DateStringRange,
@@ -46,23 +45,7 @@ function Index() {
 
   const itemList = data?.pages.flatMap((page) => page.list)
   return (
-    <TabLayout
-      header={
-        <>
-          <HeaderMobile />
-          <ListModeSelectorMobile currentMode={mode} dateRange={dateRange} />
-
-          <HeaderDesktop
-            headerLeft={
-              <ListModeSelectorDesktop
-                currentMode={mode}
-                dateRange={dateRange}
-              />
-            }
-          />
-        </>
-      }
-    >
+    <TabLayout>
       <StyledDateRangeSelector
         baseLinkTo={`/?mode=${mode}`}
         dateRange={dateRange}
