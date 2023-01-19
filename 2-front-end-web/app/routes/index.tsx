@@ -17,15 +17,13 @@ import {
 } from '~/common/util/converters'
 import styled from 'styled-components'
 import { Media } from '~/common/style/media-query'
-import HeaderMobile from '~/core/component/home/HeaderMobile'
-import HeaderDesktop from '~/core/component/home/HeaderDesktop'
+import { useListModeURLParams } from '~/core/hook/request/useListModeURLParams'
 
 function Index() {
-  const defaultDateRange = useCurrentDateRange()
   const {
     mode,
     dateRange: { start, end },
-  } = getCurrentURLParams('trending', defaultDateRange)
+  } = useListModeURLParams('trending')
   //
   const [dateRange, setDateRange] = useState<DateStringRange>({ start, end })
 
@@ -112,24 +110,6 @@ function Index() {
     mode: ItemListMode
     dateRange: DateStringRange
   }
-
-  function useCurrentDateRange() {
-    return useMemo(() => wrc.toRangeString(new Date()), [])
-  }
-
-  function getCurrentURLParams(
-    defaultMode: ItemListMode,
-    defaultDateRange: DateStringRange,
-  ) {
-    const [searchParams] = useSearchParams()
-    return {
-      mode: (searchParams.get('mode') as ItemListMode) ?? defaultMode,
-      dateRange: {
-        start: searchParams.get('start') ?? defaultDateRange.start,
-        end: searchParams.get('end') ?? defaultDateRange.end,
-      },
-    }
-  }
 }
 export default Index
 
@@ -154,23 +134,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 // Inner Components
-
-const ListModeSelectorMobile = styled(ListModeSelector)`
-  & > ul {
-    gap: 24px;
-  }
-  ${Media.minWidth.tablet} {
-    display: none;
-  }
-`
-const ListModeSelectorDesktop = styled(ListModeSelector)`
-  & > ul {
-    gap: 16px;
-  }
-  ${Media.maxWidth.tablet} {
-    display: none;
-  }
-`
 
 const StyledDateRangeSelector = styled(DateRangeSelector)`
   padding-top: 12px;
