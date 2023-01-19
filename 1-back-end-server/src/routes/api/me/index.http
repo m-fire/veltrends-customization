@@ -63,5 +63,112 @@ client.test("/api/me 일반접근", function() {
   client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
 })
 %}
+### 일반접근 실패
 
-### 일반접근
+
+POST http://{{host}}:{{port}}/api/me/change-password
+Content-Type: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"oldPassword": "test1234",
+	"newPassword": "test1234"
+}
+
+> {%
+var status = 202;
+client.test("/api/me/change-password ", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+### 패스워드 변경 성공
+
+POST http://{{host}}:{{port}}/api/me/change-password
+Content-Type: application/json
+
+{
+	"oldPassword": "!@#!@#!@#",
+	"newPassword": "!@#!@#!@#"
+}
+
+> {%
+var status = 401;
+client.test("/api/me/change-password ", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+### 패스워드 변경실패(사용자 인증정보 누락)
+
+POST http://{{host}}:{{port}}/api/me/change-password
+Content-Type: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"oldPassword": "!@#!@#!@#",
+	"newPassword": "!@#!@#!@#"
+}
+
+> {%
+var status = 403;
+client.test("/api/me/change-password ", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+### 패스워드 변경실패(이전 비번 불일치)
+
+POST http://{{host}}:{{port}}/api/me/change-password
+Content-Type: application/json
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+{
+	"oldPassword": "test1234",
+	"newPassword": "!@#!@#!@#"
+}
+
+> {%
+var status = 400;
+client.test("/api/me/change-password ", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+### 패스워드 변경실패(새 비번 양식이 유효하지 않음)
