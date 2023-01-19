@@ -12,7 +12,7 @@ type SearchAreaProps = {
 function SearchArea({ searchIcon }: SearchAreaProps) {
   const [searchParams] = useSearchParams()
 
-  const ref = useRef<HTMLInputElement>(null)
+  const ref = useRef<HTMLInputElement | null>(null)
   const onClick = () => {
     ref.current?.focus()
   }

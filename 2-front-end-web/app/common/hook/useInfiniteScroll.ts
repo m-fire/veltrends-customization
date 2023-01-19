@@ -52,7 +52,7 @@ export function useInfinityScrollTriggerRef<E extends HTMLElement>({
   'hasNextPage' | 'fetchNextPage'
 >) {
   /* 무한 스크롤 로딩 Ref 및 기능정의 */
-  const ref = useRef<E>(null)
+  const ref = useRef<E | null>(null)
 
   const fetchNext = useCallback(() => {
     if (hasNextPage === false) return

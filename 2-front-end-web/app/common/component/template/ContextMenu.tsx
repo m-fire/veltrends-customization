@@ -14,7 +14,7 @@ export type ContextMenuProps = {
 
 function ContextMenu({ visible, onClose, children }: ContextMenuProps) {
   //
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement | null>(null)
   useOnClickOutside(ref, (e) => {
     if (!visible) return
     onClose(e)

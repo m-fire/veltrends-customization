@@ -178,6 +178,7 @@ const StyledForm = styled(Form)`
     width: 460px;
     padding-left: 72px;
     padding-right: 72px;
+    padding-bottom: 56px;
   }
 `
 
@@ -186,7 +187,7 @@ const DesktopLogoLink = styled(Link)`
     display: none;
   }
   ${Flex.container().justifyContent('center').create()};
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   svg {
     width: auto;
     height: 48px;
