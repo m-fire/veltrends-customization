@@ -29,6 +29,14 @@ const meRoute: FastifyPluginAsync = async (fastify) => {
       reply.statusCode = 202
     },
   )
+
+  fastify.delete<MeRequestMap['UNREGISTER']>(
+    '/',
+    { schema: ME_SCHEMA.UNREGISTER },
+    async (request, reply) => {
+      reply.statusCode = 202
+    },
+  )
 }
 
 export default meRoute

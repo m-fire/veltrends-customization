@@ -29,4 +29,10 @@ export const ME_SCHEMA = createFastifySchemaMap({
       403: createAppErrorSchema('Forbidden'),
     },
   },
+  UNREGISTER: {
+    tags: ['me'],
+    response: {
+      202: Type.Null(),
+    },
+  },
 })
