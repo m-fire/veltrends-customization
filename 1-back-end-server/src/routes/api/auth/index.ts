@@ -3,7 +3,10 @@ import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
 import { AuthRequestMap, CookieTokens } from './types.js'
 import AUTH_SCHEMA from './schema.js'
-import { setTokenCookies } from '../../../common/config/jwt/cookies.js'
+import {
+  clearCookie,
+  setTokenCookies,
+} from '../../../common/config/jwt/cookies.js'
 
 // Route Definition
 
@@ -15,6 +18,15 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       const tokensAndUser = await UserService.login(authBody)
       setTokenCookies(reply, tokensAndUser.tokens)
       return tokensAndUser
+    },
+  )
+
+  fastify.post<AuthRequestMap['LOGOUT']>(
+    '/logout',
+    { schema: AUTH_SCHEMA.LOGOUT },
+    async ({ body: authBody }, reply) => {
+      clearCookie(reply)
+      reply.statusCode = 202
     },
   )
 

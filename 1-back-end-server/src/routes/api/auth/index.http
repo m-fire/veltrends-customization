@@ -91,11 +91,6 @@ client.test("로그인 실패", function() {
 ### 로그인 실패
 
 POST http://{{host}}:{{port}}/api/auth/logout
-Content-Type: application/json
-
-{
-  "userId": {{user.id}}
-}
 
 > {%
 var status = 202;
@@ -123,47 +118,3 @@ client.test("로그아웃", function() {
 %}
 
 ### 로그아웃
-
-#GET http://{{host}}:{{port}}/api/auth/register/1
-#Accept: application/json
-#
-#> /DEV/LIB/jetbrains-http-client/tests/assertion/found-302.js
-#
-#### 회원조회 - 성공
-#
-#GET http://{{host}}:{{port}}/api/users/2
-#Accept: application/json
-#
-#> /DEV/LIB/jetbrains-http-client/tests/assertion/found-302.js
-#
-#### 회원조회 - 성공
-#
-#GET http://{{host}}:{{port}}/api/users/-2
-#Accept: application/json
-#
-#> /DEV/LIB/jetbrains-http-client/tests/assertion/forbidden-400.js
-#
-#### 회원조회 - 실패
-#
-#PUT http://{{host}}:{{port}}/api/users
-#Content-Type: application/json
-#
-#< ./http/update-category.json
-#
-#> /DEV/LIB/jetbrains-http-client/tests/assertion/accept-202.js
-#
-#### 회원 업데이트
-#
-#DELETE http://{{host}}:{{port}}/api/users/2
-#Content-Type: application/json
-#
-#> /DEV/LIB/jetbrains-http-client/tests/assertion/accept-202.js
-#
-#### 회원 삭제 성공
-#
-#DELETE http://{{host}}:{{port}}/api/users/2
-#Content-Type: application/json
-#
-#> /DEV/LIB/jetbrains-http-client/tests/assertion/forbidden-400.js
-#
-#### 삭제된 회원 재삭제 실패

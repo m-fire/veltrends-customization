@@ -53,6 +53,12 @@ const AUTH_SCHEMA = createFastifySchemaMap({
       401: createAppErrorSchema('Authentication'),
     },
   },
+  LOGOUT: {
+    tags: ['auth'],
+    response: {
+      202: Type.Null(),
+    },
+  },
   REFRESH_TOKEN: {
     tags: ['auth'],
     body: REQ_REFRESH_TOKEN_BODY_SCHEMA,
