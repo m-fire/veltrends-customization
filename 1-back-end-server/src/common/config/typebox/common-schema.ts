@@ -20,7 +20,3 @@ export const ERROR_UNAUTHORIZED_SCHEMA = Type.Object(
     },
   },
 )
-
-export const ERROR_INVALID_PASSWORD_SCHEMA = Type.Object({
-  message: Type.String(),
-})

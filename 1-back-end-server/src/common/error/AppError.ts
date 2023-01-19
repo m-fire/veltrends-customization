@@ -80,9 +80,15 @@ export default class AppError<
 > extends Error {
   public readonly statusCode: number
 
-  constructor(public readonly name: K, public payload?: ErrorPayloadOpt<K>) {
+  constructor(
+    public readonly name: K,
+    public payload?: ErrorPayloadOpt<K> & { message?: string },
+  ) {
     const info = ERROR_INFO_MAP[name]
-    super(info.message)
+    super(payload?.message ?? info.message)
+    if (payload?.message != null) {
+      delete payload.message
+    }
     this.statusCode = info.statusCode
   }
 

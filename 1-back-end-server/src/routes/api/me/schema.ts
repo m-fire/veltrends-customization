@@ -4,10 +4,7 @@ import {
   createAppErrorSchema,
   createFastifySchemaMap,
 } from '../../../common/config/typebox/schema-util.js'
-import {
-  ERROR_INVALID_PASSWORD_SCHEMA,
-  ERROR_UNAUTHORIZED_SCHEMA,
-} from '../../../common/config/typebox/common-schema.js'
+import { ERROR_UNAUTHORIZED_SCHEMA } from '../../../common/config/typebox/common-schema.js'
 
 export const ME_SCHEMA = createFastifySchemaMap({
   GET_ACCOUNT: {
@@ -27,7 +24,7 @@ export const ME_SCHEMA = createFastifySchemaMap({
       202: Type.Null(),
       401: createAppErrorSchema('Unauthorized', ERROR_UNAUTHORIZED_SCHEMA),
       // 패스워드 변경시 이전 패스워드가 맞지 않는다면 Forbidden 처리
-      403: createAppErrorSchema('Forbidden', ERROR_INVALID_PASSWORD_SCHEMA),
+      403: createAppErrorSchema('Forbidden'),
     },
   },
 })

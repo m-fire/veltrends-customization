@@ -54,12 +54,23 @@ if (process.env.NODE_ENV === 'development') {
 
 server.setErrorHandler(async (error, request, reply) => {
   reply.statusCode = error.statusCode || 500
-  return {
-    ...(error instanceof AppError && error),
-    name: error.name,
-    message: error.message,
-    statusCode: error.statusCode,
+
+  if (AppError.is(error)) {
+    return {
+      name: error.name,
+      message: error.message,
+      statusCode: error.statusCode,
+      payload: error.payload ?? {},
+    }
   }
+  if (error.statusCode === 400) {
+    return {
+      name: 'BadRequest',
+      message: error.message,
+      statusCode: 400,
+    }
+  }
+  return error
 })
 
 server.listen({ port: 4000 })
