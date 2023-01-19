@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from 'react'
+import { DependencyList, useEffect, useRef } from 'react'
 
 /**
  * <h2>useElementDisplayHandler</h2>
@@ -12,32 +12,41 @@ import { RefObject, useEffect } from 'react'
  *         핸들러들은 무한반복 실행을 하게 될 것이다. 따라서 useCallback 으로 생성제한을 두어야 한다.</li>
  *     </ul>
  * </ol>
- * @param ref HTMLElement 기반 RefObject
  * @param displayHandler Element 가 표시될때 1번 호출될 함수
  * @param undisplayHandler Element 가 사라질때 1번 호출될 함수
+ * @param deps
  */
-export function useElementDisplayHandler<T extends HTMLElement>(
-  ref: RefObject<T>,
-  displayHandler: () => void,
-  undisplayHandler?: () => void,
+export function useElementDisplayEffect<T extends HTMLElement>(
+  displayHandler: (target: T) => void,
+  undisplayHandler?: (target: T) => void,
+  deps: DependencyList = [],
 ) {
+  const ref = useRef<T | null>(null)
+
   useEffect(() => {
     if (!ref.current) return
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (!ref.current || !e.isIntersecting) {
-          undisplayHandler?.()
-          return
-        }
-
-        displayHandler()
-      })
-    })
-    observer.observe(ref.current)
+    const el = ref.current
+    const observer = new IntersectionObserver((entries) =>
+      entries.forEach(
+        (e) => {
+          if (!e.isIntersecting) {
+            undisplayHandler?.(e.target as T)
+            return
+          }
+          displayHandler(e.target as T)
+        },
+        {
+          root: el.parentElement,
+        },
+      ),
+    )
+    observer.observe(el)
 
     return () => {
       observer.disconnect()
     }
-  }, [ref, displayHandler, undisplayHandler])
+  }, [displayHandler, undisplayHandler, ...deps])
+
+  return ref
 }
