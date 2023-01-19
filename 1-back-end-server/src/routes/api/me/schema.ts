@@ -22,8 +22,10 @@ export const ME_SCHEMA = createFastifySchemaMap({
     }),
     response: {
       202: Type.Null(),
+      // 새로운 패스워드 양식오류
+      400: createAppErrorSchema('BadRequest'),
       401: createAppErrorSchema('Unauthorized', ERROR_UNAUTHORIZED_SCHEMA),
-      // 패스워드 변경시 이전 패스워드가 맞지 않는다면 Forbidden 처리
+      // 이전 패스워드 불일치
       403: createAppErrorSchema('Forbidden'),
     },
   },

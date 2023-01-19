@@ -18,7 +18,7 @@ export function createAppErrorSchema<
       name: Type.String(),
       message: Type.String(),
       statusCode: Type.Integer(),
-      ...(payloadSchema && { payload: payloadSchema }),
+      ...(payloadSchema ? { payload: payloadSchema } : null),
     },
     errorExample && {
       example: {
