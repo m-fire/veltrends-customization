@@ -54,3 +54,8 @@ export function validateToken<P>(tokenStr: string) {
     })
   })
 }
+
+export interface TokenStringMap {
+  accessToken: string
+  refreshToken: string
+}

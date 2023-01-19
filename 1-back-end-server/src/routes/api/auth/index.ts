@@ -1,9 +1,9 @@
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
-import { TokenStringMap } from '../../../service/TokenService.js'
 import { AuthRequestMap, CookieTokens } from './types.js'
 import AUTH_SCHEMA from './schema.js'
+import { setTokenCookies } from '../../../common/config/jwt/cookies.js'
 
 // Route Definition
 
@@ -44,25 +44,6 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       return tokens
     },
   )
-
-  // ref: https://github.com/fastify/fastify-cookie#example
-  function setTokenCookies(
-    reply: FastifyReply,
-    { accessToken, refreshToken }: TokenStringMap,
-  ) {
-    reply.cookie('access_token', accessToken, {
-      // signed: true,
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000 * 60 * 60), // 1h
-      path: '/',
-    })
-    reply.cookie('refresh_token', refreshToken, {
-      // signed: true,
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7d
-      path: '/',
-    })
-  }
 }
 
 export default authRoute

@@ -3,6 +3,7 @@ import db from '../common/config/prisma/db-client.js'
 import {
   generateToken,
   RefreshTokenPayload,
+  TokenStringMap,
   validateToken,
 } from '../common/config/jwt/tokens.js'
 import { AuthUserInfo } from '../routes/api/auth/types.js'
@@ -41,9 +42,4 @@ export default class TokenService {
   static async validateRefreshToken(tokenStr: string) {
     return validateToken<RefreshTokenPayload>(tokenStr)
   }
-}
-
-export interface TokenStringMap {
-  accessToken: string
-  refreshToken: string
 }
