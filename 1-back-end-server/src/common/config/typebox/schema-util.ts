@@ -18,12 +18,12 @@ export function createAppErrorSchema<
       name: Type.String(),
       message: Type.String(),
       statusCode: Type.Integer(),
-      ...(payloadSchema ? { payload: payloadSchema } : null),
+      payload: payloadSchema ?? Type.Object({}),
     },
     errorExample && {
       example: {
         ...errorExample,
-        ...{ payload: payloadSchema?.example },
+        payload: payloadSchema?.example ?? {},
       },
     },
   )
