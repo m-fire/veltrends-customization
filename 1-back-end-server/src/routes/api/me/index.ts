@@ -34,6 +34,7 @@ const meRoute: FastifyPluginAsync = async (fastify) => {
     '/',
     { schema: ME_SCHEMA.UNREGISTER },
     async (request, reply) => {
+      await UserService.unregister(request.user?.id!)
       reply.statusCode = 202
     },
   )

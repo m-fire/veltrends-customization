@@ -31,6 +31,12 @@ class UserService {
     }
   }
 
+  static async unregister(userId: number) {
+    return db.user.delete({
+      where: { id: userId },
+    })
+  }
+
   /**
    * 사용자를 못찾거나 PW가 틀릴경우, 보안상 `AuthenticationError` 발생시킨다.
    */
