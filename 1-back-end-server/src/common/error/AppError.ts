@@ -14,7 +14,7 @@ export type ErrorPayloadOpt<K extends AppErrorType> = K extends 'Unauthorized'
   ? {
       isExpiredToken: boolean
     }
-  : K extends 'BadRequest'
+  : K extends 'BadRequest' | 'Forbidden'
   ? {
       message: string
     }

@@ -4,6 +4,8 @@ import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
 import TokenService, { TokenStringMap } from './TokenService.js'
 import { AuthBody, AuthUserInfo } from '../routes/api/auth/types.js'
+import { MeRequestMap } from '../routes/api/me/types.js'
+import { Validator } from '../common/util/validates.js'
 
 const SOLT_ROUNDS = 10
 
