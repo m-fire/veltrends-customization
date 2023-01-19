@@ -172,3 +172,24 @@ client.test("/api/me/change-password ", function() {
 })
 %}
 ### 패스워드 변경실패(새 비번 양식이 유효하지 않음)
+
+DELETE http://{{host}}:{{port}}/api/me
+Cookie: access_token={{access_token}}; refresh_token={{refresh_token}};
+
+> {%
+var status = 202;
+client.test("/api/me/change-password ", function() {
+  client.log("\n");
+  client.log("response.body:\t" + JSON.stringify(response.body))
+  client.log("\n");
+
+  client.log("client.global 속성목록\n");
+  client.log("✔ global::user.id:\t" + client.global.get("user.id"));
+  client.log("✔ global::user.username:\t" + client.global.get("user.username"));
+  client.log("✔ global::access_token:\t" + client.global.get("access_token"));
+  client.log("✔ global::refresh_token:\t" + client.global.get("refresh_token"));
+
+  client.assert(response.status === status, "expected status : " + status + " | actual (" + response.status + ")")
+})
+%}
+### 회원탈퇴
