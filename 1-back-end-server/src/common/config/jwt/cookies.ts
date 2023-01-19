@@ -19,3 +19,8 @@ export function setTokenCookies(
     path: '/',
   })
 }
+
+export function clearCookie(reply: FastifyReply) {
+  reply.clearCookie('access_token')
+  reply.clearCookie('refresh_token')
+}
