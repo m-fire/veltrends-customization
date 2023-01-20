@@ -11,12 +11,6 @@ export const REQ_AUTH_BODY_SCHEMA = Type.Object({
   password: Type.String(),
 })
 
-const REQ_REFRESH_TOKEN_BODY_SCHEMA = Type.Required(
-  Type.Object({
-    refreshToken: Type.String(),
-  }),
-)
-
 // Response Schema
 
 export const RES_AUTH_USER_INFO_SCHEMA = Type.Object({
@@ -61,7 +55,9 @@ const AUTH_SCHEMA = createFastifySchemaMap({
   },
   REFRESH_TOKEN: {
     tags: ['auth'],
-    body: REQ_REFRESH_TOKEN_BODY_SCHEMA,
+    body: Type.Object({
+      refreshToken: Type.String(),
+    }),
     response: {
       200: RES_TOKENS_SCHEMA,
       400: createAppErrorSchema('BadRequest'),
