@@ -1,10 +1,11 @@
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
-import { AuthRequestMap, CookieTokens } from './types.js'
+import { AuthRequestMap } from './types.js'
 import AUTH_SCHEMA from './schema.js'
 import {
   clearCookie,
+  CookieTokens,
   setTokenCookies,
 } from '../../../common/config/jwt/cookies.js'
 

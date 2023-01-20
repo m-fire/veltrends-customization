@@ -3,16 +3,15 @@ import db from '../common/config/prisma/db-client.js'
 import {
   generateToken,
   RefreshTokenPayload,
-  TokenStringMap,
   validateToken,
 } from '../common/config/jwt/tokens.js'
-import { AuthUserInfo } from '../routes/api/auth/types.js'
+import { AuthResponseCodeMap } from '../routes/api/auth/types.js'
 
 export default class TokenService {
   static async generateTokens(
     { id: userId, username }: AuthUserInfo,
     token?: Token,
-  ): Promise<TokenStringMap> {
+  ): Promise<AuthTokens> {
     const { id: tokenId, rotationCounter } =
       token ?? (await db.token.create({ data: { userId } }))
 
@@ -43,3 +42,6 @@ export default class TokenService {
     return validateToken<RefreshTokenPayload>(tokenStr)
   }
 }
+
+type AuthTokens = AuthResponseCodeMap['LOGIN']['200']['tokens']
+type AuthUserInfo = AuthResponseCodeMap['LOGIN']['200']['user']

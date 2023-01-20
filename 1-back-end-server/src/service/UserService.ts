@@ -2,10 +2,12 @@ import * as bcrypt from 'bcrypt'
 import db from '../common/config/prisma/db-client.js'
 import AppError from '../common/error/AppError.js'
 import TokenService from './TokenService.js'
-import { AuthBody, AuthUserInfo } from '../routes/api/auth/types.js'
+import {
+  AuthRequestMap,
+  AuthResponseCodeMap,
+} from '../routes/api/auth/types.js'
 import { MeRequestMap } from '../routes/api/me/types.js'
 import { Validator } from '../common/util/validates.js'
-import { TokenStringMap } from '../common/config/jwt/tokens.js'
 
 const SOLT_ROUNDS = 10
 
@@ -13,7 +15,7 @@ class UserService {
   static async register({
     username,
     password,
-  }: AuthBody): Promise<TokensAndUser> {
+  }: RegisterParams): Promise<TokensAndUser> {
     const exists = await db.user.findUnique({ where: { username } })
     if (exists) throw new AppError('UserExists')
 
@@ -40,7 +42,10 @@ class UserService {
   /**
    * 사용자를 못찾거나 PW가 틀릴경우, 보안상 `AuthenticationError` 발생시킨다.
    */
-  static async login({ username, password }: AuthBody): Promise<TokensAndUser> {
+  static async login({
+    username,
+    password,
+  }: LoginParams): Promise<TokensAndUser> {
     const existsUser = await db.user.findUnique({ where: { username } })
     // Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
     try {
@@ -62,7 +67,9 @@ class UserService {
     }
   }
 
-  static async refreshToken(oldToken: string): Promise<TokenStringMap> {
+  static async refreshToken(
+    oldToken: string,
+  ): Promise<TokensAndUser['tokens']> {
     try {
       const ts = TokenService
       const { tokenId: id, rotationCounter: outCount } =
@@ -105,6 +112,7 @@ class UserService {
     const existsUser = await db.user.findUnique({ where: { id: userId } })
     try {
       if (!existsUser) throw new AppError('Authentication')
+
       if (!(await bcrypt.compare(oldPassword, existsUser.passwordHash)))
         throw new AppError('Forbidden', { message: 'Password does not match' })
 
@@ -126,7 +134,11 @@ export default UserService
 
 //types
 
-type TokensAndUser = { tokens: TokenStringMap; user: AuthUserInfo }
+type TokensAndUser = AuthResponseCodeMap['LOGIN']['200']
+
+type RegisterParams = AuthRequestMap['REGISTER']['Body']
+
+type LoginParams = AuthRequestMap['LOGIN']['Body']
 
 type ChangePasswordParams = MeRequestMap['CHANGE_PASSWORD']['Body'] & {
   userId: number
