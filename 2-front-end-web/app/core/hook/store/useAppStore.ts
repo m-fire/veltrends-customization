@@ -1,110 +1,92 @@
 import create from 'zustand'
-import produce from 'immer'
+import { immer } from 'zustand/middleware/immer'
 import { devtools } from 'zustand/middleware'
 import { ItemStatus } from '~/core/api/types'
 import { WritableDraft } from 'immer/dist/types/types-external'
 
 const useAppStore = create(
-  devtools<AppStore>((set, get) => ({
-    items: {
-      stateMap: {},
-      stateActions: {
-        setLiked: (itemId: number, itemStatus, isLiked) =>
-          set((prev) =>
-            produce(prev, (next) => {
-              const stateById = extractTypeStateById('items', itemId, next)
+  devtools(
+    immer<AppStore>((set, get) => ({
+      items: {
+        stateMap: {},
+        stateActions: {
+          setLiked: (itemId: number, itemStatus, isLiked) =>
+            set((s) => {
+              const stateById = extractTypeStateById('items', itemId, s)
               stateById.itemStatus = itemStatus
               stateById.isLiked = isLiked
             }),
-          ),
-        setBookmarked: (itemId: number, isBookmarked: boolean) =>
-          set((prev) => {
-            return produce(prev, (next) => {
-              const stateById = extractTypeStateById('items', itemId, next)
+          setBookmarked: (itemId: number, isBookmarked: boolean) =>
+            set((s) => {
+              const stateById = extractTypeStateById('items', itemId, s)
               stateById.isBookmarked = isBookmarked
-            })
-          }),
+            }),
+        },
       },
-    },
 
-    comments: {
-      /* state by id */
-      stateMap: {},
-      stateActions: {
-        setLiked: (commentId, likeCount, isLiked) =>
-          set((prev) =>
-            produce(prev, (next) => {
+      comments: {
+        /* state by id */
+        stateMap: {},
+        stateActions: {
+          setLiked: (commentId, likeCount, isLiked) =>
+            set((s) => {
               if (likeCount == null) return
-              const stateById = extractTypeStateById(
-                'comments',
-                commentId,
-                next,
-              )
+              const stateById = extractTypeStateById('comments', commentId, s)
               stateById.likeCount = likeCount
               stateById.isLiked = isLiked
             }),
-          ),
-      },
+        },
 
-      /* input state & actions */
-      inputState: {
-        visible: false,
-        parentCommentId: null,
-        commentId: null,
-        inputValue: '',
-      },
-      inputStateActions: {
-        write: (parentCommentId) =>
-          set((prev) =>
-            produce(prev, (next) => {
-              const inputState = next.comments.inputState
+        /* input state & actions */
+        inputState: {
+          visible: false,
+          parentCommentId: null,
+          commentId: null,
+          inputValue: '',
+        },
+        inputStateActions: {
+          write: (parentCommentId) =>
+            set((s) => {
+              const inputState = s.comments.inputState
               inputState.parentCommentId = parentCommentId
               inputState.visible = true
             }),
-          ),
-        edit: (commentId: number, inputValue: string) =>
-          set((prev) =>
-            produce(prev, (next) => {
-              const inputState = next.comments.inputState
+          edit: (commentId: number, inputValue: string) =>
+            set((s) => {
+              const inputState = s.comments.inputState
               inputState.commentId = commentId
               inputState.inputValue = inputValue
               inputState.visible = true
             }),
-          ),
-        close: () =>
-          set((prev) =>
-            produce(prev, (next) => {
-              next.comments.inputState.visible = false
+          close: () =>
+            set((s) => {
+              s.comments.inputState.visible = false
             }),
-          ),
+        },
       },
-    },
 
-    /*  request controls by entity's AbortController */
+      /*  request controls by entity's AbortController */
 
-    abortRequestsActions: {
-      abort: (type: EntityType, entityId: number) =>
-        set((prev) =>
-          produce(prev, (next) => {
-            const stateById = extractTypeStateById(type, entityId, next)
+      abortRequestsActions: {
+        abort: (type: EntityType, entityId: number) =>
+          set((s) => {
+            const stateById = extractTypeStateById(type, entityId, s)
             if (stateById.abortController != null) {
               stateById.abortController.abort()
               return
             }
             stateById.abortController = new AbortController()
           }),
-        ),
-      getController: (type: EntityType, entityId: number) =>
-        extractTypeStateById(type, entityId, get()).abortController,
-      remove: (type: EntityType, entityId: number) =>
-        set((prev) =>
-          produce(prev, (next) => {
-            const stateById = extractTypeStateById(type, entityId, next)
+        getController: (type: EntityType, entityId: number) =>
+          extractTypeStateById(type, entityId, get()).abortController,
+        remove: (type: EntityType, entityId: number) =>
+          set((s) => {
+            const stateById = extractTypeStateById(type, entityId, s)
             stateById.abortController = undefined
           }),
-        ),
-    },
-  })),
+      },
+    })),
+  ),
 )
 export default useAppStore
 
@@ -137,7 +119,7 @@ function extractTypeStateById<K extends EntityType>(
       ? ItemActionState
       : K extends 'comments'
       ? CommentActionState
-      : {}
+      : never
   >
 }
 
