@@ -1,10 +1,11 @@
 import { FastifyReply } from 'fastify'
-import { TokenStringMap } from './tokens.js'
+import { AuthResponseCodeMap } from '../../../routes/api/auth/types'
 
 // ref: https://github.com/fastify/fastify-cookie#example
+
 export function setTokenCookies(
   reply: FastifyReply,
-  { accessToken, refreshToken }: TokenStringMap,
+  { accessToken, refreshToken }: AuthToken,
 ) {
   reply.cookie('access_token', accessToken, {
     // signed: true,
@@ -19,8 +20,14 @@ export function setTokenCookies(
     path: '/',
   })
 }
+type AuthToken = AuthResponseCodeMap['LOGIN']['200']['tokens']
 
 export function clearCookie(reply: FastifyReply) {
   reply.clearCookie('access_token')
   reply.clearCookie('refresh_token')
+}
+
+export interface CookieTokens {
+  access_token?: string
+  refresh_token?: string
 }

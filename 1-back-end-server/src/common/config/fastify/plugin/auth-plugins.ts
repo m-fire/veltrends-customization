@@ -3,7 +3,7 @@ import { FastifyPluginAsync } from 'fastify'
 import jwt from 'jsonwebtoken'
 import { AccessTokenPayload, validateToken } from '../../jwt/tokens.js'
 import AppError from '../../../error/AppError.js'
-import { CookieTokens } from '../../../../routes/api/auth/types.js'
+import { CookieTokens } from '../../jwt/cookies.js'
 
 const { JsonWebTokenError } = jwt
 

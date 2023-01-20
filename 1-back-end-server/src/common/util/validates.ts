@@ -1,5 +1,5 @@
-import { AuthUserInfo } from '../../routes/api/auth/types.js'
 import AppError from '../error/AppError.js'
+import { AuthResponseCodeMap } from '../../routes/api/auth/types'
 
 export class Validator {
   static Auth = class AuthenticationValidator {
@@ -37,3 +37,5 @@ export class Validator {
     }
   }
 }
+
+type AuthUserInfo = AuthResponseCodeMap['LOGIN']['200']['user']
