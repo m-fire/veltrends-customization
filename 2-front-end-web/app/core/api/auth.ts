@@ -12,6 +12,7 @@ const API_AUTH = API + '/auth'
 const URL_ME = API + '/me'
 const URL_REGISTER = API_AUTH + '/register'
 const URL_LOGIN = API_AUTH + '/login'
+const URL_LOGOUT = API_AUTH + '/logout'
 
 export class Authenticator {
   private static authorizedAccountMemo: AuthResult | null = null
@@ -52,6 +53,10 @@ export class Authenticator {
       const headers = Cookies.createHeaders(response.headers)
       return { headers, result: response.data }
     }
+  }
+
+  static async logout() {
+    await client.post<AuthResult>(URL_LOGOUT)
   }
 }
 
