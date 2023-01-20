@@ -6,18 +6,9 @@ import { RES_AUTH_USER_INFO_SCHEMA } from '../../auth/schema.js'
 
 // Request
 
-const REQ_COMMENT_CREATE_BODY_SCHEMA = Type.Object({
-  text: Type.String(),
-  parentCommentId: Type.Optional(Nullable(Type.Integer())),
-})
-
 const REQ_COMMENT_PATH_PARAMS_SCHEMA = Type.Object({
   id: Type.Integer(),
   commentId: Type.Integer(),
-})
-
-const REQ_COMMENT_EDIT_BODY_SCHEMA = Type.Object({
-  text: Type.String(),
 })
 
 // Response
@@ -45,15 +36,16 @@ const RES_COMMENT_LIKED_SCHEMA = Type.Object({
   likeCount: Type.Number(),
 })
 
-const RES_EMPTY_OBJECT_SCHEMA = Type.Object({})
-
 // FastifySchema
 
 const COMMENTS_SCHEMA = createFastifySchemaMap({
   CREATE_COMMENT: {
     tags: ['items/:id/comments'],
     params: ITEMS_SCHEMA.GET_ITEM.params,
-    body: REQ_COMMENT_CREATE_BODY_SCHEMA,
+    body: Type.Object({
+      text: Type.String(),
+      parentCommentId: Type.Optional(Nullable(Type.Integer())),
+    }),
     response: {
       201: RES_COMMENT_SCHEMA,
     },
@@ -82,7 +74,9 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
   EDIT_COMMENT: {
     tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
-    body: REQ_COMMENT_EDIT_BODY_SCHEMA,
+    body: Type.Object({
+      text: Type.String(),
+    }),
     response: {
       202: RES_COMMENT_SCHEMA,
     },
@@ -91,7 +85,7 @@ const COMMENTS_SCHEMA = createFastifySchemaMap({
     tags: ['items/:id/comments'],
     params: REQ_COMMENT_PATH_PARAMS_SCHEMA,
     response: {
-      204: RES_EMPTY_OBJECT_SCHEMA,
+      204: Type.Object({}),
     },
   },
   LIKE_COMMENT: {

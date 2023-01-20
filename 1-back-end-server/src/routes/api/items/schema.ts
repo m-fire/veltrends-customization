@@ -10,30 +10,8 @@ import { RES_AUTH_USER_INFO_SCHEMA } from '../auth/schema.js'
 
 // Reqeust Schema
 
-const REQ_ITEM_CREATE_BODY_SCHEMA = Type.Object({
-  title: Type.String(),
-  body: Type.String(),
-  link: Type.String(),
-  tags: Type.Optional(Type.Array(Type.String())),
-})
-
-const REQ_ITEM_LIST_QUERYSTRING_SCHEMA = Type.Object({
-  cursor: Type.Optional(Type.String()),
-  mode: Type.Optional(Type.String()),
-  // limit: 아이탬 갯수는 클라이언트에서 정하지 않도록 함
-  startDate: Type.Optional(Type.String()),
-  endDate: Type.Optional(Type.String()),
-})
-
 const REQ_ITEM_PATH_PARAMS_SCHEMA = Type.Object({
   id: Type.Integer(),
-})
-
-const REQ_ITEM_UPDATE_BODY_SCHEMA = Type.Object({
-  link: Type.String(),
-  title: Type.String(),
-  body: Type.String(),
-  tags: Type.Array(Type.String()),
 })
 
 // Response Schema
@@ -82,7 +60,12 @@ export const RES_ITEM_LIKE_SCHEMA = Type.Object({
 const ITEMS_SCHEMA = createFastifySchemaMap({
   CREATE_ITEM: {
     tags: ['items'],
-    body: REQ_ITEM_CREATE_BODY_SCHEMA,
+    body: Type.Object({
+      title: Type.String(),
+      body: Type.String(),
+      link: Type.String(),
+      tags: Type.Optional(Type.Array(Type.String())),
+    }),
     response: {
       201: RES_ITEM_SCHEMA,
       401: createAppErrorSchema('Authentication'),
@@ -90,7 +73,18 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
   },
   GET_ITEM_LIST: {
     tags: ['items'],
-    querystring: REQ_ITEM_LIST_QUERYSTRING_SCHEMA,
+    querystring: Type.Object({
+      cursor: Type.Optional(Type.String()),
+      mode: Type.Optional(
+        Type.Union([
+          Type.Literal('trending'),
+          Type.Literal('recent'),
+          Type.Literal('past'),
+        ]),
+      ), // limit: 아이탬 갯수는 클라이언트에서 정하지 않도록 함
+      startDate: Type.Optional(Type.String()),
+      endDate: Type.Optional(Type.String()),
+    }),
     response: {
       200: createPaginationSchema(RES_ITEM_SCHEMA),
       404: RES_EMPTY_LIST_SCHEMA,
@@ -107,7 +101,12 @@ const ITEMS_SCHEMA = createFastifySchemaMap({
   EDIT_ITEM: {
     tags: ['items'],
     params: REQ_ITEM_PATH_PARAMS_SCHEMA,
-    body: REQ_ITEM_UPDATE_BODY_SCHEMA,
+    body: Type.Object({
+      link: Type.String(),
+      title: Type.String(),
+      body: Type.String(),
+      tags: Type.Array(Type.String()),
+    }),
     response: {
       202: RES_ITEM_SCHEMA,
       403: createAppErrorSchema('Forbidden'),
