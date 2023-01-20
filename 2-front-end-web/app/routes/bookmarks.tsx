@@ -47,8 +47,8 @@ function Bookmarks() {
 export default Bookmarks
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const isAuthenticated = await Authenticator.checkAuthenticated(request)
-  if (!isAuthenticated) return redirect(`/auth/login?next=/bookmarks`)
+  if (!(await Authenticator.isAuthenticated(request)))
+    return redirect(`/auth/login?next=/bookmarks`)
 
   const bookmarkList = await getBookmarkItemList()
   return json(bookmarkList)

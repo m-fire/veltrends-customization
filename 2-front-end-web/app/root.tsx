@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import {
   Links,
@@ -13,16 +13,16 @@ import GlobalStyle from '~/GlobalStyle'
 import { Authenticator } from '~/core/api/auth'
 import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
-import { UserContext } from '~/common/context/UserContext'
-import { SimpleUser } from '~/common/api/types'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import AppBottomSheetModal from '~/core/component/home/AppBottomSheetModal'
 import Dialog from '~/common/component/template/Dialog'
 import AppOverlay from '~/core/component/home/AppOverlay'
+import { AuthUser } from '~/common/api/types'
+import { getUserStoreCreator, UserContext } from '~/common/store/user'
 
-const queryClient = new QueryClient({
+const initialQueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // staleTime: 쿼리가 새로 고침에서 오래된 것으로 전환될 때까지의 기간입니다.
@@ -33,6 +33,7 @@ const queryClient = new QueryClient({
   },
 })
 
+// ReactQueryDevtools Component
 const ReactQueryDevtoolsProduction = React.lazy(() =>
   import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(
     (d) => ({
@@ -41,14 +42,36 @@ const ReactQueryDevtoolsProduction = React.lazy(() =>
   ),
 )
 
+export const meta: MetaFunction = () => ({
+  charset: 'utf-8',
+  title: 'App Veltrend',
+  viewport: 'width=device-width,initial-scale=1',
+})
+
 export default function App() {
+  const { authUser, cookie } = useLoaderData<{
+    authUser: AuthUser | null
+    cookie: string | null
+  }>()
+
+  useEffect(() => {
+    console.log(
+      `root.tsx> () useEffect()`,
+      {
+        hasCookie: !!cookie,
+      },
+      !!cookie
+        ? '쿠키가 존재하므로 사용자 인증상태 유지해야 함'
+        : '쿠키가 없으므로 로그아웃 해야함',
+    )
+  }, [cookie])
+
+  // ReactQuery Devtools initialize
   const [showDevtools, setShowDevtools] = useState(false)
   useEffect(() => {
     // @ts-ignore
     window.toggleDevtools = () => setShowDevtools((old) => !old)
   }, [])
-
-  const data = useLoaderData<SimpleUser | null>()
 
   return (
     <html lang="ko">
@@ -60,14 +83,17 @@ export default function App() {
       <body>
         <GlobalStyle />
 
-        <QueryClientProvider client={queryClient}>
-          <DialogContextProvider dialog={Dialog} overlay={AppOverlay}>
-            <UserContext.Provider value={data}>
+        <QueryClientProvider client={initialQueryClient}>
+          <UserContext.Provider
+            createStore={getUserStoreCreator(({ setUser }) => {
+              cookie ? setUser(authUser) : setUser(null)
+            })}
+          >
+            <DialogContextProvider dialog={Dialog} overlay={AppOverlay}>
               <Outlet />
-            </UserContext.Provider>
-          </DialogContextProvider>
-
-          <AppBottomSheetModal />
+            </DialogContextProvider>
+            <AppBottomSheetModal />
+          </UserContext.Provider>
 
           <ReactQueryDevtools initialIsOpen />
           {showDevtools && (
@@ -87,6 +113,7 @@ export default function App() {
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const cookie = request.headers.get('Cookie')
+
   /*
   const redirectIfNeeded = () => {
     const { pathname, search } = new URL(request.url)
@@ -98,14 +125,15 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     }
     return null
   }
-*/
+  */
+
+  if (!cookie) return { authUser: null, cookie: null }
   // if (!cookie) return redirectIfNeeded()
-  if (!cookie) return null
 
   Clients.setCookie(cookie)
   try {
-    const userAndTokens = await Authenticator.getAccount()
-    return userAndTokens
+    const authUser = await Authenticator.getUser()
+    return { authUser, cookie }
   } catch (e) {
     const error = AppError.extract(e)
     if (error.name === 'Unauthorized') {
@@ -113,12 +141,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     }
 
     // return redirectIfNeeded()
-    return null
+    return { authUser: null, cookie: null }
   }
 }
-
-export const meta: MetaFunction = () => ({
-  charset: 'utf-8',
-  title: 'New Remix App',
-  viewport: 'width=device-width,initial-scale=1',
-})

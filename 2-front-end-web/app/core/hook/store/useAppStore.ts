@@ -9,58 +9,54 @@ const useAppStore = create(
     immer<AppStore>((set, get) => ({
       items: {
         stateMap: {},
-        stateActions: {
-          setLiked: (itemId: number, itemStatus, isLiked) =>
-            set((s) => {
-              const stateById = extractTypeStateById('items', itemId, s)
-              stateById.itemStatus = itemStatus
-              stateById.isLiked = isLiked
-            }),
-          setBookmarked: (itemId: number, isBookmarked: boolean) =>
-            set((s) => {
-              const stateById = extractTypeStateById('items', itemId, s)
-              stateById.isBookmarked = isBookmarked
-            }),
-        },
+        setLiked: (itemId: number, itemStatus, isLiked) =>
+          set((s) => {
+            const stateById = extractTypeStateById('items', itemId, s)
+            stateById.itemStatus = itemStatus
+            stateById.isLiked = isLiked
+          }),
+        setBookmarked: (itemId: number, isBookmarked: boolean) =>
+          set((s) => {
+            const stateById = extractTypeStateById('items', itemId, s)
+            stateById.isBookmarked = isBookmarked
+          }),
       },
 
       comments: {
         /* state by id */
         stateMap: {},
-        stateActions: {
-          setLiked: (commentId, likeCount, isLiked) =>
-            set((s) => {
-              if (likeCount == null) return
-              const stateById = extractTypeStateById('comments', commentId, s)
-              stateById.likeCount = likeCount
-              stateById.isLiked = isLiked
-            }),
-        },
+        setLiked: (commentId, likeCount, isLiked) =>
+          set((s) => {
+            if (likeCount == null) return
+            const stateById = extractTypeStateById('comments', commentId, s)
+            stateById.likeCount = likeCount
+            stateById.isLiked = isLiked
+          }),
 
         /* input state & actions */
-        inputState: {
-          visible: false,
-          parentCommentId: null,
-          commentId: null,
-          inputValue: '',
-        },
-        inputStateActions: {
+        input: {
+          state: {
+            visible: false,
+            parentCommentId: null,
+            commentId: null,
+            inputValue: '',
+          },
           write: (parentCommentId) =>
             set((s) => {
-              const inputState = s.comments.inputState
+              const inputState = s.comments.input.state
               inputState.parentCommentId = parentCommentId
               inputState.visible = true
             }),
           edit: (commentId: number, inputValue: string) =>
             set((s) => {
-              const inputState = s.comments.inputState
+              const inputState = s.comments.input.state
               inputState.commentId = commentId
               inputState.inputValue = inputValue
               inputState.visible = true
             }),
           close: () =>
             set((s) => {
-              s.comments.inputState.visible = false
+              s.comments.input.state.visible = false
             }),
         },
       },
@@ -86,6 +82,7 @@ const useAppStore = create(
           }),
       },
     })),
+    { name: 'veltrend-app' },
   ),
 )
 export default useAppStore
@@ -128,24 +125,20 @@ function extractTypeStateById<K extends EntityType>(
 interface AppStore {
   items: {
     stateMap: Record<number, ItemActionState>
-    stateActions: {
-      setLiked: (
-        entityId: number,
-        itemStatus: ItemStatus,
-        isLiked: boolean,
-      ) => void
-      setBookmarked: (entityId: number, isBookmarked: boolean) => void
-    }
+    setLiked: (
+      entityId: number,
+      itemStatus: ItemStatus,
+      isLiked: boolean,
+    ) => void
+    setBookmarked: (entityId: number, isBookmarked: boolean) => void
   }
 
   comments: {
     stateMap: Record<number, CommentActionState>
-    stateActions: {
-      setLiked: (entityId: number, likeCount: number, isLiked: boolean) => void
-    }
+    setLiked: (entityId: number, likeCount: number, isLiked: boolean) => void
 
-    inputState: CommentInputState
-    inputStateActions: {
+    input: {
+      state: CommentInputState
       write: (parentCommentId: number | null) => void
       edit: (commentId: number, editedText: string) => void
       close: () => void

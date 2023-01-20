@@ -1,4 +1,4 @@
-import { SimpleUser } from '~/common/api/types'
+import { AuthUser } from '~/common/api/types'
 
 // general result
 
@@ -15,7 +15,7 @@ export interface Item {
   createdAt: string
   updatedAt: string
   author: string
-  user: SimpleUser
+  user: AuthUser
   publisher: Publisher
   itemStatus: ItemStatus
   isLiked: boolean
@@ -49,8 +49,8 @@ export interface Comment {
   subcommentCount: number
   createdAt: string
   updatedAt: string
-  user: SimpleUser
-  mentionUser: SimpleUser | null
+  user: AuthUser
+  mentionUser: AuthUser | null
   /* Subcomment 의 subcommentList 는 undefined 인 경우를 위한 `?` 처리 */
   subcommentList?: Comment[]
   isDeleted: boolean

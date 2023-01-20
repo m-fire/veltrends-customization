@@ -47,7 +47,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (!isString(username) || !isString(password)) return
 
   try {
-    const { result, headers } = await Authenticator.Route.login({
+    const { result, headers } = await Authenticator.getAuthentication({
       username,
       password,
     })

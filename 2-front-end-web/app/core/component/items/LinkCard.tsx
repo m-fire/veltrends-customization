@@ -8,7 +8,7 @@ import { Earth } from '~/core/component/generate/svg'
 import LikeButton from '~/core/component/items/LikeButton'
 import BookmarkButton from '~/core/component/items/BookmarkButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
-import { useAuthUser } from '~/common/context/UserContext'
+import { useUserState } from '~/common/store/user'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
@@ -35,7 +35,7 @@ function LinkCard({ item }: LinkCardProps) {
   const stateById = useItemStateById(itemId)
   const itemStatus = stateById?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
-  const authUser = useAuthUser()
+  const { user } = useUserState()
 
   const isLiked = stateById?.isLiked ?? item.isLiked
   const isBookmarked = stateById?.isBookmarked ?? item.isBookmarked
@@ -43,7 +43,7 @@ function LinkCard({ item }: LinkCardProps) {
 
   const toggleActions = useCallback(
     async (type: ActionType) => {
-      if (!authUser) {
+      if (!user) {
         openDialog(type, { gotoLogin: true })
         return
       }
@@ -115,13 +115,13 @@ function LinkCard({ item }: LinkCardProps) {
           <LikeButton
             onClick={() => toggleActions('LIKE_ITEM')}
             isLiked={isLiked}
-            disabled={!authUser}
+            disabled={!user}
           />
 
           <BookmarkButton
             onClick={() => toggleActions('BOOKMARK_ITEM')}
             isBookmarked={isBookmarked}
-            disabled={!authUser}
+            disabled={!user}
           />
         </ActionButtons>
 

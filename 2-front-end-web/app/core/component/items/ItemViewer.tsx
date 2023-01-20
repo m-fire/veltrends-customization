@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import LikeButton from '~/core/component/items/LikeButton'
 import { useDateDistance } from '~/common/hook/useDateDistance'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
-import { useAuthUser } from '~/common/context/UserContext'
+import { useUserState } from '~/common/store/user'
 import Earth from '~/core/component/generate/svg/Earth'
 import { useItemStateById } from '~/core/hook/store/useItemActionStore'
 import { useItemAction } from '~/core/hook/useItemAction'
@@ -26,7 +26,6 @@ function ItemViewer({ item }: ItemViewerProps) {
     author,
     title,
     body,
-    user,
     createdAt,
     link,
   } = item
@@ -35,7 +34,7 @@ function ItemViewer({ item }: ItemViewerProps) {
   const stateById = useItemStateById(itemId)
   const itemStatus = stateById?.itemStatus ?? item.itemStatus
   const openDialog = useOpenDialog()
-  const authUser = useAuthUser()
+  const user = useUserState().user ?? item.user
 
   const isLiked = stateById?.isLiked ?? item.isLiked
   const isBookmarked = stateById?.isBookmarked ?? item.isBookmarked
@@ -43,7 +42,7 @@ function ItemViewer({ item }: ItemViewerProps) {
 
   const toggleActionByType = useCallback(
     async (type: ActionType) => {
-      if (!authUser) {
+      if (!user) {
         openDialog(type, { gotoLogin: true })
         return
       }
@@ -105,13 +104,13 @@ function ItemViewer({ item }: ItemViewerProps) {
           <LikeButton
             size="medium"
             isLiked={isLiked}
-            disabled={!authUser}
+            disabled={!user}
             onClick={() => toggleActionByType('LIKE_ITEM')}
           />
           <BookmarkButton
             size="medium"
             isBookmarked={isBookmarked}
-            disabled={!authUser}
+            disabled={!user}
             onClick={() => toggleActionByType('BOOKMARK_ITEM')}
           />
         </ActionButtons>
@@ -123,7 +122,7 @@ function ItemViewer({ item }: ItemViewerProps) {
             <LikeButton
               size="large"
               isLiked={isLiked}
-              disabled={!authUser}
+              disabled={!user}
               onClick={() => toggleActionByType('LIKE_ITEM')}
             />
 
@@ -142,7 +141,7 @@ function ItemViewer({ item }: ItemViewerProps) {
           </BottomActionBlock>
 
           <UserInfo>
-            writen by <b>{user.username}</b> · <span>{pastDistance}</span>
+            writen by <b>{user?.username}</b> · <span>{pastDistance}</span>
           </UserInfo>
         </Footer>
       </Content>

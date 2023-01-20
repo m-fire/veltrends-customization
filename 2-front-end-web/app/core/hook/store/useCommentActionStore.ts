@@ -11,13 +11,11 @@ export function useCommentActionStateById(commentId: number) {
 }
 
 export function useCommentStateAction() {
-  const commentStateActions = useAppStore(
-    (store) => store.comments.stateActions,
-  )
-  return commentStateActions
+  const { setLiked } = useAppStore((store) => store.comments)
+  return { setLiked }
 }
 
 export function useCommentInputState() {
-  const inputState = useAppStore((store) => store.comments.inputState)
-  return inputState
+  const commentInputState = useAppStore((store) => store.comments.input.state)
+  return commentInputState
 }

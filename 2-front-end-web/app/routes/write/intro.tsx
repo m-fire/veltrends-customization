@@ -73,8 +73,8 @@ export default Intro
 /* Remix routes handler */
 
 export const action: ActionFunction = async ({ request }) => {
-  const isAuthenticated = await Authenticator.checkAuthenticated(request)
-  if (!isAuthenticated) throw new Error('Not logged in')
+  if (!(await Authenticator.isAuthenticated(request)))
+    throw new Error('Not logged in')
 
   const form = await request.formData()
   const link = form.get('link') as string

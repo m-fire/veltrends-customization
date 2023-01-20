@@ -18,7 +18,7 @@ import { ItemListMode } from '~/core/api/types'
 import { Calendar, Clock, Fire } from '~/core/component/generate/svg'
 import { DateStringRange } from '~/common/util/converters'
 import { Filters, Flex, Font } from '~/common/style/css-builder'
-import { useElementDisplayEffect } from '~/common/hook/useElementDisplayEffect'
+import { useDisplayEffectRef } from '~/common/hook/useDisplayEffectRef'
 
 type ModeSelectorProps = {
   currentMode: ItemListMode
@@ -85,24 +85,27 @@ function ListModeSelector({
 
   // Indicator 의 너비, 위치 등을 모든 매뉴아이템에게 얻은 후, 이동 시 참조될 값 update.
   // 이 컴포넌트 root element 가 display: none 이 아닐때 실행됨
-  const rootRef = useElementDisplayEffect<HTMLAnchorElement>(
-    useCallback(() => {
-      const margin = INDICATOR_MIN_WIDTH
-      setItemStates((prev) =>
-        produce(prev, (next) => {
-          next.forEach((s, i) => {
-            const el = itemRefs[i].current
-            if (!el) return
-            s.size.width = el.offsetWidth + margin
-            s.position.left = el.offsetLeft - margin / 3
-          })
-        }),
-      )
-    }, []),
+  const displayRef = useDisplayEffectRef<HTMLAnchorElement>(
+    {
+      displayHandler: () => {
+        const margin = INDICATOR_MIN_WIDTH
+        setItemStates((prev) =>
+          produce(prev, (next) => {
+            next.forEach((s, i) => {
+              const el = itemRefs[i].current
+              if (!el) return
+              s.size.width = el.offsetWidth + margin
+              s.position.left = el.offsetLeft - margin / 3
+            })
+          }),
+        )
+      },
+    },
+    [],
   )
 
   return (
-    <NavBlock ref={rootRef} {...rest}>
+    <NavBlock ref={displayRef} {...rest}>
       <ItemList>
         {itemStates.map((s, index) => {
           return (

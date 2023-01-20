@@ -11,8 +11,7 @@ function Auth({}: AuthProps) {
 export default Auth
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const isAuthenticated = await Authenticator.checkAuthenticated(request)
-  if (isAuthenticated) return redirect('/')
+  if (await Authenticator.isAuthenticated(request)) redirect(`/`)
   return null
 }
 

@@ -36,7 +36,7 @@ function UserMenuButton({ username }: UserInformationProps) {
         <WriteInnerButton to="/write" variant="textonly" size="medium">
           새 글 작성
         </WriteInnerButton>
-        <VariantButton to="/account" variant="textonly" size="medium">
+        <VariantButton to="/setting/account" variant="textonly" size="medium">
           내 계정
         </VariantButton>
         <VariantButton to="/bookmarks" variant="textonly" size="medium">

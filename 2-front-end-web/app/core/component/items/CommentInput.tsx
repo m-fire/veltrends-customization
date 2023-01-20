@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { globalColors } from '~/common/style/global-colors'
-import { useAuthUser } from '~/common/context/UserContext'
+import { useUserState } from '~/common/store/user'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { useCommentInputAction } from '~/core/hook/useCommentAction'
 import { Flex, Font } from '~/common/style/css-builder'
@@ -8,12 +8,12 @@ import { Flex, Font } from '~/common/style/css-builder'
 type CommentInputParams = {}
 
 function CommentInput({}: CommentInputParams) {
-  const authUser = useAuthUser()
+  const { user } = useUserState()
   const openDialog = useOpenDialog()
   const { writeComment } = useCommentInputAction()
 
   const onClick = () => {
-    if (authUser == null) {
+    if (user == null) {
       openDialog('WRITE_COMMENT', { gotoLogin: true })
       return
     }

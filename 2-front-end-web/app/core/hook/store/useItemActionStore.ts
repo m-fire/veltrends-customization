@@ -11,6 +11,6 @@ export function useItemStateById(itemId: number) {
 }
 
 export function useItemStateAction() {
-  const itemStateActions = useAppStore((store) => store.items.stateActions)
-  return itemStateActions
+  const { setLiked, setBookmarked } = useAppStore((store) => store.items)
+  return { setLiked, setBookmarked }
 }

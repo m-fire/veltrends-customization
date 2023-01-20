@@ -9,7 +9,7 @@ import CommentList from '~/core/component/items/CommentList'
 import { useCommentListQuery } from '~/core/hook/query/useCommentsQuery'
 import CommentInputOverlay from '~/core/component/items/CommentInputOverlay'
 import MoreVertButton from '~/core/component/items/MoreVertButton'
-import { useAuthUser } from '~/common/context/UserContext'
+import { useUserState } from '~/common/store/user'
 import useBottomSheetModalStore from '~/common/hook/store/useBottomSheetModalStore'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
 import { Media } from '~/common/style/media-query'
@@ -19,9 +19,9 @@ type ItemByIdProps = {}
 
 function ItemById({}: ItemByIdProps) {
   const loaderData = useLoaderData<ItemLoaderData>()
-  const authUser = useAuthUser()
+  const { user } = useUserState()
   const { item } = loaderData
-  const isLoggedIn = authUser?.id === item.user.id
+  const isLoggedIn = user?.id === item.user.id
 
   /* react-query 적용 동기: velopert */
   // comments 에서 처리할 action 종류가 4가지가 되는데 (like, commenting, commentLike, subcommentLike)

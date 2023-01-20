@@ -1,7 +1,13 @@
-import { DependencyList, useEffect, useRef } from 'react'
+import {
+  DependencyList,
+  RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react'
 
 /**
- * <h2>useElementDisplayHandler</h2>
+ * <h2>useDisplayEffectRef</h2>
  * <p>CSS display: none 값에 의해 element 가 표시되거나, 사라짐 에 따라 동작하는 display 핸들링 훅</p>
  * <ol>
  *     <li>주의사항</li>
@@ -12,16 +18,23 @@ import { DependencyList, useEffect, useRef } from 'react'
  *         핸들러들은 무한반복 실행을 하게 될 것이다. 따라서 useCallback 으로 생성제한을 두어야 한다.</li>
  *     </ul>
  * </ol>
- * @param displayHandler Element 가 표시될때 1번 호출될 함수
- * @param undisplayHandler Element 가 사라질때 1번 호출될 함수
- * @param deps
+ * @param displayHandler Element 가 표시될때 or 사라질때 마다 1번씩 호출될 함수. deps 에 변경감지값을 설정할 경우 횟수가 증가할 수 있다.
+ * @param undisplayHandler
+ * @param deps 변경감지 의존성 배열
  */
-export function useElementDisplayEffect<T extends HTMLElement>(
-  displayHandler: (target: T) => void,
-  undisplayHandler?: (target: T) => void,
+export function useDisplayEffectRef<T extends HTMLElement>(
+  { displayHandler, undisplayHandler }: UseDisplayElementEffectParams<T>,
   deps: DependencyList = [],
-) {
+): RefObject<T> {
   const ref = useRef<T | null>(null)
+
+  const display = useCallback(() => {
+    displayHandler?.(ref.current)
+  }, [])
+
+  const undisplay = useCallback(() => {
+    undisplayHandler?.(ref.current)
+  }, [])
 
   useEffect(() => {
     if (!ref.current) return
@@ -31,10 +44,10 @@ export function useElementDisplayEffect<T extends HTMLElement>(
       entries.forEach(
         (e) => {
           if (!e.isIntersecting) {
-            undisplayHandler?.(e.target as T)
+            display()
             return
           }
-          displayHandler(e.target as T)
+          undisplay()
         },
         {
           root: el.parentElement,
@@ -46,7 +59,12 @@ export function useElementDisplayEffect<T extends HTMLElement>(
     return () => {
       observer.disconnect()
     }
-  }, [displayHandler, undisplayHandler, ...deps])
+  }, [display, undisplay, ...deps])
 
   return ref
+}
+
+type UseDisplayElementEffectParams<T extends HTMLElement> = {
+  displayHandler: (target: T | null) => void | null
+  undisplayHandler?: (target: T | null) => void | null
 }

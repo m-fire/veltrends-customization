@@ -8,7 +8,7 @@ import React from 'react'
 import ReplyButton from '~/core/component/items/ReplyButton'
 import SubcommentList from '~/core/component/items/SubcommentList'
 import { useOpenDialog } from '~/common/hook/useOpenDialog'
-import { useAuthUser } from '~/common/context/UserContext'
+import { useUserState } from '~/common/store/user'
 import { useItemIdParams } from '~/core/hook/useItemIdParams'
 import AppError from '~/common/error/AppError'
 import { MoreVert } from '~/core/component/generate/svg'
@@ -29,7 +29,6 @@ export interface CommentElementProps {
 function CommentElement({ comment, type }: CommentElementProps) {
   const {
     id: commentId,
-    user,
     text,
     createdAt,
     subcommentList = [],
@@ -41,14 +40,14 @@ function CommentElement({ comment, type }: CommentElementProps) {
   const commentActionState = useCommentActionStateById(commentId)
   const likeCount = commentActionState?.likeCount ?? comment.likeCount
   const openDialog = useOpenDialog()
-  const authUser = useAuthUser()
+  const { user } = useUserState()
   const isLiked = commentActionState?.isLiked ?? comment.isLiked
   const itemId = useItemIdParams()
 
   const toggleLike = async () => {
     if (itemId == null) throw new AppError('BadRequest')
 
-    if (authUser == null) {
+    if (user == null) {
       openDialog('LIKE_COMMENT', { gotoLogin: true })
       return
     }
@@ -66,7 +65,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
   const onReply = () => {
     if (itemId == null) throw new AppError('BadRequest')
 
-    if (authUser == null) {
+    if (user == null) {
       openDialog('WRITE_COMMENT')
       return
     }
@@ -97,7 +96,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
 
   const pastDistance = useDateDistance(createdAt)
   const hasSubcomments = subcommentList.length > 0
-  const isMyComment = comment.user.id === authUser?.id
+  const isMyComment = comment.user.id === user?.id
   const isRootComment = type === 'root'
 
   return (
@@ -111,7 +110,8 @@ function CommentElement({ comment, type }: CommentElementProps) {
         <>
           <CommentHead>
             <LeftGroup>
-              <Username>{user.username}</Username> · <Time>{pastDistance}</Time>
+              <Username>{user?.username}</Username> ·{' '}
+              <Time>{pastDistance}</Time>
             </LeftGroup>
             {isMyComment ? (
               <MoreButton onClick={onClickMore}>
@@ -133,7 +133,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
                 size={'small'}
                 isLiked={isLiked}
                 onClick={toggleLike}
-                disabled={authUser == null}
+                disabled={user == null}
               />
               {likeCount !== 0 ? (
                 <LikeCount>{likeCount.toLocaleString()}</LikeCount>

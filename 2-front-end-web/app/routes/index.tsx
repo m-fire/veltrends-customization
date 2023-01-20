@@ -19,15 +19,18 @@ import { Media } from '~/common/style/media-query'
 import { useListModeURLParams } from '~/core/hook/request/useListModeURLParams'
 
 function Index() {
+  //
   const {
     mode,
     dateRange: { start, end },
   } = useListModeURLParams('trending')
-  //
-  const [dateRange, setDateRange] = useState<DateStringRange>({ start, end })
 
+  const loaderData = useLoaderData<Pagination<Item>>()
+  const [dateRange, setDateRange] = useState<DateStringRange>({ start, end })
   const submodeOrNull = mode === 'past' ? { start } : null
+
   const { data, hasNextPage, fetchNextPage } = useItemsInfiniteQuery(
+    loaderData,
     ['items', mode, submodeOrNull].filter((key) => key != null),
     { mode, dateRange },
   )
@@ -61,10 +64,10 @@ function Index() {
 
   /* refactoring */
   function useItemsInfiniteQuery(
+    initialData: any,
     queryKey: Parameters<typeof useInfiniteQuery>[0],
     { mode, dateRange }: UseItemsInfiniteQueryParams,
   ) {
-    const initialData = useLoaderData<Pagination<Item>>()
     const queryResult = useInfiniteQuery(
       queryKey,
       async ({ pageParam: cursor }) => {

@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { client, Clients, URL_API_SERVER } from '~/common/api/client'
 import { isString } from '~/common/util/strings'
-import { SimpleUser } from '~/common/api/types'
+import { AuthUser } from '~/common/api/types'
 
 // Constants
 
@@ -15,23 +15,33 @@ const URL_LOGIN = API_AUTH + '/login'
 const URL_LOGOUT = API_AUTH + '/logout'
 
 export class Authenticator {
-  private static authorizedAccountMemo: AuthResult | null = null
-
-  static async getAccount() {
-    const response = await client.get<AuthResult>(URL_ME)
-    if (!Authenticator.authorizedAccountMemo)
-      Authenticator.authorizedAccountMemo = response.data
-
-    return Authenticator.authorizedAccountMemo
+  static async createAuthentication(params: CreateAuthParams) {
+    const response = await client.post<AuthResult>(URL_REGISTER, params)
+    console.log(`register.register() response:`, response)
+    const headers = Cookies.createHeaders(response.headers)
+    return { headers, result: response.data }
   }
 
-  static async checkAuthenticated(request: Request) {
+  static async getUser() {
+    const response = await client.get<AuthUser>(URL_ME)
+    if (!response.data) return null
+    return response.data
+  }
+
+  static async getAuthentication(params: GetAuthenticationParam) {
+    const response = await client.post<AuthResult>(URL_LOGIN, params)
+    const headers = Cookies.createHeaders(response.headers)
+    return { headers, result: response.data }
+  }
+
+  static async isAuthenticated(request: Request) {
     const cookie = request.headers.get('Cookie')
     if (!cookie || !cookie.includes('access_token')) return false
 
     Clients.setCookie(cookie)
     try {
-      await Authenticator.getAccount()
+      const user = await Authenticator.getUser()
+      if (!user) return false
     } catch (e) {
       console.log({ e })
       return false
@@ -40,22 +50,7 @@ export class Authenticator {
     return true
   }
 
-  static Route = class RouteAccessAuthenticator {
-    static async register(params: AuthParams) {
-      const response = await client.post<AuthResult>(URL_REGISTER, params)
-      console.log(`register.register() response:`, response)
-      const headers = Cookies.createHeaders(response.headers)
-      return { headers, result: response.data }
-    }
-
-    static async login(params: AuthParams) {
-      const response = await client.post<AuthResult>(URL_LOGIN, params)
-      const headers = Cookies.createHeaders(response.headers)
-      return { headers, result: response.data }
-    }
-  }
-
-  static async logout() {
+  static async removeAuthentication() {
     await client.post<AuthResult>(URL_LOGOUT)
   }
 }
@@ -83,13 +78,15 @@ export class Cookies {
 
 export interface AuthResult {
   tokens: Tokens
-  user: SimpleUser
+  user: AuthUser
 }
 
-interface AuthParams {
+interface CreateAuthParams {
   username: string
   password: string
 }
+
+type GetAuthenticationParam = CreateAuthParams
 
 interface Tokens {
   accessToken: string

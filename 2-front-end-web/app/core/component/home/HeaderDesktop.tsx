@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import styled from 'styled-components'
 import { globalColors } from '~/common/style/global-colors'
 import { appColors } from '~/core/style/app-colors'
@@ -8,8 +8,8 @@ import { LogoVeltrend, Search } from '~/core/component/generate/svg'
 import VariantLinkOrButton from '~/core/component/VariantLinkOrButton'
 import SearchArea from '~/common/component/element/SearchArea'
 import { Link } from '@remix-run/react'
-import { useAuthUser } from '~/common/context/UserContext'
 import UserMenuButton from '~/core/component/home/UserMenuButton'
+import { useUserStoreAction, useUserState } from '~/common/store/user'
 
 type HeaderDesktopProps = {
   logo?: ReactNode
@@ -25,7 +25,7 @@ function HeaderDesktop({
   // className,
   logo = <StyledLogoVeltrend />, // 기본 해더 타이틀: 메인로고
 }: HeaderDesktopProps) {
-  const authUser = useAuthUser()
+  const { user } = useUserState()
 
   return (
     <Block>
@@ -35,12 +35,12 @@ function HeaderDesktop({
         <ItemRight>
           <SearchArea searchIcon={<Search />} />
 
-          {authUser ? (
+          {user ? (
             <>
               <WriteOutterButton to="/write" variant="wire" size="small">
                 새 글 작성
               </WriteOutterButton>
-              <UserMenuButton username={authUser.username} />
+              <UserMenuButton username={user.username} />
             </>
           ) : (
             <>
