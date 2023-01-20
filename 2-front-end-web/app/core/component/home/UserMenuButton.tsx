@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Flex } from '~/common/style/css-builder'
 import ContextMenu from '~/common/component/template/ContextMenu'
 import { Media } from '~/common/style/media-query'
+import { useLogout } from '~/core/hook/auth/useLogout'
 
 type UserInformationProps = {
   username: string
@@ -14,6 +15,7 @@ type UserInformationProps = {
 function UserMenuButton({ username }: UserInformationProps) {
   const [visible, setVisible] = useState(false)
 
+  const logout = useLogout()
   const onToggleMenu = () => setVisible(!visible)
 
   return (
@@ -40,7 +42,7 @@ function UserMenuButton({ username }: UserInformationProps) {
         <VariantButton to="/bookmarks" variant="textonly" size="medium">
           북마크
         </VariantButton>
-        <VariantButton to="/" variant="textonly" size="medium">
+        <VariantButton variant="textonly" size="medium" onClick={logout}>
           로그아웃
         </VariantButton>
       </StyledContextMenu>
