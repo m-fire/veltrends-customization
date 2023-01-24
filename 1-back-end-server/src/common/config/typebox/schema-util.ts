@@ -11,8 +11,10 @@ export function createFastifySchemaMap<T extends Record<string, FastifySchema>>(
 
 export function createAppErrorSchema<
   K extends Parameters<typeof AppError.info>[0],
->(name: K, payloadSchema?: TSchema) {
-  const errorExample = AppError.info(name)
+>(name: K, message?: string | null, payloadSchema?: TSchema) {
+  //
+  const info = AppError.info(name)
+
   return Type.Object(
     {
       name: Type.String(),
@@ -20,9 +22,11 @@ export function createAppErrorSchema<
       statusCode: Type.Integer(),
       payload: payloadSchema ?? Type.Object({}),
     },
-    errorExample && {
+    info && {
       example: {
-        ...errorExample,
+        ...info,
+        // 커스텀 메세지 1순위, AppErrorInfo 메세지 2순위 설정
+        ...(message ? { message } : { message: info.message }),
         payload: payloadSchema?.example ?? {},
       },
     },
