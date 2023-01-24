@@ -10,7 +10,7 @@ export const RES_EMPTY_OBJECT_SCHEMA = Type.Undefined()
 
 /* Error schema */
 
-export const ERROR_UNAUTHORIZED_SCHEMA = Type.Object(
+export const ERROR_PAYLOAD_UNAUTHORIZED = Type.Object(
   {
     isExpiredToken: Type.Boolean(),
   },

@@ -4,14 +4,18 @@ import {
   createAppErrorSchema,
   createFastifySchemaMap,
 } from '../../../common/config/typebox/schema-util.js'
-import { ERROR_UNAUTHORIZED_SCHEMA } from '../../../common/config/typebox/common-schema.js'
+import { ERROR_PAYLOAD_UNAUTHORIZED } from '../../../common/config/typebox/common-schema.js'
 
 export const ME_SCHEMA = createFastifySchemaMap({
   GET_ACCOUNT: {
     tags: ['me'],
     response: {
       200: RES_AUTH_USER_INFO_SCHEMA,
-      401: createAppErrorSchema('Unauthorized', ERROR_UNAUTHORIZED_SCHEMA),
+      401: createAppErrorSchema(
+        'Unauthorized',
+        null,
+        ERROR_PAYLOAD_UNAUTHORIZED,
+      ),
     },
   },
   CHANGE_PASSWORD: {
@@ -24,9 +28,13 @@ export const ME_SCHEMA = createFastifySchemaMap({
       202: Type.Null(),
       // 새로운 패스워드 양식오류
       400: createAppErrorSchema('BadRequest'),
-      401: createAppErrorSchema('Unauthorized', ERROR_UNAUTHORIZED_SCHEMA),
+      401: createAppErrorSchema(
+        'Unauthorized',
+        null,
+        ERROR_PAYLOAD_UNAUTHORIZED,
+      ),
       // 이전 패스워드 불일치
-      403: createAppErrorSchema('Forbidden'),
+      403: createAppErrorSchema('Forbidden', 'Password does not match'),
     },
   },
   UNREGISTER: {

@@ -98,9 +98,11 @@ export default class AppError<
     )
   }
 
-  static info<K extends AppErrorType>(
-    name: K,
-  ): { name: K } & typeof ERROR_INFO_MAP[K] {
-    return { name, ...ERROR_INFO_MAP[name] }
+  static info<K extends AppErrorType>(name: K): AppErrorInfo<K> {
+    const errorByName = ERROR_INFO_MAP[name]
+    return { name, ...errorByName }
   }
 }
+type AppErrorInfo<K extends AppErrorType> = {
+  name: K
+} & typeof ERROR_INFO_MAP[K]
