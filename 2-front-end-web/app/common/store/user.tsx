@@ -2,12 +2,12 @@ import React from 'react'
 import create, { StoreApi } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import { AuthUser } from '~/common/api/types'
+import { UserInfo } from '~/common/api/types'
 import createContext from 'zustand/context'
 
 export interface UserStore {
   state: {
-    user: AuthUser | null
+    user: UserInfo | null
   }
   setUser(userOrNull: { id: number; username: string } | null): void
 }

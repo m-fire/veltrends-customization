@@ -20,7 +20,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import AppBottomSheetModal from '~/core/component/home/AppBottomSheetModal'
 import Dialog from '~/common/component/template/Dialog'
 import AppOverlay from '~/core/component/home/AppOverlay'
-import { AuthUser } from '~/common/api/types'
+import { UserInfo } from '~/common/api/types'
 import { getUserStoreCreator, UserContext } from '~/common/store/user'
 
 const initialQueryClient = new QueryClient({
@@ -51,7 +51,7 @@ export const meta: MetaFunction = () => ({
 
 export default function App() {
   const { authUser, cookie } = useLoaderData<{
-    authUser: AuthUser | null
+    authUser: UserInfo | null
     cookie: string | null
   }>()
 
