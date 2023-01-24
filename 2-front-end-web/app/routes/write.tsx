@@ -18,8 +18,9 @@ function Write({}: WriteProps) {
 export default Write
 
 export const loader: LoaderFunction = async ({ request }) => {
-  if (await Authenticator.isAuthenticated(request)) return null
-  redirect(`/auth/login?next=/write`)
+  if (!(await Authenticator.isAuthenticated(request)))
+    redirect(`/auth/login?next=/write`)
+  return null
 }
 
 // Inner Components

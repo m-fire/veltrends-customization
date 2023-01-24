@@ -12,7 +12,8 @@ function Setting({}: SettingProps) {
 export default Setting
 
 export const loader: LoaderFunction = async ({ request }) => {
-  if (await Authenticator.isAuthenticated(request)) return null
-  redirect(`/auth/login?next=/setting`)
+  if (!(await Authenticator.isAuthenticated(request)))
+    redirect(`/auth/login?next=/setting`)
+  return null
 }
 // Inner Components
