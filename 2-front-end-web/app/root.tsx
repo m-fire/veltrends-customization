@@ -1,3 +1,4 @@
+import './style.css'
 import React, { Suspense, useEffect, useState } from 'react'
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import {
