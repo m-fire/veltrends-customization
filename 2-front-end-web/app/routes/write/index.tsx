@@ -3,9 +3,9 @@ import BasicLayout from '~/core/component/home/BasicLayout'
 import WriteForm from '~/core/component/write/WriteForm'
 import { useWriteContext } from '~/core/context/WriteContext'
 import LabelInput from '~/core/component/LabelInput'
-import { APP_ERRORS_INFO } from '~/common/error/AppError'
+import { ERROR_INFO_MAP } from '~/common/error/AppError'
 
-const ERROR_CODE_INVALID_URL = APP_ERRORS_INFO.InvalidUrl.statusCode
+const ERROR_CODE_INVALID_URL = ERROR_INFO_MAP.InvalidUrl.statusCode
 
 //Todo: 글쓰기폼 UI는 디바이스 스크린사이즈에 따라 너비 폭 줄이거나 키움
 function WriteLink() {

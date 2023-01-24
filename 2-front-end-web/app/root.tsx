@@ -136,7 +136,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     const account = await UserInformation.getUserInfo()
     return { authUser: account, cookie }
   } catch (e) {
-    const error = AppError.extract(e)
+    const error = AppError.of(e)
     if (error.name === 'Unauthorized') {
       // console.log(error.payload)
     }

@@ -9,7 +9,7 @@ import LabelTextArea from '~/common/component/element/LabelTextArea'
 import { Authenticator } from '~/core/api/auth'
 import { createItem } from '~/core/api/items'
 import { useWriteContext } from '~/core/context/WriteContext'
-import AppError, { APP_ERRORS_INFO } from '~/common/error/AppError'
+import AppError, { ERROR_INFO_MAP } from '~/common/error/AppError'
 import { useAppErrorCatch } from '~/common/hook/useAppErrorCatch'
 import { appColors } from '~/core/style/app-colors'
 import { Flex, Font } from '~/common/style/css-builder'
@@ -86,7 +86,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     return redirect(`/items/${item.id}`)
   } catch (e) {
-    const error = AppError.extract(e)
+    const error = AppError.of(e)
     throw json(error, { status: error.statusCode })
   }
 }
@@ -96,7 +96,7 @@ export function CatchBoundary() {
   const { action } = useWriteContext()
   const navigate = useNavigate()
   useEffect(() => {
-    if (caught.status === APP_ERRORS_INFO.InvalidUrl.statusCode) {
+    if (caught.status === ERROR_INFO_MAP.InvalidUrl.statusCode) {
       navigate(-1)
       action.setError(caught.data)
     }

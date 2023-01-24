@@ -1,32 +1,40 @@
 import axios from 'axios'
 
-type AppErrorType =
-  | 'AlreadyExists'
+export type AppErrorType =
+  | 'UserExists'
   | 'Authentication'
   | 'Unauthorized'
   | 'BadRequest'
   | 'RefreshFailure'
+  | 'Forbidden'
+  | 'NotFound'
   | 'InvalidUrl'
+  | 'AlreadyExists'
   | 'Unknown'
 
 export type ErrorPayloadOpt<K extends AppErrorType> = K extends 'Unauthorized'
   ? {
       isExpiredToken: boolean
     }
-  : K extends 'BadRequest'
+  : K extends 'BadRequest' | 'Forbidden'
   ? {
       message: string
     }
   : undefined
+// : K extends '....Type'
+// ? {
+//     prop: type
+//   }
+// : undefined
 
 interface ErrorInfo {
   message: string
   statusCode: number
 }
 
-export const APP_ERRORS_INFO: Record<AppErrorType, ErrorInfo> = {
-  AlreadyExists: {
-    message: 'Already exists',
+export const ERROR_INFO_MAP: Record<AppErrorType, ErrorInfo> = {
+  UserExists: {
+    message: 'User already exists',
     statusCode: 409,
   },
   Authentication: {
@@ -45,31 +53,46 @@ export const APP_ERRORS_INFO: Record<AppErrorType, ErrorInfo> = {
     message: 'Failed to refresh token',
     statusCode: 401,
   },
+  Forbidden: {
+    message: 'Forbidden',
+    statusCode: 403,
+  },
+  NotFound: {
+    message: 'Not found',
+    statusCode: 404,
+  },
   InvalidUrl: {
     message: 'Invalid URL',
     statusCode: 422,
+  },
+  AlreadyExists: {
+    message: 'The data already exists',
+    statusCode: 409,
   },
   Unknown: {
     message: 'Unknown error',
     statusCode: 500,
   },
-}
-
-// Common Error
+} as const
 
 export default class AppError<
   K extends AppErrorType = AppErrorType,
 > extends Error {
   public readonly statusCode: number
 
-  constructor(public readonly type: K, public payload?: ErrorPayloadOpt<K>) {
-    const info = APP_ERRORS_INFO[type]
-    super(info.message)
-    this.name = type
+  constructor(
+    public readonly name: K,
+    public payload?: ErrorPayloadOpt<K> & { message?: string },
+  ) {
+    const info = ERROR_INFO_MAP[name]
+    super(payload?.message ?? info.message)
+    if (payload?.message != null) {
+      delete payload.message
+    }
     this.statusCode = info.statusCode
   }
 
-  static equals(error: any): error is AppError {
+  static is(error: any): error is AppError {
     return (
       error?.name !== undefined &&
       error?.message !== undefined &&
@@ -78,16 +101,20 @@ export default class AppError<
   }
 
   static info<K extends AppErrorType>(
-    type: K,
-  ): typeof APP_ERRORS_INFO[K] & { type: K } {
-    return { ...APP_ERRORS_INFO[type], type }
+    name: K,
+  ): { name: K } & typeof ERROR_INFO_MAP[K] {
+    return { name, ...ERROR_INFO_MAP[name] }
   }
 
-  static extract(error: unknown): AppError {
+  /**
+   * AppError 가 아닌 unknown 애러를 AppError 인스턴스로 변환 후 생성
+   * @param error
+   */
+  static of(error: unknown): AppError {
     if (axios.isAxiosError(error)) {
       const data = error.response?.data
       console.log(`AppError.extract() error, data:`, error, data)
-      if (AppError.equals(data)) {
+      if (AppError.is(data)) {
         return data
       }
     }

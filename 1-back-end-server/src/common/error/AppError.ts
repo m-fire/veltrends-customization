@@ -73,8 +73,6 @@ const ERROR_INFO_MAP: Record<AppErrorType, ErrorInfo> = {
   },
 } as const
 
-// Common Error
-
 export default class AppError<
   K extends AppErrorType = AppErrorType,
 > extends Error {

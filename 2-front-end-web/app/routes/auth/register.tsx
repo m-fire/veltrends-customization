@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ request }) => {
     })
     return json(result, { headers })
   } catch (e) {
-    const error = AppError.extract(e)
+    const error = AppError.of(e)
     throw json(error, {
       status: error.statusCode,
     })
