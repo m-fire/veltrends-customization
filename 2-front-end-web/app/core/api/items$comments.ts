@@ -2,7 +2,7 @@ import { client } from '../../common/api/client'
 import { Comment } from './types'
 import { URL_ITEMS } from '~/core/api/items'
 
-const URL_COMMENTS = '/comments'
+const URL_COMMENTS = '/comments' as const
 
 export async function createComment({
   itemId,

@@ -11,8 +11,7 @@ export type RoutePath =
 
 export const client = axios.create()
 
-export const URL_API_SERVER = 'http://localhost:4000'
-client.defaults.baseURL = URL_API_SERVER
+client.defaults.baseURL = 'http://localhost:4000'
 client.defaults.withCredentials = true
 
 export class Clients {

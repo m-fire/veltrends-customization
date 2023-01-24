@@ -1,18 +1,14 @@
 import { AxiosResponse } from 'axios'
-import { client, Clients, URL_API_SERVER } from '~/common/api/client'
+import { client, Clients } from '~/common/api/client'
 import { isString } from '~/common/util/strings'
 import { UserInfo } from '~/common/api/types'
 import { UserInformation } from '~/core/api/me'
 
 // Constants
 
-// parent uris
-const API = URL_API_SERVER + '/api'
-const API_AUTH = API + '/auth'
-// children entries
-const URL_REGISTER = API_AUTH + '/register'
-const URL_LOGIN = API_AUTH + '/login'
-const URL_LOGOUT = API_AUTH + '/logout'
+const URL_REGISTER = '/api/auth/register' as const
+const URL_LOGIN = '/api/auth/login' as const
+const URL_LOGOUT = '/api/auth/logout' as const
 
 export class Authenticator {
   static async createAuthentication(params: CreateAuthParams) {

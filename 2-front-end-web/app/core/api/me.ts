@@ -1,8 +1,7 @@
-import { client, URL_API_SERVER } from '~/common/api/client'
+import { client } from '~/common/api/client'
 import { UserInfo } from '~/common/api/types'
 
-const API = URL_API_SERVER + '/api'
-const URL_ME = API + '/me'
+const URL_ME = '/api/me' as const
 
 export class UserInformation {
   static async getUserInfo() {
