@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios'
 import { client, Clients, URL_API_SERVER } from '~/common/api/client'
 import { isString } from '~/common/util/strings'
 import { UserInfo } from '~/common/api/types'
+import { UserInformation } from '~/core/api/me'
 
 // Constants
 
@@ -9,7 +10,6 @@ import { UserInfo } from '~/common/api/types'
 const API = URL_API_SERVER + '/api'
 const API_AUTH = API + '/auth'
 // children entries
-const URL_ME = API + '/me'
 const URL_REGISTER = API_AUTH + '/register'
 const URL_LOGIN = API_AUTH + '/login'
 const URL_LOGOUT = API_AUTH + '/logout'
@@ -20,12 +20,6 @@ export class Authenticator {
     console.log(`register.register() response:`, response)
     const headers = Cookies.createHeaders(response.headers)
     return { headers, result: response.data }
-  }
-
-  static async getUser() {
-    const response = await client.get<AuthUser>(URL_ME)
-    if (!response.data) return null
-    return response.data
   }
 
   static async getAuthentication(params: GetAuthenticationParam) {
@@ -40,7 +34,7 @@ export class Authenticator {
 
     Clients.setCookie(cookie)
     try {
-      const user = await Authenticator.getUser()
+      const user = await UserInformation.getUserInfo()
       if (!user) return false
     } catch (e) {
       console.log({ e })

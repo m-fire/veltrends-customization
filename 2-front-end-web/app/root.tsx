@@ -11,7 +11,6 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import GlobalStyle from '~/GlobalStyle'
-import { Authenticator } from '~/core/api/auth'
 import { Clients } from '~/common/api/client'
 import AppError from '~/common/error/AppError'
 import { DialogContextProvider } from '~/common/context/DialogContext'
@@ -22,6 +21,7 @@ import Dialog from '~/common/component/template/Dialog'
 import AppOverlay from '~/core/component/home/AppOverlay'
 import { UserInfo } from '~/common/api/types'
 import { getUserStoreCreator, UserContext } from '~/common/store/user'
+import { UserInformation } from '~/core/api/me'
 
 const initialQueryClient = new QueryClient({
   defaultOptions: {
@@ -133,8 +133,8 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 
   Clients.setCookie(cookie)
   try {
-    const authUser = await Authenticator.getUser()
-    return { authUser, cookie }
+    const account = await UserInformation.getUserInfo()
+    return { authUser: account, cookie }
   } catch (e) {
     const error = AppError.extract(e)
     if (error.name === 'Unauthorized') {
