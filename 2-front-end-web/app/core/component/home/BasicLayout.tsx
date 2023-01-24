@@ -107,7 +107,7 @@ const ListModeSelectorDesktop = styled(ListModeSelector)`
 `
 
 const LayoutContent = styled(LayoutContentBlock)`
-  padding-top: 56px;
+  padding-top: 64px;
   padding-left: 30px;
   padding-right: 30px;
   ${Media.minWidth.desktop} {

@@ -7,11 +7,7 @@ import { Authenticator } from '~/core/api/auth'
 type SettingProps = {}
 
 function Setting({}: SettingProps) {
-  return (
-    <TabLayout>
-      <Outlet />
-    </TabLayout>
-  )
+  return <Outlet />
 }
 export default Setting
 
