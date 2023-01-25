@@ -29,16 +29,16 @@ function AccountSetting({ ...rest }: AccountSettingProps) {
     UserInformation.changePassword,
     {
       onSuccess: () => {
-        /* open Dialog */
+        openDialog('CHANGE_PASSWORD_CONFIRMED', { mode: 'OK' })
         reset()
       },
       onError: (e) => {
         const error = AppError.of(e)
         switch (error.name) {
           case 'BadRequest':
-            return /* open Dialog */
+            return openDialog('INVALID_PASSWORD_LETTERS', { mode: 'OK' })
           case 'Forbidden':
-            return /* open Dialog */
+            return openDialog('WRONG_PASSWORD', { mode: 'OK' })
           default:
             throw error
         }
@@ -58,7 +58,19 @@ function AccountSetting({ ...rest }: AccountSettingProps) {
   }
 
   const askUnregister = () => {
-    /* open Dialog */
+    openDialog('UNREGISTER', {
+      mode: 'YESNO',
+      buttonTexts: {
+        confirmText: '탈퇴 및 계정삭제',
+        cancelText: '취소',
+      },
+      async onConfirm() {
+        try {
+          await UserInformation.unregister()
+        } catch (e) {}
+        window.location.href = '/'
+      },
+    })
   }
 
   // security code

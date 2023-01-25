@@ -77,6 +77,22 @@ const descriptionMap = {
     title: '오류',
     description: '댓글 수정 실패',
   },
+  CHANGE_PASSWORD_CONFIRMED: {
+    title: '비밀번호 변경',
+    description: '비밀번호가 변경되었습니다.',
+  },
+  WRONG_PASSWORD: {
+    title: '실패',
+    description: '잘못된 비밀번호입니다.',
+  },
+  INVALID_PASSWORD_LETTERS: {
+    title: '실패',
+    description: '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.',
+  },
+  UNREGISTER: {
+    title: '회원 탈퇴',
+    description: '정말로 탈퇴하시겠습니까?',
+  },
 } as const
 
 // types
