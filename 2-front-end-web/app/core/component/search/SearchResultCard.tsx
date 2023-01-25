@@ -11,7 +11,7 @@ type SearchResultCardProps = {
 }
 
 function SearchResultCard({ item }: SearchResultCardProps) {
-  const { publisher, author, highlight } = item
+  const { publisher, author, highlight, likeCount } = item
   return (
     <Block>
       <Publisher>
@@ -28,6 +28,10 @@ function SearchResultCard({ item }: SearchResultCardProps) {
       {/** @todo: Secure this code **/}
       <h3 dangerouslySetInnerHTML={{ __html: highlight.title }} />
       <p dangerouslySetInnerHTML={{ __html: highlight.body }} />
+
+      {likeCount > 0 ? (
+        <LikeCount>좋아요 {likeCount.toLocaleString()}</LikeCount>
+      ) : null}
     </Block>
   )
 }
@@ -63,6 +67,11 @@ const Block = styled.div`
       font-weight: 600;
     }
   }
+`
+
+const LikeCount = styled.div`
+  ${Flex.container().create()};
+  ${Font.style().size(12).weight(600).color(globalColors.grey3).create()};
 `
 
 const Publisher = styled.div`
