@@ -113,7 +113,7 @@ export default class AppError<
   static of(error: unknown): AppError {
     if (axios.isAxiosError(error)) {
       const data = error.response?.data
-      console.log(`AppError.extract() error, data:`, error, data)
+      console.log(`AppError.of() error, data:`, error, data)
       if (AppError.is(data)) {
         return data
       }
