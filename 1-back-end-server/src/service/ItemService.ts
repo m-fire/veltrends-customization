@@ -6,6 +6,7 @@ import {
   Publisher,
   User,
 } from '@prisma/client'
+import senitize from 'sanitize-html'
 import { ItemsRequestMap } from '../routes/api/items/types.js'
 import {
   Pagination,
@@ -232,20 +233,22 @@ class ItemService {
 
       const serializedList = hitsPage.list
         .map((hit) => {
-          const item = itemMap[hit.id]
-          if (!item) return null
+          const hitItem = itemMap[hit.id]
 
-          const searchedItem = {
-            id: item.id,
-            link: item.link,
-            title: item.title,
-            body: item.body,
-            author: item.author === '' ? null : item.author,
-            publisher: item.publisher,
-            likeCount: item.itemStatus?.likeCount,
+          const titleOrNull = hit._highlightResult?.title?.value || null
+          const bodyOrNull = hit._highlightResult?.body?.value || null
+
+          return {
+            id: hitItem.id,
+            link: hitItem.link ?? '',
+            title: hitItem.title,
+            body: hitItem.body,
+            author: hitItem.author,
+            publisher: hitItem.publisher,
             highlight: {
-              title: hit._highlightResult?.title?.value ?? null,
-              body: hit._highlightResult?.body?.value ?? null,
+              /* senitize: XSS 공격 무효화 - 공격용JS코드가 심겨질만한 HTML 검사 */
+              title: titleOrNull ?? senitize(titleOrNull),
+              body: bodyOrNull ?? senitize(bodyOrNull),
             },
           }
           return searchedItem
