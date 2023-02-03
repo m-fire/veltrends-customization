@@ -1,4 +1,5 @@
-import fastify, { FastifyInstance } from 'fastify'
+import fastify from 'fastify'
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import fastifySwagger from '@fastify/swagger'
 import fastifyCookie from '@fastify/cookie'
 import routes from './routes/index.js'
@@ -11,9 +12,9 @@ import {
 import { PING_GET_SCHEMA, PING_POST_SCHEMA } from './schema.js'
 import { fastifyCors } from '@fastify/cors'
 
-const server: FastifyInstance = fastify({
+const server = fastify({
   logger: true,
-})
+}).withTypeProvider<TypeBoxTypeProvider>()
 
 console.log(`Veltrend BE Server - main.ts NODE_ENV:`, process.env.NODE_ENV)
 if (process.env.NODE_ENV === 'development') {
