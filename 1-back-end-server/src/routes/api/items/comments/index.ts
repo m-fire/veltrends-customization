@@ -1,14 +1,12 @@
-import { FastifyPluginAsync } from 'fastify'
-import { createAuthRoute } from '../../../../common/config/fastify/plugin/auth-plugins.js'
-import { CommentsRequestMap } from './types.js'
-import COMMENTS_SCHEMA from './schema.js'
+import { FastifyPluginAsyncTypebox } from '../../../../core/config/fastify/types.js'
+import { createAuthRoute } from '../../../../core/config/fastify/plugin/auth-plugins.js'
 import CommentService from '../../../../service/CommentService.js'
 import { Validator } from '../../../../common/util/validates.js'
 
 const CS = CommentService
 
-export const commentsRoute: FastifyPluginAsync = async (fastify) => {
-  fastify.get<CommentsRequestMap['GET_COMMENT']>(
+export const commentsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
+  fastify.get(
     '/:commentId',
     { schema: COMMENTS_SCHEMA.GET_COMMENT },
     async (request, reply) => {

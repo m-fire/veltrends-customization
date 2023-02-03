@@ -1,5 +1,5 @@
-import { FastifyPluginAsync } from 'fastify'
-import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
+import { FastifyPluginAsyncTypebox } from '../../../core/config/fastify/types.js'
+import { createAuthRoute } from '../../../core/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
 import { ListMode } from '../../../core/pagination/types.js'
 import { ItemsRequestMap } from './types.js'
@@ -7,7 +7,7 @@ import ITEMS_SCHEMA from './schema.js'
 import { commentsRoute } from './comments/index.js'
 import { Validator } from '../../../common/util/validates.js'
 
-const itemsRoute: FastifyPluginAsync = async (fastify) => {
+const itemsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
   fastify.get<ItemsRequestMap['GET_ITEM_LIST']>(
     '/',
     { schema: ITEMS_SCHEMA.GET_ITEM_LIST },

@@ -1,4 +1,4 @@
-import { FastifyPluginAsync, FastifyReply } from 'fastify'
+import { FastifyPluginAsyncTypebox } from '../../../core/config/fastify/types.js'
 import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
 import { AuthRequestMap } from './types.js'
@@ -11,8 +11,8 @@ import {
 
 // Route Definition
 
-const authRoute: FastifyPluginAsync = async (fastify) => {
-  fastify.post<AuthRequestMap['LOGIN']>(
+const authRoute: FastifyPluginAsyncTypebox = async (fastify) => {
+  fastify.post(
     '/login',
     { schema: AUTH_SCHEMA.LOGIN },
     async ({ body: authBody }, reply) => {

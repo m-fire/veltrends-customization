@@ -1,5 +1,5 @@
-import { FastifyPluginAsync } from 'fastify'
-import { createAuthRoute } from '../../../common/config/fastify/plugin/auth-plugins.js'
+import { FastifyPluginAsyncTypebox } from '../../../core/config/fastify/types.js'
+import { createAuthRoute } from '../../../core/config/fastify/plugin/auth-plugins.js'
 import BookmarkService from '../../../service/BookmarkService.js'
 import { BookmarksRequestMap } from './types.js'
 import BOOKMARKS_SCHEMA from './schema.js'
@@ -9,7 +9,7 @@ const LIMIT_BOOKMARKS = 5 as const
 
 /* Public Route */
 
-const bookmarksRoute: FastifyPluginAsync = async (fastify) => {
+const bookmarksRoute: FastifyPluginAsyncTypebox = async (fastify) => {
   //
   fastify.register(bookmarksAuthRoute)
 }

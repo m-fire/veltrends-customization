@@ -1,9 +1,8 @@
-import { FastifyPluginAsync } from 'fastify'
-import { SEARCH_SCHEMA } from './schema.js'
-import { SearchRequestMap } from './types.js'
+import { FastifyPluginAsyncTypebox } from '../../../core/config/fastify/types.js'
+import { SearchSchema } from './schema.js'
 import ItemService from '../../../service/ItemService.js'
 
-const searchRoute: FastifyPluginAsync = async (fastify) => {
+const searchRoute: FastifyPluginAsyncTypebox = async (fastify) => {
   fastify.get<SearchRequestMap['SEARCH']>(
     '/',
     { schema: SEARCH_SCHEMA.SEARCH },
