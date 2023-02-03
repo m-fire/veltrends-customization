@@ -1,17 +1,23 @@
-import { FastifySchema } from 'fastify'
 import { TSchema, Type } from '@sinclair/typebox'
-import AppError from '../../error/AppError.js'
-import { Nullable } from './type-util.js'
+import AppError from '../../../common/error/AppError.js'
+import { Nullable } from './types.js'
+import { FastifySchema } from 'fastify'
 
-export function createFastifySchemaMap<T extends Record<string, FastifySchema>>(
-  params: T,
+export function routeSchemaMap<T extends Record<string, FastifySchema>>(
+  tags: string[],
+  schemaMap: T,
 ) {
-  return params
+  const mappedSchemaMap = Object.fromEntries(
+    Object.entries(schemaMap).map(([k, v]) => [k, { ...v, tags }]),
+  )
+  return mappedSchemaMap as T
 }
 
-export function createAppErrorSchema<
-  K extends Parameters<typeof AppError.info>[0],
->(name: K, message?: string | null, payloadSchema?: TSchema) {
+export function errorSchema<K extends Parameters<typeof AppError.info>[0]>(
+  name: K,
+  message?: string | null,
+  payloadSchema?: TSchema,
+) {
   //
   const info = AppError.info(name)
 
@@ -33,7 +39,7 @@ export function createAppErrorSchema<
   )
 }
 
-export const createPaginationSchema = <T extends TSchema>(
+export const pageSchema = <T extends TSchema>(
   schema: T,
   // example?: Record<string, any>,
 ) =>

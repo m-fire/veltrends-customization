@@ -1,24 +1,23 @@
 import { Item, Publisher } from '@prisma/client'
-import { client as algoliaClient } from '../../../common/config/algolia/index.js'
-import { Pagination } from '../../../common/config/fastify/types.js'
-import { ItemsResponseCodeMap } from '../../../routes/api/items/types.js'
+import { client as algoliaClient } from '../config/algolia/index.js'
+import { Pagination } from '../config/fastify/types.js'
+import { ItemsResponseCodeMap } from '../../routes/api/items/schema.js'
 
 const itemsIndex = algoliaClient.initIndex('veltrend_items')
 
-const algolia = {
-  searchItem: async (
+const algoliaApis = {
+  async searchItem(
     query: string,
-    { offset = 0, length = 20 }: ItemSearchOption = {},
-  ) => {
+    { offset = 0, length = 20 }: SearchItemOption,
+  ) {
     const result = await itemsIndex.search<HitItem>(query, {
       offset,
       length,
     })
 
     const hasNextPage = offset + length < result.nbHits
-    type ItemResult = typeof result.hits[0]
 
-    const hitsItemPage: Pagination<ItemResult> = {
+    const hitsItemPage: Pagination<(typeof result.hits)[0]> = {
       list: result.hits,
       totalCount: result.nbHits,
       pageInfo: {
@@ -29,27 +28,27 @@ const algolia = {
     return hitsItemPage
   },
 
-  syncItemIndex: (item: ItemForAlgolia) => {
+  syncItemIndex(item: ItemForAlgolia) {
     return itemsIndex.saveObject({
       ...item,
       objectID: item.id,
     })
   },
 
-  deleteItemIndex: (objectID: number) => {
+  deleteItemIndex(objectID: number) {
     return itemsIndex.deleteObject(objectID.toString())
   },
 }
-export default algolia
+export default algoliaApis
 
 // types
 
-export type ItemSearchOption = {
+export type SearchItemOption = {
   offset?: number
   length?: number
 }
 
-type HitItem = ItemsResponseCodeMap['GET_ITEM']['200']
+type HitItem = ItemsResponseCodeMap['GetItem']['200']
 
 export type ItemForAlgolia = Pick<
   Item,

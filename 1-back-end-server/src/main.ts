@@ -2,12 +2,12 @@ import fastify, { FastifyInstance } from 'fastify'
 import fastifySwagger from '@fastify/swagger'
 import fastifyCookie from '@fastify/cookie'
 import routes from './routes/index.js'
-import { swaggerOptions } from './common/config/fastify/swagger.js'
+import { swaggerOptions } from './core/config/fastify/swagger.js'
 import AppError from './common/error/AppError.js'
 import {
   endpointAuthPlugin,
   globalAuthPlugin,
-} from './common/config/fastify/plugin/auth-plugins.js'
+} from './core/config/fastify/plugin/auth-plugins.js'
 import { PING_GET_SCHEMA, PING_POST_SCHEMA } from './schema.js'
 import { fastifyCors } from '@fastify/cors'
 

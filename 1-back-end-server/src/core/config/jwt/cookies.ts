@@ -20,7 +20,7 @@ export function setTokenCookies(
     path: '/',
   })
 }
-type AuthToken = AuthResponseCodeMap['LOGIN']['200']['tokens']
+type AuthToken = AuthResponseCodeMap['Login']['200']['tokens']
 
 export function clearCookie(reply: FastifyReply) {
   reply.clearCookie('access_token')

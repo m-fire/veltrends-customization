@@ -1,27 +1,29 @@
 import { ListingInfo } from '../pagination/types.js'
-import { Pagination } from '../../common/config/fastify/types.js'
+import { Pagination } from '../config/fastify/types.js'
 
-export function createPage<T>({
-  list,
-  totalCount,
-  hasNextPage,
-  lastCursor,
-}: ListingInfo<T>): Pagination<T> {
-  return {
+export const Pages = {
+  createPage<E>({
     list,
-    totalCount: totalCount,
-    pageInfo: {
-      hasNextPage,
-      lastCursor: lastCursor ?? null,
-    },
-  }
-}
+    totalCount,
+    hasNextPage,
+    lastCursor,
+  }: ListingInfo<E>): Pagination<E> {
+    return {
+      list,
+      totalCount: totalCount,
+      pageInfo: {
+        hasNextPage,
+        lastCursor: lastCursor ?? null,
+      },
+    }
+  },
 
-export function createEmptyPage() {
-  return createPage({
-    list: [],
-    totalCount: 0,
-    hasNextPage: false,
-    lastCursor: null,
-  })
-}
+  emptyPage() {
+    return this.createPage({
+      list: [],
+      totalCount: 0,
+      hasNextPage: false,
+      lastCursor: null,
+    })
+  },
+} as const

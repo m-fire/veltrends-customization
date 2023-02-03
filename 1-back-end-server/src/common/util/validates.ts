@@ -2,11 +2,13 @@ import AppError from '../error/AppError.js'
 import { AuthResponseCodeMap } from '../../routes/api/auth/types'
 
 export class Validator {
+  //
   static Auth = class AuthenticationValidator {
     static getValidUser(user: AuthUserInfo | null): AuthUserInfo {
       if (user == null || user?.id == null) throw new AppError('Forbidden')
       return user
     }
+
     /**
      * should be more than or equal to 8 letters and contains at least two types of alphabet, number, special character.
      * 8자 이상이어야 하며 알파벳, 숫자, 특수문자 중 2가지 이상을 포함해야 합니다.
@@ -23,11 +25,13 @@ export class Validator {
       return counter > 1
     }
   }
+
   static URL = class ExternalUrlValidator {
     static hasProtocol(url: string) {
       return /^https?:\/\//.test(url)
     }
   }
+
   static DateFormat = class DateFormatValidator {
     /**
      * yyyy-mm-dd 형태의 날짜형식 문자열을 검사합니다.
@@ -38,4 +42,4 @@ export class Validator {
   }
 }
 
-type AuthUserInfo = AuthResponseCodeMap['LOGIN']['200']['user']
+type AuthUserInfo = AuthResponseCodeMap['Login']['200']['user']

@@ -2,8 +2,9 @@ import fp from 'fastify-plugin'
 import { FastifyPluginAsync } from 'fastify'
 import jwt from 'jsonwebtoken'
 import { AccessTokenPayload, validateToken } from '../../jwt/tokens.js'
-import AppError from '../../../error/AppError.js'
+import AppError from '../../../../common/error/AppError.js'
 import { CookieTokens } from '../../jwt/cookies.js'
+import { FastifyPluginAsyncTypebox } from '../types'
 
 const { JsonWebTokenError } = jwt
 
@@ -54,8 +55,8 @@ export const globalAuthPlugin = fp(
   },
 )
 
-export function createAuthRoute(plugin: FastifyPluginAsync) {
-  const wrappedPlugin: FastifyPluginAsync = async (fastify, opts) => {
+export function createAuthRoute(plugin: FastifyPluginAsyncTypebox) {
+  const wrappedPlugin: FastifyPluginAsyncTypebox = async (fastify, opts) => {
     fastify.register(endpointAuthPlugin)
     return plugin(fastify, opts)
   }

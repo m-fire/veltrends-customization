@@ -1,10 +1,19 @@
-import { FastifySchema } from 'fastify'
+import {
+  FastifySchema,
+  FastifyInstance,
+  FastifyLoggerInstance,
+  RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
+  RawServerDefault,
+  FastifyPluginOptions,
+} from 'fastify'
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { RequestGenericInterface } from 'fastify/types/request'
 import { Static, TObject, TSchema } from '@sinclair/typebox'
-import { PAGINATION_OPTION_SCHEMA } from '../typebox/common-schema.js'
+import { PAGINATION_OPTION_SCHEMA } from '../typebox/schema.js'
 
-export interface Pagination<T> {
-  list: T[]
+export interface Pagination<E> {
+  list: E[]
   totalCount: number
   pageInfo: PageInfo
 }
@@ -43,3 +52,17 @@ export type RouteResponseCodeMap<T extends Record<string, FastifySchema>> = {
 type FastifyResponseCodeProps<Res extends Record<string, TSchema>> = {
   [RCode in keyof Res]: Res[RCode] extends TSchema ? Static<Res[RCode]> : never
 }
+
+// fastify type plugin: type provider
+
+type FastifyTypebox = FastifyInstance<
+  RawServerDefault,
+  RawRequestDefaultExpression<RawServerDefault>,
+  RawReplyDefaultExpression<RawServerDefault>,
+  FastifyLoggerInstance,
+  TypeBoxTypeProvider
+>
+
+export type FastifyPluginAsyncTypebox<
+  Options extends FastifyPluginOptions = Record<never, never>,
+> = (fastify: FastifyTypebox, opts: Options) => Promise<void>
