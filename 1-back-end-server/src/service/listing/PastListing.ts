@@ -1,8 +1,7 @@
-import db from '../../common/config/prisma/db-client.js'
 import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
 import AppError from '../../common/error/AppError.js'
 import { Validator } from '../../common/util/validates.js'
-import { Converts } from '../../common/util/converts.js'
+import { Formatters } from '../../common/util/formatters.js'
 import { ListingParams } from '../../core/pagination/types.js'
 import ItemRepository from '../../repository/ItemRepository.js'
 
@@ -52,17 +51,16 @@ class PastListing extends AbstractModeListing<PastItem> {
     }
 
     const rangeCount = await ItemRepository.countCreatedDateRange({
-      startDate: Converts.Date.newYyyymmddHhmmss(startDate),
-      endDate: Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59'),
+      startDate: Formatters.Date.yyyymmdd_hhmmss(startDate),
+      endDate: Formatters.Date.yyyymmdd_hhmmss(endDate, '23:59:59'),
     })
     return rangeCount
   }
 
   protected async findList(options: ListingParams) {
-    return ItemRepository.findItemListByCursorAndDateRange(options, [
-      { itemStatus: { likeCount: 'desc' } },
-      { id: 'desc' },
-    ])
+    return ItemRepository.findItemListByCursorAndDateRange(options, {
+      orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
+    })
   }
 
   protected async hasNextPage(
@@ -71,10 +69,10 @@ class PastListing extends AbstractModeListing<PastItem> {
     //
     const { cursor, startDate, endDate } = options
     const fullStartDate = startDate
-      ? Converts.Date.newYyyymmddHhmmss(startDate)
+      ? Formatters.Date.yyyymmdd_hhmmss(startDate)
       : undefined
     const fullEndDate = endDate
-      ? Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59')
+      ? Formatters.Date.yyyymmdd_hhmmss(endDate, '23:59:59')
       : undefined
 
     const totalPage = await ItemRepository.countCreatedDateRange(
@@ -83,7 +81,9 @@ class PastListing extends AbstractModeListing<PastItem> {
         startDate: fullStartDate,
         endDate: fullEndDate,
       },
-      [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
+      {
+        orderBy: [{ itemStatus: { likeCount: 'desc' } }, { id: 'desc' }],
+      },
     )
     return totalPage > 0
   }

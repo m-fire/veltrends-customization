@@ -54,7 +54,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 server.setErrorHandler(async (error, request, reply) => {
-  reply.statusCode = error.statusCode || 500
+  reply.status(error.statusCode || 500)
 
   if (AppError.is(error)) {
     return {

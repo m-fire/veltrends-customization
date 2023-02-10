@@ -70,10 +70,12 @@ class TrendListing extends AbstractModeListing<TredingItem> {
   }
 
   protected async findList(options: ListingParams) {
-    return IR.findItemListByCursor(options, [
-      { itemStatus: { score: 'desc' } },
-      { itemStatus: { itemId: 'desc' } },
-    ])
+    return IR.findItemListByCursor(options, {
+      orderBy: [
+        { itemStatus: { score: 'desc' } },
+        { itemStatus: { itemId: 'desc' } },
+      ],
+    })
   }
 
   protected async hasNextPage(
@@ -88,7 +90,12 @@ class TrendListing extends AbstractModeListing<TredingItem> {
         maxScore: THRESHOLD_SCORE,
         minScore: lastElementScore,
       },
-      [{ itemStatus: { score: 'desc' } }, { itemStatus: { itemId: 'desc' } }],
+      {
+        orderBy: [
+          { itemStatus: { score: 'desc' } },
+          { itemStatus: { itemId: 'desc' } },
+        ],
+      },
     )
     return scoredCount > 0
   }

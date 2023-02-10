@@ -1,13 +1,13 @@
 import * as bcrypt from 'bcrypt'
-import db from '../common/config/prisma/db-client.js'
+import db from '../core/config/prisma/index.js'
 import AppError from '../common/error/AppError.js'
 import TokenService from './TokenService.js'
 import {
   AuthRequestMap,
   AuthResponseCodeMap,
-} from '../routes/api/auth/types.js'
-import { MeRequestMap } from '../routes/api/me/types.js'
+} from '../routes/api/auth/schema.js'
 import { Validator } from '../common/util/validates.js'
+import { MeRequestMap } from '../routes/api/me/schema.js'
 
 const SOLT_ROUNDS = 10
 
@@ -15,7 +15,7 @@ class UserService {
   static async register({
     username,
     password,
-  }: RegisterParams): Promise<TokensAndUser> {
+  }: RegisterParams): Promise<AuthResult> {
     const exists = await db.user.findUnique({ where: { username } })
     if (exists) throw new AppError('UserExists')
 
@@ -42,10 +42,7 @@ class UserService {
   /**
    * 사용자를 못찾거나 PW가 틀릴경우, 보안상 `AuthenticationError` 발생시킨다.
    */
-  static async login({
-    username,
-    password,
-  }: LoginParams): Promise<TokensAndUser> {
+  static async login({ username, password }: LoginParams): Promise<AuthResult> {
     const existsUser = await db.user.findUnique({ where: { username } })
     // Promise 는 어떤 애러가 발생할지 알 수 없기에, try catch 처리
     try {
@@ -67,9 +64,7 @@ class UserService {
     }
   }
 
-  static async refreshToken(
-    oldToken: string,
-  ): Promise<TokensAndUser['tokens']> {
+  static async refreshToken(oldToken: string): Promise<AuthResult['tokens']> {
     try {
       const ts = TokenService
       const { tokenId: id, rotationCounter: outCount } =
@@ -134,12 +129,12 @@ export default UserService
 
 //types
 
-type TokensAndUser = AuthResponseCodeMap['LOGIN']['200']
+type AuthResult = AuthResponseCodeMap['Login']['200']
 
-type RegisterParams = AuthRequestMap['REGISTER']['Body']
+type RegisterParams = AuthRequestMap['Register']['Body']
 
-type LoginParams = AuthRequestMap['LOGIN']['Body']
+type LoginParams = AuthRequestMap['Login']['Body']
 
-type ChangePasswordParams = MeRequestMap['CHANGE_PASSWORD']['Body'] & {
+type ChangePasswordParams = MeRequestMap['ChangePassword']['Body'] & {
   userId: number
 }

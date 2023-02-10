@@ -1,12 +1,10 @@
 import { Prisma, Publisher } from '@prisma/client'
-import db from '../common/config/prisma/db-client.js'
-import { ItemsRequestMap } from '../routes/api/items/types.js'
+import db from '../core/config/prisma/index.js'
 import AppError from '../common/error/AppError.js'
-import { Converts } from '../common/util/converts.js'
+import { Formatters } from '../common/util/formatters.js'
 import { CursorOrUndefined } from './types.js'
-import { validateMatchToUserAndOwner } from '../core/util/validates.js'
-
-// prisma include conditions
+import { validateMatchUserToOwner } from '../core/util/validates.js'
+import { ItemsRequestMap } from '../routes/api/items/schema.js'
 
 class ItemRepository {
   /* Count */
@@ -15,21 +13,21 @@ class ItemRepository {
     return db.item.count()
   }
 
-  static async countFromCursor(
+  static async countFromCursor<Q extends ItemCountQuery>(
     { cursor }: CountFromCursorParams,
-    orderBy?: PrismaItemOrderBy | PrismaItemOrderBy[],
+    query?: Q,
   ) {
     return await db.item.count({
       where: {
         id: IR.Query.lessThanIdOrUndefined(cursor),
       },
-      orderBy,
+      ...query,
     })
   }
 
-  static async countScoreRange(
+  static async countScoreRange<Q extends ItemCountQuery>(
     { cursor, maxScore, minScore }: CountItemByScoreRangeParams,
-    orderBy?: PrismaItemOrderBy | PrismaItemOrderBy[],
+    query: Q,
   ) {
     return await db.item.count({
       where: {
@@ -41,13 +39,13 @@ class ItemRepository {
           },
         },
       },
-      orderBy,
+      ...query,
     })
   }
 
-  static async countCreatedDateRange(
+  static async countCreatedDateRange<Q extends ItemCountQuery>(
     { cursor, startDate, endDate }: CountItemByDateRangeParams,
-    orderBy?: PrismaItemOrderBy | PrismaItemOrderBy[],
+    query?: Q,
   ) {
     return db.item.count({
       where: {
@@ -57,7 +55,7 @@ class ItemRepository {
           lte: endDate,
         },
       },
-      orderBy,
+      ...query,
     })
   }
 
@@ -67,7 +65,7 @@ class ItemRepository {
     title,
     body,
     link,
-    tags,
+    // tags,
     userId,
     publisher,
     author,
@@ -84,35 +82,30 @@ class ItemRepository {
         thumbnail,
         author,
       },
-      include: IR.Query.includeItemRelation(userId),
+      include: IR.Query.includePartialRelation(userId),
     })
   }
 
   /* Read list */
 
-  static async findItemListByCursor(
-    { cursor, userId, limit }: FindListByCursorParams,
-    orderBy: PrismaItemOrderBy | PrismaItemOrderBy[] = { id: 'desc' },
+  static async findItemListByCursor<Q extends ItemFindManyQuery>(
+    { cursor, userId }: FindListByCursorParams,
+    query?: Q,
   ) {
     return db.item.findMany({
       where: {
         id: IR.Query.lessThanIdOrUndefined(cursor),
       },
-      orderBy,
-      include: IR.Query.includeItemRelation(userId),
-      take: limit,
+      ...{
+        ...query,
+        include: IR.Query.includePartialRelation(userId),
+      },
     })
   }
 
-  static async findItemListByCursorAndDateRange(
-    {
-      cursor,
-      userId,
-      limit,
-      startDate,
-      endDate,
-    }: FindListByCursorAndDateRangeParams,
-    orderBy: PrismaItemOrderBy | PrismaItemOrderBy[] = { id: 'desc' },
+  static async findItemListByCursorAndDateRange<Q extends ItemFindManyQuery>(
+    { cursor, userId, startDate, endDate }: FindListByCursorAndDateRangeParams,
+    query?: Q,
   ) {
     if (!startDate || !endDate) throw new AppError('BadRequest')
 
@@ -120,65 +113,107 @@ class ItemRepository {
       where: {
         id: IR.Query.lessThanIdOrUndefined(cursor),
         createdAt: {
-          gte: Converts.Date.newYyyymmddHhmmss(startDate),
-          lte: Converts.Date.newYyyymmddHhmmss(endDate, '23:59:59'),
+          gte: formatYyyyymmddHhmmss(startDate),
+          lte: formatYyyyymmddHhmmss(endDate, '23:59:59'),
         },
       },
-      orderBy,
-      include: IR.Query.includeItemRelation(userId),
-      take: limit,
+      ...{
+        ...query,
+        include: IR.Query.includePartialRelation(userId),
+      },
     })
   }
 
-  static async findItemMapByIds<QS extends Prisma.ItemSelect>(
+  static async findItemMapByIds<Q extends ItemFindManyQuery>(
     itemIds: number[],
-    select?: QS,
+    query?: Q,
   ) {
     const itemList = (await db.item.findMany({
       where: { id: { in: itemIds } },
-      select: select ?? { id: true },
-    })) as Prisma.ItemGetPayload<{ select: QS }>[]
+      ...{
+        ...query,
+        select: { ...query?.select, id: true },
+      },
+    })) as Awaited<
+      Prisma.ItemGetPayload<
+        Q extends undefined
+          ? {
+              where: { id: { in: typeof itemIds } }
+              select: Q['select'] extends undefined
+                ? { id: true }
+                : Q['select'] & { id: true }
+            }
+          : Q & {
+              where: { id: { in: typeof itemIds } }
+              select: Q['select'] extends undefined
+                ? { id: true }
+                : Q['select'] & { id: true }
+            }
+      >[]
+    >
 
     const itemByIdMap = itemList.reduce((acc, item) => {
       acc[item.id] = item
       return acc
-    }, {} as Record<number, typeof itemList[0]>)
+    }, {} as Record<number, (typeof itemList)[0]>)
 
     return itemByIdMap
   }
 
   /* Read entity */
 
-  static async findItemOrNull<QI extends Prisma.ItemInclude>(
+  static async findItemOrNull<Q extends ItemFindUniqueQuery>(
     itemId: number,
-    include?: QI,
+    query?: Q,
   ) {
-    return (await db.item.findUnique({
-      where: { id: itemId },
-      include,
-    })) as Prisma.ItemGetPayload<{ include: QI }> | null
+    try {
+      return db.item.findUnique({
+        where: { id: itemId },
+        ...query,
+      }) as Promise<Prisma.ItemGetPayload<Q & { where: { id: number } }> | null>
+    } catch (e) {
+      console.error(e)
+      return null
+    }
   }
 
-  static async findItemOrThrow<QI extends Prisma.ItemInclude>(
+  static async findItemOrThrow<Q extends ItemFindUniqueQuery>(
     itemId: number,
-    include?: QI,
+    query?: Q,
   ) {
-    const item = await IR.findItemOrNull(itemId, include)
-    if (item == null) throw new AppError('NotFound')
-    return item
+    try {
+      const item = await IR.findItemOrNull(itemId, query)
+      if (!item) throw new AppError('NotFound')
+
+      return item
+    } catch (e) {
+      if (e instanceof Prisma.NotFoundError) {
+        throw new AppError('NotFound')
+      }
+      console.error(e)
+      throw e
+    }
   }
 
-  static async findPartialItemOrNull<QS extends Prisma.ItemSelect>(
+  static async findPartialItemOrNull<Q extends ItemFindUniqueQuery>(
     itemId: number,
-    select?: QS,
+    query?: Q,
   ) {
-    const item = await db.item.findUnique({
-      where: { id: itemId },
-      select,
-    })
-    if (!item) return null
+    try {
+      const item = await db.item.findUnique({
+        where: { id: itemId },
+        ...query,
+      })
+      if (!item) return null
 
-    return item as Prisma.ItemGetPayload<{ select: QS }>
+      return item
+    } catch (e) {
+      if (e instanceof Prisma.NotFoundError) {
+        throw new AppError('NotFound')
+      } else if (AppError.is(e)) {
+        throw e
+      }
+    }
   }
 
   /* Update */
@@ -187,24 +222,28 @@ class ItemRepository {
     itemId: number,
     { userId, link, title, body, tags }: UpdateItemParams,
   ) {
-    const item = await IR.findPartialItemOrNull(itemId, { userId: true })
+    const item = await IR.findItemOrNull(itemId)
 
-    validateMatchToUserAndOwner(userId, item?.userId)
+    if (!validateMatchUserToOwner(userId, item?.userId))
+      throw new AppError('Forbidden')
 
-    return db.item.update({
+    const updated = await db.item.update({
       where: { id: itemId },
       data: { link, title, body },
-      include: IR.Query.includeItemRelation(userId),
+      include: IR.Query.includePartialRelation(userId),
     })
+    return updated as Required<typeof updated> | never
   }
 
   /* Delete */
 
   // Item 의경우 Comment 와 달리 기록을 보관하지 않으므로 실제 row 를 삭제한다.
   static async deleteItem({ itemId, userId }: DeleteItemParams) {
-    const item = await IR.findPartialItemOrNull(itemId, { userId: true })
+    const item = await IR.findPartialItemOrNull(itemId, {
+      select: { userId: true },
+    })
 
-    validateMatchToUserAndOwner(userId, item?.userId)
+    validateMatchUserToOwner(userId, item?.userId)
 
     return db.item.delete({ where: { id: itemId } })
   }
@@ -218,7 +257,7 @@ class ItemRepository {
         : undefined
     }
 
-    static includeItemRelation(userId: number | undefined) {
+    static includePartialRelation(userId: number | undefined) {
       return Prisma.validator<Prisma.ItemInclude>()({
         user: {
           select: { id: true, username: true },
@@ -244,7 +283,15 @@ export default ItemRepository
 
 const IR = ItemRepository
 
+// utils
+
+const formatYyyyymmddHhmmss = Formatters.Date.yyyymmdd_hhmmss
+
 // types
+
+export type ItemCountQuery = Omit<Prisma.ItemCountArgs, 'where'>
+export type ItemFindManyQuery = Omit<Prisma.ItemFindManyArgs, 'where'>
+export type ItemFindUniqueQuery = Omit<Prisma.ItemFindUniqueArgs, 'where'>
 
 type CountFromCursorParams = {
   cursor?: CursorOrUndefined
@@ -262,7 +309,7 @@ type CountItemByDateRangeParams = {
   endDate?: Date
 }
 
-type CreateItemWithPublisherParams = ItemsRequestMap['CREATE_ITEM']['Body'] & {
+type CreateItemWithPublisherParams = ItemsRequestMap['CreateItem']['Body'] & {
   userId: number
   publisher: Publisher
   thumbnail?: string
@@ -272,7 +319,6 @@ type CreateItemWithPublisherParams = ItemsRequestMap['CREATE_ITEM']['Body'] & {
 type FindListByCursorAndDateRangeParams = {
   cursor?: CursorOrUndefined
   userId?: number
-  limit: number
   startDate?: string
   endDate?: string
 }
@@ -280,12 +326,7 @@ type FindListByCursorAndDateRangeParams = {
 type FindListByCursorParams = {
   cursor?: CursorOrUndefined
   userId?: number
-  limit: number
 }
-
-type PrismaItemOrderBy =
-  | Prisma.ItemOrderByWithRelationInput
-  | Prisma.ItemOrderByWithAggregationInput
 
 type UpdateItemParams = Pick<
   Prisma.ItemUpdateInput,

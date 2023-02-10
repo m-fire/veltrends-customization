@@ -1,4 +1,3 @@
-import db from '../../common/config/prisma/db-client.js'
 import AbstractModeListing from '../../core/pagination/AbstractModeListing.js'
 import { ListingParams } from '../../core/pagination/types.js'
 import ItemRepository from '../../repository/ItemRepository.js'
@@ -22,7 +21,9 @@ class RecentListing extends AbstractModeListing<RecentItem> {
   }
 
   protected async findList(options: ListingParams) {
-    return ItemRepository.findItemListByCursor(options, { id: 'desc' })
+    return ItemRepository.findItemListByCursor(options, {
+      orderBy: { id: 'desc' },
+    })
   }
 
   protected async hasNextPage(
@@ -30,7 +31,9 @@ class RecentListing extends AbstractModeListing<RecentItem> {
   ) {
     const totalPage = await ItemRepository.countFromCursor(
       { cursor },
-      { createdAt: 'desc' },
+      {
+        orderBy: { createdAt: 'desc' },
+      },
     )
     return totalPage > 0
   }

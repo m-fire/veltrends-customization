@@ -1,4 +1,4 @@
-import db from '../common/config/prisma/db-client.js'
+import db from '../core/config/prisma/index.js'
 import { Prisma } from '@prisma/client'
 
 class ItemStatusService {

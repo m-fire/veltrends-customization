@@ -1,5 +1,5 @@
 import { FastifyReply } from 'fastify'
-import { AuthResponseCodeMap } from '../../../routes/api/auth/types'
+import { AuthResponseCodeMap } from '../../../routes/api/auth/schema.js'
 
 // ref: https://github.com/fastify/fastify-cookie#example
 

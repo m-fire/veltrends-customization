@@ -1,4 +1,4 @@
-import db from '../common/config/prisma/db-client.js'
+import db from '../core/config/prisma/index.js'
 import { DeleteCommentParams } from './CommentService.js'
 
 class CommentLikeService {
@@ -45,7 +45,7 @@ class CommentLikeService {
     commentId,
     userId,
   }: GetCommentLikeOrNull) {
-    return await db.commentLike.findUnique({
+    return db.commentLike.findUnique({
       where: {
         commentId_userId: {
           commentId,
@@ -55,7 +55,7 @@ class CommentLikeService {
     })
   }
 
-  static async getCommentLikeMapByCommentIds({
+  static async getCommentLikeByIdMap({
     commentIds,
     userId,
   }: GetCommentLikeMapParams) {
@@ -69,7 +69,7 @@ class CommentLikeService {
     const commentLikeMap = commentLikeList.reduce((acc, commentLike) => {
       acc[commentLike.commentId] = commentLike
       return acc
-    }, {} as Record<number, typeof commentLikeList[0]>)
+    }, {} as Record<number, (typeof commentLikeList)[0]>)
 
     return commentLikeMap
   }

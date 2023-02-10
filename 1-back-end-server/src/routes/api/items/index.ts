@@ -2,15 +2,14 @@ import { FastifyPluginAsyncTypebox } from '../../../core/config/fastify/types.js
 import { createAuthRoute } from '../../../core/config/fastify/plugin/auth-plugins.js'
 import ItemService from '../../../service/ItemService.js'
 import { ListMode } from '../../../core/pagination/types.js'
-import { ItemsRequestMap } from './types.js'
-import ITEMS_SCHEMA from './schema.js'
+import ItemsSchema from './schema.js'
 import { commentsRoute } from './comments/index.js'
 import { Validator } from '../../../common/util/validates.js'
 
 const itemsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
-  fastify.get<ItemsRequestMap['GET_ITEM_LIST']>(
+  fastify.get(
     '/',
-    { schema: ITEMS_SCHEMA.GET_ITEM_LIST },
+    { schema: ItemsSchema.GetItemList },
     async (request, reply) => {
       const {
         query: { cursor, mode, startDate, endDate },
@@ -32,16 +31,15 @@ const itemsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
     },
   )
 
-  fastify.get<ItemsRequestMap['GET_ITEM']>(
+  fastify.get(
     '/:id',
-    { schema: ITEMS_SCHEMA.GET_ITEM },
+    { schema: ItemsSchema.GetItem },
     async (request, reply) => {
       const {
         params: { id },
         user,
       } = request
       const item = await ItemService.getItem({ itemId: id, userId: user?.id })
-      if (!item) reply.statusCode = 404
       return item
     },
   )
@@ -57,22 +55,23 @@ export default itemsRoute
 
 /* 이곳에 작성된 엔드포인트 핸들러는 인증접속을 요구함 */
 const itemsAuthRoute = createAuthRoute(async (fastify) => {
-  fastify.post<ItemsRequestMap['CREATE_ITEM']>(
+  //
+  fastify.post(
     '/',
-    { schema: ITEMS_SCHEMA.CREATE_ITEM },
+    { schema: ItemsSchema.CreateItem },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const createItemBody = request.body
 
       const newItem = await ItemService.createItem(userId, createItemBody)
-      reply.statusCode = 201
+      reply.status(201)
       return newItem
     },
   )
 
-  fastify.patch<ItemsRequestMap['EDIT_ITEM']>(
+  fastify.patch(
     '/:id',
-    { schema: ITEMS_SCHEMA.EDIT_ITEM },
+    { schema: ItemsSchema.EditItem },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const {
@@ -85,47 +84,47 @@ const itemsAuthRoute = createAuthRoute(async (fastify) => {
         itemId,
         userId,
       })
-      reply.statusCode = 202
+      reply.status(202)
       return updatedItem
     },
   )
 
-  fastify.delete<ItemsRequestMap['DELETE_ITEM']>(
+  fastify.delete(
     '/:id',
-    { schema: ITEMS_SCHEMA.DELETE_ITEM },
+    { schema: ItemsSchema.DeleteItem },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const itemId = request.params.id
 
       await ItemService.deleteItem({ itemId, userId })
-      reply.statusCode = 204
+      reply.status(204)
     },
   )
 
   // Item Like process
-  fastify.post<ItemsRequestMap['LIKE_ITEM']>(
+  fastify.post(
     '/:id/likes',
-    { schema: ITEMS_SCHEMA.LIKE_ITEM },
+    { schema: ItemsSchema.LikeItem },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const itemId = request.params.id
 
       const itemStatus = await ItemService.likeItem({ itemId, userId })
-      reply.statusCode = 202
+      reply.status(202)
       return { id: itemId, itemStatus, isLiked: true }
     },
   )
 
   // Item Unlike process
-  fastify.delete<ItemsRequestMap['UNLIKE_ITEM']>(
+  fastify.delete(
     '/:id/likes',
-    { schema: ITEMS_SCHEMA.UNLIKE_ITEM },
+    { schema: ItemsSchema.UnlikeItem },
     async (request, reply) => {
       const { id: userId } = Validator.Auth.getValidUser(request.user)
       const { id: itemId } = request.params
 
       const itemStatus = await ItemService.unlikeItem({ itemId, userId })
-      reply.statusCode = 202
+      reply.status(202)
       return { id: itemId, itemStatus, isLiked: false }
     },
   )

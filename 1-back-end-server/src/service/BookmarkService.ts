@@ -1,10 +1,11 @@
-import { Bookmark, Item } from '@prisma/client'
-import db from '../common/config/prisma/db-client.js'
+import { Bookmark, Item, Prisma } from '@prisma/client'
+import db from '../core/config/prisma/index.js'
 import AppError from '../common/error/AppError.js'
-import { createEmptyPage, createPage } from '../core/util/paginations.js'
+import { Pages } from '../core/util/paginations.js'
 import ItemService from './ItemService.js'
 import ItemRepository from '../repository/ItemRepository.js'
-import { validateMatchToUserAndOwner } from '../core/util/validates.js'
+import { validateMatchUserToOwner } from '../core/util/validates.js'
+import { TypeMapper } from '../common/util/type-mapper.js'
 
 class BookmarkService {
   static async mark({ itemId, userId }: MarkedParams) {
@@ -13,7 +14,7 @@ class BookmarkService {
         data: { userId, itemId },
         include: {
           item: {
-            include: IR.Query.includeItemRelation(userId),
+            include: IR.Query.includePartialRelation(userId),
           },
         },
       })
@@ -51,25 +52,21 @@ class BookmarkService {
         },
         include: {
           item: {
-            include: IR.Query.includeItemRelation(userId),
+            include: IR.Query.includePartialRelation(userId),
           },
         },
         orderBy: { createdAt: 'desc' },
         take: limit,
       }),
     ])
-    if (totalCount === 0) return createEmptyPage()
+    if (totalCount === 0) return Pages.emptyPage()
 
-    const serializedList = bookmarkList.map((bookmark) =>
-      BS.serialize(bookmark),
-    )
-
-    const lastBookmark = serializedList.at(-1)
+    const lastBookmark = bookmarkList.at(-1)
     const hasLessThanCreatedAt = await BS.hasLessThanCreateAt(lastBookmark)
     const lastCursor = lastBookmark?.id ?? null
 
-    const bookmarkListPage = createPage({
-      list: serializedList,
+    const bookmarkListPage = Pages.createPage({
+      list: bookmarkList.map((bookmark) => BS.serialize(bookmark)),
       totalCount,
       hasNextPage: hasLessThanCreatedAt,
       lastCursor,
@@ -78,8 +75,14 @@ class BookmarkService {
   }
 
   static serialize<T extends Bookmark & { item: Item }>(bookmark: T) {
+    const mappedBookmark = TypeMapper.mapProps(
+      bookmark,
+      Date,
+      (d) => d.toISOString(),
+      true,
+    )
     return {
-      ...bookmark,
+      ...mappedBookmark,
       item: IS.serialize(bookmark.item),
     }
   }
@@ -103,24 +106,19 @@ class BookmarkService {
     return bookmark?.createdAt ?? null
   }
 
-  private static async findBookmarkOrThrow({
-    itemId,
-    userId,
-    include,
-  }: {
-    itemId: number
-    userId: number
-    include?: Partial<Parameters<typeof db.bookmark.findUnique>[0]['include']>
-  }) {
-    const bookmark = await db.bookmark.findUnique({
+  private static async findBookmarkOrThrow<Q extends Prisma.BookmarkArgs>(
+    { itemId, userId }: FindBookmarkOrThrowParams,
+    queryArgs?: Q,
+  ) {
+    const bookmarkOrNull = await db.bookmark.findUnique({
       where: { userId_itemId: { itemId, userId } },
-      include,
+      ...queryArgs,
     })
-    if (bookmark == null) throw new AppError('NotFound')
+    if (bookmarkOrNull == null) throw new AppError('NotFound')
+    if (!validateMatchUserToOwner(userId, bookmarkOrNull?.userId))
+      throw new AppError('Forbidden')
 
-    validateMatchToUserAndOwner(userId, bookmark?.userId)
-
-    return bookmark
+    return bookmarkOrNull as Prisma.BookmarkGetPayload<Q> | never
   }
 
   private static async countBookmark(userId: number) {
@@ -141,4 +139,9 @@ type GetBookmarkListParams = {
   userId: number
   cursor?: number | null
   limit: number
+}
+
+type FindBookmarkOrThrowParams = {
+  itemId: number
+  userId: number
 }

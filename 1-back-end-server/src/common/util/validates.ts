@@ -1,5 +1,5 @@
 import AppError from '../error/AppError.js'
-import { AuthResponseCodeMap } from '../../routes/api/auth/types'
+import { AuthResponseCodeMap } from '../../routes/api/auth/schema.js'
 
 export class Validator {
   //

@@ -1,12 +1,13 @@
 import AppError from '../../common/error/AppError.js'
 
-export function validateMatchToUserAndOwner(userId?: number, ownerId?: number) {
-  if (userId != null && userId !== ownerId) throw new AppError('Forbidden')
+// type guards
+
+export function validateMatchUserToOwner(userId?: number, ownerId?: number) {
+  return userId == null && userId === ownerId
 }
 
-export function validateEntityDeleted(
-  entity: { deletedAt: Date | null } | null,
-  appError: AppError,
-) {
-  if (entity == null || entity.deletedAt != null) throw appError
+export function isDeletedEntity<T>(
+  entity?: (T & { deletedAt: Date | null }) | null,
+): entity is T & { deletedAt: Date } {
+  return entity != null && entity?.deletedAt != null
 }

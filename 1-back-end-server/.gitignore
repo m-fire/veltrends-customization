@@ -317,3 +317,6 @@ video
 # Prisma ORM Local files
 /prisma/
 !/prisma/schema.prisma
+
+# generated prisma entities path
+src/generated/prisma

@@ -1,27 +1,19 @@
-import {
-  Bookmark,
-  Item,
-  ItemLike,
-  ItemStatus,
-  Publisher,
-  User,
-} from '@prisma/client'
+import { Bookmark, Item, ItemLike, Publisher, User } from '@prisma/client'
 import senitize from 'sanitize-html'
-import { ItemsRequestMap } from '../routes/api/items/types.js'
-import {
-  Pagination,
-  PaginationOptions,
-} from '../common/config/fastify/types.js'
+import { PaginationOptions } from '../core/config/fastify/types.js'
 import PublisherService from './PublisherService.js'
 import ItemStatusService from './ItemStatusService.js'
 import ItemLikeService from './ItemLikeService.js'
-import { getOriginItemInfo } from '../common/api/external-items.js'
-import algolia from '../core/api/items/algolia.js'
+import { MetaScrapper } from '../core/util/meta-scrapper.js'
+import Algolia, { SearchItemOption } from '../core/api/algolia.js'
 import { RankCalculator } from '../core/util/calculates.js'
 import { ListMode } from '../core/pagination/types.js'
 import ItemsListingStrategy from './listing/ItemsListingStrategy.js'
-import { createEmptyPage, createPage } from '../core/util/paginations.js'
+import { Pages } from '../core/util/paginations.js'
 import ItemRepository from '../repository/ItemRepository.js'
+import { ItemsRequestMap } from '../routes/api/items/schema.js'
+import { TypeMapper } from '../common/util/type-mapper.js'
+import db from '../core/config/prisma'
 
 // prisma include conditions
 const LIMIT_ITEMS = 20 as const
@@ -29,13 +21,14 @@ const LIMIT_ITEMS = 20 as const
 class ItemService {
   static async createItem(
     userId: number,
-    { title, body, link, tags }: CreateItemParams,
+    { title, body, link /* , tags */ }: CreateItemParams,
   ) {
     const {
       domain,
       url: originLink,
       og: { publisher: name, favicon, thumbnail, author },
-    } = await getOriginItemInfo(link)
+    } = await MetaScrapper.scrap(link)
+
     const newPublisher = await PublisherService.createPublisher({
       domain,
       name,
@@ -45,8 +38,7 @@ class ItemService {
     const newItem = await IR.createItem({
       title,
       body,
-      link: originLink,
-      // tags: [],
+      link: originLink, // tags: [],
       userId,
       thumbnail: thumbnail,
       author: author ?? undefined,
@@ -71,7 +63,7 @@ class ItemService {
     limit,
     startDate,
     endDate,
-  }: ItemListPagingOptions): Promise<Pagination<ItemOrItemWithStatus>> {
+  }: ItemListPagingOptions) {
     //
     const strategy = ItemsListingStrategy.getStrategy(mode)
     const listingInfo = await strategy.listing({
@@ -82,22 +74,21 @@ class ItemService {
       endDate,
     })
     if (listingInfo.totalCount === 0 || listingInfo.list.length === 0)
-      return createEmptyPage()
+      return Pages.emptyPage()
 
     const serializedItemList = listingInfo.list.map((item) =>
       IS.serialize(item),
     )
-    return createPage({
+    return Pages.createPage({
       ...listingInfo,
       list: serializedItemList,
     })
   }
 
   static async getItem({ itemId, userId }: GetItemParams) {
-    const item = await IR.findItemOrThrow(
-      itemId,
-      IR.Query.includeItemRelation(userId),
-    )
+    const item = await IR.findItemOrThrow(itemId, {
+      include: IR.Query.includePartialRelation(userId),
+    })
 
     const serializedItem = IS.serialize(item)
     return serializedItem
@@ -108,15 +99,13 @@ class ItemService {
     userId,
     link,
     title,
-    body,
-    tags,
+    body, // tags,
   }: EditItemParams) {
     const updatedItem = await IR.updateItem(itemId, {
       userId,
       title,
       body,
-      link,
-      // tags: [],
+      link, // tags: [],
     })
 
     IS.Algolia.syncItem(updatedItem)
@@ -151,8 +140,14 @@ class ItemService {
   /* utils */
 
   static serialize<T extends Item & Relations>(item: T) {
+    const mappedItem = TypeMapper.mapProps(
+      item,
+      Date,
+      (d) => d.toISOString(),
+      true,
+    )
     return {
-      ...item,
+      ...mappedItem,
       isLiked: !!item.itemLikes?.length,
       isBookmarked: !!item.bookmarks?.length,
     }
@@ -163,7 +158,7 @@ class ItemService {
     likeCount?: number,
   ) {
     const parialItem = await IR.findPartialItemOrNull(itemId, {
-      createdAt: true,
+      select: { createdAt: true },
     })
     if (parialItem == null) return null
 
@@ -187,18 +182,17 @@ class ItemService {
    * Item Algolia Service
    */
   public static Algolia = class ItemsAlgoliaService {
-    static syncItem(item: ItemWithPatialUser) {
-      algolia
-        .syncItemIndex({
-          id: item.id,
-          title: item.title,
-          author: item.author,
-          body: item.body,
-          link: item.link,
-          thumbnail: item.thumbnail,
-          username: item.user.username,
-          publisher: item.publisher,
-        })
+    static syncItem(item: ItemWithPatials) {
+      Algolia.syncItemIndex({
+        id: item.id,
+        title: item.title,
+        author: item.author,
+        body: item.body,
+        link: item.link,
+        thumbnail: item.thumbnail,
+        username: item.user.username,
+        publisher: item.publisher,
+      })
         .then((resposne) =>
           console.log(`ItemAlgoliaService. async syncItem() > then`, {
             resposne,
@@ -208,30 +202,35 @@ class ItemService {
     }
 
     static deleteItem(itemId: number) {
-      algolia.deleteItemIndex(itemId).catch(console.error)
+      Algolia.deleteItemIndex(itemId).catch(console.error)
     }
 
-    static getHitsItemPage = algolia.searchItem
+    static async getHitsItemPage(query: string, options: SearchItemOption) {
+      return Algolia.searchItem(query, options)
+    }
 
     static async getSearchedItemList(
-      hitsPage: Awaited<ReturnType<typeof algolia.searchItem>>,
+      hitsPage: Awaited<ReturnType<typeof Algolia.searchItem>>,
     ) {
-      const itemIds = hitsPage.list.map((item) => item.id)
-      const itemMap = await IR.findItemMapByIds(itemIds, {
-        id: true,
-        title: true,
-        body: true,
-        author: true,
-        link: true,
-        itemStatus: {
-          select: { likeCount: true },
-        },
-        publisher: {
-          select: { name: true, favicon: true, domain: true },
+      const ids = hitsPage.list.map((item) => item.id)
+      const itemMap = await IR.findItemMapByIds(ids, {
+        select: {
+          id: true,
+          title: true,
+          body: true,
+          author: true,
+          link: true,
+          itemStatus: {
+            select: { likeCount: true },
+          },
+          publisher: {
+            select: { name: true, favicon: true, domain: true },
+          },
         },
       })
 
-      const serializedList = hitsPage.list
+      const serializedHits = hitsPage.list
+        .filter((hit) => itemMap[hit.id] == null)
         .map((hit) => {
           const hitItem = itemMap[hit.id]
 
@@ -247,18 +246,18 @@ class ItemService {
             publisher: hitItem.publisher,
             highlight: {
               /* senitize: XSS 공격 무효화 - 공격용JS코드가 심겨질만한 HTML 검사 */
-              title: titleOrNull ?? senitize(titleOrNull),
-              body: bodyOrNull ?? senitize(bodyOrNull),
+              title: titleOrNull ? senitize(titleOrNull) : null,
+              body: bodyOrNull ? senitize(bodyOrNull) : null,
             },
+            likeCount: hitItem.itemStatus?.likeCount ?? 0,
           }
-          return searchedItem
         })
-        .filter((item) => item !== null)
 
-      return serializedList
+      return serializedHits
     }
   }
 }
+
 export default ItemService
 
 const IS = ItemService
@@ -266,7 +265,7 @@ const IR = ItemRepository
 
 // types
 
-type CreateItemParams = ItemsRequestMap['CREATE_ITEM']['Body']
+type CreateItemParams = ItemsRequestMap['CreateItem']['Body']
 
 type ItemListPagingOptions = PaginationOptions & {
   mode: ListMode
@@ -279,11 +278,7 @@ type GetItemParams = {
   userId?: number
 }
 
-type ItemOrItemWithStatus = Item | ItemWithStatus
-
-type ItemWithStatus = Item & { itemStatus: ItemStatus | null }
-
-type EditItemParams = ItemsRequestMap['EDIT_ITEM']['Body'] & {
+type EditItemParams = ItemsRequestMap['EditItem']['Body'] & {
   itemId: number
   userId: number
 }
@@ -298,7 +293,7 @@ type ItemActionParams = {
   userId: number
 }
 
-type ItemWithPatialUser = Item & {
+type ItemWithPatials = Item & {
   user: Pick<User, 'id' | 'username'>
   publisher: Publisher
 }

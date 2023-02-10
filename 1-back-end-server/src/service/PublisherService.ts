@@ -1,4 +1,4 @@
-import db from '../common/config/prisma/db-client.js'
+import db from '../core/config/prisma/index.js'
 
 class PublisherService {
   static async createPublisher({ domain, name, favicon }: GetPublisherParams) {

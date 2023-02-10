@@ -1,50 +1,49 @@
 import { FastifyPluginAsyncTypebox } from '../../../core/config/fastify/types.js'
 import UserService from '../../../service/UserService.js'
 import AppError from '../../../common/error/AppError.js'
-import { AuthRequestMap } from './types.js'
-import AUTH_SCHEMA from './schema.js'
+import AuthSchema from './schema.js'
 import {
   clearCookie,
   CookieTokens,
   setTokenCookies,
-} from '../../../common/config/jwt/cookies.js'
+} from '../../../core/config/jwt/cookies.js'
 
 // Route Definition
 
 const authRoute: FastifyPluginAsyncTypebox = async (fastify) => {
   fastify.post(
     '/login',
-    { schema: AUTH_SCHEMA.LOGIN },
-    async ({ body: authBody }, reply) => {
-      const tokensAndUser = await UserService.login(authBody)
-      setTokenCookies(reply, tokensAndUser.tokens)
-      return tokensAndUser
+    { schema: AuthSchema.Login },
+    async ({ body: userInfo }, reply) => {
+      const authResult = await UserService.login(userInfo)
+      setTokenCookies(reply, authResult.tokens)
+      return authResult
     },
   )
 
-  fastify.post<AuthRequestMap['LOGOUT']>(
+  fastify.post(
     '/logout',
-    { schema: AUTH_SCHEMA.LOGOUT },
+    { schema: AuthSchema.Logout },
     async ({ body: authBody }, reply) => {
       clearCookie(reply)
-      reply.statusCode = 202
+      reply.status(202)
     },
   )
 
-  fastify.post<AuthRequestMap['REGISTER']>(
+  fastify.post(
     '/register',
-    { schema: AUTH_SCHEMA.REGISTER },
+    { schema: AuthSchema.Register },
     async ({ body: userInfo }, reply) => {
-      const tokensAndUser = await UserService.register(userInfo)
-      setTokenCookies(reply, tokensAndUser.tokens)
-      reply.statusCode = 201
-      return tokensAndUser
+      const authResult = await UserService.register(userInfo)
+      setTokenCookies(reply, authResult.tokens)
+      reply.status(201)
+      return authResult
     },
   )
 
-  fastify.post<AuthRequestMap['REFRESH_TOKEN']>(
+  fastify.post(
     '/refresh',
-    { schema: AUTH_SCHEMA.REFRESH_TOKEN },
+    { schema: AuthSchema.RefreshToken },
     async (request, reply) => {
       const oldToken =
         request.body?.refreshToken ??
@@ -53,7 +52,7 @@ const authRoute: FastifyPluginAsyncTypebox = async (fastify) => {
 
       const tokens = await UserService.refreshToken(oldToken)
       setTokenCookies(reply, tokens)
-      reply.statusCode = 200
+      reply.status(200)
       return tokens
     },
   )

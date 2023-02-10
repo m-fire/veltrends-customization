@@ -1,11 +1,11 @@
 import { Token } from '@prisma/client'
-import db from '../common/config/prisma/db-client.js'
+import db from '../core/config/prisma/index.js'
 import {
   generateToken,
   RefreshTokenPayload,
   validateToken,
-} from '../common/config/jwt/tokens.js'
-import { AuthResponseCodeMap } from '../routes/api/auth/types.js'
+} from '../core/config/jwt/tokens.js'
+import { AuthResponseCodeMap } from '../routes/api/auth/schema.js'
 
 export default class TokenService {
   static async generateTokens(
@@ -43,5 +43,5 @@ export default class TokenService {
   }
 }
 
-type AuthTokens = AuthResponseCodeMap['LOGIN']['200']['tokens']
-type AuthUserInfo = AuthResponseCodeMap['LOGIN']['200']['user']
+type AuthTokens = AuthResponseCodeMap['Login']['200']['tokens']
+type AuthUserInfo = AuthResponseCodeMap['Login']['200']['user']
