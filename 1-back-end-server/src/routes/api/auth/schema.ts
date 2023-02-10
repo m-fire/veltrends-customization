@@ -1,69 +1,73 @@
 import { Type } from '@sinclair/typebox'
 import {
-  createAppErrorSchema,
-  createFastifySchemaMap,
-} from '../../../common/config/typebox/schema-util.js'
+  errorSchema,
+  routeSchemaMap,
+} from '../../../core/config/typebox/schema-util.js'
+import {
+  RouteRequestMap,
+  RouteResponseCodeMap,
+} from '../../../core/config/fastify/types.js'
 
 // Reqeust Schema
 
-export const REQ_AUTH_BODY_SCHEMA = Type.Object({
+const REQ_USERNAME_PASSWORD = Type.Object({
   username: Type.String(),
   password: Type.String(),
 })
 
 // Response Schema
 
-export const RES_AUTH_USER_INFO_SCHEMA = Type.Object({
+export const RES_AUTH_USER_INFO = Type.Object({
   id: Type.Integer(),
   username: Type.String(),
 })
 
-export const RES_TOKENS_SCHEMA = Type.Object({
+export const RES_AUTH_TOKENS = Type.Object({
   accessToken: Type.String(),
   refreshToken: Type.String(),
 })
 
-const RES_TOKENS_N_USER_SCHEMA = Type.Object({
-  tokens: RES_TOKENS_SCHEMA,
-  user: RES_AUTH_USER_INFO_SCHEMA,
+const RES_AUTH_RESULT = Type.Object({
+  tokens: RES_AUTH_TOKENS,
+  user: RES_AUTH_USER_INFO,
 })
 
 // FastifySchema
 
-const AUTH_SCHEMA = createFastifySchemaMap({
-  REGISTER: {
-    tags: ['auth'],
-    body: REQ_AUTH_BODY_SCHEMA,
+const AuthSchema = routeSchemaMap(['auth'], {
+  Register: {
+    body: REQ_USERNAME_PASSWORD,
     response: {
-      200: RES_TOKENS_N_USER_SCHEMA,
-      409: createAppErrorSchema('UserExists'),
+      200: RES_AUTH_RESULT,
+      409: errorSchema('UserExists'),
     },
   },
-  LOGIN: {
-    tags: ['auth'],
-    body: REQ_AUTH_BODY_SCHEMA,
+  Login: {
+    body: REQ_USERNAME_PASSWORD,
     response: {
-      200: RES_TOKENS_N_USER_SCHEMA,
-      401: createAppErrorSchema('Authentication'),
+      200: RES_AUTH_RESULT,
+      401: errorSchema('Authentication'),
     },
   },
-  LOGOUT: {
-    tags: ['auth'],
+  Logout: {
     response: {
       202: Type.Null(),
     },
   },
-  REFRESH_TOKEN: {
-    tags: ['auth'],
+  RefreshToken: {
     body: Type.Object({
       refreshToken: Type.String(),
     }),
     response: {
-      200: RES_TOKENS_SCHEMA,
-      400: createAppErrorSchema('BadRequest'),
-      401: createAppErrorSchema('RefreshFailure'),
+      200: RES_AUTH_TOKENS,
+      400: errorSchema('BadRequest'),
+      401: errorSchema('RefreshFailure'),
     },
   },
 })
+export default AuthSchema
 
-export default AUTH_SCHEMA
+// static types
+
+export type AuthRequestMap = RouteRequestMap<typeof AuthSchema>
+export type AuthResponseCodeMap = RouteResponseCodeMap<typeof AuthSchema>

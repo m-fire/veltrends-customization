@@ -1,38 +1,49 @@
 import { Type } from '@sinclair/typebox'
-import { Nullable } from '../../../common/config/typebox/type-util.js'
+import { Nullable } from '../../../core/config/typebox/types.js'
 import {
-  createFastifySchemaMap,
-  createPaginationSchema,
-} from '../../../common/config/typebox/schema-util.js'
+  routeSchemaMap,
+  pageSchema,
+} from '../../../core/config/typebox/schema-util.js'
+import {
+  RouteRequestMap,
+  RouteResponseCodeMap,
+} from '../../../core/config/fastify/types.js'
 
-export const SEARCH_SCHEMA = createFastifySchemaMap({
-  SEARCH: {
-    tags: ['search'],
+// route schema
+
+export const SearchSchema = routeSchemaMap(['search'], {
+  Search: {
     querystring: Type.Object({
       q: Type.String(),
       offset: Type.Optional(Type.Integer()),
       limit: Type.Optional(Type.Integer()),
     }),
     response: {
-      200: createPaginationSchema(
+      200: pageSchema(
         Type.Object({
           id: Type.Number(),
+          link: Type.String(),
           title: Type.String(),
           body: Type.String(),
-          author: Nullable(Type.String()),
-          link: Type.String(),
-          likeCount: Type.Number(),
+          author: Type.String(),
           publisher: Type.Object({
             name: Type.String(),
-            favicon: Type.String(),
+            favicon: Nullable(Type.String()),
             domain: Type.String(),
           }),
           highlight: Type.Object({
-            title: Type.String(),
-            body: Type.String(),
+            title: Nullable(Type.String()),
+            body: Nullable(Type.String()),
           }),
+          likeCount: Type.Number(),
         }),
       ),
     },
   },
 })
+
+// static types
+
+export type SearchRequestMap = RouteRequestMap<typeof SearchSchema>
+
+export type SearchResponseCodeMap = RouteResponseCodeMap<typeof SearchSchema>

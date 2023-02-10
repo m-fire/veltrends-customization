@@ -1,35 +1,38 @@
 import { Type } from '@sinclair/typebox'
 import {
-  createFastifySchemaMap,
-  createPaginationSchema,
-} from '../../../common/config/typebox/schema-util.js'
-import { RES_EMPTY_LIST_SCHEMA } from '../../../common/config/typebox/common-schema.js'
-import { RES_ITEM_SCHEMA } from '../items/schema.js'
+  pageSchema,
+  routeSchemaMap,
+} from '../../../core/config/typebox/schema-util.js'
+import { RES_EMPTY_LIST_SCHEMA } from '../../../core/config/typebox/schema.js'
+import { RES_ITEM } from '../items/schema.js'
+import {
+  RouteRequestMap,
+  RouteResponseCodeMap,
+} from '../../../core/config/fastify/types.js'
 
 // Reqeust Schema
 
 // Response Schema
 
-const RES_BOOKMARK_SCHEMA = Type.Object({
+const RES_BOOKMARK = Type.Object({
   id: Type.Integer(),
-  item: RES_ITEM_SCHEMA,
+  item: RES_ITEM,
   createdAt: Type.String(),
 })
 
 // FastifySchema
 
-const BOOKMARKS_SCHEMA = createFastifySchemaMap({
-  MARK: {
-    tags: ['bookmarks'],
+const BOOKMARKS_SCHEMA = routeSchemaMap(['bookmarks'], {
+  Mark: {
     body: Type.Object({
       itemId: Type.Number(),
     }),
     response: {
-      201: RES_BOOKMARK_SCHEMA,
+      201: RES_BOOKMARK,
     },
   },
-  UNMARK: {
-    tags: ['bookmarks'],
+
+  Unmark: {
     querystring: Type.Object({
       itemId: Type.Number(),
     }),
@@ -37,16 +40,22 @@ const BOOKMARKS_SCHEMA = createFastifySchemaMap({
       204: Type.Null(),
     },
   },
-  GET_BOOKMARK_LIST: {
-    tags: ['bookmarks'],
+
+  GetBookmarkList: {
     querystring: Type.Object({
       cursor: Type.Optional(Type.Integer()),
     }),
     response: {
-      200: createPaginationSchema(RES_BOOKMARK_SCHEMA),
+      200: pageSchema(RES_BOOKMARK),
       404: RES_EMPTY_LIST_SCHEMA,
     },
   },
 })
-
 export default BOOKMARKS_SCHEMA
+
+// static types
+
+export type BookmarksRequestMap = RouteRequestMap<typeof BOOKMARKS_SCHEMA>
+export type BookmarksResponseCodeMap = RouteResponseCodeMap<
+  typeof BOOKMARKS_SCHEMA
+>
