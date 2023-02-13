@@ -42,7 +42,7 @@ const RES_COMMENT_LIKED_SCHEMA = Type.Object({
 
 // FastifySchema
 
-const COMMENTS_SCHEMA = routeSchemaMap(['items', 'comments'], {
+const COMMENTS_SCHEMA = routeSchemaMap(['comments'], {
   CREATE_COMMENT: {
     params: Items.GetItem.params,
     body: Type.Object({
