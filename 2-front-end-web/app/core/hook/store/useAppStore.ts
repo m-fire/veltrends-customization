@@ -1,10 +1,10 @@
-import create from 'zustand'
+import { createStore } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { devtools } from 'zustand/middleware'
 import { ItemStatus } from '~/core/api/types'
 import { WritableDraft } from 'immer/dist/types/types-external'
 
-const useAppStore = create(
+const initialStore = createStore(
   devtools(
     immer<AppStore>((set, get) => ({
       items: {
@@ -85,7 +85,9 @@ const useAppStore = create(
     { name: 'veltrend-app' },
   ),
 )
-export default useAppStore
+export default function useAppStore() {
+  return initialStore.getState()
+}
 
 // utils
 

@@ -32,9 +32,7 @@ function ItemById({}: ItemByIdProps) {
   const { data: commentList } = useCommentListQuery(item.id, {
     initialData: loaderData.commentList,
   })
-  const { open: openBottomModal } = useBottomSheetModalStore(
-    (store) => store.action,
-  )
+  const { open: openBottomModal } = useBottomSheetModalStore().action
   const openDialog = useOpenDialog()
   const navigate = useNavigate()
 

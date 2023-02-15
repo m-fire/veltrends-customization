@@ -1,5 +1,5 @@
 import React from 'react'
-import create, { StoreApi } from 'zustand'
+import { createStore, StoreApi } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { UserInfo } from '~/common/api/types'
@@ -12,7 +12,7 @@ export interface UserStore {
   setUser(userOrNull: { id: number; username: string } | null): void
 }
 
-const initialUserStore = create(
+const initialUserStore = createStore(
   // devtools(
   // persist(
   immer<UserStore>((set, get) => ({
@@ -41,7 +41,7 @@ type OmittedAuthStore = Omit<UserStore, 'state'>
 export function getUserStoreCreator(
   initialize?: (stateSetters: OmittedAuthStore) => void,
 ) {
-  initialize?.(getStateSetters(initialUserStore()))
+  initialize?.(getStateSetters(initialUserStore.getState()))
   return () => initialUserStore
 }
 

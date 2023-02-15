@@ -1,6 +1,6 @@
-import create from 'zustand'
+import { createStore } from 'zustand'
 
-const useBottomSheetModalStore = create<BottomSheetModalStore>((set) => ({
+const initialStore = createStore<BottomSheetModalStore>((set) => ({
   state: {
     visible: false,
     items: [],
@@ -27,7 +27,9 @@ const useBottomSheetModalStore = create<BottomSheetModalStore>((set) => ({
     },
   },
 }))
-export default useBottomSheetModalStore
+export default function useBottomSheetModalStore() {
+  return initialStore.getState()
+}
 
 // types
 
