@@ -42,6 +42,7 @@ const AuthSchema = routeSchemaMap(['auth'], {
       409: errorSchema('UserExists'),
     },
   },
+
   Login: {
     body: REQ_USERNAME_PASSWORD,
     response: {
@@ -49,14 +50,16 @@ const AuthSchema = routeSchemaMap(['auth'], {
       401: errorSchema('Authentication'),
     },
   },
+
   Logout: {
     response: {
       202: Type.Null(),
     },
   },
+
   RefreshToken: {
     body: Type.Object({
-      refreshToken: Type.String(),
+      refreshToken: Type.Optional(Type.String()),
     }),
     response: {
       200: RES_AUTH_TOKENS,

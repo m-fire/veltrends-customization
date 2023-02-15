@@ -1,6 +1,7 @@
 import './style.css'
 import React, { Suspense, useEffect, useState } from 'react'
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -12,16 +13,15 @@ import {
 } from '@remix-run/react'
 import GlobalStyle from '~/GlobalStyle'
 import { Clients } from '~/common/api/client'
-import AppError from '~/common/error/AppError'
 import { DialogContextProvider } from '~/common/context/DialogContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import AppBottomSheetModal from '~/core/component/home/AppBottomSheetModal'
 import Dialog from '~/common/component/template/Dialog'
 import AppOverlay from '~/core/component/home/AppOverlay'
-import { UserInfo } from '~/common/api/types'
+import { Account } from '~/common/api/types'
 import { getUserStoreCreator, UserContext } from '~/common/store/user'
-import { UserInformation } from '~/core/api/me'
+import { Me } from '~/core/api/me'
 
 const initialQueryClient = new QueryClient({
   defaultOptions: {
@@ -50,22 +50,9 @@ export const meta: MetaFunction = () => ({
 })
 
 export default function App() {
-  const { authUser, cookie } = useLoaderData<{
-    authUser: UserInfo | null
-    cookie: string | null
+  const data = useLoaderData<{
+    account: Account | null
   }>()
-
-  useEffect(() => {
-    console.log(
-      `root.tsx> () useEffect()`,
-      {
-        hasCookie: !!cookie,
-      },
-      !!cookie
-        ? '쿠키가 존재하므로 사용자 인증상태 유지해야 함'
-        : '쿠키가 없으므로 로그아웃 해야함',
-    )
-  }, [cookie])
 
   // ReactQuery Devtools initialize
   const [showDevtools, setShowDevtools] = useState(false)
@@ -86,9 +73,9 @@ export default function App() {
 
         <QueryClientProvider client={initialQueryClient}>
           <UserContext.Provider
-            createStore={getUserStoreCreator(({ setUser }) => {
-              cookie ? setUser(authUser) : setUser(null)
-            })}
+            createStore={getUserStoreCreator(({ setUser }) =>
+              setUser(data?.account ?? null),
+            )}
           >
             <DialogContextProvider dialog={Dialog} overlay={AppOverlay}>
               <Outlet />
@@ -114,9 +101,10 @@ export default function App() {
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const cookie = request.headers.get('Cookie')
+  if (!cookie) return json(null)
 
   /*
-  const redirectIfNeeded = () => {
+    const redirectIfNeeded = () => {
     const { pathname, search } = new URL(request.url)
     const isProtected = PROTECTED_ROUTES.some((route) =>
       pathname.includes(route),
@@ -124,24 +112,15 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     if (isProtected) {
       return redirect('/login?next=' + encodeURIComponent(pathname + search))
     }
-    return null
-  }
+      return null
+    }
   */
-
-  if (!cookie) return { authUser: null, cookie: null }
-  // if (!cookie) return redirectIfNeeded()
 
   Clients.setCookie(cookie)
   try {
-    const account = await UserInformation.getUserInfo()
-    return { authUser: account, cookie }
+    const { account, headers } = await Me.getAccountMemo()
+    return json({ account }, headers ? { headers } : undefined)
   } catch (e) {
-    const error = AppError.of(e)
-    if (error.name === 'Unauthorized') {
-      // console.log(error.payload)
-    }
-
-    // return redirectIfNeeded()
-    return { authUser: null, cookie: null }
+    return json(null)
   }
 }

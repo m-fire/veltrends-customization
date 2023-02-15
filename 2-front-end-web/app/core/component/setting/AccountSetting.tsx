@@ -8,7 +8,7 @@ import { Flex, Font } from '~/common/style/css-builder'
 import { Media } from '~/common/style/media-query'
 import VariantLinkOrButton from '~/core/component/VariantLinkOrButton'
 import useOpenDialog from '~/common/hook/useOpenDialog'
-import { UserInformation } from '~/core/api/me'
+import { Me } from '~/core/api/me'
 import AppError from '~/common/error/AppError'
 
 const initialFormState = {
@@ -25,26 +25,23 @@ function AccountSetting({ ...rest }: AccountSettingProps) {
 
   const reset = () => setForm(initialFormState)
 
-  const { mutate: mutateChangePassword } = useMutation(
-    UserInformation.changePassword,
-    {
-      onSuccess: () => {
-        openDialog('CHANGE_PASSWORD_CONFIRMED', { mode: 'OK' })
-        reset()
-      },
-      onError: (e) => {
-        const error = AppError.of(e)
-        switch (error.name) {
-          case 'BadRequest':
-            return openDialog('INVALID_PASSWORD_LETTERS', { mode: 'OK' })
-          case 'Forbidden':
-            return openDialog('WRONG_PASSWORD', { mode: 'OK' })
-          default:
-            throw error
-        }
-      },
+  const { mutate: mutateChangePassword } = useMutation(Me.changePassword, {
+    onSuccess: () => {
+      openDialog('CHANGE_PASSWORD_CONFIRMED', { mode: 'OK' })
+      reset()
     },
-  )
+    onError: (e) => {
+      const error = AppError.of(e)
+      switch (error.name) {
+        case 'BadRequest':
+          return openDialog('INVALID_PASSWORD_LETTERS', { mode: 'OK' })
+        case 'Forbidden':
+          return openDialog('WRONG_PASSWORD', { mode: 'OK' })
+        default:
+          throw error
+      }
+    },
+  })
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const { name, value } = e.target
@@ -66,7 +63,7 @@ function AccountSetting({ ...rest }: AccountSettingProps) {
       },
       async onConfirm() {
         try {
-          await UserInformation.unregister()
+          await Me.unregister()
         } catch (e) {}
         window.location.href = '/'
       },
