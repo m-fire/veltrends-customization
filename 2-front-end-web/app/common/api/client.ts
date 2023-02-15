@@ -20,7 +20,7 @@ export class Clients {
   }
 }
 
-/* Remix 가 쿠키 제거 알아서 처리하므로 불필요 */
+/* Remix는 쿠키를 알아서 제거하므로 불필요한 코드 */
 // export function clearClientCookie() {
 //   delete client.defaults.headers.common['Cookie']
 // }

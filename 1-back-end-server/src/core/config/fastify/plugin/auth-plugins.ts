@@ -62,8 +62,7 @@ export function createAuthRoute(plugin: FastifyPluginAsyncTypebox) {
   return wrappedPlugin
 }
 
-// 특정 엔드포인트 인증용 플러그인
-
+// 특정 라우트 엔드포인트에 인증절차 기능추가를 위한 Fastify 라우트플러그인
 export const endpointAuthPlugin = fp(
   async (fastify, options) => {
     fastify.addHook('preHandler', async (request) => {
