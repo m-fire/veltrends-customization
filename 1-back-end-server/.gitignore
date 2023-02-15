@@ -320,3 +320,7 @@ video
 
 # generated prisma entities path
 src/generated/prisma
+
+# docker
+docker
+dockers/*.yml
