@@ -1,10 +1,6 @@
 import { Token } from '@prisma/client'
 import db from '../core/config/prisma/index.js'
-import {
-  generateToken,
-  RefreshTokenPayload,
-  validateToken,
-} from '../core/config/jwt/tokens.js'
+import Tokens, { RefreshTokenPayload } from '../core/config/jwt/tokens.js'
 import { AuthResponseCodeMap } from '../routes/api/auth/schema.js'
 
 export default class TokenService {
@@ -16,13 +12,13 @@ export default class TokenService {
       token ?? (await db.token.create({ data: { userId } }))
 
     const [accessToken, refreshToken] = await Promise.all([
-      generateToken({
+      Tokens.generateToken({
         type: 'access',
         tokenId,
         userId,
         username,
       }),
-      generateToken({
+      Tokens.generateToken({
         type: 'refresh',
         tokenId,
         rotationCounter,
@@ -39,7 +35,7 @@ export default class TokenService {
   }
 
   static async validateRefreshToken(tokenStr: string) {
-    return validateToken<RefreshTokenPayload>(tokenStr)
+    return Tokens.validateToken<RefreshTokenPayload>(tokenStr)
   }
 }
 

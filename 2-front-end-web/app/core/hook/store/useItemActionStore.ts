@@ -1,16 +1,13 @@
 import useAppStore from './useAppStore'
 
 export function useItemStateMap() {
-  const stateMap = useAppStore((store) => store.items.stateMap)
-  return stateMap
+  return useAppStore().items.stateMap
 }
 
 export function useItemStateById(itemId: number) {
-  const stateById = useItemStateMap()[itemId]
-  return stateById
+  return useItemStateMap()[itemId]
 }
 
 export function useItemStateAction() {
-  const { setLiked, setBookmarked } = useAppStore((store) => store.items)
-  return { setLiked, setBookmarked }
+  return useAppStore().items
 }

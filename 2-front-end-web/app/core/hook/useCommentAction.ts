@@ -68,7 +68,7 @@ export function useCommentAction() {
 }
 
 export function useCommentInputAction() {
-  const { write, edit, close } = useAppStore((s) => s.comments.input)
+  const { write, edit, close } = useAppStore().comments.input
 
   const inputActionMemo = useMemo(
     () => ({

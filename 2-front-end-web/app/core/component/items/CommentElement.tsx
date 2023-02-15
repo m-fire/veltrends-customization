@@ -73,7 +73,7 @@ function CommentElement({ comment, type }: CommentElementProps) {
   }
 
   const deleteComment = useDeleteComment()
-  const openBottomModal = useBottomSheetModalStore((store) => store.action.open)
+  const { open: openBottomModal } = useBottomSheetModalStore().action
   const onClickMore = () => {
     openBottomModal([
       {

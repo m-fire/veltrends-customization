@@ -1,7 +1,6 @@
 import fp from 'fastify-plugin'
-import { FastifyPluginAsync } from 'fastify'
 import jwt from 'jsonwebtoken'
-import { AccessTokenPayload, validateToken } from '../../jwt/tokens.js'
+import Tokens, { AccessTokenPayload } from '../../jwt/tokens.js'
 import AppError from '../../../../common/error/AppError.js'
 import { CookieTokens } from '../../jwt/cookies.js'
 import { FastifyPluginAsyncTypebox } from '../types'
@@ -32,7 +31,7 @@ export const globalAuthPlugin = fp(
       if (!tokenStr) return
 
       try {
-        const decoded = await validateToken<AccessTokenPayload>(tokenStr)
+        const decoded = await Tokens.validateToken<AccessTokenPayload>(tokenStr)
         request.user = {
           id: decoded.userId,
           username: decoded.username,
